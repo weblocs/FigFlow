@@ -1,3 +1,5 @@
+import React from "react";
+
 import FigFlow from "./FigFlow";
 
 export default function App() {
