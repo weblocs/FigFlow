@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css?family=Inter:regular,bold,italic&subset=latin,latin-ext");
+
+body {
+  padding: 0;
+  margin: 10px;
+  font-family: Inter;
+}
+h1,
+h2,
+h3 {
+  letter-spacing: -0.03em;
+}
+
+p {
+  letter-spacing: -0.15em;
+}
+
+button {
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 12px;
+  outline: none;
+  border: 0;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.Button {
+  background: #7122ee;
+  display: inline-block;
+  padding: 20px 40px;
+  color: #fff;
+}
+
+.addTodoItemForm {
+  display: flex;
+  margin-bottom: 16px;
+}
+.addTodoItemInput {
+  padding: 0 12px;
+  border: 1px solid #cdcdcd;
+  border-radius: 4px;
+}
+
+.addTodoItemInput:hover {
+  border: 1px solid #999;
+}
+
+.addTodoItemButton {
+  padding: 10px 20px;
+  background-color: blue;
+  color: #fff;
+  margin-left: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.todoListItem {
+  position: relative;
+  padding: 20px 30px;
+  background-color: #eee;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.todoListItem:hover {
+  background-color: #ddd;
+}
+
+.todoListItem.itemDone {
+  background: #ccc;
+}
+
+.todoListItem.itemDone:hover {
+  background: #bbb;
+}
+
+.todoListItemDelete {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 15px 12px;
+  background: #bbb;
+}
+
+.ButtonStroke {
+  border: 1px solid blue;
+}
+
+.saveButton {
+  margin-bottom: 20px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.saveButton:hover {
+  background-color: #ddd;
+}
