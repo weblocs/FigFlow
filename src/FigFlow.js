@@ -15,10 +15,6 @@ export default function FigFlow(props) {
   const [addTodoItemInput, setAddTodoItemInput] = useState("");
   const [elementTypeInput, setElementTypeInput] = useState("div");
 
-  // function handleNestedChange(items) {
-  //   setElements(items.items);
-  // }
-
   function handleAddingTodoItem(e) {
     e.preventDefault();
     if (addTodoItemInput.length > 0) {
@@ -36,22 +32,6 @@ export default function FigFlow(props) {
       console.log("Empty input");
     }
   }
-
-  // const renderItem = ({ item }) => {
-  //   return (
-  //     <div className="todoListItem" key={item.id}>
-  //       {item.type} {item.title}
-  //       <div
-  //         className="todoListItemDelete"
-  //         onClick={() => {
-  //           handleTaskStatusToggle(item.id);
-  //         }}
-  //       >
-  //         x
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   function handleTaskStatusToggle(id) {
     setElements(deleteNodeById(elements, id, "New text"));
@@ -131,26 +111,9 @@ export default function FigFlow(props) {
                 x
               </div>
             </div>
-            // <input
-            //   style={{ fontSize: "1rem" }}
-            //   value={node.title}
-            //   onChange={(event) => {
-            //     const name = event.target.value;
-            //     setElements(editNodeTitleById(elements, node.id, name));
-            //   }}
-            // />
           )
         })}
       />
-      {/* <div className="todoList">
-        <Nestable
-          idProp="id"
-          threshold={5}
-          items={elements}
-          onChange={(items) => handleNestedChange(items)}
-          renderItem={renderItem}
-        />
-      </div> */}
 
       <div className="Project">
         {elements.map((el) => (
