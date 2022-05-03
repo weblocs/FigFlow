@@ -9,11 +9,24 @@ import Element from "./Element";
 import { editNodeTitleById, deleteNodeById } from "./utils/edit-nodes";
 import saveProject from "./utils/save-project";
 
+FigFlow.defaultProps = {
+  elements: [],
+  classes: [{ name: "heading-1", styles: { color: "green" } }]
+};
+
 export default function FigFlow(props) {
   const [elements, setElements] = useState(props.elements);
   const [classes, setClasses] = useState(props.classes);
   const [addTodoItemInput, setAddTodoItemInput] = useState("");
   const [elementTypeInput, setElementTypeInput] = useState("div");
+
+  const css = `
+  .${props.classes[0].name} {
+    color: green !important;
+     }
+`;
+
+  //JSON.strigify(${props.classes[0].styles[0]}).replaceAll('"','');
 
   function handleAddingTodoItem(e) {
     e.preventDefault();
@@ -115,6 +128,8 @@ export default function FigFlow(props) {
         })}
       />
 
+      <style>{css}</style>
+
       <div className="Project">
         {elements.map((el) => (
           <Element
@@ -131,8 +146,3 @@ export default function FigFlow(props) {
     </div>
   );
 }
-
-FigFlow.defaultProps = {
-  elements: [],
-  classes: [{ name: "heading-1", styles: { color: "green" } }]
-};
