@@ -1,5 +1,5 @@
-import React from "react";
-import { StrictMode } from "react";
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { render } from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
@@ -7,10 +7,12 @@ import Expenses from "./routes/expenses";
 import Invoices from "./routes/invoices";
 
 import "./styles/styles.css";
+import "./styles/project-styles.css";
 import "./styles/nested.css";
 
 const rootElement = document.getElementById("root");
-render(
+const root = createRoot(rootElement);
+root.render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
@@ -19,6 +21,5 @@ render(
         <Route path="invoices" element={<Invoices />} />
       </Routes>
     </BrowserRouter>
-  </StrictMode>,
-  rootElement
+  </StrictMode>
 );
