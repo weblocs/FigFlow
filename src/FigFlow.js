@@ -3,30 +3,39 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import FileExplorerTheme from "react-sortable-tree-theme-file-explorer";
 import SortableTree from "react-sortable-tree";
-
+import Constants from "./const.js";
 import Element from "./Element";
 
 import { editNodeTitleById, deleteNodeById } from "./utils/edit-nodes";
 import saveProject from "./utils/save-project";
+import JSONtoCSS from "./utils/json-to-css"
 
 FigFlow.defaultProps = {
   elements: [],
-  classes: [{ name: "heading-1", styles: { color: "green" } }]
+  classes: [
+    { name: "new-item", styles: [{ color: "green",  font_size: "0", padding: "20px", background: "#eee" }] },
+    { name: "heading-1", styles: [{ color: "green",  font_size: "28px", margin_top: "0", margin_bottom: "0" }] },
+    { name: "heading-2", styles: [{ color: "blue",  font_size: "44px", margin_top: "0" }] },
+  ]
 };
+
+function getIndexOfElement(nodes, name) {
+  let res;
+  for (let i = 0; i < nodes.length; i++) {
+    if (nodes[i].name === name) {
+      res = i;
+    }
+  }
+  return res;
+}
 
 export default function FigFlow(props) {
   const [elements, setElements] = useState(props.elements);
   const [classes, setClasses] = useState(props.classes);
+  const [activeClass, setActiveClass] = useState("heading-2");
   const [addTodoItemInput, setAddTodoItemInput] = useState("");
   const [elementTypeInput, setElementTypeInput] = useState("div");
-
-  const css = `
-  .${props.classes[0].name} {
-    color: green !important;
-     }
-`;
-
-  //JSON.strigify(${props.classes[0].styles[0]}).replaceAll('"','');
+  const [css, setCss] = useState("");
 
   function handleAddingTodoItem(e) {
     e.preventDefault();
@@ -39,7 +48,10 @@ export default function FigFlow(props) {
         class: [{ name: addTodoItemInput }]
       };
 
+      let newClass = { name: addTodoItemInput, styles: [{font_size:"20px"}] };
+
       setElements([...elements, newTodoItem]);
+      setClasses([...classes, newClass]);
       setAddTodoItemInput("");
     } else {
       console.log("Empty input");
@@ -47,12 +59,26 @@ export default function FigFlow(props) {
   }
 
   function handleTaskStatusToggle(id) {
-    setElements(deleteNodeById(elements, id, "New text"));
+    setElements(deleteNodeById(elements, id));
   }
 
   function handleElementOnChange(text, id) {
     setElements(editNodeTitleById(elements, id, text));
   }
+
+  function handleUpdatingClassStyle(_activeClass,_style,_value) {
+    let tempClasses = classes;
+    let _newStyle = tempClasses[getIndexOfElement(tempClasses,activeClass)].styles[0].font_size;
+    _newStyle = _newStyle.replace('px','');
+    _newStyle = parseInt(_newStyle) + 1;
+    _newStyle = _newStyle.toString() + "px";
+    tempClasses[getIndexOfElement(tempClasses,activeClass)].styles[0].font_size = _newStyle;
+    setClasses(tempClasses);
+  }
+
+  useEffect(() => {
+    setCss(JSONtoCSS(classes));
+  }, [classes]);
 
   useEffect(() => {
     if (elements.length > 0) {
@@ -65,8 +91,7 @@ export default function FigFlow(props) {
     console.log("Start");
     axios
       .get(
-        "https://us-east-1.aws.data.mongodb-api.com/app/application-0-icorv/endpoint/" +
-          "items"
+        Constants.BASE_API + "items"
       )
       .then((res) => {
         setElements(res.data[0].items);
@@ -75,6 +100,8 @@ export default function FigFlow(props) {
 
   return (
     <div>
+      <style>{css}</style>
+
       <button className="saveButton" onClick={() => saveProject(elements)}>
         Save
       </button>
@@ -102,47 +129,60 @@ export default function FigFlow(props) {
 
         <button className="addTodoItemButton">Add</button>
       </form>
-      <SortableTree
-        canNodeHaveChildren={(node) => node.type === "div"}
-        onChange={(treeData) => setElements([...treeData])}
-        isVirtualized={false}
-        treeData={elements}
-        theme={FileExplorerTheme}
-        generateNodeProps={({ node, path }) => ({
-          title: (
-            <div>
-              <span className="typeSeparator">{node.type}</span>
-              {/* {node.title} */}
-              {/* <span>|</span> */}
-              {node.class[0].name}
-              <div
-                className="todoListItemDelete"
-                onClick={() => {
-                  handleTaskStatusToggle(node.id);
-                }}
-              >
-                x
+
+      <div className="projectWrapper">
+        <SortableTree
+          className="navigatorWrapper"
+          canNodeHaveChildren={(node) => node.type === "div"}
+          onChange={(treeData) => setElements([...treeData])}
+          isVirtualized={false}
+          treeData={elements}
+          theme={FileExplorerTheme}
+          
+          generateNodeProps={({ node, path }) => ({
+            title: (
+              <div>
+                <span className="typeSeparator">{node.type}</span>
+                <span onClick={() => setActiveClass(node.class[0].name)}>{node.class[0].name}</span>
+                
+                <div
+                  className="todoListItemDelete"
+                  
+                  onClick={() => {
+                    handleTaskStatusToggle(node.id);
+                  }}
+                >
+                  x
+                </div>
               </div>
-            </div>
-          )
-        })}
-      />
+            )
+          })}
+        />
+        <div className="Project">
+          {elements.map((el) => (
+            <Element
+              onChange={(text, id) => handleElementOnChange(text, id)}
+              type={el.type}
+              id={el.id}
+              key={el.id}
+              title={el.title}
+              children={el.children}
+              class={el.class}
+            />
+          ))}
+        </div>
 
-      <style>{css}</style>
+        <div className="styleWrapper">
 
-      <div className="Project">
-        {elements.map((el) => (
-          <Element
-            onChange={(text, id) => handleElementOnChange(text, id)}
-            type={el.type}
-            id={el.id}
-            key={el.id}
-            title={el.title}
-            children={el.children}
-            class={el.class}
-          />
-        ))}
+            {classes.map((el) => (
+              <div key={el.name} onClick={() => setActiveClass(el.name)} className={"classElement " + ((activeClass == el.name) ? "active" : "")} >{el.name}</div>
+            ))}
+
+          <div>font size</div>
+          <input onInput={(e) => handleUpdatingClassStyle(activeClass,"font_size",e.target.value)} value={classes[getIndexOfElement(classes,activeClass)].styles[0].font_size} name="styleFontSize" placeholder="font size" />
+        </div>
       </div>
+
     </div>
   );
 }

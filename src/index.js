@@ -7,7 +7,6 @@ import Expenses from "./routes/expenses";
 import Invoices from "./routes/invoices";
 
 import "./styles/styles.css";
-import "./styles/project-styles.css";
 import "./styles/nested.css";
 
 const rootElement = document.getElementById("root");

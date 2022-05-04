@@ -23,6 +23,7 @@ button {
   border: 0;
 }
 
+
 .App {
   font-family: sans-serif;
   text-align: center;
@@ -117,10 +118,50 @@ button {
   background-color: #ddd;
 }
 
+
+.Project {
+  border: 1px solid #aaa;
+  width: 600px;
+  height: 400px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+
 .Project p {
   letter-spacing: -0.05em;
 }
 
 .Project .Element:hover {
   outline: 1px solid blue;
+}
+
+.projectWrapper {
+  display: flex;
+  margin-top: 40px;
+}
+
+.navigatorWrapper {
+  padding-top: 20px;
+  width: 240px;
+  border: 1px solid #aaa;
+}
+
+.styleWrapper {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #aaa;
+}
+
+.classElement {
+  display: inline-block;
+  padding: 10px;
+  background: #eee;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.classElement.active {
+  background: #bbb;
 }
