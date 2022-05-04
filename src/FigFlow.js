@@ -15,7 +15,7 @@ FigFlow.defaultProps = {
   classes: [
     { name: "new-item", styles: [{ color: "green",  font_size: "0", padding: "20px", background: "#eee" }] },
     { name: "heading-1", styles: [{ color: "green",  font_size: "28px", margin_top: "0", margin_bottom: "0" }] },
-    { name: "heading-2", styles: [{ color: "blue",  font_size: "44px", margin_top: "0" }] },
+    { name: "heading-2", styles: [{ color: "blue",  font_size: "20px", margin_top: "0" }] },
   ]
 };
 
@@ -30,12 +30,24 @@ function getIndexOfElement(nodes, name) {
 }
 
 export default function FigFlow(props) {
+
+  // preRenderedHTMLNodes
   const [elements, setElements] = useState(props.elements);
+
+  // preRenderedStyles
   const [classes, setClasses] = useState(props.classes);
+
+
+  // postRenderedStyles
+  const [css, setCss] = useState("");
+
+  // 
   const [activeClass, setActiveClass] = useState("heading-2");
+
+
   const [addTodoItemInput, setAddTodoItemInput] = useState("");
   const [elementTypeInput, setElementTypeInput] = useState("div");
-  const [css, setCss] = useState("");
+  
 
   function handleAddingTodoItem(e) {
     e.preventDefault();
@@ -67,16 +79,24 @@ export default function FigFlow(props) {
   }
 
   function handleUpdatingClassStyle(_activeClass,_style,_value) {
+    
     let tempClasses = classes;
+
     let _newStyle = tempClasses[getIndexOfElement(tempClasses,activeClass)].styles[0].font_size;
+
     _newStyle = _newStyle.replace('px','');
     _newStyle = parseInt(_newStyle) + 1;
     _newStyle = _newStyle.toString() + "px";
+
     tempClasses[getIndexOfElement(tempClasses,activeClass)].styles[0].font_size = _newStyle;
-    setClasses(tempClasses);
+
+    console.log(tempClasses);
+
+    setClasses([...tempClasses]);
   }
 
   useEffect(() => {
+    console.log("parsing classes to css");
     setCss(JSONtoCSS(classes));
   }, [classes]);
 
@@ -98,6 +118,8 @@ export default function FigFlow(props) {
       });
   }, []);
 
+  console.log("classes");
+  console.log(classes);
   return (
     <div>
       <style>{css}</style>
@@ -168,6 +190,7 @@ export default function FigFlow(props) {
               title={el.title}
               children={el.children}
               class={el.class}
+              onClick={() => setActiveClass(el.class[0].name)}
             />
           ))}
         </div>
