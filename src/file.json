@@ -1,5 +1,0 @@
-[{"_id":{"$oid":"626cf0dda40201f8ef751364"},"items":[
-    {"id":"536670b8-a982-434a-852c-811695326659","title":"Default text","type":"div","children":[
-        {"id":"eb063109-4d86-4a65-876d-b4e110a813dc","title":"Default text here","type":"h","children":[],"class":[{"name":"heading-1"}]}],"class":[{"name":"new-item"}],"expanded":true},
-    {"id":"47a40107-2aa0-4beb-ae82-c87624bb2c67","title":"Nice","type":"h","children":[],"class":[{"name":"heading-2"}]},{"id":"7a0fc6db-92cb-4cd1-8128-6fc965b6e695","title":"Default text","type":"div","children":[],"class":[{"name":"new-heading"}]},
-    {"id":"9a22c6a6-3c82-4d74-875c-677deba07732","title":"Default text","type":"div","children":[],"class":[{"name":"hello"}]}],"project":"test"}]

@@ -1,9 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
+import {JSONtoCSS, getIndexOfElementInArrayByName} from "../utils/nodes-editing"
 
 const initialState = {
   preRenderedHTMLNodes: [],
   preRenderedStyles: [],
-  postRenderedStyles: ""
+  postRenderedStyles: "",
+  activeNodeId: "",
+  activeStyleName: "",
+  activeStyleIndex: 0,
 }
 
 export const preRenderedNodesSlice = createSlice({
@@ -75,36 +79,39 @@ export const preRenderedNodesSlice = createSlice({
         let activeClass = action.payload[0];
         let styleValue = action.payload[1];
 
-        function getIndexOfElement(nodes, name) {
-            let res;
-            for (let i = 0; i < nodes.length; i++) {
-              if (nodes[i].name === name) {
-                res = i;
-              }
-            }
-            return res;
-          }
-
-        tempPreRenderedStyles[getIndexOfElement(tempPreRenderedStyles,activeClass)].styles.font_size = styleValue;
+        tempPreRenderedStyles[getIndexOfElementInArrayByName(tempPreRenderedStyles,activeClass)].styles.font_size = styleValue;
         state.preRenderedStyles = tempPreRenderedStyles;
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles]);
     },
-  },
+
+    editStyleInPreRenderedStyles: (state, action) => {
+        let tempPreRenderedStyles = JSON.stringify(state.preRenderedStyles);
+        tempPreRenderedStyles = JSON.parse(tempPreRenderedStyles);
+        let styleProperty = action.payload[1];
+        let styleValue = action.payload[1];
+
+        tempPreRenderedStyles[state.activeStyleIndex].styles.font_size = styleValue;
+
+        state.preRenderedStyles = tempPreRenderedStyles;
+        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles]);
+    },
+
+    setActiveNodeAndStyle: (state, action) => {
+        state.activeNodeId = action.payload[0]
+        state.activeStyleName = action.payload[1]
+        state.activeStyleIndex = getIndexOfElementInArrayByName(state.preRenderedStyles, state.activeStyleName)
+    },
+
+    setActiveStyle: (state, action) => {
+        state.activeStyleName = action.payload
+        state.activeStyleIndex = getIndexOfElementInArrayByName(state.preRenderedStyles, state.activeStyleName)
+    },
+    // Add next reducers here
+  }
 })
 
-function JSONtoCSS (_classes) {
-    return JSON.stringify(_classes)
-    .replaceAll("_","-")
-    .replaceAll("[","")
-    .replaceAll("]","")
-    .replaceAll('"',"")
-    .replaceAll('{name:',".")
-    .replaceAll(',styles:',"")
-    .replaceAll("}},","}")
-    .replaceAll("}}","}")
-    .replaceAll(",",";");
-}
 
-export const {setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, addNodeToRenderedHTMLNodesAsLastElement, setPreRenderedStyles, editStyleByNameInPreRenderedStyles } = preRenderedNodesSlice.actions
+
+export const {setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, addNodeToRenderedHTMLNodesAsLastElement, setPreRenderedStyles, editStyleByNameInPreRenderedStyles, setActiveNodeAndStyle, setActiveStyle, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 
 export default preRenderedNodesSlice.reducer

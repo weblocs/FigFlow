@@ -1,11 +1,11 @@
 import React from "react";
 import ContentEditable from "react-contenteditable";
 
-function Element(props) {
+function RenderedNode(props) {
   let elementHTML = (
     <div className="Element" className={props.class[0].name}>
       {props.children.map((el) => (
-        <Element
+        <RenderedNode
           type={el.type}
           id={el.id}
           key={el.id}
@@ -13,7 +13,7 @@ function Element(props) {
           children={el.children}
           onChange={(text, id) => props.onChange(text, id)}
           class={el.class}
-          onClick={(className) => props.onClick(className)}
+          onClick={([nodeId,className]) => props.onClick([nodeId,className])}
         />
       ))}
     </div>
@@ -25,7 +25,7 @@ function Element(props) {
         className={props.class[0].name}
         el_id={props.id}
         tagName="h2"
-        onClick={() => props.onClick(props.class[0].name)}
+        onClick={() => props.onClick([props.id, props.class[0].name])}
         html={props.title} // innerHTML of the editable div
         disabled={false} // use true to disable edition
         onChange={(e) => props.onChange(e.target.value, props.id)} // handle innerHTML change
@@ -57,4 +57,4 @@ function Element(props) {
   return elementHTML;
 }
 
-export default Element;
+export default RenderedNode;

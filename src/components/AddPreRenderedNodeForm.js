@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import {addNodeToRenderedHTMLNodesAsLastElement} from "../features/pre-rendered-html-nodes"
 import { v4 as uuidv4 } from "uuid";
 
-export default function AddHtmlNode() {
+export default function AddPreRenderedNodeForm() {
 
     const [addTodoItemInput, setAddTodoItemInput] = useState("");
     const [elementTypeInput, setElementTypeInput] = useState("div");
