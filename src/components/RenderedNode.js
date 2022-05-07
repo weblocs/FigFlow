@@ -1,9 +1,39 @@
 import React from "react";
 import ContentEditable from "react-contenteditable";
 
+import {useSelector, useDispatch} from "react-redux";
+import {setHoveredNodeId} from "../features/pre-rendered-html-nodes"
+
 function RenderedNode(props) {
+
+  const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
+  const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId);
+
+  function handleOnClick(e) {
+    e.stopPropagation();
+    props.onClick([props.id, props?.class[0]?.name]);
+    
+  }
+
+  function handleMouseOver(e) {
+    e.stopPropagation();
+    dispatch(setHoveredNodeId(props.id));
+  }
+
+  function handleMouseOut(e) {
+    e.stopPropagation();
+    dispatch(setHoveredNodeId(""));
+  }
+
+  const dispatch = useDispatch()
+  
   let elementHTML = (
-    <div className="Element" className={props.class[0].name}>
+    <div 
+    onClick={handleOnClick}
+    onMouseOver={handleMouseOver}
+    onMouseOut={handleMouseOut}
+    className={(props.class.map((cl) => ( cl.name  ))).toString().replace(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+        >
       {props.children.map((el) => (
         <RenderedNode
           type={el.type}
@@ -22,10 +52,13 @@ function RenderedNode(props) {
   if (props.type === "h") {
     elementHTML = (
       <ContentEditable
-        className={props.class[0].name}
+        onClick={handleOnClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        className={(props.class.map((cl) => ( cl.name  ))).toString().replace(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
         el_id={props.id}
         tagName="h2"
-        onClick={() => props.onClick([props.id, props.class[0].name])}
+        
         html={props.title} // innerHTML of the editable div
         disabled={false} // use true to disable edition
         onChange={(e) => props.onChange(e.target.value, props.id)} // handle innerHTML change
@@ -36,9 +69,12 @@ function RenderedNode(props) {
   if (props.type === "p") {
     elementHTML = (
       <ContentEditable
-        className={props.class[0].name}
+        className={(props.class.map((cl) => ( cl.name  ))).toString().replace(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
         el_id={props.id}
         tagName="p"
+        onClick={handleOnClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
         html={props.title} // innerHTML of the editable div
         disabled={false} // use true to disable edition
         onChange={(e) => props.onChange(e.target.value, props.id)} // handle innerHTML change

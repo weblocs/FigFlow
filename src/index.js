@@ -9,7 +9,6 @@ import { store } from './app/store'
 import { Provider } from 'react-redux'
 
 import "./styles/styles.css";
-import "./styles/nested.css";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);

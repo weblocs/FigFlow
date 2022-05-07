@@ -1,9 +1,12 @@
 import axios from "axios";
 import Constants from "./const.js";
 
-export default function saveProject(items,preRenderedStyles) {
+import { useEffect } from "react";
+import { useDispatch } from 'react-redux'
 
-  
+import { setPreRenderedHTMLNodes, setPreRenderedStyles } from '../features/pre-rendered-html-nodes'
+
+export default function saveProject(items,preRenderedStyles) {
   axios
     .put(
       Constants.BASE_API + "update",
@@ -16,17 +19,22 @@ export default function saveProject(items,preRenderedStyles) {
     )
     .then((res) => {
       console.log("Saved");
-      console.log(preRenderedStyles);
     });
 }
 
 // return new Promise
 // async/await
 
-export function loadProjectStructure() {
-  let response;
-  axios.get(Constants.BASE_API + "items").then((res) => {
-    response = res.data[0].items;
-    return response;
-  });
+export function loadProjectPreRenderedNodesAndStyles() {
+  const dispatch = useDispatch()
+  useEffect(() => {
+  axios
+      .get(
+        Constants.BASE_API + "items"
+      )
+      .then((res) => {
+        dispatch(setPreRenderedHTMLNodes([...res.data[0].items]));
+        dispatch(setPreRenderedStyles([...res.data[0].preRenderedStyles]));        
+      });
+  }, []);
 }

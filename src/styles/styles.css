@@ -125,6 +125,7 @@ button {
   height: 400px;
   margin-left: 40px;
   margin-right: 40px;
+  overflow-y: scroll;
 }
 
 
@@ -162,6 +163,74 @@ button {
   cursor: pointer;
 }
 
+.classElement.small {
+  padding: 3px;
+  font-size:12px;
+}
+
 .classElement.active {
   background: #bbb;
+}
+
+.panelStyleEditor {
+  display: none;
+}
+
+
+.panelStyleEditor.show {
+  display: block;
+}
+
+.setShowEditorToggle {
+  font-size:10px; 
+  position: relative; 
+  bottom: 1px; 
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.selectStyleInPanelWrapper {
+  margin-bottom: 24px;
+}
+
+.navigatorElement {
+
+}
+
+.navigatorElement.hovered {
+  background: #eee;
+}
+
+.navigatorElement.active {
+  background: #ccc;
+}
+
+.panelStyleEditorWrapper {
+  opacity: .3;
+}
+
+.panelStyleEditorWrapper.active {
+  opacity:1;
+}
+
+.renderedNode {
+  outline-offset: -1px;
+}
+
+.renderedNode.hovered {
+  outline: 1px solid #8181e1;
+}
+
+.renderedNode.active {
+  outline: 1px solid blue;
+}
+
+
+
+:focus-visible {
+  outline: 0;
+}
+
+.rstcustom__rowWrapper:hover {
+  opacity: 1;
 }

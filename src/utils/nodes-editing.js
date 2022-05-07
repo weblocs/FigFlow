@@ -6,9 +6,16 @@ export function getIndexOfElementInArrayByName(nodes, name) {
       }
     }
     return res;
-  }
+}
 
 export function JSONtoCSS (_classes) {
+
+    // Deleting Id property from preRenderedStyles
+    _classes.map((_class, i) => (
+      delete _classes[i].id
+    ));
+    
+    // Converting preRenderedStyles (JSON) into renderedStyles (CSS)
     return JSON.stringify(_classes)
     .replaceAll("_","-")
     .replaceAll("[","")

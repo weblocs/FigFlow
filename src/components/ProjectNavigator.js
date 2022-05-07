@@ -5,11 +5,19 @@ import { useSelector, useDispatch } from 'react-redux'
 import FileExplorerTheme from "react-sortable-tree-theme-file-explorer";
 import SortableTree from "react-sortable-tree";
 
-import {setPreRenderedHTMLNodes, setActiveNodeAndStyle, deleteNodeByIdInPreRenderedHTMLNodes} from "../features/pre-rendered-html-nodes"
+import {setPreRenderedHTMLNodes,setActiveNodeId, setActiveNodeAndStyle, deleteNodeByIdInPreRenderedHTMLNodes, setHoveredNodeId} from "../features/pre-rendered-html-nodes"
 
 export default function ProjectNavigator() {
 
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
+    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId)
+
+    function handleNavigatorNodeOnClick (_id,_styleName) {
+        dispatch(setActiveNodeAndStyle([_id,_styleName]));
+    }
+
+    
 
     const dispatch = useDispatch()
     
@@ -25,9 +33,17 @@ export default function ProjectNavigator() {
           
           generateNodeProps={({ node, path }) => ({
             title: (
-              <div>
-                <span className="typeSeparator">{node.type}</span>
-                <span onClick={() => dispatch(setActiveNodeAndStyle([node.id,node.class[0].name]))}>{node.class[0].name}</span>
+              <div 
+              onMouseOver={() => dispatch(setHoveredNodeId(node.id))}
+              onMouseOut={() => dispatch(setHoveredNodeId(""))}
+
+              className={"navigatorElement " + ((node.id == activeNodeId) ? "active " : " ") + ((node.id == hoveredNodeId) ? "hovered " : " ")} >
+                <span className="typeSeparator">
+                  {node.type}
+                </span>
+                <span onClick={() => handleNavigatorNodeOnClick(node.id,node?.class[0]?.name)}>
+                  {(node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type}
+                </span>
                 
                 <div
                   className="todoListItemDelete"

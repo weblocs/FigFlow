@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch } from 'react-redux'
-import {addNodeToRenderedHTMLNodesAsLastElement} from "../features/pre-rendered-html-nodes"
+import {addNodeToRenderedHTMLNodesAsLastElement, addNodeToRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
 import { v4 as uuidv4 } from "uuid";
 
 export default function AddPreRenderedNodeForm() {
@@ -18,10 +18,10 @@ export default function AddPreRenderedNodeForm() {
             title: "Default text",
             type: elementTypeInput,
             children: [],
-            class: [{ name: addTodoItemInput }]
+            class: []
           };
     
-          dispatch(addNodeToRenderedHTMLNodesAsLastElement(newTodoItem));
+          dispatch(addNodeToRenderedHTMLNodesAfterActiveNode(newTodoItem));
           
           setAddTodoItemInput("");
         } else {
@@ -34,7 +34,7 @@ export default function AddPreRenderedNodeForm() {
         <input
           name="addTodoItemTitle"
           className="addTodoItemInput"
-          placeholder="Class Name"
+          placeholder="Node Title"
           value={addTodoItemInput}
           onInput={(e) => setAddTodoItemInput(e.target.value)}
         />
