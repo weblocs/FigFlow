@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {JSONtoCSS, getIndexOfElementInArrayByName} from "../utils/nodes-editing"
+import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
   preRenderedHTMLNodes: [],
@@ -18,9 +19,6 @@ export const preRenderedNodesSlice = createSlice({
   reducers: {
     setPreRenderedHTMLNodes: (state, action) => {
         state.preRenderedHTMLNodes = action.payload
-    },
-    addNodeToRenderedHTMLNodesAsLastElement: (state, action) => {
-        state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, action.payload]
     },
 
     addNodeToRenderedHTMLNodesAfterActiveNode: (state, action) => {
@@ -45,7 +43,13 @@ export const preRenderedNodesSlice = createSlice({
             }
         }
         findNode(state.preRenderedHTMLNodes, activeNodeId);
-        state.preRenderedHTMLNodes = response;
+        
+        if(state.activeNodeId !== "") {
+            state.preRenderedHTMLNodes = response;
+        } else {
+            // add newNode as last element if activeNode is not selected
+            state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
+        }  
     },
 
     editTextByIdInPreRenderedHTMLNode: (state,action) => {
@@ -144,7 +148,6 @@ export const preRenderedNodesSlice = createSlice({
             for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id) {
                 response = nodes[i].class;
-                console.log(nodes[i].class)
                 break;
             }
             if (nodes[i].children) {
@@ -168,16 +171,30 @@ export const preRenderedNodesSlice = createSlice({
         let response = [];
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
         let nodeId = state.activeNodeId;
-        let newStyleToConnectWithNode = {name: action.payload};
+        let styleName = action.payload;
+        let isItNewStyle = true;
+
+        state.preRenderedStyles.map((style) => {
+            if(style.name === styleName) {
+                isItNewStyle = false;
+            }
+        });
+
+        let newStyleToConnectWithNodes = { name: styleName, id: uuidv4() };
+        let newStyleToConnectWithStyles = { name: styleName, id: uuidv4(), styles: [] };
+
+        if(isItNewStyle) {
+            state.preRenderedStyles = [...state.preRenderedStyles, newStyleToConnectWithStyles];
+        }
 
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id) {
                 tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
                 JSON.stringify(nodes[i]),
-                JSON.stringify(nodes[i]).replace(JSON.stringify(nodes[i].class), JSON.stringify([...nodes[i].class, newStyleToConnectWithNode]))
+                JSON.stringify(nodes[i]).replace('"class":' + JSON.stringify(nodes[i].class), '"class":' +  JSON.stringify([...nodes[i].class, newStyleToConnectWithNodes]))
                 );
-                response = [[...nodes[i].class, newStyleToConnectWithNode], JSON.parse(tempPreRenderedHTMLNodes)];
+                response = [[...nodes[i].class, newStyleToConnectWithNodes], JSON.parse(tempPreRenderedHTMLNodes)];
                 break;
             }
             if (nodes[i].children) {
@@ -188,6 +205,8 @@ export const preRenderedNodesSlice = createSlice({
         findNode(state.preRenderedHTMLNodes, nodeId);
         state.stylesInActiveNode = response[0];
         state.preRenderedHTMLNodes = response[1];
+
+        
     },
 
     setHoveredNodeId: (state,action) => {
@@ -199,6 +218,6 @@ export const preRenderedNodesSlice = createSlice({
 
 
 
-export const {setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, addNodeToRenderedHTMLNodesAsLastElement, setPreRenderedStyles, editStyleByNameInPreRenderedStyles, setActiveNodeAndStyle, setActiveStyle, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, editStyleByNameInPreRenderedStyles, setActiveNodeAndStyle, setActiveStyle, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 
 export default preRenderedNodesSlice.reducer

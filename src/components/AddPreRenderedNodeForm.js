@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { useDispatch } from 'react-redux'
-import {addNodeToRenderedHTMLNodesAsLastElement, addNodeToRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
+import {addNodeToRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
 import { v4 as uuidv4 } from "uuid";
 
 export default function AddPreRenderedNodeForm() {
 
-    const [addTodoItemInput, setAddTodoItemInput] = useState("");
     const [elementTypeInput, setElementTypeInput] = useState("div");
 
     const dispatch = useDispatch()
 
     function handleAddingTodoItem(e) {
         e.preventDefault();
-        if (addTodoItemInput.length > 0) {
+        
           let newTodoItem = {
             id: uuidv4(),
             title: "Default text",
@@ -23,21 +22,11 @@ export default function AddPreRenderedNodeForm() {
     
           dispatch(addNodeToRenderedHTMLNodesAfterActiveNode(newTodoItem));
           
-          setAddTodoItemInput("");
-        } else {
-          console.log("Empty input");
-        }
       }
 
     return (
         <form onSubmit={handleAddingTodoItem} className="addTodoItemForm">
-        <input
-          name="addTodoItemTitle"
-          className="addTodoItemInput"
-          placeholder="Node Title"
-          value={addTodoItemInput}
-          onInput={(e) => setAddTodoItemInput(e.target.value)}
-        />
+        
         <select
           name="type"
           value={elementTypeInput}
