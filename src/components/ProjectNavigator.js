@@ -17,11 +17,8 @@ export default function ProjectNavigator() {
         dispatch(setActiveNodeAndStyle([_id,_styleName]));
     }
 
-    
-
     const dispatch = useDispatch()
     
-
     return (
         <SortableTree
           className="navigatorWrapper"
