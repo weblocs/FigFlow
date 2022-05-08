@@ -2,9 +2,10 @@
 
 body {
   padding: 0;
-  margin: 10px;
+  margin: 0;
   font-family: Inter;
 }
+
 h1,
 h2,
 h3 {
@@ -233,4 +234,32 @@ button {
 
 .rstcustom__rowWrapper:hover {
   opacity: 1;
+}
+
+.rstcustom__collapseButton::after, .rstcustom__expandButton::after {
+  content: '';
+  position: absolute;
+  -webkit-transform-origin: 7px 4px;
+  -ms-transform-origin: 7px 4px;
+  transform-origin: 3px 1px;
+  -webkit-transform: translate3d(-50%, -20%, 0);
+  transform: translate3d(-0%, -40%, 0px);
+  border: solid transparent 4px;
+  border-left-width: 3px;
+  border-right-width: 3px;
+  border-top-color: gray;
+}
+
+.rstcustom__expandButton::after {
+  -webkit-transform: translate3d(-0%, -40%, 0px) rotateZ(-90deg);
+  transform: translate3d(-0%, -40%, 0px) rotateZ(-90deg);
+}
+
+.rstcustom__collapseButton:focus::after, .rstcustom__expandButton:focus::after {
+  -webkit-filter: none;
+  filter: none;
+}
+
+.rstcustom__lineBlock {
+  /* width: 16px !important; */
 }

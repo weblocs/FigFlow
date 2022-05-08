@@ -25,7 +25,14 @@ export const preRenderedNodesSlice = createSlice({
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
         let activeNodeId = state.activeNodeId;
-        let newNode = action.payload;
+
+        let newNode = {
+            id: uuidv4(),
+            title: "Default text",
+            type: action.payload,
+            children: [],
+            class: []
+        };
 
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
