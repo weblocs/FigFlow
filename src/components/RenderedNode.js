@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import ContentEditable from "react-contenteditable";
 
 import {useSelector, useDispatch} from "react-redux";
@@ -6,13 +6,19 @@ import {setHoveredNodeId} from "../features/pre-rendered-html-nodes"
 
 function RenderedNode(props) {
 
+  const [editable,setEditable] = useState(false);
+
   const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
   const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId);
+
+  function handleDoubleClick(e) {
+    e.stopPropagation();
+    setEditable(true);
+  }
 
   function handleOnClick(e) {
     e.stopPropagation();
     props.onClick([props.id, props?.class[0]?.name]);
-    
   }
 
   function handleMouseOver(e) {
@@ -53,14 +59,14 @@ function RenderedNode(props) {
     elementHTML = (
       <ContentEditable
         onClick={handleOnClick}
+        onDoubleClick={handleDoubleClick}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
         className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
         el_id={props.id}
         tagName="h2"
-        
         html={props.title} // innerHTML of the editable div
-        disabled={false} // use true to disable edition
+        disabled={!editable} // use true to disable edition
         onChange={(e) => props.onChange(e.target.value, props.id)} // handle innerHTML change
       />
     );
@@ -73,10 +79,11 @@ function RenderedNode(props) {
         el_id={props.id}
         tagName="p"
         onClick={handleOnClick}
+        onDoubleClick={handleDoubleClick}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
         html={props.title} // innerHTML of the editable div
-        disabled={false} // use true to disable edition
+        disabled={!editable} // use true to disable edition
         onChange={(e) => props.onChange(e.target.value, props.id)} // handle innerHTML change
       />
     );

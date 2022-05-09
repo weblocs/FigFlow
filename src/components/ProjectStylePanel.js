@@ -9,6 +9,7 @@ export default function ProjectRenderedDesign() {
 
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const activeStyleName = useSelector((state) => state.designerProjectState.activeStyleName)
+    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
 
     const [styleConnectorInput, setStyleConnectorInput] = useState("");
@@ -31,7 +32,7 @@ export default function ProjectRenderedDesign() {
               </div>
             
             {stylesInActiveNode.map((el) => (
-              <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"classElement " + ((activeStyleName == el.name) ? "active" : "")} >{el.name} </div>
+              <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"classElement " + ((activeStyleId == el.id) ? "active" : "")} >{el.name} </div>
             ))}
 
             </div>      

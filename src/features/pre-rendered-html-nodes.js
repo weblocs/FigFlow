@@ -145,12 +145,7 @@ export const preRenderedNodesSlice = createSlice({
     setActiveNodeAndStyle: (state, action) => {
         state.activeNodeId = action.payload.id;
         [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
-        
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
-
-        console.log(JSON.parse(JSON.stringify(state.preRenderedHTMLNodes)));
-        console.log(JSON.parse(JSON.stringify(state.preRenderedStyles)));
-        console.log(JSON.parse(JSON.stringify(state.activeStyleIndex)));
     },
 
     setActiveStyleId: (state, action) => {
