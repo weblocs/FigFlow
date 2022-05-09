@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import FileExplorerTheme from "react-sortable-tree-theme-file-explorer";
 import SortableTree from "react-sortable-tree";
 
-import {setPreRenderedHTMLNodes,setActiveNodeId, setActiveNodeAndStyle, deleteNodeByIdInPreRenderedHTMLNodes, setHoveredNodeId} from "../features/pre-rendered-html-nodes"
+import {setPreRenderedHTMLNodes, setActiveNodeAndStyle, deleteNodeByIdInPreRenderedHTMLNodes, setHoveredNodeId} from "../features/pre-rendered-html-nodes"
 
 export default function ProjectNavigator() {
 

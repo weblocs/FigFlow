@@ -10,13 +10,24 @@ export function getIndexOfElementInArrayByName(nodes, name) {
 
 export function JSONtoCSS (_classes) {
 
-    // Deleting Id property from preRenderedStyles
-    _classes.map((_class, i) => (
-      delete _classes[i].id
-    ));
+
+    let tempClasses = [];
+    let tempName = "";
+    
+    _classes.forEach(createTempClasses);
+
+    function createTempClasses(_class, i) {
+      tempName = _classes[i].name;
+      if( _classes[i].parents.length == 1) { tempName = _classes[i].parents[0].name + "." + _classes[i].name };
+      tempClasses.push({name:tempName, styles: _classes[i].styles});
+    };
+
+
+
+    console.log(tempClasses);
     
     // Converting preRenderedStyles (JSON) into renderedStyles (CSS)
-    return JSON.stringify(_classes)
+    return JSON.stringify(tempClasses)
     .replaceAll("_","-")
     .replaceAll("[","")
     .replaceAll("]","")

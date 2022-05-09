@@ -32,7 +32,7 @@ function RenderedNode(props) {
     onClick={handleOnClick}
     onMouseOver={handleMouseOver}
     onMouseOut={handleMouseOut}
-    className={(props.class.map((cl) => ( cl.name  ))).toString().replace(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+    className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
         >
       {props.children.map((el) => (
         <RenderedNode
@@ -55,7 +55,7 @@ function RenderedNode(props) {
         onClick={handleOnClick}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
-        className={(props.class.map((cl) => ( cl.name  ))).toString().replace(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+        className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
         el_id={props.id}
         tagName="h2"
         
@@ -69,7 +69,7 @@ function RenderedNode(props) {
   if (props.type === "p") {
     elementHTML = (
       <ContentEditable
-        className={(props.class.map((cl) => ( cl.name  ))).toString().replace(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+        className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
         el_id={props.id}
         tagName="p"
         onClick={handleOnClick}

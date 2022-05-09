@@ -25,9 +25,10 @@ export const preRenderedNodesSlice = createSlice({
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
         let activeNodeId = state.activeNodeId;
+        let newNodeId = uuidv4();
 
         let newNode = {
-            id: uuidv4(),
+            id: newNodeId,
             title: "Default text",
             type: action.payload,
             children: [],
@@ -57,6 +58,7 @@ export const preRenderedNodesSlice = createSlice({
             // add newNode as last element if activeNode is not selected
             state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
         }  
+        state.activeNodeId = newNodeId;
     },
 
     editTextByIdInPreRenderedHTMLNode: (state,action) => {
@@ -108,6 +110,7 @@ export const preRenderedNodesSlice = createSlice({
         state.preRenderedHTMLNodes = response;
     },
 
+    // not used (was using in first basic add style form)(missing style id)
     addPreRenderedStyle: (state, action) => {
         let newStyle = {name: action.payload, styles: {}};
         state.preRenderedStyles = [...state.preRenderedStyles, newStyle];
@@ -140,7 +143,9 @@ export const preRenderedNodesSlice = createSlice({
         tempPreRenderedStyles[state.activeStyleIndex].styles [styleProperty] = styleValue;
 
         state.preRenderedStyles = tempPreRenderedStyles;
-        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles]);
+        state.postRenderedStyles = JSONtoCSS([...tempPreRenderedStyles]);
+
+        console.log(state.preRenderedStyles);
     },
 
     setActiveNodeAndStyle: (state, action) => {
@@ -181,14 +186,28 @@ export const preRenderedNodesSlice = createSlice({
         let styleName = action.payload;
         let isItNewStyle = true;
 
+        let newStyleId = uuidv4();
+
         state.preRenderedStyles.map((style) => {
+           
+            
             if(style.name === styleName) {
-                isItNewStyle = false;
+
+                // [to work on] For classes with parents we have different id values in styles and nodes
+
+                console.log(JSON.stringify(style.parents));
+                console.log(JSON.stringify(state.stylesInActiveNode));
+
+                if(JSON.stringify(style.parents) === JSON.stringify(state.stylesInActiveNode)) {
+                    console.log("hop");
+                    isItNewStyle = false;
+                }
             }
         });
 
-        let newStyleToConnectWithNodes = { name: styleName, id: uuidv4() };
-        let newStyleToConnectWithStyles = { name: styleName, id: uuidv4(), styles: [] };
+        let newStyleToConnectWithNodes = { name: styleName, id: newStyleId };
+        let newStyleToConnectWithStyles = { name: styleName, id: newStyleId, styles: {}, parents: state.stylesInActiveNode };
+
 
         if(isItNewStyle) {
             state.preRenderedStyles = [...state.preRenderedStyles, newStyleToConnectWithStyles];
@@ -218,13 +237,58 @@ export const preRenderedNodesSlice = createSlice({
 
     setHoveredNodeId: (state,action) => {
         state.hoveredNodeId = action.payload;
-    }
+    },
+
+    arrowActiveNodeNavigation: (state,action) => {
+        let response = state.activeNodeId;
+        let pressedKey = action.payload.key;
+        let parentNodes = [];
+        let initailNodes = state.preRenderedHTMLNodes;
+
+        function findNode(nodes, id) {
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].id === id) {
+                    if(pressedKey == "left") {
+                        if(i != 0) {
+                            response = nodes[i-1].id;
+                        }
+                    }
+                    if(pressedKey == "right") {
+                        if(i != (nodes.length - 1)) {
+                            response = nodes[i+1].id;
+                        }
+                    }
+
+                    if(pressedKey == "up") {
+                        if(initailNodes !== nodes) {
+                            response = parentNodes.id;
+                        }
+                    }
+
+                    if(pressedKey == "down") {
+                        if(nodes[i].children.length > 0) {
+                            response = nodes[i].children[0].id;
+                        }
+                    }
+                    break;
+                }
+                if (nodes[i].children) {
+                    if(nodes[i].children.length > 0) {
+                        parentNodes = nodes[i];
+                    }
+                    findNode(nodes[i].children, id);
+                }
+            }
+        }
+        findNode(state.preRenderedHTMLNodes, state.activeNodeId); 
+        state.activeNodeId = response;
+    },
     // Add next reducers here
   }
 })
 
 
 
-export const {setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, editStyleByNameInPreRenderedStyles, setActiveNodeAndStyle, setActiveStyle, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, editStyleByNameInPreRenderedStyles, setActiveNodeAndStyle, setActiveStyle, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 
 export default preRenderedNodesSlice.reducer

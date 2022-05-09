@@ -5,13 +5,19 @@ import ProjectRenderedDesign from "./components/ProjectRenderedDesign"
 import ProjectStylePanel from "./components/ProjectStylePanel"
 import SaveButton from "./components/atoms/SaveButton"
 import {loadProjectPreRenderedNodesAndStyles} from "./utils/save-load-project"
+import loadShortcuts from "./utils/shortcuts"
+
+
+
 
 export default function FigFlow() {
 
-  loadProjectPreRenderedNodesAndStyles()
+  loadProjectPreRenderedNodesAndStyles();
+  loadShortcuts();
 
   return (
     <>
+      <div onKeyDown={() => console.log("30")} tabIndex="-1" ></div>
       <SaveButton />
       <AddPreRenderedNodeForm />
     
