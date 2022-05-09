@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import { useSelector, useDispatch } from 'react-redux'
 
-import {setActiveStyle, connectStyleWithNode} from "../features/pre-rendered-html-nodes"
+import {connectStyleWithNode} from "../features/pre-rendered-html-nodes"
 
 import ProjectStylePropertyEditor from "./atoms/ProjectStylePropertyEditor"
 
@@ -31,13 +31,13 @@ export default function ProjectRenderedDesign() {
               </div>
             
             {stylesInActiveNode.map((el) => (
-              <div key={el.name} onClick={() => dispatch(setActiveStyle(el.name))} className={"classElement " + ((activeStyleName == el.name) ? "active" : "")} >{el.name} </div>
+              <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"classElement " + ((activeStyleName == el.name) ? "active" : "")} >{el.name} </div>
             ))}
 
             </div>      
 
             {/* {preRenderedStyles.map((el) => (
-              <div key={el.name} onClick={() => dispatch(setActiveStyle(el.name))} className={"classElement small " + ((activeStyleName == el.name) ? "active" : "")} >{el.name}</div>
+              <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"classElement small " + ((activeStyleName == el.name) ? "active" : "")} >{el.name}</div>
             ))} */}
 
 

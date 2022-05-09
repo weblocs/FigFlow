@@ -1,11 +1,11 @@
-export function getIndexOfElementInArrayByName(nodes, name) {
-    let res;
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].name === name) {
-        res = i;
-      }
+export function getIndexOfElementInArrayById(styleNodes, id) {
+  let res;
+  for (let i = 0; i < styleNodes.length; i++) {
+    if (styleNodes[i].id === id) {
+      res = i;
     }
-    return res;
+  }
+  return res;
 }
 
 export function JSONtoCSS (_classes) {
@@ -64,6 +64,7 @@ export function setStylesInActiveNodeAndActiveStyle(nodes, id) {
     if (nodes[i].id === id) {
         response[0] = nodes[i]?.class;
         response[1] = nodes[i]?.class[nodes[i].class.length - 1]?.name;
+        response[2] = nodes[i]?.class[nodes[i].class.length - 1]?.id;
         break;
     }
     if (nodes[i].children) {
