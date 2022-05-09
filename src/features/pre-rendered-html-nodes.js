@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import {JSONtoCSS, getIndexOfElementInArrayByName, setStylesInActiveNode, setStylesInActiveNodeAndActiveStyle} from "../utils/nodes-editing"
+import {JSONtoCSS, getIndexOfElementInArrayById, setStylesInActiveNodeAndActiveStyle} from "../utils/nodes-editing"
 import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
@@ -9,7 +9,7 @@ const initialState = {
   activeNodeId: "",
   hoveredNodeId: "",
 
-
+  activeStyleId: "",
   activeStyleName: "",
   activeStyleIndex: 0,
   stylesInActiveNode: []
@@ -128,17 +128,6 @@ export const preRenderedNodesSlice = createSlice({
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles]);
     },
 
-    editStyleByNameInPreRenderedStyles: (state, action) => {
-        let tempPreRenderedStyles = JSON.stringify(state.preRenderedStyles);
-        tempPreRenderedStyles = JSON.parse(tempPreRenderedStyles);
-        let activeClass = action.payload[0];
-        let styleValue = action.payload[1];
-
-        tempPreRenderedStyles[getIndexOfElementInArrayByName(tempPreRenderedStyles,activeClass)].styles.font_size = styleValue;
-        state.preRenderedStyles = tempPreRenderedStyles;
-        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles]);
-    },
-
     editStyleInPreRenderedStyles: (state, action) => {
         let tempPreRenderedStyles = JSON.stringify(state.preRenderedStyles);
         tempPreRenderedStyles = JSON.parse(tempPreRenderedStyles);
@@ -151,19 +140,22 @@ export const preRenderedNodesSlice = createSlice({
 
         state.preRenderedStyles = tempPreRenderedStyles;
         state.postRenderedStyles = JSONtoCSS([...tempPreRenderedStyles]);
-
-        console.log(state.preRenderedStyles);
     },
 
     setActiveNodeAndStyle: (state, action) => {
         state.activeNodeId = action.payload.id;
-        [state.stylesInActiveNode, state.activeStyleName] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
-        state.activeStyleIndex = getIndexOfElementInArrayByName(state.preRenderedStyles,state.activeStyleName);
+        [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
+        
+        state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
+
+        console.log(JSON.parse(JSON.stringify(state.preRenderedHTMLNodes)));
+        console.log(JSON.parse(JSON.stringify(state.preRenderedStyles)));
+        console.log(JSON.parse(JSON.stringify(state.activeStyleIndex)));
     },
 
-    setActiveStyle: (state, action) => {
-        state.activeStyleName = action.payload
-        state.activeStyleIndex = getIndexOfElementInArrayByName(state.preRenderedStyles, state.activeStyleName)
+    setActiveStyleId: (state, action) => {
+        state.activeStyleId = action.payload;
+        state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
     },
 
     connectStyleWithNode: (state, action) => {
@@ -220,7 +212,8 @@ export const preRenderedNodesSlice = createSlice({
         state.stylesInActiveNode = response[0];
         state.preRenderedHTMLNodes = response[1];
         state.activeStyleName = styleName;
-        state.activeStyleIndex = getIndexOfElementInArrayByName(state.preRenderedStyles, state.activeStyleName);
+        state.activeStyleId = newStyleId;
+        state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
         
     },
 
@@ -271,8 +264,8 @@ export const preRenderedNodesSlice = createSlice({
         }
         findNode(state.preRenderedHTMLNodes, state.activeNodeId); 
         state.activeNodeId = response;
-        [state.stylesInActiveNode, state.activeStyleName] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
-        state.activeStyleIndex = getIndexOfElementInArrayByName(state.preRenderedStyles,state.activeStyleName);
+        [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
+        state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
 
         
     },
@@ -282,6 +275,6 @@ export const preRenderedNodesSlice = createSlice({
 
 
 
-export const {arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, editStyleByNameInPreRenderedStyles, setActiveNodeAndStyle, setActiveStyle, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 
 export default preRenderedNodesSlice.reducer

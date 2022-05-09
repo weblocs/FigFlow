@@ -11,7 +11,6 @@ export default function ProjectStylePropertyEditor(props) {
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
 
     let activeStyleClass = "panelStyleEditorWrapper";
-
     (preRenderedStyles[activeStyleIndex]?.styles [props.name.replace(" ","_")] !== undefined) && (activeStyleClass = "panelStyleEditorWrapper active")
 
     const dispatch = useDispatch()
