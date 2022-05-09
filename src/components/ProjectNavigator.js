@@ -14,7 +14,7 @@ export default function ProjectNavigator() {
     const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId)
 
     function handleNavigatorNodeOnClick (_id,_styleName) {
-        dispatch(setActiveNodeAndStyle([_id,_styleName]));
+        dispatch(setActiveNodeAndStyle({id: _id}));
     }
 
     const dispatch = useDispatch()
@@ -38,7 +38,7 @@ export default function ProjectNavigator() {
                 <span className="typeSeparator">
                   {node.type}
                 </span>
-                <span onClick={() => handleNavigatorNodeOnClick(node.id,node?.class[0]?.name)}>
+                <span onClick={() => dispatch(setActiveNodeAndStyle({id: node.id}))}>
                   {(node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type}
                 </span>
                 

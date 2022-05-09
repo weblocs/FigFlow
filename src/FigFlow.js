@@ -8,8 +8,6 @@ import {loadProjectPreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
 
 
-
-
 export default function FigFlow() {
 
   loadProjectPreRenderedNodesAndStyles();

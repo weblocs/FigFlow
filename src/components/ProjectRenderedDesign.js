@@ -25,7 +25,7 @@ export default function ProjectRenderedDesign() {
                 title={el.title}
                 children={el.children}
                 class={el.class}
-                onClick={([nodeId,className]) => dispatch(setActiveNodeAndStyle([nodeId, className]))}
+                onClick={([_id,className]) => dispatch(setActiveNodeAndStyle({id: _id}))}
             />
             ))}
         </div>
