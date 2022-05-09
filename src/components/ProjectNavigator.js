@@ -21,6 +21,7 @@ export default function ProjectNavigator() {
     
     return (
         <SortableTree
+          scaffoldBlockPxWidth={15}
           className="navigatorWrapper"
           canNodeHaveChildren={(node) => node.type === "div"}
           onChange={(treeData) => dispatch(setPreRenderedHTMLNodes([...treeData]))}
@@ -43,7 +44,7 @@ export default function ProjectNavigator() {
                 </span>
                 
                 <div
-                  className="todoListItemDelete"
+                  className="deleteButton"
                   onClick={() => {
                     dispatch(deleteNodeByIdInPreRenderedHTMLNodes(node.id));
                   }}

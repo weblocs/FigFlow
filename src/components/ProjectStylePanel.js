@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import { useSelector, useDispatch } from 'react-redux'
 
-import {connectStyleWithNode} from "../features/pre-rendered-html-nodes"
+import {connectStyleWithNode, setActiveStyleId, deleteStyleFromStylesInActiveNode} from "../features/pre-rendered-html-nodes"
 
 import ProjectStylePropertyEditor from "./atoms/ProjectStylePropertyEditor"
 
@@ -31,8 +31,15 @@ export default function ProjectRenderedDesign() {
                 </form>
               </div>
             
-            {stylesInActiveNode.map((el) => (
-              <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"classElement " + ((activeStyleId == el.id) ? "active" : "")} >{el.name} </div>
+            {stylesInActiveNode?.map((el) => (
+              <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"classElement " + ((activeStyleId == el.id) ? "active" : "")} >
+                {el.name}
+                <span 
+                className="stylesDeleteButton"
+                onClick={() => dispatch(deleteStyleFromStylesInActiveNode(el.id))}
+                > x
+                </span>
+              </div>
             ))}
 
             </div>      

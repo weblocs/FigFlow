@@ -60,17 +60,27 @@ export function setActiveStyleNameByAcitveNode(nodes, id) {
 
 export function setStylesInActiveNodeAndActiveStyle(nodes, id) {
   let response = [];
-  for (let i = 0; i < nodes.length; i++) {
-    if (nodes[i].id === id) {
-        response[0] = nodes[i]?.class;
-        response[1] = nodes[i]?.class[nodes[i].class.length - 1]?.name;
-        response[2] = nodes[i]?.class[nodes[i].class.length - 1]?.id;
-        break;
-    }
-    if (nodes[i].children) {
-        setStylesInActiveNode(nodes[i].children, id);
+
+  
+  
+  function findNode(nodes,id) {
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].id === id) {
+          response[0] = nodes[i]?.class;
+          response[1] = nodes[i]?.class[nodes[i].class.length - 1]?.name;
+          response[2] = nodes[i]?.class[nodes[i].class.length - 1]?.id;
+
+          // console.log(JSON.parse(JSON.stringify(response[2])));
+
+          break;
+      }
+      if (nodes[i].children) {
+          findNode(nodes[i].children, id);
+      }
     }
   }
+  findNode(nodes,id);
+
   return response;
 }
 

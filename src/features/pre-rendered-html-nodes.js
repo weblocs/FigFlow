@@ -92,6 +92,41 @@ export const preRenderedNodesSlice = createSlice({
         state.preRenderedHTMLNodes = response;
     },
 
+    deleteStyleFromStylesInActiveNode: (state,action) => {
+
+        let deletedStyleId = action.payload.deletedStyleId;
+
+        let tempStyleIndex = state.stylesInActiveNode.map(x => {
+            return x.id;
+          }).indexOf(deletedStyleId);
+
+        state.stylesInActiveNode.splice(tempStyleIndex, 1);
+
+        let response;
+        let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
+        let editedNodeId = state.activeNodeId;
+        
+
+        function findNode(nodes, id) {
+            for (let i = 0; i < nodes.length; i++) {
+            if (nodes[i].id === id) {
+                tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
+                JSON.stringify(nodes[i]),
+                JSON.stringify(nodes[i]).replace( JSON.stringify(nodes[i].class), JSON.stringify(state.stylesInActiveNode) )
+                );
+                response = JSON.parse(tempPreRenderedHTMLNodes);
+                break;
+            }
+            if (nodes[i].children) {
+                findNode(nodes[i].children, id);
+            }
+            }
+        }
+        findNode(state.preRenderedHTMLNodes, editedNodeId);
+        state.preRenderedHTMLNodes = response;
+    },
+
+
     deleteNodeByIdInPreRenderedHTMLNodes: (state,action) => {
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
@@ -144,7 +179,9 @@ export const preRenderedNodesSlice = createSlice({
 
     setActiveNodeAndStyle: (state, action) => {
         state.activeNodeId = action.payload.id;
+        
         [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
+        
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
     },
 
@@ -169,11 +206,11 @@ export const preRenderedNodesSlice = createSlice({
 
                 // [to work on] For classes with parents we have different id values in styles and nodes
 
-                console.log(JSON.stringify(style.parents));
-                console.log(JSON.stringify(state.stylesInActiveNode));
+                // console.log(JSON.stringify(style.parents));
+                // console.log(JSON.stringify(state.stylesInActiveNode));
 
                 if(JSON.stringify(style.parents) === JSON.stringify(state.stylesInActiveNode)) {
-                    console.log("hop");
+                    // console.log("hop");
                     isItNewStyle = false;
                 }
             }
@@ -204,6 +241,7 @@ export const preRenderedNodesSlice = createSlice({
             }
         }
         findNode(state.preRenderedHTMLNodes, nodeId);
+
         state.stylesInActiveNode = response[0];
         state.preRenderedHTMLNodes = response[1];
         state.activeStyleName = styleName;
@@ -270,6 +308,6 @@ export const preRenderedNodesSlice = createSlice({
 
 
 
-export const {arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 
 export default preRenderedNodesSlice.reducer

@@ -15,13 +15,15 @@ export default function ProjectStylePropertyEditor(props) {
 
     const dispatch = useDispatch()
 
+    const editedStyleProperty = props.name.replace(" ","_");
+
     return (
         <div className={activeStyleClass}>
-          <div>{props.name}: {preRenderedStyles[activeStyleIndex]?.styles [props.name.replace(" ","_")]} 
+          <div>{props.name}: {preRenderedStyles[activeStyleIndex]?.styles [editedStyleProperty]} 
           <span className="setShowEditorToggle" onClick={() => setShowEditor(!showEditor)}>edit</span> </div>
           <div className={"panelStyleEditor " + (showEditor && "show")} >
             <div style={{fontSize:"10px"}}>change to</div>
-            <input onKeyPress={(e) => e.key === 'Enter' && dispatch(editStyleInPreRenderedStyles([props.name.replace(" ","_"),e.target.value]))  } />
+            <input onKeyPress={(e) => e.key === 'Enter' && dispatch(editStyleInPreRenderedStyles([editedStyleProperty,e.target.value]))  } />
           </div>
         </div>
     )
