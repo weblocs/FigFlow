@@ -1,15 +1,15 @@
 import React, {useState} from "react"
 import { useSelector, useDispatch } from 'react-redux'
-
 import {connectStyleWithNode, editStyleInPreRenderedStyles, setActiveStyleId, deleteStyleFromStylesInActiveNode} from "../features/pre-rendered-html-nodes"
 
 import ProjectStylePropertyEditor from "./atoms/ProjectStylePropertyEditor"
-import DisplayStyleEdit from "./DisplayStyleEdit"
+import DisplayStyleEdit from "./style-panel/DisplayStyleEdit"
+import SpacingStyleEdit from "./style-panel/SpacingStyleEdit"
 import SpacingInput from "./SpacingInput"
 
 
 
-export default function ProjectRenderedDesign() {
+export default function ProjectStylePanel() {
 
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
@@ -54,14 +54,10 @@ export default function ProjectRenderedDesign() {
             ))} */}
 
             <DisplayStyleEdit />
+            <SpacingStyleEdit />
 
             
-
-            <div>Spacing</div>
-            <SpacingInput />
-
-            
-
+            {/* <SpacingInput /> */}
 
             <ProjectStylePropertyEditor name="display" />
             <ProjectStylePropertyEditor name="font size" />

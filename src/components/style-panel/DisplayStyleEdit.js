@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 
 
 import { useDispatch, useSelector } from 'react-redux'
-import {editStyleInPreRenderedStyles} from "../features/pre-rendered-html-nodes"
+import {editStyleInPreRenderedStyles} from "../../features/pre-rendered-html-nodes"
 
 
 export default function DisplayStyleEdit () {

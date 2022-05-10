@@ -1,0 +1,41 @@
+.style-panel {
+    height: calc(100vh - 33px);
+    flex-shrink: 0;
+    overflow-y: scroll;
+    border-top: 1px solid #d3d3d3;
+}
+
+.select-class-input {
+    min-height: 30px;
+}
+
+.selected-class {
+    cursor: default;
+}
+
+.selected-class.active {
+    background-color: #534cca;
+}
+
+.seleted-class-delete-button {
+    font-size: 8px;
+    padding: 2px;
+    position: relative;
+    bottom: 1px;
+    margin-left: 6px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.display-button {
+    cursor: pointer;
+    transition: background-color .2s;
+}
+
+.display-button:hover {
+    background-color: #efefef;
+}
+
+.display-button.active {
+    background-color: #e2e2e2;
+}

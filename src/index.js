@@ -9,6 +9,8 @@ import { store } from './app/store'
 import { Provider } from 'react-redux'
 
 import "./styles/styles.css";
+import "./styles/panel-styles.css";
+import "./styles/panel-extra-styles.css";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);

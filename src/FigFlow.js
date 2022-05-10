@@ -2,7 +2,10 @@ import React, { useEffect } from "react";
 import AddPreRenderedNodeForm from "./components/AddPreRenderedNodeForm"
 import ProjectNavigator from "./components/ProjectNavigator"
 import ProjectRenderedDesign from "./components/ProjectRenderedDesign"
+
 import ProjectStylePanel from "./components/ProjectStylePanel"
+import ProjectStylePanelNew from "./components/ProjectStylePanelNew"
+
 import SaveButton from "./components/atoms/SaveButton"
 import {loadProjectPreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
@@ -22,7 +25,10 @@ export default function FigFlow() {
       <div className="projectWrapper">
         <ProjectNavigator />
         <ProjectRenderedDesign />
-        <ProjectStylePanel />
+
+        {/* <ProjectStylePanel /> */}
+        <ProjectStylePanelNew />
+
       </div>
     </>
   );
