@@ -27,11 +27,12 @@ export default function saveProject(items,preRenderedStyles) {
 // async/await
 
 export function loadProjectPreRenderedNodesAndStyles() {
+  const project_id = "test";
   const dispatch = useDispatch()
   useEffect(() => {
   axios
       .get(
-        Constants.BASE_API + "items"
+        Constants.BASE_API + "items?project_id=" + project_id
       )
       .then((res) => {
         dispatch(setPreRenderedHTMLNodes([...res.data[0].items]));

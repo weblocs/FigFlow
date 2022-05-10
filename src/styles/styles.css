@@ -248,8 +248,6 @@ font-size: 12px;
   outline: 1px solid blue;
 }
 
-
-
 :focus-visible {
   outline: 0;
 }

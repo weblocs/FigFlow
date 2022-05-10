@@ -9,10 +9,10 @@ export default function SaveButton() {
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
 
-
     const [buttonText, setButtonText] = useState("Save");
 
     function saveProject(items,preRenderedStyles) {
+      setButtonText("Saving");
         axios
           .put(
             Constants.BASE_API + "update",
