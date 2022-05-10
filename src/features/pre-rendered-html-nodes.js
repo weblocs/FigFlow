@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import {JSONtoCSS, getIndexOfElementInArrayById, setStylesInActiveNodeAndActiveStyle} from "../utils/nodes-editing"
+import {JSONtoCSS, getIdOfPreRenderedStyleByName, getIndexOfElementInArrayById, setStylesInActiveNodeAndActiveStyle} from "../utils/nodes-editing"
 import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
@@ -195,13 +195,15 @@ export const preRenderedNodesSlice = createSlice({
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
         let nodeId = state.activeNodeId;
         let styleName = action.payload;
+        let styleId = getIdOfPreRenderedStyleByName(state.preRenderedStyles, styleName, state.stylesInActiveNode);
+
+
         let isItNewStyle = true;
 
         let newStyleId = uuidv4();
 
         state.preRenderedStyles.map((style) => {
            
-            
             if(style.name === styleName) {
 
                 // [to work on] For classes with parents we have different id values in styles and nodes
@@ -216,13 +218,16 @@ export const preRenderedNodesSlice = createSlice({
             }
         });
 
-        let newStyleToConnectWithNodes = { name: styleName, id: newStyleId };
+        let newStyleToConnectWithNodes = {};
         let newStyleToConnectWithStyles = { name: styleName, id: newStyleId, styles: {}, parents: state.stylesInActiveNode };
 
 
         if(isItNewStyle) {
+            newStyleToConnectWithNodes = { name: styleName, id: newStyleId };
             state.preRenderedStyles = [...state.preRenderedStyles, newStyleToConnectWithStyles];
             state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles]);
+        } else {
+            newStyleToConnectWithNodes = { name: styleName, id: styleId };
         }
 
         function findNode(nodes, id) {
@@ -242,10 +247,12 @@ export const preRenderedNodesSlice = createSlice({
         }
         findNode(state.preRenderedHTMLNodes, nodeId);
 
+
+
         state.stylesInActiveNode = response[0];
         state.preRenderedHTMLNodes = response[1];
         state.activeStyleName = styleName;
-        state.activeStyleId = newStyleId;
+        state.activeStyleId = newStyleToConnectWithNodes.id;
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
         
     },

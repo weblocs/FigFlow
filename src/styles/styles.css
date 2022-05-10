@@ -296,3 +296,31 @@ button {
   background-color: #eee;
 }
 
+.displayButtonsWrapper {
+  display: flex;
+  border-left: 1px solid #aaa;
+  margin-bottom: 12px;
+}
+
+.displayButton {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  border: 1px solid #aaa;
+  border-left: 0;
+  cursor:pointer;
+  transition: background .2s;
+}
+
+.displayButton:hover {
+  background: #eee;
+}
+
+.displayButton.active {
+  background: #ddd;
+}
+
+.SpacingInput {
+  cursor: n-resize;
+}

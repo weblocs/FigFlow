@@ -8,6 +8,16 @@ export function getIndexOfElementInArrayById(styleNodes, id) {
   return res;
 }
 
+export function getIdOfPreRenderedStyleByName(styleNodes, styleName, styleParents) {
+  let res;
+  for (let i = 0; i < styleNodes.length; i++) {
+    if (styleNodes[i].name === styleName && JSON.stringify(styleNodes[i].parents) === JSON.stringify(styleParents)) {
+        res = styleNodes[i].id;
+    }
+  }
+  return res;
+}
+
 export function JSONtoCSS (_classes) {
     let tempClasses = [];
     let tempName = "";

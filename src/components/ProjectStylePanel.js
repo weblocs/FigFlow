@@ -1,16 +1,21 @@
 import React, {useState} from "react"
 import { useSelector, useDispatch } from 'react-redux'
 
-import {connectStyleWithNode, setActiveStyleId, deleteStyleFromStylesInActiveNode} from "../features/pre-rendered-html-nodes"
+import {connectStyleWithNode, editStyleInPreRenderedStyles, setActiveStyleId, deleteStyleFromStylesInActiveNode} from "../features/pre-rendered-html-nodes"
 
 import ProjectStylePropertyEditor from "./atoms/ProjectStylePropertyEditor"
+import DisplayStyleEdit from "./DisplayStyleEdit"
+import SpacingInput from "./SpacingInput"
+
+
 
 export default function ProjectRenderedDesign() {
 
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const activeStyleName = useSelector((state) => state.designerProjectState.activeStyleName)
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
+
+    
 
     const [styleConnectorInput, setStyleConnectorInput] = useState("");
 
@@ -47,6 +52,15 @@ export default function ProjectRenderedDesign() {
             {/* {preRenderedStyles.map((el) => (
               <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"classElement small " + ((activeStyleName == el.name) ? "active" : "")} >{el.name}</div>
             ))} */}
+
+            <DisplayStyleEdit />
+
+            
+
+            <div>Spacing</div>
+            <SpacingInput />
+
+            
 
 
             <ProjectStylePropertyEditor name="display" />
