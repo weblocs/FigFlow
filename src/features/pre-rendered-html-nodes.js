@@ -8,7 +8,7 @@ const initialState = {
   postRenderedStyles: "",
   activeNodeId: "",
   hoveredNodeId: "",
-
+  arrowNavigationOn: true,
   activeStyleId: "",
   activeStyleName: "",
   activeStyleIndex: 0,
@@ -302,19 +302,24 @@ export const preRenderedNodesSlice = createSlice({
                 }
             }
         }
-        findNode(state.preRenderedHTMLNodes, state.activeNodeId); 
-        state.activeNodeId = response;
-        [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
-        state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
 
-        
+        if(state.arrowNavigationOn) {
+            findNode(state.preRenderedHTMLNodes, state.activeNodeId); 
+            state.activeNodeId = response;
+            [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
+            state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
+        }
     },
+
+    setArrowNavigationOn: (state, action) => {
+        state.arrowNavigationOn = action.payload;
+    }
     // Add next reducers here
   }
 })
 
 
 
-export const {deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 
 export default preRenderedNodesSlice.reducer

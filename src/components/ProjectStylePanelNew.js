@@ -252,25 +252,6 @@ export default function ProjectStylePanelNew() {
             <div className="input"></div>
           </div>
         </div>
-        <div className="display-horizontal-grid">
-          <div className="style-title-box">
-            <div className="text">Align</div>
-          </div>
-          <div className="display-buttons-box">
-            <div className="display-button">
-              <div className="text">L</div>
-            </div>
-            <div className="display-button">
-              <div className="text">T</div>
-            </div>
-            <div className="display-button">
-              <div className="text">R</div>
-            </div>
-            <div className="display-button">
-              <div className="text">B</div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

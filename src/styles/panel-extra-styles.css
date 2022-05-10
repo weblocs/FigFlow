@@ -43,12 +43,6 @@
 
 
 
-// new elements
-
-.space-editor {
-    position: relative;
-}
-
 .space-editor-toggle {
     cursor: pointer;
 }
@@ -61,7 +55,8 @@
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
     left: 50%;
-    top: -26px;
+    top: -30px;
+    z-index: 99;
     background: #ececec;
     border: 1px solid #c0c0c0;
     text-align: center;
@@ -71,4 +66,8 @@
 
 .space-editor-popup.active {
     display: block;
+}
+
+.space-editor {
+    position: relative;
 }

@@ -1,11 +1,12 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import {editStyleInPreRenderedStyles} from "../../features/pre-rendered-html-nodes"
+import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features/pre-rendered-html-nodes"
 
-export default function SpacingStylePanel () {
+export default function SpacingStylePanel (props) {
 
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const paddingTopStyle = useSelector((state) => (state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["padding_top"])?.replace('px',''))
+    const editedStyle = useSelector((state) => (state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles [props.style])?.replace('px',''))
+    
     const dispatch = useDispatch()
 
     const inputRef = useRef();
@@ -18,30 +19,47 @@ export default function SpacingStylePanel () {
     },[openEditor]);
 
     useEffect(() => {
-        inputRef.current.focus();
-        console.log(inputRef.current);
+        if(openEditor === true) {
+            inputRef.current.focus();
+            if(editedStyle === undefined) {
+                inputRef.current.value = "";
+            } else {
+                inputRef.current.value = editedStyle;
+            }
+            dispatch(setArrowNavigationOn(false));
+        } else {
+            dispatch(setArrowNavigationOn(true));
+        }
     },[editorPopUpClass]);
-
-
-
 
     function handleOnClick () {
         setOpenEditor(!openEditor);
-        
-        // if (openEditor) {
-        //     inputRef.current.focus();
-        // }
     }
+
+    function handleKeyPress(e) {
+        if(e.key === 'Enter') {
+            dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+"px"]));
+            setOpenEditor(false);
+        }
+        if(e.key === 'ArrowUp') {
+            dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)+1+"px"]));
+        }
+        if(e.key === 'ArrowDown') {
+            dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)-1+"px"]));
+        }
+    }
+
+
 
     return (
         <div className="text">
             <div className="space-editor">
-                <div onClick={handleOnClick} className="space-editor-toggle">{(paddingTopStyle) ? paddingTopStyle : "0"}</div>
+                <div onClick={handleOnClick} className="space-editor-toggle">{(editedStyle) ? editedStyle : "0"}</div>
                 
                 <input 
                 ref={inputRef}
-                type="text"
-                onKeyPress={(e) => e.key === 'Enter' && dispatch(editStyleInPreRenderedStyles(["padding_top",e.target.value+"px"]))  }
+                type="number"
+                onKeyDown={handleKeyPress}
                 className={editorPopUpClass} />
             </div>
          </div>
