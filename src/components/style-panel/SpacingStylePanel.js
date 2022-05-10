@@ -1,12 +1,7 @@
 import React from "react";
-import { useDispatch, useSelector } from 'react-redux'
 import SpacingStyleButton from "./SpacingStyleButton"
 
-
 export default function SpacingStylePanel () {
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const paddingTopStyle = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["padding_top"])
-
     return (
         <div className="style-panel-box">
             <div className="margin-wrapper">

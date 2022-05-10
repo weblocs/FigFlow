@@ -3,8 +3,8 @@ import AddPreRenderedNodeForm from "./components/AddPreRenderedNodeForm"
 import ProjectNavigator from "./components/ProjectNavigator"
 import ProjectRenderedDesign from "./components/ProjectRenderedDesign"
 
+import ProjectStylePanelOld from "./components/ProjectStylePanelOld"
 import ProjectStylePanel from "./components/ProjectStylePanel"
-import ProjectStylePanelNew from "./components/ProjectStylePanelNew"
 
 import SaveButton from "./components/atoms/SaveButton"
 import {loadProjectPreRenderedNodesAndStyles} from "./utils/save-load-project"
@@ -26,8 +26,8 @@ export default function FigFlow() {
         <ProjectNavigator />
         <ProjectRenderedDesign />
 
-        {/* <ProjectStylePanel /> */}
-        <ProjectStylePanelNew />
+        {/* <ProjectStylePanelOld /> */}
+        <ProjectStylePanel />
 
       </div>
     </>
