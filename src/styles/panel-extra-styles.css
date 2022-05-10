@@ -39,3 +39,36 @@
 .display-button.active {
     background-color: #e2e2e2;
 }
+
+
+
+
+// new elements
+
+.space-editor {
+    position: relative;
+}
+
+.space-editor-toggle {
+    cursor: pointer;
+}
+
+.space-editor-popup {
+    display: none;
+    width: 40px;
+    height: 24px;
+    position: absolute;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    left: 50%;
+    top: -26px;
+    background: #ececec;
+    border: 1px solid #c0c0c0;
+    text-align: center;
+    font-size: 11px;
+    color: #333;
+}
+
+.space-editor-popup.active {
+    display: block;
+}

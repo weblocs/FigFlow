@@ -2,7 +2,13 @@ import React, {useState} from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import {connectStyleWithNode, editStyleInPreRenderedStyles, setActiveStyleId, deleteStyleFromStylesInActiveNode} from "../features/pre-rendered-html-nodes"
 
+import StylePanelTitle from "./style-panel/StylePanelTitle"
 import DispayStylePanel from "./style-panel/DispayStylePanel"
+import SpacingStylePanel from "./style-panel/SpacingStylePanel"
+
+
+
+
 
 export default function ProjectStylePanelNew() {
 
@@ -45,79 +51,15 @@ export default function ProjectStylePanelNew() {
         <div className="text on-page">1 on this page</div>
       </div>
     </div>
-    <div className="style-panel-box title-box">
-      <div className="text panel-title">Layout</div>
-    </div>
+    
+
+    <StylePanelTitle title="Layout" />
+    <DispayStylePanel />
+
+    <StylePanelTitle title="Spacing" />
+    <SpacingStylePanel />
 
     
-    <DispayStylePanel />
-    {/* <div className="style-panel-box">
-      <div className="display-horizontal-grid">
-        <div className="style-title-box">
-          <div className="text">Display</div>
-        </div>
-        <div className="display-buttons-box">
-          <div className="display-button">
-            <div className="text">B</div>
-          </div>
-          <div className="display-button">
-            <div className="text">F</div>
-          </div>
-          <div className="display-button">
-            <div className="text">G</div>
-          </div>
-          <div className="display-button">
-            <div className="text">I</div>
-          </div>
-          <div className="display-button">
-            <div className="text">IB</div>
-          </div>
-          <div className="display-button">
-            <div className="text">N</div>
-          </div>
-        </div>
-      </div>
-    </div> */}
-
-
-    <div className="style-panel-box title-box">
-      <div className="text panel-title">Spacing</div>
-    </div>
-    <div className="style-panel-box">
-      <div className="margin-wrapper">
-        <div className="margin-top">
-          <div className="text">0</div>
-        </div>
-        <div className="margin-inside-wrapper">
-          <div className="margin-left">
-            <div className="text">0</div>
-          </div>
-          <div className="padding-wrapper">
-            <div className="padding-top">
-              <div className="text">0</div>
-            </div>
-            <div className="margin-inside-wrapper">
-              <div className="padding-left">
-                <div className="text">0</div>
-              </div>
-              <div className="padding-inside-wrapper"></div>
-              <div className="padding-left">
-                <div className="text">0</div>
-              </div>
-            </div>
-            <div className="padding-top">
-              <div className="text">0</div>
-            </div>
-          </div>
-          <div className="margin-left">
-            <div className="text">0</div>
-          </div>
-        </div>
-        <div className="margin-top">
-          <div className="text">0</div>
-        </div>
-      </div>
-    </div>
     <div className="style-panel-box title-box">
       <div className="text panel-title">Size</div>
     </div>
