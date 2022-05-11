@@ -1,6 +1,5 @@
 import axios from "axios";
 import Constants from "./const.js";
-
 import { useEffect } from "react";
 import { useDispatch } from 'react-redux'
 
@@ -26,13 +25,13 @@ export default function saveProject(items,preRenderedStyles) {
 // return new Promise
 // async/await
 
-export function loadProjectPreRenderedNodesAndStyles() {
+export function loadProjectPreRenderedNodesAndStyles(projectId) {
   const project_id = "test";
   const dispatch = useDispatch()
   useEffect(() => {
   axios
       .get(
-        Constants.BASE_API + "items?project_id=" + project_id
+        Constants.BASE_API + "items?project_id=" + projectId
       )
       .then((res) => {
         dispatch(setPreRenderedHTMLNodes([...res.data[0].items]));

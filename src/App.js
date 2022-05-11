@@ -5,7 +5,7 @@ import FigFlow from "./FigFlow";
 export default function App() {
   return (
     <div>
-      <FigFlow />
+      <FigFlow projectId="test" />
     </div>
   );
 }

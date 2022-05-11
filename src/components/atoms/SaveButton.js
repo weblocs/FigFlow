@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import axios from "axios";
 import Constants from "../../utils/const.js";
 
-export default function SaveButton() {
+export default function SaveButton(props) {
 
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
@@ -15,7 +15,7 @@ export default function SaveButton() {
       setButtonText("Saving");
         axios
           .put(
-            Constants.BASE_API + "update",
+            Constants.BASE_API + "update?project_id=" + props.projectId,
             { items: [...items], preRenderedStyles: [...preRenderedStyles] },
             {
               headers: {

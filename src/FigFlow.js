@@ -11,15 +11,15 @@ import {loadProjectPreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
 
 
-export default function FigFlow() {
+export default function FigFlow(props) {
 
-  loadProjectPreRenderedNodesAndStyles();
+  loadProjectPreRenderedNodesAndStyles(props.projectId);
   loadShortcuts();
 
   return (
     <>
       <div onKeyDown={() => console.log("30")} tabIndex="-1" ></div>
-      <SaveButton />
+      <SaveButton projectId={props.projectId} />
       <AddPreRenderedNodeForm />
     
       <div className="projectWrapper">
