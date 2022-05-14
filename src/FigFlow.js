@@ -7,20 +7,18 @@ import ProjectStylePanelOld from "./components/ProjectStylePanelOld"
 import ProjectStylePanel from "./components/ProjectStylePanel"
 
 import SaveButton from "./components/atoms/SaveButton"
-import {loadProjectPreRenderedNodesAndStyles} from "./utils/save-load-project"
+import {loadProjectPreRenderedNodesAndStyles, loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
-
-
 
 export default function FigFlow(props) {
 
-  loadProjectPreRenderedNodesAndStyles(props.projectId);
+  // loadProjectPreRenderedNodesAndStyles(props.projectId);
+  loadProjectFromFirebasePreRenderedNodesAndStyles(props.projectSlug);
   loadShortcuts();
 
   return (
     <>
-      <div onKeyDown={() => console.log("30")} tabIndex="-1" ></div>
-      <SaveButton projectId={props.projectId} />
+      <SaveButton projectSlug={props.projectSlug} />
       <AddPreRenderedNodeForm />
     
       <div className="projectWrapper">

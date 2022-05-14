@@ -7,7 +7,7 @@ export default function Design() {
 
   return (
     <div>
-      <FigFlow projectId={params.designId} />
+      <FigFlow projectSlug={params.projectSlug} />
     </div>
   );
 }

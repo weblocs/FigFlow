@@ -3,8 +3,10 @@ import { createRoot } from "react-dom/client";
 import { render } from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
+
 import Dashboard from "./routes/dashboard";
 import Design from "./routes/design";
+import Login from "./routes/login";
 import { store } from './app/store'
 import { Provider } from 'react-redux'
 
@@ -21,8 +23,9 @@ root.render(
       <BrowserRouter>
         <Routes>
           {/* <Route path="/" element={<App />} /> */}
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Dashboard />} />
-          <Route path="design/:designId" element={<Design />} />
+          <Route path="design/:projectSlug" element={<Design />} />
           
           
         </Routes>

@@ -10,7 +10,6 @@ export default function ProjectRenderedDesign() {
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const postRenderedStyles = useSelector((state) => state.designerProjectState.postRenderedStyles)
 
-
     const dispatch = useDispatch()
 
     return (

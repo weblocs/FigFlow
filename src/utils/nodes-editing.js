@@ -19,6 +19,7 @@ export function getIdOfPreRenderedStyleByName(styleNodes, styleName, styleParent
 }
 
 export function JSONtoCSS (_classes) {
+  
     let tempClasses = [];
     let tempName = "";
     

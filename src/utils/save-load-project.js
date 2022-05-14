@@ -1,9 +1,13 @@
 import axios from "axios";
 import Constants from "./const.js";
-import { useEffect } from "react";
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux'
 
-import { setPreRenderedHTMLNodes, setPreRenderedStyles } from '../features/pre-rendered-html-nodes'
+import { initializeApp } from "firebase/app";
+import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "firebase/firestore";
+import { firebaseConfig } from "./firebase-config.js";
+
+import { setPreRenderedHTMLNodes, setPreRenderedStyles, setProjectFirebaseId } from '../features/pre-rendered-html-nodes'
 
 export default function saveProject(items,preRenderedStyles) {
   axios
@@ -22,9 +26,6 @@ export default function saveProject(items,preRenderedStyles) {
     });
 }
 
-// return new Promise
-// async/await
-
 export function loadProjectPreRenderedNodesAndStyles(projectId) {
   const project_id = "test";
   const dispatch = useDispatch()
@@ -34,8 +35,30 @@ export function loadProjectPreRenderedNodesAndStyles(projectId) {
         Constants.BASE_API + "items?project_id=" + projectId
       )
       .then((res) => {
-        dispatch(setPreRenderedHTMLNodes([...res.data[0].items]));
-        dispatch(setPreRenderedStyles([...res.data[0].preRenderedStyles]));        
+        // sending data from MongoDB
+        // dispatch(setPreRenderedHTMLNodes([...res.data[0].items]));
+        // dispatch(setPreRenderedStyles([...res.data[0].preRenderedStyles]));  
       });
   }, []);
 }
+
+export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSlug) {
+
+  const dispatch = useDispatch()
+  const projectFirebaseId = useSelector((state) => state.designerProjectState.projectFirebaseId)
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const userProjects = await getDocs( query( collection(db, "projects"), where("projectId", "==", projectSlug)));
+  
+  userProjects.forEach((doc) => {
+    dispatch(setProjectFirebaseId(doc.id));
+  });
+  
+  const projectData = await getDoc(doc(db, "projects", projectFirebaseId));
+
+  dispatch(setPreRenderedHTMLNodes([...projectData.data().items]));
+  dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
+}
+

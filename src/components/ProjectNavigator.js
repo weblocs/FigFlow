@@ -8,16 +8,18 @@ import SortableTree from "react-sortable-tree";
 import {setPreRenderedHTMLNodes, setActiveNodeAndStyle, deleteNodeByIdInPreRenderedHTMLNodes, setHoveredNodeId} from "../features/pre-rendered-html-nodes"
 
 export default function ProjectNavigator() {
-
+    
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
     const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId)
 
-    function handleNavigatorNodeOnClick (_id,_styleName) {
+    function handleNavigatorNodeOnClick (_id) {
         dispatch(setActiveNodeAndStyle({id: _id}));
     }
 
     const dispatch = useDispatch()
+
+    // console.log([...preRenderedHTMLNodes]); // redux dev tools
     
     return (
         <SortableTree
