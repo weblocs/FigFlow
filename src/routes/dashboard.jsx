@@ -26,6 +26,8 @@ export default function Dashboard() {
             setUid(user.uid);
             setUserEmail(user.email);
             setIsLoggedIn(true);
+        } else {
+            window.location.href = "/login";
         }
     });
 
@@ -43,26 +45,31 @@ export default function Dashboard() {
     },[uid]);
 
     return (
-        <div>
-
-            {isLoggedIn ?
-            <div>
-                <CreateNewProject userid={uid} />
-                <div>user: {userEmail}</div>
-            </div> : <Link to="/login" key="login">Login</Link> }
-            
-            {isLoggedIn &&
-
-            
-            projects.map((project,index) =>
-                <Link
-                style={{ display: "block", margin: "1rem 0" }}
+<div class="dashboard-section">
+<div class="container">
+  <div class="new-project-header">
+    <div class="dashboard-email-box">
+        
+        <div class="dashboard-log-out">Account:</div>
+        <Link to="/login" className="user-link">
+        <div class="dashboard-email">{userEmail}</div>
+        </Link>
+    </div>
+    <CreateNewProject userid={uid} />
+    
+  </div>
+  <div class="project-grid">
+        {projects.map((project) => 
+            <Link
+                class="project-item"
                 to={`/design/${project.projectId}`}
                 key={project.projectId}>
-                    {project.projectId}
-                </Link>
-            )} 
-            <Outlet />
-        </div>
+                <div class="project-title">{project.projectId}</div>
+            </Link>
+        )} 
+        <Outlet />
+  </div>
+</div>
+</div>
     );
 }

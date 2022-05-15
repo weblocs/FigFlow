@@ -40,9 +40,9 @@ export default function Test (props) {
     }
 
     return (
-        <form onSubmit={addNewProject}>
-            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Add new project" />
-            <button>Add</button>
+        <form onSubmit={addNewProject} className="new-project-form">
+            <input className="new-project-input" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Add new project" />
+            <button className="new-project-button w-button">New project</button>
         </form>
     )
 }

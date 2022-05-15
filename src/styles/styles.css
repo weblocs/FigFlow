@@ -333,3 +333,22 @@ font-size: 12px;
 .SpacingInput {
   cursor: n-resize;
 }
+
+.loginSection {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.accountBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  grid-row-gap: 24px;
+}
+

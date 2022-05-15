@@ -54,13 +54,13 @@ export default function Login() {
     });
 
     return (
-        <div>
+        <div className="loginSection">
             { !isLoggedIn ? 
-            <button onClick={handleSignUpWithGoogle}>Log in with Google</button> :
-            <div>
-            Account, {userEmail}
-            <Link to="/">Dashboard</Link>
-            <button onClick={handleSignOut}>Log out</button>
+            <button className="new-project-button" onClick={handleSignUpWithGoogle}>Log in with Google</button> :
+            <div className="accountBox">
+            Account: {userEmail}
+            <Link className="new-project-button" to="/">Dashboard</Link>
+            <button className="new-project-button outline" onClick={handleSignOut}>Log out</button>
             </div> }
             
         </div>
