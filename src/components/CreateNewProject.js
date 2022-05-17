@@ -5,9 +5,10 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, getDocs, setDoc, doc, where,query, collection } from "firebase/firestore";
 import { firebaseConfig } from "../utils/firebase-config";
 
-export default function Test (props) {
+export default function CreateNewProject (props) {
     const [input, setInput] = useState("");
     const newProjectId = uuidv4();
+    const firstPageInProjectId = uuidv4();
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -30,6 +31,7 @@ export default function Test (props) {
             projectId: projectSlug,
             projectName: input,
             userid: props.userid,
+            pages: [{pageName: "Home", pageId: firstPageInProjectId, preRenderedHTMLNodes:[]}],
             items: [],
             preRenderedStyles: [],
         }).then((res) => {

@@ -3,6 +3,13 @@ import {JSONtoCSS, getIdOfPreRenderedStyleByName, getIndexOfElementInArrayById, 
 import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
+  activeProjectTab: "",
+  projectPages: [],
+  activePageId: "",
+  activePageIndex: 0,
+  projectCollections:[],
+  activeProjectCollectionId: "",
+  activeProjectCollectionIndex: 0,
   preRenderedHTMLNodes: [],
   preRenderedStyles: [],
   postRenderedStyles: "",
@@ -322,12 +329,77 @@ export const preRenderedNodesSlice = createSlice({
     setProjectFirebaseId: (state, action) => {
         state.projectFirebaseId = action.payload;
     },
+
+    setProjectPages: (state, action) => {
+        state.projectPages = action.payload;
+        state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
+        // add setActivePageIndex here
+        state.activePageId = state.projectPages[state.activePageIndex].pageId;
+    },
+    setProjectCollections: (state, action) => {
+        state.projectCollections = action.payload;
+    },
+    updateProjectPagesBeforeSaving: (state) => {
+        state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
+    },
+    setActivePageIdAndIndex: (state, action) => {
+        //update previos page before creating a new one
+        state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
+        // change page
+        state.activePageId = action.payload;
+        state.activePageIndex = state.projectPages.map(x => {
+            return x.pageId;
+        }).indexOf(state.activePageId);
+        // render the new page
+        state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
+        state.activeNodeId = "";
+    },
+    createNewPageInProject: (state, action) => {
+        //update previos page before creating a new one
+        state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
+        // create new page
+        let newPageName = action.payload;
+        let newPageSlug = newPageName.toLowerCase().replaceAll(" ","-");
+        let newPageId = uuidv4()
+        let newPage = {
+            pageName: newPageName, 
+            pageSlug: newPageSlug,
+            pageId: newPageId, 
+            preRenderedHTMLNodes:[]
+        }
+        state.projectPages = [...state.projectPages, newPage];
+        //navigate to the new page
+        state.activePageId = newPageId;
+        state.activePageIndex = state.projectPages.map(x => {
+            return x.pageId;
+        }).indexOf(state.activePageId);
+        state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
+        state.activeNodeId = "";
+
+    },
+
+    createNewCollection: (state, action) => {
+        state.projectCollections = [...state.projectCollections, 
+            {
+                id:uuidv4(),
+                name:action.payload, 
+                slug:action.payload.toLowerCase().replaceAll(" ","-"), 
+                fields:[],
+                items:[],
+            }
+        ];
+    },
+    setActiveProjectTab: (state, action) => {
+        if(state.activeProjectTab === action.payload) {
+            state.activeProjectTab = "";
+        } else {
+            state.activeProjectTab = action.payload;
+        }
+        
+    },
     // Add next reducers here
   }
 })
 
-
-
-export const {setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
-
+export const {setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

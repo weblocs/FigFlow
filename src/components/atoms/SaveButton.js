@@ -1,8 +1,10 @@
 import React, { useState } from "react"
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import axios from "axios";
 import Constants from "../../utils/const.js";
+
+import {updateProjectPagesBeforeSaving} from "../../features/pre-rendered-html-nodes"
 
 import { initializeApp } from "firebase/app";
 import { getFirestore, updateDoc, doc } from "firebase/firestore";
@@ -13,7 +15,11 @@ export default function SaveButton(props) {
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const projectFirebaseId = useSelector((state) => state.designerProjectState.projectFirebaseId)
+    const projectPages = useSelector((state) => state.designerProjectState.projectPages)
+    const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
 
+    const [updatedProjectPages, setUpdatedProjectPages] = useState([...projectPages]);
+    const dispatch = useDispatch()
     
 
     const [buttonText, setButtonText] = useState("Save");
@@ -39,12 +45,16 @@ export default function SaveButton(props) {
     }
 
     async function saveProjectToFirebasePreRenderedNodesAndStyles(preRenderedHTMLNodes,preRenderedStyles) {
+      // setUpdatedProjectPages([...projectPages]);
+      // console.log(updatedProjectPages);
+      // updatedProjectPages[0].preRenderedNodes = preRenderedHTMLNodes;
       setButtonText("Saving");
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
-      
       await updateDoc(doc(db, "projects", projectFirebaseId), {
-        items: preRenderedHTMLNodes,
+        pages: projectPages,
+        collections: projectCollections,
+        // items: preRenderedHTMLNodes,
         preRenderedStyles: preRenderedStyles
       })
       .then((res) => {
@@ -56,7 +66,9 @@ export default function SaveButton(props) {
     } 
 
     function handleOnClick() {
+      
         // saveProject(preRenderedHTMLNodes,preRenderedStyles);
+        dispatch(updateProjectPagesBeforeSaving());
         saveProjectToFirebasePreRenderedNodesAndStyles(preRenderedHTMLNodes,preRenderedStyles);
     }
 

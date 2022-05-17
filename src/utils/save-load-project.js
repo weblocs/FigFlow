@@ -7,7 +7,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "firebase/firestore";
 import { firebaseConfig } from "./firebase-config.js";
 
-import { setPreRenderedHTMLNodes, setPreRenderedStyles, setProjectFirebaseId } from '../features/pre-rendered-html-nodes'
+import { setProjectCollections, setPreRenderedStyles, setProjectPages, setProjectFirebaseId } from '../features/pre-rendered-html-nodes'
 
 export default function saveProject(items,preRenderedStyles) {
   axios
@@ -58,7 +58,8 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
   
   const projectData = await getDoc(doc(db, "projects", projectFirebaseId));
 
-  dispatch(setPreRenderedHTMLNodes([...projectData.data().items]));
+  dispatch(setProjectPages([...projectData.data().pages]));
+  dispatch(setProjectCollections([...projectData.data().collections]));
   dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
 }
 

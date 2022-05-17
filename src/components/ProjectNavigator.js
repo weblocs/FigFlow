@@ -12,6 +12,9 @@ export default function ProjectNavigator() {
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
     const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId)
+    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
+
+    
 
     function handleNavigatorNodeOnClick (_id) {
         dispatch(setActiveNodeAndStyle({id: _id}));
@@ -24,7 +27,7 @@ export default function ProjectNavigator() {
     return (
         <SortableTree
           scaffoldBlockPxWidth={15}
-          className="navigatorWrapper"
+          className={"navigatorWrapper "+ ((activeProjectTab === "Navigator") ? "active" : "" )}
           canNodeHaveChildren={(node) => node.type === "div"}
           onChange={(treeData) => dispatch(setPreRenderedHTMLNodes([...treeData]))}
           isVirtualized={false}

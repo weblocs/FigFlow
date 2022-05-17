@@ -33,7 +33,6 @@ export default function StylePanelHeader () {
 
     function handleOpenNewStyleInput () {
         setOpenEditor(!openEditor);
-        console.log(openEditor);
     }
 
     function handleKeyPress(e) {

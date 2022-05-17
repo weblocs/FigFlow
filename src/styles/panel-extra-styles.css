@@ -151,3 +151,13 @@
     color: #333;
     text-decoration: none;
 }
+
+.new-page-form {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    grid-column-gap: 8px;
+    grid-row-gap: 8px;
+    margin-bottom: 8px;
+}

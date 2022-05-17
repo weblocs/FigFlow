@@ -163,6 +163,12 @@ button {
   flex-shrink: 0;
   border: 1px solid #d3d3d3;
   border-bottom: 0;
+  border-left: 0;
+  display: none;
+}
+
+.navigatorWrapper.active {
+  display: block;
 }
 
 .styleWrapper {
@@ -288,6 +294,10 @@ font-size: 12px;
   display: flex;
 }
 
+a {
+  text-decoration: none;
+}
+
 .addNodeButton {
     transition: background-color .2s;
     display: flex;
@@ -299,6 +309,7 @@ font-size: 12px;
     /* background-color: #f5f5f5; */
     border-right: 1px solid #d3d3d3;
     justify-content: center;
+    text-decoration: none;
 }
 
 .addNodeButton:hover {
@@ -352,3 +363,78 @@ font-size: 12px;
   grid-row-gap: 24px;
 }
 
+.projectSidebar {
+  width: 32px;
+  flex-shrink: 0;
+  border-right: 1px solid #d3d3d3;
+  border-top: 1px solid #d3d3d3;
+}
+
+.projectSidebarButton {
+  height: 32px;
+  width: 100%;
+  border-bottom: 1px solid #d3d3d3;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.projectSidebarButton:hover {
+  background-color: #eee;
+}
+
+.projectPagesPanel {
+  width: 200px;
+  flex-shrink: 0;
+  border-right: 1px solid #d3d3d3;
+  border-top: 1px solid #d3d3d3;
+  display: none;
+}
+
+.projectPagesPanel.active {
+  display: block;
+}
+
+.projectCollectionsPanel  {
+  width: 200px;
+  flex-shrink: 0;
+  border-right: 1px solid #d3d3d3;
+  border-top: 1px solid #d3d3d3;
+  display: none;
+}
+
+.projectCollectionsPanel.active {
+  display: block;
+}
+
+.projectTabTitleBox {
+  padding: 5px 16px;
+  font-weight: 600;
+  font-size: 12px;
+  border-bottom: 1px solid #d3d3d3;
+}
+
+.pagesList {
+  border-top: 1px solid #d3d3d3;
+}
+
+.projectPageItem {
+  cursor: pointer;
+  padding: 2px 16px 3px;
+  font-size: 12px;
+  background: #fff;
+  border-bottom: 1px solid #d3d3d3;
+  transition: background-color .2s;
+}
+
+.projectPageItem:hover {
+  background: #f7f7f7;
+}
+
+.projectPageItem.active {
+  background: #ededed;
+}

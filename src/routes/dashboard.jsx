@@ -45,26 +45,26 @@ export default function Dashboard() {
     },[uid]);
 
     return (
-<div class="dashboard-section">
-<div class="container">
-  <div class="new-project-header">
-    <div class="dashboard-email-box">
+<div className="dashboard-section">
+<div className="container">
+  <div className="new-project-header">
+    <div className="dashboard-email-box">
         
-        <div class="dashboard-log-out">Account:</div>
+        <div className="dashboard-log-out">Account:</div>
         <Link to="/login" className="user-link">
-        <div class="dashboard-email">{userEmail}</div>
+        <div className="dashboard-email">{userEmail}</div>
         </Link>
     </div>
     <CreateNewProject userid={uid} />
     
   </div>
-  <div class="project-grid">
+  <div className="project-grid">
         {projects.map((project) => 
             <Link
-                class="project-item"
+                className="project-item"
                 to={`/design/${project.projectId}`}
                 key={project.projectId}>
-                <div class="project-title">{project.projectId}</div>
+                <div className="project-title">{project.projectId}</div>
             </Link>
         )} 
         <Outlet />

@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import AddPreRenderedNodeForm from "./components/AddPreRenderedNodeForm"
+import ProjectSidebar from "./components/ProjectSidebar"
 import ProjectNavigator from "./components/ProjectNavigator"
 import ProjectRenderedDesign from "./components/ProjectRenderedDesign"
 
-import ProjectStylePanelOld from "./components/ProjectStylePanelOld"
 import ProjectStylePanel from "./components/ProjectStylePanel"
+import ProjectPagesPanel from "./components/ProjectPagesPanel";
+import ProjectCollectionsPanel from "./components/ProjectCollectionsPanel";
 
 import SaveButton from "./components/atoms/SaveButton"
-import {loadProjectPreRenderedNodesAndStyles, loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-load-project"
+import {loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
 
 export default function FigFlow(props) {
 
-  // loadProjectPreRenderedNodesAndStyles(props.projectId);
   loadProjectFromFirebasePreRenderedNodesAndStyles(props.projectSlug);
   loadShortcuts();
 
@@ -22,12 +23,14 @@ export default function FigFlow(props) {
       <AddPreRenderedNodeForm />
     
       <div className="projectWrapper">
+        <ProjectSidebar />
         <ProjectNavigator />
+        <ProjectPagesPanel />
+        <ProjectCollectionsPanel />
+
         <ProjectRenderedDesign />
 
-        {/* <ProjectStylePanelOld /> */}
         <ProjectStylePanel />
-
       </div>
     </>
   );

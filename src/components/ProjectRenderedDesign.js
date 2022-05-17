@@ -15,6 +15,7 @@ export default function ProjectRenderedDesign() {
     return (
         <div className="Project">
             <style>{postRenderedStyles}</style>
+
             {preRenderedHTMLNodes.map((el) => (
             <RenderedNode
                 onChange={(text, id) => dispatch(editTextByIdInPreRenderedHTMLNode([id, text]))}
