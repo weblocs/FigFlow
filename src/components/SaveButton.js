@@ -2,13 +2,13 @@ import React, { useState } from "react"
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Constants from "../../utils/const.js";
+import Constants from "../utils/const.js";
 
-import {updateProjectPagesBeforeSaving} from "../../features/pre-rendered-html-nodes"
+import {updateProjectPagesBeforeSaving} from "../features/pre-rendered-html-nodes"
 
 import { initializeApp } from "firebase/app";
 import { getFirestore, updateDoc, doc } from "firebase/firestore";
-import { firebaseConfig } from "../../utils/firebase-config.js";
+import { firebaseConfig } from "../utils/firebase-config.js";
 
 export default function SaveButton() {
 

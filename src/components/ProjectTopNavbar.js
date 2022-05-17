@@ -3,8 +3,10 @@ import { useDispatch } from 'react-redux'
 import { Link } from "react-router-dom";
 import {addNodeToRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
 import ProjectRightSidebarButton from "./ProjectRightSidebarButton";
+import SaveButton from "./SaveButton";
 
-export default function AddPreRenderedNodeForm() {
+
+export default function ProjectTopNavbar() {
 
     const dispatch = useDispatch()
 
@@ -18,8 +20,12 @@ export default function AddPreRenderedNodeForm() {
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("col"))}>C</div> 
         </div>
           
-      
-        <ProjectRightSidebarButton />
+        <div className="projectNavigationRight">
+          <SaveButton />
+          <ProjectRightSidebarButton letter="S" tab="Style" />
+          <ProjectRightSidebarButton letter="D" tab="Settings" />
+        </div>
+       
       
       </div>
     )

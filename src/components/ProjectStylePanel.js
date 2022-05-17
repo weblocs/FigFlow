@@ -8,14 +8,15 @@ import SizeStylePanel from "./style-panel/SizeStylePanel"
 // import OverflowStylePanel from "./style-panel/OverflowStylePanel"
 import TypographyStylePanel from "./style-panel/TypographyStylePanel"
 import BackgroundStylePanel from "./style-panel/BackgroundStylePanel"
-
+import { useSelector } from "react-redux";
 
 export default function ProjectStylePanel() {
 
-    
+  const activeRightSidebarTab = useSelector((state) => state.designerProjectState.activeRightSidebarTab)
     return (
         <>
-        <div className="style-panel">
+        <div
+        className={"style-panel "+ ((activeRightSidebarTab === "Style") ? "active" : "" )} >
 
         <StylePanelHeader />
 

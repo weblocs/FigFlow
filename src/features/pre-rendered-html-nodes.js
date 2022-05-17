@@ -3,8 +3,8 @@ import {JSONtoCSS, getIdOfPreRenderedStyleByName, getIndexOfElementInArrayById, 
 import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
-  activeProjectId: "",
   activeProjectTab: "",
+  activeRightSidebarTab: "Style",
   projectPages: [],
   activePageId: "",
   activePageIndex: 0,
@@ -462,14 +462,13 @@ export const preRenderedNodesSlice = createSlice({
         } else {
             state.activeProjectTab = action.payload;
         }
-        
     },
-    setActiveProjectId: (state, action) => {
-        state.activeProjectId = action.payload;
-    }
+    setActiveRightSidebarTab: (state, action) => {
+        state.activeRightSidebarTab = action.payload;
+    },
     // Add next reducers here
   }
 })
 
-export const {setActiveProjectId, editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer
