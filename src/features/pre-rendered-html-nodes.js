@@ -10,6 +10,8 @@ const initialState = {
   projectCollections:[],
   activeProjectCollectionId: "",
   activeProjectCollectionIndex: 0,
+  activeProjectCollectionItemId: "",
+  activeProjectCollectionItemIndex: 0,
   preRenderedHTMLNodes: [],
   preRenderedStyles: [],
   postRenderedStyles: "",
@@ -189,8 +191,6 @@ export const preRenderedNodesSlice = createSlice({
 
 
         state.activeNodeId = action.payload.id;
-
-        // console.log( current(state.preRenderedHTMLNodes) );
         
         [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
@@ -219,11 +219,8 @@ export const preRenderedNodesSlice = createSlice({
 
                 // [to work on] For classes with parents we have different id values in styles and nodes
 
-                // console.log(JSON.stringify(style.parents));
-                // console.log(JSON.stringify(state.stylesInActiveNode));
 
                 if(JSON.stringify(style.parents) === JSON.stringify(state.stylesInActiveNode)) {
-                    // console.log("hop");
                     isItNewStyle = false;
                 }
             }
@@ -338,6 +335,8 @@ export const preRenderedNodesSlice = createSlice({
     },
     setProjectCollections: (state, action) => {
         state.projectCollections = action.payload;
+        state.activeProjectCollectionId = state.projectCollections[state.activeProjectCollectionIndex].id;
+        state.activeProjectCollectionItemId = state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].id;
     },
     updateProjectPagesBeforeSaving: (state) => {
         state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
@@ -353,6 +352,23 @@ export const preRenderedNodesSlice = createSlice({
         // render the new page
         state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
         state.activeNodeId = "";
+    },
+    setActiveCollectionIdAndIndex: (state, action) => {
+        state.activeProjectCollectionId = action.payload;
+        state.activeProjectCollectionIndex = state.projectCollections.map(x => {
+            return x.id;
+        }).indexOf(state.activeProjectCollectionId);
+        state.activeProjectCollectionItemIndex = 0;
+        state.activeProjectCollectionItemId = state.projectCollections[state.activeProjectCollectionIndex].items[0]?.id;
+
+    },
+    setActiveCollectionItemIdAndIndex: (state, action) => {
+        state.activeProjectCollectionItemId = action.payload;
+        let activeCollectionsItems = state.projectCollections[state.activeProjectCollectionIndex].items;
+        state.activeProjectCollectionItemIndex = activeCollectionsItems.map(x => {
+            return x.id;
+        }).indexOf(state.activeProjectCollectionItemId);
+
     },
     createNewPageInProject: (state, action) => {
         //update previos page before creating a new one
@@ -389,6 +405,56 @@ export const preRenderedNodesSlice = createSlice({
             }
         ];
     },
+    createNewCollectionField: (state, action) => {
+        state.projectCollections[state.activeProjectCollectionIndex].fields = [...state.projectCollections[state.activeProjectCollectionIndex].fields, 
+            {
+                id:uuidv4(),
+                name:action.payload,
+                type:"text",
+            }
+        ];
+    },
+    createNewCollectionItems: (state, action) => {
+        let newId = uuidv4();
+        let activeCollectionItems = state.projectCollections[state.activeProjectCollectionIndex].items;
+        activeCollectionItems = [...activeCollectionItems, 
+            {
+                id:newId,
+                name:action.payload,
+                data:[]
+            }
+        ];
+
+        state.projectCollections[state.activeProjectCollectionIndex].items = activeCollectionItems;
+        
+        state.activeProjectCollectionItemId = newId;
+        state.activeProjectCollectionItemIndex = activeCollectionItems.map(x => {
+            return x.id;
+        }).indexOf(state.activeProjectCollectionItemId);
+
+        
+
+
+    },
+    editActiveCollectionItemData: (state, action) => {
+        action.payload.map((item) => {
+            let fieldExistInList = false;
+            state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex]?.data.find(function(value, index) {
+                if(value.fieldId === item.fieldId) {
+                    fieldExistInList = true;
+                    state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].data[index].fieldValue = item.fieldValue;
+                }
+              });
+
+              if(!fieldExistInList) {
+                state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].data = [
+                    ...state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].data,
+                    { fieldId: item.fieldId, fieldValue: item.fieldValue}
+                ];
+              }
+            });
+        
+    },
     setActiveProjectTab: (state, action) => {
         if(state.activeProjectTab === action.payload) {
             state.activeProjectTab = "";
@@ -401,5 +467,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

@@ -21,14 +21,12 @@ export default function ProjectNavigator() {
     }
 
     const dispatch = useDispatch()
-
-    // console.log([...preRenderedHTMLNodes]); // redux dev tools
     
     return (
         <SortableTree
           scaffoldBlockPxWidth={15}
           className={"navigatorWrapper "+ ((activeProjectTab === "Navigator") ? "active" : "" )}
-          canNodeHaveChildren={(node) => node.type === "div"}
+          canNodeHaveChildren={(node) => node.type === "div" || node.type === "col"}
           onChange={(treeData) => dispatch(setPreRenderedHTMLNodes([...treeData]))}
           isVirtualized={false}
           treeData={preRenderedHTMLNodes} 

@@ -81,7 +81,6 @@ export function setStylesInActiveNodeAndActiveStyle(nodes, id) {
           response[1] = nodes[i]?.class[nodes[i].class.length - 1]?.name;
           response[2] = nodes[i]?.class[nodes[i].class.length - 1]?.id;
 
-          // console.log(JSON.parse(JSON.stringify(response[2])));
 
           break;
       }

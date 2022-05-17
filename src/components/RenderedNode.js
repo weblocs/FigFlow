@@ -55,6 +55,38 @@ function RenderedNode(props) {
     </div>
   );
 
+  // Collection List
+  if (props.type === "col") {
+
+    let collectionListItems = [{id:"23420"},{id:"1312"},{id:"1231240"},{id:"56750"}]
+
+    elementHTML = (
+      <div 
+      onClick={handleOnClick}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+          >
+            {collectionListItems.map((item) => (
+              <div key={item.id} >
+              {props.children.map((el) => (
+                <RenderedNode
+                  type={el.type}
+                  id={el.id}
+                  key={el.id}
+                  title={el.title}
+                  children={el.children}
+                  onChange={(text, id) => props.onChange(text, id)}
+                  class={el.class}
+                  onClick={([nodeId,className]) => props.onClick([nodeId,className])}
+                />
+              ))}
+              </div>
+            ))}
+      </div>
+    );
+  }
+
   if (props.type === "h") {
     elementHTML = (
       <ContentEditable

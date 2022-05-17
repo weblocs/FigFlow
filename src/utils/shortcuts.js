@@ -20,7 +20,6 @@ function handleKeyDown({ key }) {
         keys.push(key);
     }
 
-    // console.log(keys);
     if (RIGHT_ARROW.includes(String(key))) {
       dispatch(arrowActiveNodeNavigation({key: "right"}))
     }
@@ -35,12 +34,11 @@ function handleKeyDown({ key }) {
       }
 
       if(keys.includes('Meta') && keys.includes('c')) {
-          console.log("Copy");
+      
       }
 
       if(keys.includes('Meta') && keys.includes('s')) {
         
-        console.log("Copy");
     }
   }
 

@@ -22,7 +22,6 @@ export default function saveProject(items,preRenderedStyles) {
     )
     .then((res) => {
       return "Saved";
-      console.log("Saved");
     });
 }
 

@@ -7,6 +7,8 @@ import ProjectRenderedDesign from "./components/ProjectRenderedDesign"
 import ProjectStylePanel from "./components/ProjectStylePanel"
 import ProjectPagesPanel from "./components/ProjectPagesPanel";
 import ProjectCollectionsPanel from "./components/ProjectCollectionsPanel";
+import ProjectCollectionsFieldsPanel from "./components/ProjectCollectionsFieldsPanel"
+import ProjectCollectionsItemsPanel from "./components/ProjectCollectionsItemsPanel";
 
 import SaveButton from "./components/atoms/SaveButton"
 import {loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-load-project"
@@ -27,6 +29,8 @@ export default function FigFlow(props) {
         <ProjectNavigator />
         <ProjectPagesPanel />
         <ProjectCollectionsPanel />
+        <ProjectCollectionsItemsPanel />
+        <ProjectCollectionsFieldsPanel />
 
         <ProjectRenderedDesign />
 

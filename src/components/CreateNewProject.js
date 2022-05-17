@@ -35,7 +35,6 @@ export default function CreateNewProject (props) {
             items: [],
             preRenderedStyles: [],
         }).then((res) => {
-            console.log("New project added");
             window.location.replace("/design/"+projectSlug);
             } 
         );

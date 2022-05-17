@@ -2,14 +2,17 @@ import React, {useState} from "react";
 import { useDispatch } from "react-redux";
 import {createNewCollection} from "../features/pre-rendered-html-nodes"
 
-export default function CreateNewCollection () {
+export default function CreateNewPageInProject () {
     const dispatch = useDispatch();
     const [input, setInput] = useState("");
 
     async function handleAddNewCollection(e) {
         e.preventDefault();
-        dispatch(createNewCollection(input));
-        setInput("");
+        if(input !== "") {
+            dispatch(createNewCollection(input));
+            setInput("");
+        }
+        
     };
 
     return (

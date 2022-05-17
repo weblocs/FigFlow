@@ -46,7 +46,6 @@ export default function SaveButton(props) {
 
     async function saveProjectToFirebasePreRenderedNodesAndStyles(preRenderedHTMLNodes,preRenderedStyles) {
       // setUpdatedProjectPages([...projectPages]);
-      // console.log(updatedProjectPages);
       // updatedProjectPages[0].preRenderedNodes = preRenderedHTMLNodes;
       setButtonText("Saving");
       const app = initializeApp(firebaseConfig);

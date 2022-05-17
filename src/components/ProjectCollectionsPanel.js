@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CreateNewCollection from "./CreateNewCollection"
-import {setActivePageIdAndIndex} from "../features/pre-rendered-html-nodes"
+import {setActiveCollectionIdAndIndex} from "../features/pre-rendered-html-nodes"
 
 
 export default function ProjectCollectionsPanel(){
@@ -20,7 +20,10 @@ export default function ProjectCollectionsPanel(){
 
             <div className="pagesList">
             {projectCollections.map((collection) => (
-                <div onClick={() => dispatch(setActivePageIdAndIndex(collection.id))} className={"projectPageItem " + ((activeProjectCollectionId === collection.id) ? "active" : "") } key={collection.id}>
+                <div 
+                onClick={() => dispatch(setActiveCollectionIdAndIndex(collection.id))} 
+                className={"projectPageItem " + ((activeProjectCollectionId === collection.id) ? "active" : "") } 
+                key={collection.id}>
                     {collection.name}
                 </div>
             ))}
