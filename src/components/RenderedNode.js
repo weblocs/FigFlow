@@ -10,6 +10,7 @@ function RenderedNode(props) {
 
   const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
   const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId);
+  const projectCollections = useSelector((state) => state.designerProjectState.projectCollections);
 
   function handleDoubleClick(e) {
     e.stopPropagation();
@@ -58,7 +59,8 @@ function RenderedNode(props) {
   // Collection List
   if (props.type === "col") {
 
-    let collectionListItems = [{id:"23420"},{id:"1312"},{id:"1231240"},{id:"56750"}]
+    let collectionListItems = [{id:"23420"},{id:"1312"},{id:"1231240"},{id:"56750"}];
+
 
     elementHTML = (
       <div 
@@ -67,14 +69,14 @@ function RenderedNode(props) {
       onMouseOut={handleMouseOut}
       className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
           >
-            {collectionListItems.map((item) => (
-              <div key={item.id} >
+            {projectCollections[0].items.map((item,itemIndex) => (
+              <div key={item.id}>
               {props.children.map((el) => (
                 <RenderedNode
                   type={el.type}
                   id={el.id}
                   key={el.id}
-                  title={el.title}
+                  title={ (el.cmsFieldId) ? projectCollections[0].items[itemIndex].data.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue : el.title }
                   children={el.children}
                   onChange={(text, id) => props.onChange(text, id)}
                   class={el.class}

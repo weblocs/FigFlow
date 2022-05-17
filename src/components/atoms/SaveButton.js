@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useSelector, useDispatch } from 'react-redux'
-
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import Constants from "../../utils/const.js";
 
@@ -10,16 +10,17 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, updateDoc, doc } from "firebase/firestore";
 import { firebaseConfig } from "../../utils/firebase-config.js";
 
-export default function SaveButton(props) {
+export default function SaveButton() {
 
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const projectFirebaseId = useSelector((state) => state.designerProjectState.projectFirebaseId)
     const projectPages = useSelector((state) => state.designerProjectState.projectPages)
     const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
+    const dispatch = useDispatch()
 
     const [updatedProjectPages, setUpdatedProjectPages] = useState([...projectPages]);
-    const dispatch = useDispatch()
+    let params = useParams();
     
 
     const [buttonText, setButtonText] = useState("Save");
@@ -28,7 +29,7 @@ export default function SaveButton(props) {
       setButtonText("Saving");
         axios
           .put(
-            Constants.BASE_API + "update?project_id=" + props.projectSlug,
+            Constants.BASE_API + "update?project_id=" + params.projectSlug,
             { items: [...items], preRenderedStyles: [...preRenderedStyles] },
             {
               headers: {

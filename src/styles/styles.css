@@ -292,6 +292,7 @@ font-size: 12px;
 
 .addNodeWrapper {
   display: flex;
+  justify-content: space-between;
 }
 
 a {
@@ -437,4 +438,22 @@ a {
 
 .projectPageItem.active {
   background: #ededed;
+}
+
+.projectRightSidebarNav {
+  transition: background-color .2s;
+    display: flex;
+    font-size: 11px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    /* background-color: #f5f5f5; */
+    border-right: 1px solid #d3d3d3;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.projectNavigationLeft {
+  display: flex;
 }

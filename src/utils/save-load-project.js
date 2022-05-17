@@ -2,7 +2,7 @@ import axios from "axios";
 import Constants from "./const.js";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
-
+import { useParams } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "firebase/firestore";
 import { firebaseConfig } from "./firebase-config.js";
@@ -45,11 +45,13 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
 
   const dispatch = useDispatch()
   const projectFirebaseId = useSelector((state) => state.designerProjectState.projectFirebaseId)
+  
+  let params = useParams();
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const userProjects = await getDocs( query( collection(db, "projects"), where("projectId", "==", projectSlug)));
+  const userProjects = await getDocs( query( collection(db, "projects"), where("projectId", "==", params.projectSlug)));
   
   userProjects.forEach((doc) => {
     dispatch(setProjectFirebaseId(doc.id));

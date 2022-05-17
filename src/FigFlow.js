@@ -14,14 +14,14 @@ import SaveButton from "./components/atoms/SaveButton"
 import {loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
 
-export default function FigFlow(props) {
+export default function FigFlow() {
 
-  loadProjectFromFirebasePreRenderedNodesAndStyles(props.projectSlug);
+  loadProjectFromFirebasePreRenderedNodesAndStyles();
   loadShortcuts();
 
   return (
     <>
-      <SaveButton projectSlug={props.projectSlug} />
+      <SaveButton />
       <AddPreRenderedNodeForm />
     
       <div className="projectWrapper">
@@ -33,8 +33,9 @@ export default function FigFlow(props) {
         <ProjectCollectionsFieldsPanel />
 
         <ProjectRenderedDesign />
-
+          
         <ProjectStylePanel />
+        
       </div>
     </>
   );
