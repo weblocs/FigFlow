@@ -1,7 +1,7 @@
 import React from "react"
 import { useSelector, useDispatch } from 'react-redux'
 
-import {editTextByIdInPreRenderedHTMLNode, setActiveNodeAndStyle} from "../features/pre-rendered-html-nodes"
+import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeAndStyle} from "../features/pre-rendered-html-nodes"
 
 import RenderedNode from "./RenderedNode";
 
@@ -18,7 +18,7 @@ export default function ProjectRenderedDesign() {
 
             {preRenderedHTMLNodes.map((el) => (
             <RenderedNode
-                onChange={(text, id) => dispatch(editTextByIdInPreRenderedHTMLNode([id, text]))}
+                onChange={(text, id) => dispatch(editSelectedFieldInPreRenderedHTMLNode({id: id, field: 'title', value: text}))}
                 type={el.type}
                 id={el.id}
                 key={el.id}

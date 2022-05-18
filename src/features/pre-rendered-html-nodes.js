@@ -78,18 +78,21 @@ export const preRenderedNodesSlice = createSlice({
         state.activeStyleIndex = undefined;
     },
 
-    editTextByIdInPreRenderedHTMLNode: (state,action) => {
+    editSelectedFieldInPreRenderedHTMLNode: (state,action) => {
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
-        let editedNodeId = action.payload[0];
-        let editedNodeNewText = action.payload[1];
+        let editedNodeId = action.payload.id;
+        let editedNodeNewText = action.payload.value;
+        let editedField = action.payload.field;
 
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id) {
                 tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
-                JSON.stringify(nodes[i]),
-                JSON.stringify(nodes[i]).replace(nodes[i].title, editedNodeNewText)
+                    JSON.stringify(nodes[i]),
+                    JSON.stringify(nodes[i]).replace( 
+                        `"${editedField}":"${nodes[i] [editedField]}"`,
+                        `"${editedField}":"${editedNodeNewText}"`)
                 );
                 response = JSON.parse(tempPreRenderedHTMLNodes);
                 break;
@@ -99,6 +102,7 @@ export const preRenderedNodesSlice = createSlice({
             }
             }
         }
+
         findNode(state.preRenderedHTMLNodes, editedNodeId);
         state.preRenderedHTMLNodes = response;
     },
@@ -189,10 +193,8 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     setActiveNodeAndStyle: (state, action) => {
-
-
         state.activeNodeId = action.payload.id;
-        
+
         [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
     },
@@ -470,5 +472,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, editTextByIdInPreRenderedHTMLNode, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer
