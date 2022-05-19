@@ -44,9 +44,11 @@ function RenderedNode(props) {
       {props.children.map((el) => (
         <RenderedNode
           type={el.type}
+          cmsCollectionId={el.cmsCollectionId}
+          cmsFieldId={el.cmsFieldId}
           id={el.id}
           key={el.id}
-          title={el.title}
+          title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
           children={el.children}
           onChange={(text, id) => props.onChange(text, id)}
           class={el.class}
@@ -56,11 +58,18 @@ function RenderedNode(props) {
     </div>
   );
 
+  
+
   // Collection List
   if (props.type === "col") {
 
     let collectionListItems = [{id:"23420"},{id:"1312"},{id:"1231240"},{id:"56750"}];
 
+    let renderedCollectionIndex = projectCollections.map(x => {
+      return x.id;
+    }).indexOf(props.cmsCollectionId);
+
+    // console.log(renderedCollectionIndex);
 
     elementHTML = (
       <div 
@@ -69,14 +78,17 @@ function RenderedNode(props) {
       onMouseOut={handleMouseOut}
       className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
           >
-            {projectCollections[0].items.map((item,itemIndex) => (
+            {projectCollections[renderedCollectionIndex]?.items.map((item,itemIndex) => (
               <div key={item.id}>
               {props.children.map((el) => (
                 <RenderedNode
                   type={el.type}
+                  cmsCollectionId={el.cmsCollectionId}
+                  cmsFieldId={el.cmsFieldId}
                   id={el.id}
                   key={el.id}
-                  title={ (el.cmsFieldId) ? projectCollections[0].items[itemIndex].data.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue : el.title }
+                  collectionItems={projectCollections[renderedCollectionIndex]?.items[itemIndex].data}
+                  title={ (el.cmsFieldId) ? projectCollections[renderedCollectionIndex]?.items[itemIndex].data.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue : el.title }
                   children={el.children}
                   onChange={(text, id) => props.onChange(text, id)}
                   class={el.class}

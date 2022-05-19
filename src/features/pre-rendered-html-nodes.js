@@ -1,14 +1,18 @@
-import { createSlice, current } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
 import {JSONtoCSS, getIdOfPreRenderedStyleByName, getIndexOfElementInArrayById, setStylesInActiveNodeAndActiveStyle} from "../utils/nodes-editing"
 import { v4 as uuidv4 } from "uuid";
+
+import { initializeApp } from "firebase/app";
+import { getFirestore, updateDoc, doc } from "firebase/firestore";
+import { firebaseConfig } from "../utils/firebase-config.js";
 
 const initialState = {
   activeProjectTab: "",
   activeRightSidebarTab: "Style",
   projectPages: [],
   activePageId: "",
-  activePageIndex: 0,
-  projectCollections:[],
+  activePageIndex: 0,  // pages[activePageIndex].data 
+  projectCollections:[],  // find(({id}) => id === collection.id)
   activeProjectCollectionId: "",
   activeProjectCollectionIndex: 0,
   activeProjectCollectionItemId: "",
@@ -17,14 +21,24 @@ const initialState = {
   preRenderedStyles: [],
   postRenderedStyles: "",
   activeNodeId: "",
+  activeNodeObject: {},
   hoveredNodeId: "",
   arrowNavigationOn: true,
   activeStyleId: "",
   activeStyleName: "",
   activeStyleIndex: 0,
   stylesInActiveNode: [],
-  projectFirebaseId: ""
+  projectFirebaseId: "",
+  saveButtonStateText: "Save",
 }
+
+// export const updateProjectPagesBeforeSavingTest = createAsyncThunk("preRenderedNodes/updateProjectPagesBeforeSavingTest", 
+// async (test,thunkAPI) => {
+//     return await new Promise((resolve) => {
+//         thunkAPI.dispatch(updateProjectPagesBeforeSaving());
+//         resolve();
+//     }) 
+// }) 
 
 export const preRenderedNodesSlice = createSlice({
   name: 'preRenderedNodes',
@@ -32,6 +46,23 @@ export const preRenderedNodesSlice = createSlice({
   reducers: {
     setPreRenderedHTMLNodes: (state, action) => {
         state.preRenderedHTMLNodes = action.payload
+    },
+
+    setActiveNodeObject: (state) => {
+        let response;
+        function findNode(nodes, id) {
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].id === id) {
+                    response = nodes[i];
+                    break;
+                }
+                if (nodes[i].children) {
+                    findNode(nodes[i].children, id);
+                }
+            }
+        }
+        findNode(state.preRenderedHTMLNodes, state.activeNodeId);
+        state.activeNodeObject = response;
     },
 
     addNodeToRenderedHTMLNodesAfterActiveNode: (state, action) => {
@@ -88,12 +119,25 @@ export const preRenderedNodesSlice = createSlice({
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id) {
-                tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
-                    JSON.stringify(nodes[i]),
-                    JSON.stringify(nodes[i]).replace( 
-                        `"${editedField}":"${nodes[i] [editedField]}"`,
-                        `"${editedField}":"${editedNodeNewText}"`)
-                );
+                // edit using find
+                if(nodes[i] [editedField] === undefined) {
+                    // create field
+                    tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
+                        JSON.stringify(nodes[i]),
+                        JSON.stringify(nodes[i]).replace( 
+                            `"id":"${nodes[i].id}"`,
+                            `"id":"${nodes[i].id}", "${editedField}":"${editedNodeNewText}" `)
+                    );
+                } else {
+                    // edit field
+                    tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
+                        JSON.stringify(nodes[i]),
+                        JSON.stringify(nodes[i]).replace( 
+                            `"${editedField}":"${nodes[i] [editedField]}"`,
+                            `"${editedField}":"${editedNodeNewText}"`)
+                    );
+                }
+                
                 response = JSON.parse(tempPreRenderedHTMLNodes);
                 break;
             }
@@ -220,9 +264,7 @@ export const preRenderedNodesSlice = createSlice({
            
             if(style.name === styleName) {
 
-                // [to work on] For classes with parents we have different id values in styles and nodes
-
-
+                // [to-work-on] For classes with parents we have different id values in styles and nodes
                 if(JSON.stringify(style.parents) === JSON.stringify(state.stylesInActiveNode)) {
                     isItNewStyle = false;
                 }
@@ -341,8 +383,24 @@ export const preRenderedNodesSlice = createSlice({
         state.activeProjectCollectionId = state.projectCollections[state.activeProjectCollectionIndex].id;
         state.activeProjectCollectionItemId = state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].id;
     },
+
     updateProjectPagesBeforeSaving: (state) => {
+        async function saveProjectToFirebasePreRenderedNodesAndStyles() {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            await updateDoc(doc(db, "projects", state.projectFirebaseId), {
+              pages: state.projectPages,
+              collections: state.projectCollections,
+              preRenderedStyles: state.preRenderedStyles
+            });
+            // state.saveButtonStateText = "Saved" TypeError: Cannot perform 'set' on a proxy that has been revoked
+        } 
+
         state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
+        saveProjectToFirebasePreRenderedNodesAndStyles(); 
+    },
+    setSaveButtonStateText: (state,action) => {
+        state.saveButtonStateText = action.payload;
     },
     setActivePageIdAndIndex: (state, action) => {
         //update previos page before creating a new one
@@ -435,9 +493,6 @@ export const preRenderedNodesSlice = createSlice({
             return x.id;
         }).indexOf(state.activeProjectCollectionItemId);
 
-        
-
-
     },
     editActiveCollectionItemData: (state, action) => {
         action.payload.map((item) => {
@@ -472,5 +527,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer
