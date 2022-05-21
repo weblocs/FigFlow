@@ -7,6 +7,7 @@ export default function ProjectSidebar(){
            <ProjectSidebarButton letter="N" tab="Navigator" />
            <ProjectSidebarButton letter="P" tab="Pages" />
            <ProjectSidebarButton letter="C" tab="Collections" />
+           <ProjectSidebarButton letter="I" tab="Images" />
         </div>
     )
 }

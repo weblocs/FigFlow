@@ -13,13 +13,6 @@ export default function ProjectNavigator() {
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
     const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-
-    
-
-    function handleNavigatorNodeOnClick (_id) {
-        dispatch(setActiveNodeAndStyle({id: _id}));
-    }
-
     const dispatch = useDispatch()
     
     return (

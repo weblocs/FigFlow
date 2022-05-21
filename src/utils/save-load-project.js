@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "firebase/firestore";
+import { getStorage, ref } from "firebase/storage";
 import { firebaseConfig } from "./firebase-config.js";
+
 
 import { setProjectCollections, setPreRenderedStyles, setProjectPages, setProjectFirebaseId } from '../features/pre-rendered-html-nodes'
 
@@ -62,5 +64,13 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
   dispatch(setProjectPages([...projectData.data().pages]));
   dispatch(setProjectCollections([...projectData.data().collections]));
   dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
+
+
+  // Storage
+
+  // const storage = getStorage(firebaseApp);
+  // const storageRef = ref(storage);
+
+
 }
 

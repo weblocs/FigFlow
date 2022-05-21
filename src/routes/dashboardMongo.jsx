@@ -8,10 +8,6 @@ import * as Realm from "realm-web";
 
 export default function Dashboard() {
 
-
-
-
-
 // Mongo DB Realm
 
   const app = new Realm.App({ id: "application-0-icorv" });
