@@ -104,23 +104,48 @@ export default function ProjectSettingsPanel() {
 
             
             
-            <div>{(isNodeInCollection && (activeNodeObject?.type === "h" || activeNodeObject?.type === "p" )) ? ( 
+            <div>
+                
+                {(isNodeInCollection && (activeNodeObject?.type === "h" || activeNodeObject?.type === "p" )) && 
                 <div>
 
                 <div style={{marginBottom:"20px"}}>
                     <div>In Collection:  {projectCollections.find(({id}) => id === activeCollectionId).name}</div>
-                    <div>Field:  {projectCollections.find(({id}) => id === activeCollectionId).fields.find(({id}) => id === activeNodeObject?.cmsFieldId)?.name}</div>
+                    <div>Field:  {projectCollections.find(({id}) => id === activeCollectionId).fields
+                    .find(({id}) => id === activeNodeObject?.cmsFieldId)?.name}</div>
                 </div>
                 
                 <div>Fields:</div>
-                {projectCollections.find(({id}) => id === activeCollectionId).fields.map((field) => (
+                {projectCollections.find(({id}) => id === activeCollectionId).fields
+                    .filter(({type}) => type === "text")
+                    .map((field) => (
                     <div onClick={() => handleClickInFieldItem(field.id)} key={field.id}>
                         {field.name}
                     </div>
                 ))}
+                </div>
+                }
+
+                {(isNodeInCollection && (activeNodeObject?.type === "img" )) && 
+                <div>
+
+                <div style={{marginBottom:"20px"}}>
+                    <div>In Collection:  {projectCollections.find(({id}) => id === activeCollectionId).name}</div>
+                    <div>Field:  {projectCollections.find(({id}) => id === activeCollectionId).fields.filter(({type}) => type === "img").find(({id}) => id === activeNodeObject?.cmsFieldId)?.name}</div>
+                </div>
+
+                <div>Fields:</div>
+                {projectCollections.find(({id}) => id === activeCollectionId).fields
+                    .filter(({type}) => type === "img").map((field) => (
+                    <div onClick={() => handleClickInFieldItem(field.id)} key={field.id}>
+                        {field.name}
+                    </div>
+                ))}
+                </div>
+                }
+                
                 
                 </div>
-                ) : ""}</div>
         </div>
     )
 }

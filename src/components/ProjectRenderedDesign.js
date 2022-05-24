@@ -19,6 +19,7 @@ export default function ProjectRenderedDesign() {
             {preRenderedHTMLNodes.map((el) => (
             <RenderedNode
                 onChange={(text, id) => dispatch(editSelectedFieldInPreRenderedHTMLNode({id: id, field: 'title', value: text}))}
+                data={el}
                 cmsCollectionId={el.cmsCollectionId}
                 cmsFieldId={el.cmsFieldId}
                 type={el.type}

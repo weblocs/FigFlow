@@ -43,6 +43,7 @@ function RenderedNode(props) {
         >
       {props.children.map((el) => (
         <RenderedNode
+          data={el}
           type={el.type}
           cmsCollectionId={el.cmsCollectionId}
           cmsFieldId={el.cmsFieldId}
@@ -71,6 +72,7 @@ function RenderedNode(props) {
 
     // console.log(renderedCollectionIndex);
 
+
     elementHTML = (
       <div 
       onClick={handleOnClick}
@@ -79,14 +81,17 @@ function RenderedNode(props) {
       className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
           >
             {projectCollections[renderedCollectionIndex]?.items.map((item,itemIndex) => (
-              <div key={item.id}>
+              <div key={item.id}> 
               {props.children.map((el) => (
                 <RenderedNode
+                  data={el}
                   type={el.type}
                   cmsCollectionId={el.cmsCollectionId}
                   cmsFieldId={el.cmsFieldId}
                   id={el.id}
                   key={el.id}
+                  itemIndex = {itemIndex}
+                  renderedCollectionIndex={renderedCollectionIndex}
                   collectionItems={projectCollections[renderedCollectionIndex]?.items[itemIndex].data}
                   title={ (el.cmsFieldId) ? projectCollections[renderedCollectionIndex]?.items[itemIndex].data.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue : el.title }
                   children={el.children}
@@ -101,8 +106,28 @@ function RenderedNode(props) {
     );
   }
 
+  let h = `<h x-bind:class="(count > 8) ? 'h1' : ''" x-text="count" x-on:click="count = count + 1"></h>`;
+
+  if (props.type === "img") {
+    let imageSrc = props.data?.src;
+    if(props.data.cmsFieldId) {
+      imageSrc = projectCollections[props.renderedCollectionIndex]?.items[props.itemIndex].data.find(({ fieldId }) => fieldId === props.data.cmsFieldId)?.fieldValue
+    }
+    elementHTML = (
+      <img 
+      src={"https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+imageSrc+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a"}
+      onClick={handleOnClick}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      el_id={props.id}
+      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      />
+    );
+  }
+
   if (props.type === "h") {
     elementHTML = (
+      // <div dangerouslySetInnerHTML={{__html: h}} />
       <ContentEditable
         onClick={handleOnClick}
         onDoubleClick={handleDoubleClick}

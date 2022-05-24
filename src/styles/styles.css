@@ -478,3 +478,13 @@ a {
 .style-panel.active {
   display: block;
 }
+
+.libraryImageGrid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.libraryImage {
+  width: 100px;
+  height: 100px;
+}

@@ -19,7 +19,7 @@ export default function ProjectNavigator() {
         <SortableTree
           scaffoldBlockPxWidth={15}
           className={"navigatorWrapper "+ ((activeProjectTab === "Navigator") ? "active" : "" )}
-          canNodeHaveChildren={(node) => node.type === "div" || node.type === "col"}
+          canNodeHaveChildren={(node) => node.type === "div" || node.type === "col" || node.type === "sym"}
           onChange={(treeData) => dispatch(setPreRenderedHTMLNodes([...treeData]))}
           isVirtualized={false}
           treeData={preRenderedHTMLNodes} 

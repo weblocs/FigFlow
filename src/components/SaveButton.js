@@ -14,6 +14,7 @@ export default function SaveButton() {
     const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
     const saveButtonStateText = useSelector((state) => state.designerProjectState.saveButtonStateText)
 
+
     const dispatch = useDispatch()
     
     const [buttonText, setButtonText] = useState("Save");

@@ -11,6 +11,7 @@ const initialState = {
   activeRightSidebarTab: "Style",
   projectPages: [],
   activePageId: "",
+  
   activePageIndex: 0,  // pages[activePageIndex].data 
   projectCollections:[],  // find(({id}) => id === collection.id)
   activeProjectCollectionId: "",
@@ -147,6 +148,7 @@ export const preRenderedNodesSlice = createSlice({
             }
         }
 
+        
         findNode(state.preRenderedHTMLNodes, editedNodeId);
         state.preRenderedHTMLNodes = response;
     },
@@ -470,8 +472,8 @@ export const preRenderedNodesSlice = createSlice({
         state.projectCollections[state.activeProjectCollectionIndex].fields = [...state.projectCollections[state.activeProjectCollectionIndex].fields, 
             {
                 id:uuidv4(),
-                name:action.payload,
-                type:"text",
+                name:action.payload.name,
+                type:action.payload.type,
             }
         ];
     },

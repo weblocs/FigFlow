@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import CreateNewCollection from "./CreateNewCollection"
-import {setActiveCollectionIdAndIndex} from "../features/pre-rendered-html-nodes"
 import {addImageToProjectImages} from "../features/project-images"
 import {v4 as uuidv4} from "uuid"
 import { initializeApp } from "firebase/app";
 import { getFirestore, setDoc, doc, updateDoc } from "firebase/firestore";
 import { firebaseConfig } from "../utils/firebase-config.js";
-import { editSelectedFieldInPreRenderedHTMLNode } from "../features/pre-rendered-html-nodes"
 
 const fileToDataUri = (file) => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -18,18 +15,12 @@ const fileToDataUri = (file) => new Promise((resolve, reject) => {
     reader.readAsDataURL(file);
 })
 
-export default function ProjectImagesPanel(){
+export default function FileUploaderToCollectionField({handleInputChange}){
     const dispatch = useDispatch()
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
     const projectFirebaseId = useSelector((state) => state.designerProjectState.projectFirebaseId)
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
     const projectImages = useSelector((state) => state.projectImages.Images)
 
     const storage = getStorage();
-
-    function setImageToActiveNode(imageName) {
-        dispatch(editSelectedFieldInPreRenderedHTMLNode({id: activeNodeId, field: 'src', value: imageName}))
-    }
 
     const imageUploading = (file) => {
 
@@ -55,23 +46,17 @@ export default function ProjectImagesPanel(){
                 }],
             });
             dispatch(addImageToProjectImages(projectFirebaseId+"-"+file.name));
+            handleInputChange(projectFirebaseId+"-"+file.name);
         })
+
+        
+
     }
 
     return(
 
-        <div className={"projectCollectionsPanel "+ ((activeProjectTab === "Images") ? "active" : "" )}>
-            <div className="projectTabTitleBox">Images</div>
-            <div style={{overflow:"hidden"}}>
+        <div style={{overflow:"hidden"}}>
                 <input type="file" onChange={(event) => imageUploading(event.target.files[0] || null)} />
-            </div>
-            <div className="libraryImageGrid">
-                {projectImages.map((images) => (
-                        <div onClick={() => setImageToActiveNode(images.name)} key={images.id}>
-                            <img className="libraryImage" src={"https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+images.name+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a"} />
-                        </div>
-                ))} 
-            </div>  
         </div>
     )
 }
