@@ -143,6 +143,12 @@ export default function ProjectSettingsPanel() {
                 ))}
                 </div>
                 }
+
+{(activeNodeObject?.type === "sym" ) && 
+                <div>
+                    {activeNodeObject?.symbolId}
+                </div>
+                }
                 
                 
                 </div>

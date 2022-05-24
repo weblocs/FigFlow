@@ -10,6 +10,7 @@ import ProjectCollectionsPanel from "./components/ProjectCollectionsPanel";
 import ProjectCollectionsFieldsPanel from "./components/ProjectCollectionsFieldsPanel"
 import ProjectCollectionsItemsPanel from "./components/ProjectCollectionsItemsPanel";
 import ProjectSettingsPanel from "./components/ProjectSettingsPanel";
+import ProjectSymbolsPanel from "./components/ProjectSymbolsPanel"
 
 import {loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
@@ -33,6 +34,7 @@ export default function FigFlow() {
         <ProjectImagesPanel />
         <ProjectCollectionsItemsPanel />
         <ProjectCollectionsFieldsPanel />
+        <ProjectSymbolsPanel />
 
         <ProjectRenderedDesign />
           

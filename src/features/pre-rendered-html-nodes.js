@@ -11,13 +11,13 @@ const initialState = {
   activeRightSidebarTab: "Style",
   projectPages: [],
   activePageId: "",
-  
-  activePageIndex: 0,  // pages[activePageIndex].data 
-  projectCollections:[],  // find(({id}) => id === collection.id)
+  activePageIndex: 0, 
+  projectCollections:[],  
   activeProjectCollectionId: "",
   activeProjectCollectionIndex: 0,
   activeProjectCollectionItemId: "",
   activeProjectCollectionItemIndex: 0,
+  projectSymbols: [],
   preRenderedHTMLNodes: [],
   preRenderedStyles: [],
   postRenderedStyles: "",
@@ -31,15 +31,8 @@ const initialState = {
   stylesInActiveNode: [],
   projectFirebaseId: "",
   saveButtonStateText: "Save",
+  
 }
-
-// export const updateProjectPagesBeforeSavingTest = createAsyncThunk("preRenderedNodes/updateProjectPagesBeforeSavingTest", 
-// async (test,thunkAPI) => {
-//     return await new Promise((resolve) => {
-//         thunkAPI.dispatch(updateProjectPagesBeforeSaving());
-//         resolve();
-//     }) 
-// }) 
 
 export const preRenderedNodesSlice = createSlice({
   name: 'preRenderedNodes',
@@ -393,7 +386,8 @@ export const preRenderedNodesSlice = createSlice({
             await updateDoc(doc(db, "projects", state.projectFirebaseId), {
               pages: state.projectPages,
               collections: state.projectCollections,
-              preRenderedStyles: state.preRenderedStyles
+              preRenderedStyles: state.preRenderedStyles,
+              symbols: state.projectSymbols,
             });
             // state.saveButtonStateText = "Saved" TypeError: Cannot perform 'set' on a proxy that has been revoked
         } 
@@ -455,6 +449,20 @@ export const preRenderedNodesSlice = createSlice({
         state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
         state.activeNodeId = "";
 
+    },
+
+    setProjectSymbols: (state, action) => {
+        state.projectSymbols = action.payload;
+    },
+
+    createNewSymbol: (state, action) => {
+        state.projectSymbols = [...state.projectSymbols, 
+            {
+                id: uuidv4(),
+                name: action.payload,  
+                preRenderedHTMLNodes: [],
+            }
+        ];
     },
 
     createNewCollection: (state, action) => {
@@ -529,5 +537,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

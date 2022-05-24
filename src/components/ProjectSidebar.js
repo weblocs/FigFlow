@@ -8,6 +8,7 @@ export default function ProjectSidebar(){
            <ProjectSidebarButton letter="P" tab="Pages" />
            <ProjectSidebarButton letter="C" tab="Collections" />
            <ProjectSidebarButton letter="I" tab="Images" />
+           <ProjectSidebarButton letter="S" tab="Symbols" />
         </div>
     )
 }

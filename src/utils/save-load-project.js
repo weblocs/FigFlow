@@ -8,7 +8,7 @@ import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "fi
 import { getStorage, ref } from "firebase/storage";
 import { firebaseConfig } from "./firebase-config.js";
 
-import { setProjectCollections, setPreRenderedStyles, setProjectPages, setProjectFirebaseId } from '../features/pre-rendered-html-nodes'
+import { setProjectCollections, setProjectSymbols, setPreRenderedStyles, setProjectPages, setProjectFirebaseId } from '../features/pre-rendered-html-nodes'
 import { setProjectImages } from "../features/project-images"
 
 export default function saveProject(items,preRenderedStyles) {
@@ -65,6 +65,9 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
   dispatch(setProjectCollections([...projectData.data().collections]));
   dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
   dispatch(setProjectImages([...projectData.data()?.images]));
+  dispatch(setProjectSymbols([...projectData.data()?.symbols]));
+
+  
 
   
 
