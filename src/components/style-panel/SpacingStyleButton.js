@@ -100,6 +100,7 @@ export default function SpacingStyleButton (props) {
                 <input 
                 ref={inputRef}
                 type="number"
+                onBlur={() => setOpenEditor(false)}
                 onKeyDown={handleKeyPress}
                 className={editorPopUpClass} />
 
