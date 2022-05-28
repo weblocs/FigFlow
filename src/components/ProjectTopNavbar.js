@@ -19,16 +19,16 @@ export default function ProjectTopNavbar() {
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("p"))}>P</div> 
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("col"))}>C</div>
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("img"))}>I</div>
-          <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("sym"))}>S</div> 
+          <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("sym"))}>S</div>
+          <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("l"))}>L</div> 
         </div>
-          
+        
         <div className="projectNavigationRight">
           <SaveButton />
           <ProjectRightSidebarButton letter="S" tab="Style" />
           <ProjectRightSidebarButton letter="D" tab="Settings" />
         </div>
-       
-      
+        
       </div>
     )
 }

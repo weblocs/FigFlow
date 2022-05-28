@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
-import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject} from "../features/pre-rendered-html-nodes";
+import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
 
 export default function ProjectSettingsPanel() {
     
@@ -11,37 +11,84 @@ export default function ProjectSettingsPanel() {
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
+    const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
     const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
 
 
     let activeNode = {};
+
     let _isNodeCollection = false;
     let isNodeCollection = false;
+
     let isNodeInCollection = false;
+    let _isNodeInCollection = false;
+
     let activeCollectionId = "";
     let _activeCollectionId = "";
+
+    let _elementIdAfterActiveCollection = "";
+
+    let _isNodeSymbol = false;
+    let isNodeSymbol = false;
+
+    let isNodeInSymbol = false;
+    let _isNodeInSymbol = false;
+
+    let activeSymbolId = "";
+    let _activeSymbolId = "";
+
+    let activeSymbolNodes = [];
+    let _activeSymbolNodes = [];
+
+    let _elementIdAfterActiveSymbol = "";
+
+    const [updateSymbolButtonText, setUpdateSymbolButtonText] = useState("Update symbol");
+    
     
 
 
     // zbiera zawsze stare dane [DO ZMIANY]
     useEffect(() => {
         dispatch(setActiveNodeObject());
-        // console.log("activeNodeObject");
-        // console.log(activeNodeObject);
     },[activeNodeId]);
+
+    function handleUpdatingSymbol() {
+
+        dispatch(updateProjectSymbol({id: activeSymbolId, nodes: activeSymbolNodes}));
+
+        setUpdateSymbolButtonText("Symbol updated");
+        setTimeout(() => {
+            setUpdateSymbolButtonText("Update symbol");
+        }, 2000)
+    }
 
     
 
     function findNode(nodes, id) {
         for (let i = 0; i < nodes.length; i++) {
 
+            if(_elementIdAfterActiveCollection === nodes[i].id) {
+                _isNodeInCollection = false;
+            }
+
+            if(_elementIdAfterActiveSymbol === nodes[i].id) {
+                _isNodeInSymbol = false;
+            }
+
             if (nodes[i].id === id) {
+
                 // console.log(nodes[i]);
                 activeNode = nodes[i];
 
-                if(_isNodeCollection) {
+                if(_isNodeCollection && _isNodeInCollection) {
                     isNodeInCollection = true;
                     activeCollectionId = _activeCollectionId;
+                }
+
+                if(_isNodeSymbol && _isNodeInSymbol) {
+                    isNodeInSymbol = true;
+                    activeSymbolId = _activeSymbolId;
+                    activeSymbolNodes = _activeSymbolNodes;
                 }
 
                 if(nodes[i].type === "col") {
@@ -50,11 +97,37 @@ export default function ProjectSettingsPanel() {
                 } else {
                     isNodeCollection = false;
                 }
+
+                if(nodes[i].type === "sym") {
+                    isNodeSymbol = true;
+                    activeSymbolId = nodes[i].symbolId;
+                } else {
+                    isNodeSymbol = false;
+                }
             }
 
+            
+
             if(nodes[i].type === "col") {
+                _isNodeInCollection = true;
                 _isNodeCollection = true;
                 _activeCollectionId = nodes[i].cmsCollectionId;
+
+                if(i <= nodes.length) {
+                    _elementIdAfterActiveCollection = nodes[i+1]?.id;
+                }
+            }
+
+            if(nodes[i].type === "sym") {
+                _isNodeInSymbol = true;
+                _isNodeSymbol = true;
+                _activeSymbolId = nodes[i].symbolId;
+                _activeSymbolNodes = nodes[i].children;
+
+                if(i <= nodes.length) {
+                    _elementIdAfterActiveSymbol = nodes[i+1]?.id;
+                }
+
             }
             
             if (nodes[i].children) {
@@ -76,10 +149,15 @@ export default function ProjectSettingsPanel() {
         dispatch(setActiveNodeObject());
     }
 
+    function handleClickInSymbolItem(symbolId) {
+        dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'symbolId', value:symbolId}))
+        dispatch(setActiveNodeObject());
+    }
+
     return (
         <div className={"projectSettingsPanel "+ ((activeRightSidebarTab === "Settings") ? "active" : "" )}>
             
-            <div>{activeNode?.type}</div> 
+            <div>{activeNode?.type}</div>
             <div>
 
             {(isNodeCollection) ? (
@@ -144,11 +222,35 @@ export default function ProjectSettingsPanel() {
                 </div>
                 }
 
-{(activeNodeObject?.type === "sym" ) && 
+                {(activeNodeObject?.type === "sym"  ) && 
                 <div>
-                    {activeNodeObject?.symbolId}
+                    <div style={{marginBottom: "20px"}}>
+                        Symbol: {projectSymbols?.find(({id}) => id === activeSymbolId)?.name}
+                    </div>
+                   
+                    <div>
+                        Symbols:
+                        {projectSymbols.map((symbol) => (
+                            <div onClick={() => handleClickInSymbolItem(symbol.id)} key={symbol.id}>
+                                <div>
+                                    {symbol.name}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    
                 </div>
                 }
+
+                {(isNodeInSymbol) && 
+                <div>
+                    In Symbol: {projectSymbols.find(({id}) => id === activeSymbolId).name}
+                    <button onClick={handleUpdatingSymbol}>{updateSymbolButtonText}</button>
+                </div>
+                }
+
+                
                 
                 
                 </div>

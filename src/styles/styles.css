@@ -154,8 +154,6 @@ button {
 }
 
 .navigatorWrapper {
-  padding-top: 10px;
-  padding-left: 10px;
   width: 170px;
   flex-shrink: 0;
   border: 1px solid #d3d3d3;
@@ -163,6 +161,8 @@ button {
   border-left: 0;
   display: none;
 }
+
+
 
 .navigatorWrapper.active {
   display: block;
@@ -265,8 +265,8 @@ font-size: 12px;
   -webkit-transform-origin: 7px 4px;
   -ms-transform-origin: 7px 4px;
   transform-origin: 3px 1px;
-  -webkit-transform: translate3d(-50%, -75%, 0);
-  transform: translate3d(-50%, -75%, 0);
+  -webkit-transform: translate3d(-50%, -35%, 0);
+  transform: translate3d(-50%, -35%, 0);
   border: solid transparent 4px;
   border-left-width: 3px;
   border-right-width: 3px;
@@ -274,8 +274,8 @@ font-size: 12px;
 }
 
 .rstcustom__expandButton::after {
-  -webkit-transform: translate3d(-50%, -75%, 0px) rotateZ(-90deg);
-  transform: translate3d(-50%, -75%, 0px) rotateZ(-90deg);
+  -webkit-transform: translate3d(-50%, -35%, 0px) rotateZ(-90deg);
+  transform: translate3d(-50%, -35%, 0px) rotateZ(-90deg);
 }
 
 .rstcustom__collapseButton:focus::after, .rstcustom__expandButton:focus::after {
@@ -487,4 +487,31 @@ a {
 .libraryImage {
   width: 100px;
   height: 100px;
+}
+
+.navigation-node {
+  cursor: default;
+  padding: 3px 0;
+  
+}
+
+.navigation-node-inside {
+  padding-left: 10px;
+}
+
+.navigation-node-inside.lined {
+  border-left: 1px solid #ccc;
+}
+
+.navigation-node.hovered {
+  background: #eee;
+}
+
+.navigation-node.active {
+  background: #ddd;
+}
+
+
+
+.navigation-node-folder {
 }

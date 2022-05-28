@@ -1,7 +1,8 @@
 import useEventListener from '@use-it/event-listener'
 import { useDispatch } from 'react-redux';
+import useKeyboardShortcut from 'use-keyboard-shortcut'
 
-import {arrowActiveNodeNavigation} from "../features/pre-rendered-html-nodes"
+import {arrowActiveNodeNavigation, setCopiedNodes, pasteCopiedNodes, deleteActiveNode} from "../features/pre-rendered-html-nodes"
 
 let keys = [];
 
@@ -12,7 +13,62 @@ const DOWN_ARROW = ['40', 'ArrowDown'];
 
 export default function loadShortcuts() {
 
+
     const dispatch = useDispatch()
+
+
+    const { copyShortcut } = useKeyboardShortcut(
+      ["Meta", "C"],
+      shortcutKeys => {
+        dispatch(setCopiedNodes())
+      },
+      { 
+        overrideSystem: false,
+        ignoreInputFields: false, 
+        repeatOnHold: false 
+      }
+    );
+
+    const { copyandDeleteShortcut } = useKeyboardShortcut(
+      ["Meta", "X"],
+      shortcutKeys => {
+        dispatch(setCopiedNodes())
+        dispatch(deleteActiveNode())
+      },
+      { 
+        overrideSystem: false,
+        ignoreInputFields: false, 
+        repeatOnHold: false 
+      }
+    );
+
+    const { pasteShortcut } = useKeyboardShortcut(
+      ["Meta", "V"],
+      shortcutKeys => {
+        // console.log(shortcutKeys);
+        dispatch(pasteCopiedNodes({pasteAfter: false, pasteBefore: false}))
+      },
+      { 
+        overrideSystem: false,
+        ignoreInputFields: false, 
+        repeatOnHold: false 
+      }
+    );
+
+    const { deleteShortcut } = useKeyboardShortcut(
+      ["Backspace"],
+      shortcutKeys => {
+        dispatch(deleteActiveNode())
+        console.log("Delete")
+      },
+      { 
+        overrideSystem: false,
+        ignoreInputFields: false, 
+        repeatOnHold: false 
+      }
+    );
+
+    
 
 function handleKeyDown({ key }) {
 
@@ -32,14 +88,6 @@ function handleKeyDown({ key }) {
       if (DOWN_ARROW.includes(String(key))) {
         dispatch(arrowActiveNodeNavigation({key: "down"}))
       }
-
-      if(keys.includes('Meta') && keys.includes('c')) {
-      
-      }
-
-      if(keys.includes('Meta') && keys.includes('s')) {
-        
-    }
   }
 
   function handleKeyUp({ key }) {

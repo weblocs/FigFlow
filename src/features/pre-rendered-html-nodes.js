@@ -31,6 +31,7 @@ const initialState = {
   stylesInActiveNode: [],
   projectFirebaseId: "",
   saveButtonStateText: "Save",
+  copiedNodes: [],
   
 }
 
@@ -38,8 +39,83 @@ export const preRenderedNodesSlice = createSlice({
   name: 'preRenderedNodes',
   initialState,
   reducers: {
+
+    setCopiedNodes: (state) => {
+        state.copiedNodes = state.activeNodeObject
+    },
+
+    deleteActiveNode: (state) => {
+        function findNode(nodes) {
+            for (let i = 0; i < nodes.length; i++) {
+                if(nodes[i].id === state.activeNodeId) {
+                    if(nodes[i+1]) {
+                        state.activeNodeId = nodes[i+1].id
+                    } else if(nodes[i-1]) {
+                        state.activeNodeId = nodes[i-1].id
+                    }
+
+                    nodes = nodes.splice(i,1);
+                    
+                    
+                    break;
+                }
+                
+                if (nodes[i].children) {
+                    findNode(nodes[i].children);
+                }
+            }
+        }
+        findNode(state.preRenderedHTMLNodes);
+    },
+
+    pasteCopiedNodes: (state, action) => {
+
+        let pasteAfter = action.payload.pasteAfter;
+        let pasteBefore = action.payload.pasteBefore;
+
+        function editCopiedNodesIds(nodes) {
+            nodes.id = uuidv4();
+            for (let i = 0; i < nodes.children.length; i++) {
+                nodes.children[i].id = uuidv4();
+                if (nodes.children[i].children.length > 0) {
+                    editCopiedNodesIds(nodes[i].children);
+                }
+            }
+        }
+        editCopiedNodesIds(state.copiedNodes);
+
+        function findNode(nodes, id) {
+            function nodeIsFolder(node) {
+                if(node.type === "div" || node.type === "l") {
+                    return true;
+                } else if(node.type === "col" && node.cmsCollectionId) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].id === id) {
+                    if(nodeIsFolder(nodes[i] || pasteAfter) && (nodes[i].children.length == 0)) {
+                        nodes[i].children.splice(i+1,0,state.copiedNodes);
+                    } else {
+                        // we also need to reorganize it so paste is in right place
+                        
+                        nodes.splice(i+1,0,state.copiedNodes)
+                    }
+                    break;
+                }
+                if (nodes[i].children) {
+                    findNode(nodes[i].children, id);
+                }
+            }
+        }
+        findNode(state.preRenderedHTMLNodes, state.activeNodeId);
+    },
+
     setPreRenderedHTMLNodes: (state, action) => {
         state.preRenderedHTMLNodes = action.payload
+        // console.log(state.preRenderedHTMLNodes)
     },
 
     setActiveNodeObject: (state) => {
@@ -59,6 +135,8 @@ export const preRenderedNodesSlice = createSlice({
         state.activeNodeObject = response;
     },
 
+
+
     addNodeToRenderedHTMLNodesAfterActiveNode: (state, action) => {
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
@@ -70,6 +148,51 @@ export const preRenderedNodesSlice = createSlice({
             title: "Default text",
             type: action.payload,
             children: [],
+            class: []
+        };
+
+        function findNode(nodes, id) {
+            for (let i = 0; i < nodes.length; i++) {
+            if (nodes[i].id === id) {
+                tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
+                JSON.stringify(nodes[i]),
+                JSON.stringify(nodes[i]) + "," + JSON.stringify(newNode)
+                );
+                response = JSON.parse(tempPreRenderedHTMLNodes);
+                break;
+            }
+            if (nodes[i].children) {
+                findNode(nodes[i].children, id);
+            }
+            }
+        }
+        findNode(state.preRenderedHTMLNodes, activeNodeId);
+        
+        if(state.activeNodeId !== "") {
+            state.preRenderedHTMLNodes = response;
+        } else {
+            // add newNode as last element if activeNode is not selected
+            state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
+        }  
+        
+        state.activeNodeId = newNodeId;
+        state.stylesInActiveNode = [];
+        state.activeStyleName = "";
+        state.activeStyleIndex = undefined;
+    },
+
+    addSymbolToPreRenderedHTMLNodesAfterActiveNode: (state, action) => {
+        let response;
+        let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
+        let activeNodeId = state.activeNodeId;
+        let newNodeId = uuidv4();
+
+        let newNode = {
+            id: newNodeId,
+            title: "Default text",
+            type: "sym",
+            symbolId: action.payload.id,
+            children: state.projectSymbols.find(({id}) => id === action.payload.id).preRenderedHTMLNodes,
             class: []
         };
 
@@ -144,6 +267,16 @@ export const preRenderedNodesSlice = createSlice({
         
         findNode(state.preRenderedHTMLNodes, editedNodeId);
         state.preRenderedHTMLNodes = response;
+
+        console.log(state.preRenderedHTMLNodes)
+    },
+
+    updateSymbolDataInAllPagesPreRenderedHTMLNodes: (state,action) => {
+        let updatedSymbolId = action.payload.id;
+        let tempPagesNodes = JSON.stringify(state.pages);
+
+        
+
     },
 
     deleteStyleFromStylesInActiveNode: (state,action) => {
@@ -244,15 +377,11 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     connectStyleWithNode: (state, action) => {
-        let response = [];
-        let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
         let nodeId = state.activeNodeId;
         let styleName = action.payload;
         let styleId = getIdOfPreRenderedStyleByName(state.preRenderedStyles, styleName, state.stylesInActiveNode);
 
-
         let isItNewStyle = true;
-
         let newStyleId = uuidv4();
 
         state.preRenderedStyles.map((style) => {
@@ -281,11 +410,8 @@ export const preRenderedNodesSlice = createSlice({
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id) {
-                tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
-                JSON.stringify(nodes[i]),
-                JSON.stringify(nodes[i]).replace('"class":' + JSON.stringify(nodes[i].class), '"class":' +  JSON.stringify([...nodes[i].class, newStyleToConnectWithNodes]))
-                );
-                response = [[...nodes[i].class, newStyleToConnectWithNodes], JSON.parse(tempPreRenderedHTMLNodes)];
+                nodes[i].class.push(newStyleToConnectWithNodes);
+                state.stylesInActiveNode = [...nodes[i].class];
                 break;
             }
             if (nodes[i].children) {
@@ -295,10 +421,6 @@ export const preRenderedNodesSlice = createSlice({
         }
         findNode(state.preRenderedHTMLNodes, nodeId);
 
-
-
-        state.stylesInActiveNode = response[0];
-        state.preRenderedHTMLNodes = response[1];
         state.activeStyleName = styleName;
         state.activeStyleId = newStyleToConnectWithNodes.id;
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
@@ -465,6 +587,33 @@ export const preRenderedNodesSlice = createSlice({
         ];
     },
 
+    // add dispatch to the action using activeNodeObject
+
+    updateProjectSymbol: (state, action) => {
+
+        let updatedSymbolId = action.payload.id;
+        let updatedSymbolNodes = action.payload.nodes;
+
+        // update symbol root
+        state.projectSymbols.find(({id}) => id === updatedSymbolId).preRenderedHTMLNodes = updatedSymbolNodes;
+
+        // update nodes which is seleceted symbol 
+        state.projectPages.forEach((page) => {
+            function findNode(nodes, id) {
+                for (let i = 0; i < nodes.length; i++) {
+                    if (nodes[i].symbolId === id) {
+                        nodes[i].children = updatedSymbolNodes;
+                    }
+                    if (nodes[i].children) {
+                        findNode(nodes[i].children, id);
+                    }
+                }
+            }
+            findNode(page.preRenderedHTMLNodes, updatedSymbolId); 
+        });
+        // console.log(current(state.projectPages))
+    },
+
     createNewCollection: (state, action) => {
         state.projectCollections = [...state.projectCollections, 
             {
@@ -537,5 +686,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

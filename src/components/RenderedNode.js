@@ -33,6 +33,7 @@ function RenderedNode(props) {
   }
 
   const dispatch = useDispatch()
+
   
   let elementHTML = (
     <div 
@@ -40,7 +41,7 @@ function RenderedNode(props) {
     onMouseOver={handleMouseOver}
     onMouseOut={handleMouseOut}
     className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
-        >
+    >
       {props.children.map((el) => (
         <RenderedNode
           data={el}
@@ -49,6 +50,8 @@ function RenderedNode(props) {
           cmsFieldId={el.cmsFieldId}
           id={el.id}
           key={el.id}
+          itemIndex = {props.itemIndex}
+          renderedCollectionIndex={props.renderedCollectionIndex}
           title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
           children={el.children}
           onChange={(text, id) => props.onChange(text, id)}
@@ -64,14 +67,9 @@ function RenderedNode(props) {
   // Collection List
   if (props.type === "col") {
 
-    let collectionListItems = [{id:"23420"},{id:"1312"},{id:"1231240"},{id:"56750"}];
-
     let renderedCollectionIndex = projectCollections.map(x => {
       return x.id;
     }).indexOf(props.cmsCollectionId);
-
-    // console.log(renderedCollectionIndex);
-
 
     elementHTML = (
       <div 
@@ -110,6 +108,7 @@ function RenderedNode(props) {
 
   if (props.type === "img") {
     let imageSrc = props.data?.src;
+    
     if(props.data.cmsFieldId) {
       imageSrc = projectCollections[props.renderedCollectionIndex]?.items[props.itemIndex].data.find(({ fieldId }) => fieldId === props.data.cmsFieldId)?.fieldValue
     }
@@ -160,11 +159,32 @@ function RenderedNode(props) {
     );
   }
 
-  if (props.type === "a") {
+  if (props.type === "l") {
     elementHTML = (
-      <a href="#" el_id={props.id}>
-        {props.title}
-      </a>
+      <div 
+      onClick={handleOnClick}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      >
+        {props.children.map((el) => (
+          <RenderedNode
+            data={el}
+            type={el.type}
+            cmsCollectionId={el.cmsCollectionId}
+            cmsFieldId={el.cmsFieldId}
+            id={el.id}
+            key={el.id}
+            itemIndex = {props.itemIndex}
+            renderedCollectionIndex={props.renderedCollectionIndex}
+            title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
+            children={el.children}
+            onChange={(text, id) => props.onChange(text, id)}
+            class={el.class}
+            onClick={([nodeId,className]) => props.onClick([nodeId,className])}
+          />
+        ))}
+      </div>
     );
   }
 

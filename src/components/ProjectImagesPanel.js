@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import CreateNewCollection from "./CreateNewCollection"
-import {setActiveCollectionIdAndIndex} from "../features/pre-rendered-html-nodes"
 import {addImageToProjectImages} from "../features/project-images"
 import {v4 as uuidv4} from "uuid"
 import { initializeApp } from "firebase/app";
@@ -54,6 +52,8 @@ export default function ProjectImagesPanel(){
                     id: uuidv4()
                 }],
             });
+        })
+        .then(async() => {
             dispatch(addImageToProjectImages(projectFirebaseId+"-"+file.name));
         })
     }
