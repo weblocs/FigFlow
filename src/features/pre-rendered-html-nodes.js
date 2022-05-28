@@ -41,7 +41,9 @@ export const preRenderedNodesSlice = createSlice({
   reducers: {
 
     setCopiedNodes: (state) => {
-        state.copiedNodes = state.activeNodeObject
+        if(state.arrowNavigationOn) {
+            state.copiedNodes = state.activeNodeObject
+        }
     },
 
     deleteActiveNode: (state) => {
@@ -65,7 +67,9 @@ export const preRenderedNodesSlice = createSlice({
                 }
             }
         }
-        findNode(state.preRenderedHTMLNodes);
+        if(state.arrowNavigationOn) {
+            findNode(state.preRenderedHTMLNodes);
+        }
     },
 
     pasteCopiedNodes: (state, action) => {
@@ -86,7 +90,7 @@ export const preRenderedNodesSlice = createSlice({
 
         function findNode(nodes, id) {
             function nodeIsFolder(node) {
-                if(node.type === "div" || node.type === "l") {
+                if(node.type === "div" || node.type === "l" || node.type === "sym") {
                     return true;
                 } else if(node.type === "col" && node.cmsCollectionId) {
                     return true;
@@ -110,7 +114,9 @@ export const preRenderedNodesSlice = createSlice({
                 }
             }
         }
-        findNode(state.preRenderedHTMLNodes, state.activeNodeId);
+        if(state.arrowNavigationOn) {
+            findNode(state.preRenderedHTMLNodes, state.activeNodeId);
+        }
     },
 
     setPreRenderedHTMLNodes: (state, action) => {

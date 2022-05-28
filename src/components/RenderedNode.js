@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import ContentEditable from "react-contenteditable";
 
 import {useSelector, useDispatch} from "react-redux";
-import {setHoveredNodeId} from "../features/pre-rendered-html-nodes"
+import {setHoveredNodeId, setArrowNavigationOn} from "../features/pre-rendered-html-nodes"
+import useKeyboardShortcut from 'use-keyboard-shortcut'
 
 function RenderedNode(props) {
 
@@ -11,15 +12,41 @@ function RenderedNode(props) {
   const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
   const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId);
   const projectCollections = useSelector((state) => state.designerProjectState.projectCollections);
+  const arrowNavigationOn = useSelector((state) => state.designerProjectState.arrowNavigationOn);
+
+  const { escapeEditableMode } = useKeyboardShortcut(
+    ["Escape"],
+    shortcutKeys => {
+      if(editable) {
+        setEditable(false);
+        dispatch(setArrowNavigationOn(true));
+      }
+    },
+    { 
+      overrideSystem: false,
+      ignoreInputFields: false, 
+      repeatOnHold: false 
+    }
+  );
+
+  useEffect(() => {
+    if(activeNodeId !== props.id) {
+      setEditable(false);
+    }
+  },[activeNodeId])
 
   function handleDoubleClick(e) {
     e.stopPropagation();
     setEditable(true);
+    dispatch(setArrowNavigationOn(false))
   }
 
   function handleOnClick(e) {
     e.stopPropagation();
     props.onClick([props.id, props?.class[0]?.name]);
+    if(!editable) {
+      dispatch(setArrowNavigationOn(true))
+    }
   }
 
   function handleMouseOver(e) {

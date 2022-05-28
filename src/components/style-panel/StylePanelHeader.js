@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
 import {connectStyleWithNode, setArrowNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode} from "../../features/pre-rendered-html-nodes"
+import useKeyboardShortcut from 'use-keyboard-shortcut'
 
 export default function StylePanelHeader () {
 
@@ -15,6 +16,33 @@ export default function StylePanelHeader () {
 
     const [openEditor, setOpenEditor] = useState(false);
     const [editorPopUpClass, setEditorPopUpClass] = useState("");
+
+
+    const { openClassEditorShortcut } = useKeyboardShortcut(
+        ["Meta", "Enter"],
+        shortcutKeys => {
+            handleOpenNewStyleInput()
+        },
+        { 
+          overrideSystem: false,
+          ignoreInputFields: false, 
+          repeatOnHold: false 
+        }
+      );
+
+      const { closeClassEditorShortcut } = useKeyboardShortcut(
+        ["Escape"],
+        shortcutKeys => {
+            handleCloseNewStyleInput()
+        },
+        { 
+          overrideSystem: false,
+          ignoreInputFields: false, 
+          repeatOnHold: false 
+        }
+      );
+
+      
 
 
     useEffect(() => {
@@ -33,6 +61,10 @@ export default function StylePanelHeader () {
 
     function handleOpenNewStyleInput () {
         setOpenEditor(!openEditor);
+    }
+
+    function handleCloseNewStyleInput () {
+        setOpenEditor(false);
     }
 
     function handleKeyPress(e) {

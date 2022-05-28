@@ -7,6 +7,7 @@ import {setHoveredNodeId, setActiveNodeAndStyle} from "../features/pre-rendered-
      const dispatch = useDispatch()
     const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
 
     return (
         <div className={"navigation-node " + ((node.id == activeNodeId) ? "active " : " ") + ((node.id == hoveredNodeId) ? "hovered " : " ")}
