@@ -9,12 +9,12 @@ export default function DispayStylePanel () {
                 <div className="text">Display</div>
                 </div>
                 <div className="display-buttons-box">
-                <DisplayStyleButton value="block" letter="B"/>
-                <DisplayStyleButton value="flex" letter="F"/>
-                <DisplayStyleButton value="grid" letter="G"/>
-                <DisplayStyleButton value="inline" letter="I"/>
-                <DisplayStyleButton value="inline-block" letter="IB"/>
-                <DisplayStyleButton value="none" letter="N"/>
+                <DisplayStyleButton style="display" value="block" letter="B"/>
+                <DisplayStyleButton style="display" value="flex" letter="F"/>
+                <DisplayStyleButton style="display" value="grid" letter="G"/>
+                <DisplayStyleButton style="display" value="inline" letter="I"/>
+                <DisplayStyleButton style="display" value="inline-block" letter="IB"/>
+                <DisplayStyleButton style="display" value="none" letter="N"/>
                 </div>
             </div>
         </div>

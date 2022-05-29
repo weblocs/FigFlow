@@ -131,6 +131,10 @@ body {
   display: flex;
 }
 
+.display-horizontal-grid.with-margin {
+  margin-bottom: 12px;
+}
+
 .style-title-box {
   width: 60px;
   -webkit-align-self: center;

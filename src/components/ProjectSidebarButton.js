@@ -7,8 +7,9 @@ export default function ProjectSidebarButton(props){
     const dispatch = useDispatch();
     const arrowNavigationOn = useSelector((state) => state.designerProjectState.arrowNavigationOn)
 
+
     const { openNavigatorShortcut } = useKeyboardShortcut(
-        [props.letter],
+        [props.shortcode],
         shortcutKeys => {
             if(arrowNavigationOn) {
                 dispatch(setActiveProjectTab(props.tab))
@@ -20,6 +21,7 @@ export default function ProjectSidebarButton(props){
           repeatOnHold: false 
         }
     );
+    
     return(
         <div className="projectSidebarButton" onClick={() => dispatch(setActiveProjectTab(props.tab))}>
            {props.letter}

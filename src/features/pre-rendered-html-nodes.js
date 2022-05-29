@@ -81,8 +81,9 @@ export const preRenderedNodesSlice = createSlice({
             nodes.id = uuidv4();
             for (let i = 0; i < nodes.children.length; i++) {
                 nodes.children[i].id = uuidv4();
+                
                 if (nodes.children[i].children.length > 0) {
-                    editCopiedNodesIds(nodes[i].children);
+                    editCopiedNodesIds(nodes.children[i]);
                 }
             }
         }
