@@ -5,32 +5,47 @@ import DisplayDirectionReverseStyleButton from "./DisplayDirectionReverseStyleBu
 import DisplayStyleButton from "./DisplayStyleButton";
 import SpacingStyleButton from "./SpacingStyleButton";
 import DisplayFlexWrapStyleButton from "./DisplayFlexWrapStyleButton";
+import DisplayGridColumnsRowsEditor from "./DisplayGridColumnsRowsEditor";
 
 
 
-export default function DispayFlexStylePanel () {
+export default function DisplayGridStylePanel () {
 
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
     const displayStyle = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["display"])
 
-    if(displayStyle === "flex") {
+    if(displayStyle === "grid") {
         return (
             <div className="style-panel-box">
 
-                
-
-
+                <DisplayGridColumnsRowsEditor />
 
                 <div className="display-horizontal-grid with-margin">
-                    <div className="style-title-box">
-                        <div className="text">Direction</div>
+                    <div style={{width:"100%"}}>
+                        <div className="_2-col-style-grid">
+                            <div className="size-style-box">
+                                <div className="style-title-box">
+                                <div className="text">Column Gap</div>
+                                </div>
+                                <div className="input">
+                                    <SpacingStyleButton style="grid-column-gap" />
+                                </div>
+                            </div>
+                            <div className="size-style-box">
+                                <div className="style-title-box">
+                                <div className="text">Row Gap</div>
+                                </div>
+                                <div className="input">
+                                <SpacingStyleButton style="grid-row-gap" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="display-buttons-box">
-                        <DisplayDirectionStyleButton value="row" letter="Horizontal"/>
-                        <DisplayDirectionStyleButton value="column" letter="Vertical"/>
-                    </div>
-                    <DisplayDirectionReverseStyleButton />
                 </div>
+
+                
+
+                
 
                 <div className="display-horizontal-grid with-margin">
                     <div className="style-title-box">
@@ -58,40 +73,16 @@ export default function DispayFlexStylePanel () {
                     </div>
                 </div>
 
-
-                <div className="display-horizontal-grid with-margin">
-                    <div style={{width:"100%"}}>
-                        <div className="_2-col-style-grid">
-                            <div className="size-style-box">
-                                <div className="style-title-box">
-                                <div className="text">Column Gap</div>
-                                </div>
-                                <div className="input">
-                                    <SpacingStyleButton style="grid-column-gap" />
-                                </div>
-                            </div>
-                            <div className="size-style-box">
-                                <div className="style-title-box">
-                                <div className="text">Row Gap</div>
-                                </div>
-                                <div className="input">
-                                <SpacingStyleButton style="grid-row-gap" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div className="display-horizontal-grid with-margin">
                     <div className="style-title-box">
-                        <div className="text">Children</div>
+                        <div className="text">Direction</div>
                     </div>
                     <div className="display-buttons-box">
-                        <DisplayFlexWrapStyleButton value="nowrap" letter="Don't Wrap"/>
-                        <DisplayFlexWrapStyleButton value="wrap" letter="Wrap"/>
+                        <DisplayDirectionStyleButton value="row" letter="Horizontal"/>
+                        <DisplayDirectionStyleButton value="column" letter="Vertical"/>
                     </div>
-                    <DisplayDirectionReverseStyleButton />
                 </div>
+                
 
 
             </div>

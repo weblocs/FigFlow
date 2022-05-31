@@ -10,6 +10,7 @@ import TypographyStylePanel from "./style-panel/TypographyStylePanel"
 import BackgroundStylePanel from "./style-panel/BackgroundStylePanel"
 import { useSelector } from "react-redux";
 import DispayFlexStylePanel from "./style-panel/DisplayFlexStylePanel";
+import DisplayGridStylePanel from "./style-panel/DisplayGridStylePanel";
 
 export default function ProjectStylePanel() {
 
@@ -27,8 +28,9 @@ export default function ProjectStylePanel() {
 
     <StylePanelTitle title="Layout" />
     <DispayStylePanel />
-    
+
     <DispayFlexStylePanel />
+    <DisplayGridStylePanel />
 
 
     <StylePanelTitle title="Spacing" />
