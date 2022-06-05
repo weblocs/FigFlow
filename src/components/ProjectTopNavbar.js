@@ -24,10 +24,10 @@ export default function ProjectTopNavbar() {
         </div>
 
         <div className="centerNavbar">
-          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("1"))}>D</div>
-          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("2"))}>T</div>
-          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("3"))}>M</div>
-          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("4"))}>R</div>
+          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("1"))}>1</div>
+          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("2"))}>2</div>
+          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("3"))}>3</div>
+          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("4"))}>4</div>
         </div>
         
         <div className="projectNavigationRight">
