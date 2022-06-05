@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {editStyleInPreRenderedStyles} from "../../features/pre-rendered-html-nodes"
 
 import { v4 as uuidv4 } from "uuid";
+import DisplayGridColumnSizeButton from "./DisplayGridColumnSizeButton";
 
 
 export default function DisplayGridColumnsRowsEditor (props) {
@@ -40,6 +41,42 @@ export default function DisplayGridColumnsRowsEditor (props) {
         }
     },[]);
 
+    function handleEditColumnSize(columnId,value) {
+        let tempStyle = [...columns];
+        let tempColumns = [...columns];
+        tempStyle = tempStyle.find(({id}) => id === columnId).size;
+        
+        let sizeUnit = "";
+        if(tempStyle.includes("fr")) {
+            sizeUnit = "fr";
+        }
+        if(tempStyle.includes("px")) {
+            sizeUnit = "px";
+        }
+        
+        tempStyle = tempStyle.replace(sizeUnit,"");
+        tempStyle = value;
+        tempColumns.find(({id}) => id === columnId).size = tempStyle+sizeUnit;
+        setColumns(tempColumns);
+    }
+
+    function handleEditColumnUnitChange(columnId,value) {
+        let tempStyle = [...columns];
+        let tempColumns = [...columns];
+        tempStyle = tempStyle.find(({id}) => id === columnId).size;
+
+        let sizeUnit = "";
+        if(tempStyle.includes("fr")) {
+            sizeUnit = "fr";
+        }
+        if(tempStyle.includes("px")) {
+            sizeUnit = "px";
+        }
+        tempStyle = tempStyle.replace(sizeUnit,value);
+        tempColumns.find(({id}) => id === columnId).size = tempStyle;
+        setColumns(tempColumns);
+    }
+
     useEffect(() => {
         if(columns.length > 0) {
             dispatch(editStyleInPreRenderedStyles(["grid-template-columns", columns.map((column) => column.size ).join(' ') ]))
@@ -58,9 +95,7 @@ export default function DisplayGridColumnsRowsEditor (props) {
 
                 {columns.map((column) => (
                     <div className="display-grid-column" key={column.id}> 
-                        <div>
-                            {column.size}
-                        </div>
+                        <DisplayGridColumnSizeButton id={column.id} size={column.size} handleEditColumnSize={handleEditColumnSize} handleEditColumnUnitChange={handleEditColumnUnitChange} />
                         <div 
                         onClick={() => handleDeleteColumn(column.id)}
                         className="display-grid-column-delete">

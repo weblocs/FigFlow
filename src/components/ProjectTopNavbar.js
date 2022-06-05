@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from 'react-redux'
 import { Link } from "react-router-dom";
-import {addNodeToRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
+import {addNodeToRenderedHTMLNodesAfterActiveNode, setActiveProjectResolution} from "../features/pre-rendered-html-nodes"
 import ProjectRightSidebarButton from "./ProjectRightSidebarButton";
 import SaveButton from "./SaveButton";
 
@@ -21,6 +21,13 @@ export default function ProjectTopNavbar() {
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("img"))}>I</div>
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("sym"))}>S</div>
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("l"))}>L</div> 
+        </div>
+
+        <div className="centerNavbar">
+          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("1"))}>1</div>
+          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("2"))}>2</div>
+          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("3"))}>3</div>
+          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("4"))}>4</div>
         </div>
         
         <div className="projectNavigationRight">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
-import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
+import {editSelectedFieldInPreRenderedHTMLNode, checkIfActvieNodeParentDispayStyleIsFlex, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
 
 export default function ProjectSettingsPanel() {
     
@@ -45,11 +45,9 @@ export default function ProjectSettingsPanel() {
     const [updateSymbolButtonText, setUpdateSymbolButtonText] = useState("Update symbol");
     
     
-
-
-    // zbiera zawsze stare dane [DO ZMIANY]
     useEffect(() => {
         dispatch(setActiveNodeObject());
+        dispatch(checkIfActvieNodeParentDispayStyleIsFlex());
     },[activeNodeId]);
 
     function handleUpdatingSymbol() {

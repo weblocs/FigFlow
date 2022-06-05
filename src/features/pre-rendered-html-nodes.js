@@ -32,13 +32,18 @@ const initialState = {
   projectFirebaseId: "",
   saveButtonStateText: "Save",
   copiedNodes: [],
-  
+  isActiveNodeParentDisplayStyleFlex: false,
+  activeProjectResolution: "1",
 }
 
 export const preRenderedNodesSlice = createSlice({
   name: 'preRenderedNodes',
   initialState,
   reducers: {
+
+    setActiveProjectResolution: (state, action) => {
+        state.activeProjectResolution = action.payload
+    },
 
     setCopiedNodes: (state) => {
         if(state.arrowNavigationOn) {
@@ -140,6 +145,28 @@ export const preRenderedNodesSlice = createSlice({
         }
         findNode(state.preRenderedHTMLNodes, state.activeNodeId);
         state.activeNodeObject = response;
+    },
+
+    checkIfActvieNodeParentDispayStyleIsFlex: (state) => {
+        function findNode(nodes, parent, id) {
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].id === id) {
+                    if(parent?.class?.length) {
+                        parent.class.forEach((cl) => {
+                            let parentClassStyle = JSON.stringify(state.preRenderedStyles.find(({id}) => id === cl.id).styles);
+                            state.isActiveNodeParentDisplayStyleFlex = parentClassStyle.includes('"display":"flex"');
+                        });
+                    } else {
+                        state.isActiveNodeParentDisplayStyleFlex = false;
+                    }
+                    break;
+                }
+                if (nodes[i].children) {
+                    findNode(nodes[i].children, nodes[i], id);
+                }
+            }
+        }
+        findNode(state.preRenderedHTMLNodes, [] , state.activeNodeId);
     },
 
 
@@ -364,7 +391,7 @@ export const preRenderedNodesSlice = createSlice({
         let styleProperty = action.payload[0];
         let styleValue = action.payload[1];
 
-
+        // ADD resolutions check here
         tempPreRenderedStyles[state.activeStyleIndex].styles [styleProperty] = styleValue;
 
         state.preRenderedStyles = tempPreRenderedStyles;
@@ -693,5 +720,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

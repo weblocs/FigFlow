@@ -43,48 +43,6 @@ export default function DisplayGridStylePanel () {
                     </div>
                 </div>
 
-                
-
-                
-
-                <div className="display-horizontal-grid with-margin">
-                    <div className="style-title-box">
-                        <div className="text">Align</div>
-                    </div>
-                    <div className="display-buttons-box">
-                        <DisplayStyleButton style="align-items" value="flex-start" letter="S"/>
-                        <DisplayStyleButton style="align-items" value="center" letter="C"/>
-                        <DisplayStyleButton style="align-items" value="flex-end" letter="E"/>
-                        <DisplayStyleButton style="align-items" value="stretch" letter="S"/>
-                        <DisplayStyleButton style="align-items" value="baseline" letter="B"/>
-                    </div>
-                </div>
-
-                <div className="display-horizontal-grid with-margin">
-                    <div className="style-title-box">
-                        <div className="text">Justify</div>
-                    </div>
-                    <div className="display-buttons-box">
-                        <DisplayStyleButton style="justify-content" value="flex-start" letter="T"/>
-                        <DisplayStyleButton style="justify-content" value="center" letter="C"/>
-                        <DisplayStyleButton style="justify-content" value="flex-end" letter="B"/>
-                        <DisplayStyleButton style="justify-content" value="space-between" letter="S"/>
-                        <DisplayStyleButton style="justify-content" value="space-around" letter="A"/>
-                    </div>
-                </div>
-
-                <div className="display-horizontal-grid with-margin">
-                    <div className="style-title-box">
-                        <div className="text">Direction</div>
-                    </div>
-                    <div className="display-buttons-box">
-                        <DisplayDirectionStyleButton value="row" letter="Horizontal"/>
-                        <DisplayDirectionStyleButton value="column" letter="Vertical"/>
-                    </div>
-                </div>
-                
-
-
             </div>
         )
     } else {
