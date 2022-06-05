@@ -385,17 +385,19 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     editStyleInPreRenderedStyles: (state, action) => {
-        let tempPreRenderedStyles = JSON.stringify(state.preRenderedStyles);
-        tempPreRenderedStyles = JSON.parse(tempPreRenderedStyles);
-
         let styleProperty = action.payload[0];
         let styleValue = action.payload[1];
 
         // ADD resolutions check here
-        tempPreRenderedStyles[state.activeStyleIndex].styles [styleProperty] = styleValue;
+        let styleResolution = "styles";
+        (state.activeProjectResolution === "2") && (
+            styleResolution = "tabletStyles"
+        )
+        
+        state.preRenderedStyles[state.activeStyleIndex] [styleResolution] [styleProperty] = styleValue;
+        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles]);
 
-        state.preRenderedStyles = tempPreRenderedStyles;
-        state.postRenderedStyles = JSONtoCSS([...tempPreRenderedStyles]);
+        console.log(current(state.preRenderedStyles[state.activeStyleIndex] [styleResolution]));
     },
 
     setActiveNodeAndStyle: (state, action) => {

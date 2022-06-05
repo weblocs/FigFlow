@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from "react-router-dom";
 import {addNodeToRenderedHTMLNodesAfterActiveNode, setActiveProjectResolution} from "../features/pre-rendered-html-nodes"
 import ProjectRightSidebarButton from "./ProjectRightSidebarButton";
 import SaveButton from "./SaveButton";
+import TopNavbarResolutionChangeButton from "./TopNavbarResolutionChangeButton";
 
 
 export default function ProjectTopNavbar() {
+
+    const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
 
     const dispatch = useDispatch()
 
@@ -24,10 +27,14 @@ export default function ProjectTopNavbar() {
         </div>
 
         <div className="centerNavbar">
-          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("1"))}>1</div>
+          <TopNavbarResolutionChangeButton resolutionNumber="1" />
+          <TopNavbarResolutionChangeButton resolutionNumber="2" />
+          <TopNavbarResolutionChangeButton resolutionNumber="3" />
+          <TopNavbarResolutionChangeButton resolutionNumber="4" />
+          {/* <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("1"))}>1</div>
           <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("2"))}>2</div>
           <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("3"))}>3</div>
-          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("4"))}>4</div>
+          <div className="addNodeButton" onClick={() => dispatch(setActiveProjectResolution("4"))}>4</div> */}
         </div>
         
         <div className="projectNavigationRight">

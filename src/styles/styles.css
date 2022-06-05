@@ -317,6 +317,10 @@ a {
   background-color: #eee;
 }
 
+.addNodeButton.active {
+  background-color: #e8e8e8;
+}
+
 .displayButtonsWrapper {
   display: flex;
   border-left: 1px solid #d3d3d3;
