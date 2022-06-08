@@ -4,15 +4,43 @@ import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features
 
 export default function ColorStyleInput (props) {
 
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const editedStyle = useSelector((state) => (state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles [props.style]))
+    const activeNodeStyles = useSelector((state) => state.designerProjectState.activeNodeStyles)
+
+    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex) 
+    
+    let resulutionType = "styles";
+
+    const editedStyle = useSelector((state) => {
+
+        const nodeStyles = state.designerProjectState.preRenderedStyles[activeStyleIndex];
+        
+        if (nodeStyles?.[resulutionType] !== undefined) {
+            return nodeStyles[resulutionType][props.style]
+        }
+
+        return "";
+    })
     
     const dispatch = useDispatch()
 
     const inputRef = useRef();
 
+    const [styleValue, setStyleValue] = useState("");
+
     const [openEditor, setOpenEditor] = useState(false);
     const [editorPopUpClass, setEditorPopUpClass] = useState("");
+
+    useEffect(() => {
+        if (activeNodeStyles !== undefined) {
+            if (activeNodeStyles.hasOwnProperty(props.style)) {
+                setStyleValue(activeNodeStyles [props.style]);
+            } else {
+                setStyleValue("inherit");
+            }
+        } else {
+            setStyleValue("inherit");
+        }
+    },[activeNodeStyles]);
 
     useEffect(() => {
         (openEditor === true) ? setEditorPopUpClass("space-editor-popup color active") : setEditorPopUpClass("space-editor-popup color");
@@ -49,7 +77,7 @@ export default function ColorStyleInput (props) {
         <div className="text">
             <div className="space-editor">
                 <div className="space-editor-text-box">
-                    <div onClick={handleOnClick} className="space-editor-toggle">{(editedStyle) ? editedStyle : "inherit"}</div>
+                    <div onClick={handleOnClick} className="space-editor-toggle">{styleValue}</div>
                 </div>    
                 
                 <input 

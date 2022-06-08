@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
-import {editSelectedFieldInPreRenderedHTMLNode, checkIfActvieNodeParentDispayStyleIsFlex, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
+import {updateActiveNodeStyles, editSelectedFieldInPreRenderedHTMLNode, checkIfActvieNodeParentDispayStyleIsFlex, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
 
 export default function ProjectSettingsPanel() {
     
@@ -13,6 +13,10 @@ export default function ProjectSettingsPanel() {
     const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
     const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
     const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
+
+    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
+    const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
+    
 
 
     let activeNode = {};
@@ -44,6 +48,9 @@ export default function ProjectSettingsPanel() {
 
     const [updateSymbolButtonText, setUpdateSymbolButtonText] = useState("Update symbol");
     
+    useEffect(() => {
+        dispatch(updateActiveNodeStyles());
+    },[activeNodeId, activeProjectResolution, preRenderedStyles]);
     
     useEffect(() => {
         dispatch(setActiveNodeObject());
