@@ -11,7 +11,7 @@ export default function BackgroundStylePanel () {
             <div className="text">Color</div>
           </div>
           <div className="input">
-              <ColorStyleInput style="background" />
+              <ColorStyleInput style="background_color" />
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
-import {updateActiveNodeStyles, editSelectedFieldInPreRenderedHTMLNode, checkIfActvieNodeParentDispayStyleIsFlex, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
+import {setActiveNodeParentsPath, updateActiveNodeStyles, editSelectedFieldInPreRenderedHTMLNode, checkIfActvieNodeParentDispayStyleIsFlex, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
 
 export default function ProjectSettingsPanel() {
     
@@ -56,6 +56,12 @@ export default function ProjectSettingsPanel() {
         dispatch(setActiveNodeObject());
         dispatch(checkIfActvieNodeParentDispayStyleIsFlex());
     },[activeNodeId]);
+
+    useEffect(() => {
+        dispatch(setActiveNodeParentsPath());
+    },[activeNodeId]);
+
+    
 
     function handleUpdatingSymbol() {
 

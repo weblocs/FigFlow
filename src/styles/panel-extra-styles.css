@@ -46,6 +46,10 @@
     cursor: pointer;
 }
 
+.space-editor-toggle.active {
+    color: #534bca;
+}
+
 .space-editor-popup {
     display: none;
     width: 40px;
@@ -90,6 +94,10 @@
 
 .space-editor-text-box {
     display: flex;
+}
+
+.space-editor-text-box.active {
+    color: #534cca;
 }
 
 .space-editor-unit-toggle {

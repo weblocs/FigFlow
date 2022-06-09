@@ -64,6 +64,7 @@ function RenderedNode(props) {
   
   let elementHTML = (
     <div 
+    el_id={props.id}
     onClick={handleOnClick}
     onMouseOver={handleMouseOver}
     onMouseOut={handleMouseOut}
@@ -100,6 +101,7 @@ function RenderedNode(props) {
 
     elementHTML = (
       <div 
+      el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
@@ -189,6 +191,7 @@ function RenderedNode(props) {
   if (props.type === "l") {
     elementHTML = (
       <div 
+      el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}

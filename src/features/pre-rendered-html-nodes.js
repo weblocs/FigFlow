@@ -35,7 +35,14 @@ const initialState = {
   copiedNodes: [],
   isActiveNodeParentDisplayStyleFlex: false,
   activeProjectResolution: "1",
+  activeProjectResolutionStylesListName: "styles",
+  activeNodeParentsPath: [], 
 }
+
+
+// CREATE activeNodeParentsPath
+
+
 
 export const preRenderedNodesSlice = createSlice({
   name: 'preRenderedNodes',
@@ -49,14 +56,56 @@ export const preRenderedNodesSlice = createSlice({
             state.activeNodeStyles = state.preRenderedStyles[state.activeStyleIndex]?.tabletStyles
         }
 
-        // [ADD] parents and higher resolutions hierarchy to styles
-        
     },
 
+    setActiveNodeParentsPath: (state) => {
+        state.activeNodeParentsPath = [];
+        let activeNodeIsFinded = false;
+        console.log("--------------");
+        function findNode(nodes, id) {
+            for (let i = 0; i < nodes.length; i++) {
 
-    
+                if(nodes.length === (i+1) && !activeNodeIsFinded && nodes[i].children.length === 0 && nodes[i].id !== id) {
+                    state.activeNodeParentsPath = []; // tutaj jeszcze zabiera wszystko a nie oddaje elementow ostaniego parenta
+                }
+
+                if (nodes[i].id === id) {
+                    state.activeNodeParentsPath.push(nodes[i]?.class[0]?.name);
+                    activeNodeIsFinded = true;
+                    break;
+                }
+
+                if (!activeNodeIsFinded) {
+                    if(nodes[i].children.length > 0) {
+                        state.activeNodeParentsPath.push(nodes[i]?.class[0]?.name);
+                        findNode(nodes[i].children, id);
+                    }
+                } 
+
+                
+                
+            }
+        }
+        findNode(state.preRenderedHTMLNodes, state.activeNodeId);
+        console.log(state.activeNodeParentsPath);
+    },
+
     setActiveProjectResolution: (state, action) => {
-        state.activeProjectResolution = action.payload
+        state.activeProjectResolution = action.payload;
+
+        (state.activeProjectResolution === "1") && (
+            state.activeProjectResolutionStylesListName = "styles"
+        );
+        (state.activeProjectResolution === "2") && (
+            state.activeProjectResolutionStylesListName = "tabletStyles"
+        );
+        (state.activeProjectResolution === "3") && (
+            state.activeProjectResolutionStylesListName = "portraitStyles"
+        );
+        (state.activeProjectResolution === "4") && (
+            state.activeProjectResolutionStylesListName = "mobileStyles"
+        );
+        
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
     },
 
@@ -737,5 +786,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {updateActiveNodeStyles, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setActiveNodeParentsPath, updateActiveNodeStyles, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

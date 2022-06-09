@@ -13,7 +13,7 @@ export default function SizeStylePanel () {
                 <div className="text">Width</div>
                 </div>
                 <div className="input">
-                    <SpacingStyleButton style="width" />
+                    <SpacingStyleButton style="width" placeholder="auto" />
                 </div>
             </div>
             <div className="size-style-box">
@@ -21,7 +21,7 @@ export default function SizeStylePanel () {
                 <div className="text">Height</div>
                 </div>
                 <div className="input">
-                <SpacingStyleButton style="height" />
+                <SpacingStyleButton style="height"  placeholder="auto" />
                 </div>
             </div>
             <div className="size-style-box">

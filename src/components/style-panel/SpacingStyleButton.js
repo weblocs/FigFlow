@@ -5,6 +5,13 @@ import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features
 export default function SpacingStyleButton (props) {
 
     const activeNodeStyles = useSelector((state) => state.designerProjectState.activeNodeStyles)
+    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
+    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
+
+    
+
+    
     const dispatch = useDispatch()
     
     const inputRef = useRef();
@@ -14,27 +21,51 @@ export default function SpacingStyleButton (props) {
 
     const [openEditor, setOpenEditor] = useState(false);
     const [editorPopUpClass, setEditorPopUpClass] = useState("space-editor-popup");
+
+    const activeNodeStyle = document.querySelector(`[el_id="${activeNodeId}"]`);
+    let activeNodeUnit = "";
+    let activeNodeStyleValue = "";
+
+    if(activeNodeId !== "" ) {
+        activeNodeStyleValue = getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")].replace("px","").replace("%","");
+        if(getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")].includes("px")) {
+            activeNodeUnit = "px";
+        } else if(getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")].includes("%")) {
+            activeNodeUnit = "%";
+        } else {
+            activeNodeUnit = "";
+        }
+        console.log(getComputedStyle(activeNodeStyle))
+    }
+
+    const editedStyleValue = useSelector((state) => {
+        const nodeStyles = state.designerProjectState.preRenderedStyles[activeStyleIndex];
+        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
+            if (props.placeholder) {
+                activeNodeStyleValue = nodeStyles[activeProjectResolutionStylesListName][props.style].replace("px","").replace("%","");
+            }
+            return nodeStyles[activeProjectResolutionStylesListName][props.style]
+        } 
+        if (props.placeholder) {
+            activeNodeStyleValue = props.placeholder;   
+        }
+        return "empty";    
+    })
     
 
     useEffect(() => {
-        if (activeNodeStyles !== undefined) {
-            if (activeNodeStyles.hasOwnProperty(props.style)) {
-                setStyleValue(activeNodeStyles [props.style]?.replace('px','').replace('%',''));
-                
-                if(activeNodeStyles [props.style].includes("px")) {
-                    setStyleValueUnit("px");
-                }
-                if(activeNodeStyles [props.style].includes("%")) {
-                    setStyleValueUnit("%");
-                }
+        
 
-            } else {
-                setStyleValue("0");
-            }
-        } else {
-            setStyleValue("0");
+
+        if(editedStyleValue.includes("px")) {
+            setStyleValueUnit("px");
+        } else if(editedStyleValue.includes("%")) {
+            setStyleValueUnit("%");
+        } else 
+        if(activeNodeStyleValue = props.placeholder) {
+            setStyleValueUnit("");
         }
-    },[activeNodeStyles]);
+    },[editedStyleValue]);
 
     useEffect(() => {
         (openEditor === true) ? setEditorPopUpClass("space-editor-popup active") : setEditorPopUpClass("space-editor-popup");
@@ -46,7 +77,7 @@ export default function SpacingStyleButton (props) {
             if(styleValue === undefined) {
                 inputRef.current.value = "";
             } else {
-                inputRef.current.value = styleValue;
+                inputRef.current.value = activeNodeStyleValue;
             }
             dispatch(setArrowNavigationOn(false));
         } else {
@@ -60,7 +91,11 @@ export default function SpacingStyleButton (props) {
 
     function handleKeyPress(e) {
         if(e.key === 'Enter') {
-            dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+styleValueUnit]));
+            if(styleValueUnit === "") {
+                dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+"px"]));
+            } else {
+                dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+styleValueUnit]));
+            }
             setOpenEditor(false);
         }
         if(e.key === 'ArrowUp') {
@@ -72,6 +107,7 @@ export default function SpacingStyleButton (props) {
     }
 
     function handleChangeUnit() {
+        
 
         if(styleValueUnit == "px") {
             if(styleValue !== undefined) {
@@ -95,8 +131,12 @@ export default function SpacingStyleButton (props) {
     return (
         <div className="text">
             <div className="space-editor">
-                <div className="space-editor-text-box">
-                    <div onClick={handleOnClick} className="space-editor-toggle">{styleValue}</div>
+                <div 
+                className={"space-editor-text-box " + 
+                ((editedStyleValue !== "empty") ? "active" : "")}>
+                    <div onClick={handleOnClick}
+                    className="space-editor-toggle">
+                        {activeNodeStyleValue}</div>
                     <div onClick={handleChangeUnit} className="space-editor-unit-toggle"> {styleValueUnit} </div>
                 </div>    
                 

@@ -5,20 +5,24 @@ import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features
 export default function ColorStyleInput (props) {
 
     const activeNodeStyles = useSelector((state) => state.designerProjectState.activeNodeStyles)
+    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
 
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex) 
-    
-    let resulutionType = "styles";
+    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId) 
 
-    const editedStyle = useSelector((state) => {
 
+    const activeNodeStyle = document.querySelector(`[el_id="${activeNodeId}"]`);
+    let activeNodeStyleValue = "";
+    if(activeNodeId !== "" ) {
+        activeNodeStyleValue = getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")];
+    }
+
+    const editedStyleValue = useSelector((state) => {
         const nodeStyles = state.designerProjectState.preRenderedStyles[activeStyleIndex];
-        
-        if (nodeStyles?.[resulutionType] !== undefined) {
-            return nodeStyles[resulutionType][props.style]
-        }
-
-        return "";
+        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
+            return nodeStyles[activeProjectResolutionStylesListName][props.style]
+        } 
+        return "empty";    
     })
     
     const dispatch = useDispatch()
@@ -49,10 +53,10 @@ export default function ColorStyleInput (props) {
     useEffect(() => {
         if(openEditor === true) {
             inputRef.current.focus();
-            if(editedStyle === undefined) {
+            if(editedStyleValue === undefined) {
                 inputRef.current.value = "";
             } else {
-                inputRef.current.value = editedStyle;
+                inputRef.current.value = editedStyleValue;
             }
             dispatch(setArrowNavigationOn(false));
         } else {
@@ -77,12 +81,18 @@ export default function ColorStyleInput (props) {
         <div className="text">
             <div className="space-editor">
                 <div className="space-editor-text-box">
-                    <div onClick={handleOnClick} className="space-editor-toggle">{styleValue}</div>
+                    <div 
+                    onClick={handleOnClick} 
+                    className={"space-editor-toggle " + 
+                    ((editedStyleValue !== "empty") ? "active" : "")}>
+                        {activeNodeStyleValue}
+                    </div>
                 </div>    
                 
                 <input 
                 ref={inputRef}
                 type="text"
+                onBlur={() => setOpenEditor(false)}
                 onKeyDown={handleKeyPress}
                 className={editorPopUpClass} />
 
