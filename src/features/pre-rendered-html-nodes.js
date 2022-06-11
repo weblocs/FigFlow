@@ -265,7 +265,12 @@ export const preRenderedNodesSlice = createSlice({
             }
         }
         
-        findNode(state.preRenderedHTMLNodes, state.activeNodeId);
+        if(state.activeNodeId !== "") {
+            findNode(state.preRenderedHTMLNodes, state.activeNodeId);
+        } else {
+            state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
+        }
+        
 
         // function findNode(nodes, id) {
         //     for (let i = 0; i < nodes.length; i++) {
@@ -386,14 +391,6 @@ export const preRenderedNodesSlice = createSlice({
         console.log(state.preRenderedHTMLNodes)
     },
 
-    updateSymbolDataInAllPagesPreRenderedHTMLNodes: (state,action) => {
-        let updatedSymbolId = action.payload.id;
-        let tempPagesNodes = JSON.stringify(state.pages);
-
-        
-
-    },
-
     deleteStyleFromStylesInActiveNode: (state,action) => {
 
         let deletedStyleId = action.payload.deletedStyleId;
@@ -468,14 +465,9 @@ export const preRenderedNodesSlice = createSlice({
     editStyleInPreRenderedStyles: (state, action) => {
         let styleProperty = action.payload[0];
         let styleValue = action.payload[1];
-
-        // ADD resolutions check here
-        let styleResolution = "styles";
-        (state.activeProjectResolution === "2") && (
-            styleResolution = "tabletStyles"
-        )
+        let styleResolution = state.activeProjectResolutionStylesListName;
         
-        state.preRenderedStyles[state.activeStyleIndex] [styleResolution] [styleProperty] = styleValue;
+        state.preRenderedStyles[state.activeStyleIndex][styleResolution][styleProperty] = styleValue;
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
 
         console.log(current(state.preRenderedStyles[state.activeStyleIndex] [styleResolution]));
@@ -513,7 +505,7 @@ export const preRenderedNodesSlice = createSlice({
         });
 
         let newStyleToConnectWithNodes = {};
-        let newStyleToConnectWithStyles = { name: styleName, id: newStyleId, styles: {}, parents: state.stylesInActiveNode };
+        let newStyleToConnectWithStyles = { name: styleName, id: newStyleId, styles: {}, tabletStyles: {}, portraitStyles: {}, mobileStyles: {}, parents: state.stylesInActiveNode };
 
 
         if(isItNewStyle) {
