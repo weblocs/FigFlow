@@ -59,37 +59,34 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     setActiveNodeParentsPath: (state) => {
-        state.activeNodeParentsPath = [];
-        let activeNodeIsFinded = false;
-        console.log("--------------");
+        // state.activeNodeParentsPath = [];
+        // let activeNodeIsFinded = false;
+        // console.log("--------------");
+        
+        // function findNode(nodes, id, parent) {
+        //     for (let i = 0; i < nodes.length; i++) {
+        //         console.log(JSON.stringify(parent));
+        //         if(nodes[i].children.length > 0) {
+        //             findNode(nodes[i].children, id, nodes[i]);
+        //         }
+        //     }
+        // }
+        // findNode(state.preRenderedHTMLNodes, state.activeNodeId, {});
 
-        function findNode(nodes, id) {
-            for (let i = 0; i < nodes.length; i++) {
+        // function setUpParentsPath(node) {
+            // let nodeName = node?.class[0]?.name;
+            // (nodeName === undefined) && (nodeName = node?.type);
 
-                let nodeName = nodes[i]?.class[0]?.name;
-                (nodeName === undefined) && (nodeName = nodes[i]?.type);
+            // if(node !== {}) {
+                // state.activeNodeParentsPath.push({id: "hi"});
+                // setUpParentsPath(node.parent);
+            // }
+        // }
 
-                if(nodes.length === (i+1) && !activeNodeIsFinded && nodes[i].children.length === 0 && nodes[i].id !== id) {
-                    state.activeNodeParentsPath = []; // tutaj jeszcze zabiera wszystko a nie oddaje elementow ostaniego parenta
-                }
+        // setUpParentsPath(state.activeNodeObject);
 
-                if (nodes[i].id === id) {
-                    state.activeNodeParentsPath.push({id: nodes[i].id , name: nodeName});
-                    activeNodeIsFinded = true;
-                    break;
-                }
 
-                if (!activeNodeIsFinded) {
-                    if(nodes[i].children.length > 0) {
-                        state.activeNodeParentsPath.push({id: nodes[i].id , name: nodeName});
-                        findNode(nodes[i].children, id);
-                    }
-                } 
-
-            }
-        }
-        findNode(state.preRenderedHTMLNodes, state.activeNodeId);
-        console.log(state.activeNodeParentsPath);
+        // console.log(JSON.stringify(state.activeNodeParentsPath));
     },
 
     setActiveProjectResolution: (state, action) => {
@@ -244,28 +241,55 @@ export const preRenderedNodesSlice = createSlice({
         };
 
         function findNode(nodes, id) {
+            function nodeIsFolder(node) {
+                if(node.type === "div" || node.type === "l" || node.type === "sym") {
+                    return true;
+                } else if(node.type === "col" && node.cmsCollectionId) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
             for (let i = 0; i < nodes.length; i++) {
-            if (nodes[i].id === id) {
-                tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
-                JSON.stringify(nodes[i]),
-                JSON.stringify(nodes[i]) + "," + JSON.stringify(newNode)
-                );
-                response = JSON.parse(tempPreRenderedHTMLNodes);
-                break;
-            }
-            if (nodes[i].children) {
-                findNode(nodes[i].children, id);
-            }
+                if (nodes[i].id === id) {
+                    if(nodeIsFolder(nodes[i]) && (nodes[i].children.length == 0)) {
+                        nodes[i].children.splice(i+1,0,newNode);
+                    } else {
+                        nodes.splice(i+1,0,newNode)
+                    }
+                    break;
+                }
+                if (nodes[i].children) {
+                    findNode(nodes[i].children, id);
+                }
             }
         }
-        findNode(state.preRenderedHTMLNodes, activeNodeId);
         
-        if(state.activeNodeId !== "") {
-            state.preRenderedHTMLNodes = response;
-        } else {
-            // add newNode as last element if activeNode is not selected
-            state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
-        }  
+        findNode(state.preRenderedHTMLNodes, state.activeNodeId);
+
+        // function findNode(nodes, id) {
+        //     for (let i = 0; i < nodes.length; i++) {
+        //     if (nodes[i].id === id) {
+        //         tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
+        //         JSON.stringify(nodes[i]),
+        //         JSON.stringify(nodes[i]) + "," + JSON.stringify(newNode)
+        //         );
+        //         response = JSON.parse(tempPreRenderedHTMLNodes);
+        //         break;
+        //     }
+        //     if (nodes[i].children) {
+        //         findNode(nodes[i].children, id);
+        //     }
+        //     }
+        // }
+        // findNode(state.preRenderedHTMLNodes, activeNodeId);
+        
+        // if(state.activeNodeId !== "") {
+        //     state.preRenderedHTMLNodes = response;
+        // } else {
+        //     // add newNode as last element if activeNode is not selected
+        //     state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
+        // }  
         
         state.activeNodeId = newNodeId;
         state.stylesInActiveNode = [];
@@ -328,9 +352,10 @@ export const preRenderedNodesSlice = createSlice({
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id) {
-                // edit using find
+                // simple version
+                // nodes[i][editedField] = editedNodeNewText;
+
                 if(nodes[i] [editedField] === undefined) {
-                    // create field
                     tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
                         JSON.stringify(nodes[i]),
                         JSON.stringify(nodes[i]).replace( 
@@ -338,7 +363,6 @@ export const preRenderedNodesSlice = createSlice({
                             `"id":"${nodes[i].id}", "${editedField}":"${editedNodeNewText}" `)
                     );
                 } else {
-                    // edit field
                     tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
                         JSON.stringify(nodes[i]),
                         JSON.stringify(nodes[i]).replace( 
@@ -346,7 +370,6 @@ export const preRenderedNodesSlice = createSlice({
                             `"${editedField}":"${editedNodeNewText}"`)
                     );
                 }
-                
                 response = JSON.parse(tempPreRenderedHTMLNodes);
                 break;
             }

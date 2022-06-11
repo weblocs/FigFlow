@@ -157,7 +157,9 @@ button {
 }
 
 .navigatorWrapper {
-  width: 170px;
+  width: 200px;
+  height: calc(100vh - 32px);
+  overflow-y: scroll;
   flex-shrink: 0;
   border: 1px solid #d3d3d3;
   border-bottom: 0;
@@ -172,6 +174,7 @@ button {
 }
 
 .styleWrapper {
+  
   padding: 10px;
   width: 240px;
   flex-shrink: 0;
@@ -503,7 +506,13 @@ a {
 }
 
 .navigation-node-inside {
-  padding-left: 10px;
+  padding-left: 8px;
+  font-size: 11px;
+}
+
+.navigation-node-inside span {
+  color: #999;
+  margin-right: 5px;
 }
 
 .navigation-node-inside.lined {

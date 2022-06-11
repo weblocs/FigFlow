@@ -27,14 +27,20 @@ export default function SpacingStyleButton (props) {
     let activeNodeStyleValue = "";
 
     if(activeNodeId !== "" ) {
-        activeNodeStyleValue = getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")].replace("px","").replace("%","");
-        if(getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")].includes("px")) {
-            activeNodeUnit = "px";
-        } else if(getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")].includes("%")) {
-            activeNodeUnit = "%";
-        } else {
-            activeNodeUnit = "";
+        try {
+            activeNodeStyleValue = getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")].replace("px","").replace("%","");
+            
+            if(getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")].includes("px")) {
+                activeNodeUnit = "px";
+            } else if(getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")].includes("%")) {
+                activeNodeUnit = "%";
+            } else {
+                activeNodeUnit = "";
+            }
+        } catch (error) {
         }
+        
+        
     }
 
     const editedStyleValue = useSelector((state) => {

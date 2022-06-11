@@ -11,13 +11,13 @@ import {setHoveredNodeId, setActiveNodeAndStyle} from "../features/pre-rendered-
 
     return (
         <div className={"navigation-node " + ((node.id == activeNodeId) ? "active " : " ") + ((node.id == hoveredNodeId) ? "hovered " : " ")}
-            style={{paddingLeft: depth + "0px"}}
+            style={{paddingLeft: depth*8 + "px"}}
             onMouseOver={() => dispatch(setHoveredNodeId(node.id))}
             onMouseOut={() => dispatch(setHoveredNodeId(""))}
             onClick={() => dispatch(setActiveNodeAndStyle({id: node.id}))}
         >
             <div className={"navigation-node-inside" + ((depth > 0) ? " lined" : "")}>
-                {node.type} - {(node?.symbolId === undefined) ? ((node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type) : (projectSymbols.find( ({id}) => id === node.symbolId)?.name )}
+                <span>{node.type}</span>{(node?.symbolId === undefined) ? ((node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type) : (projectSymbols.find( ({id}) => id === node.symbolId)?.name )}
             </div>
         </div>
     )

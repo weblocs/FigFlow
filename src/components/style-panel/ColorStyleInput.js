@@ -14,7 +14,10 @@ export default function ColorStyleInput (props) {
     const activeNodeStyle = document.querySelector(`[el_id="${activeNodeId}"]`);
     let activeNodeStyleValue = "";
     if(activeNodeId !== "" ) {
-        activeNodeStyleValue = getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")];
+        try {
+            activeNodeStyleValue = getComputedStyle(activeNodeStyle)?.[props.style.replace("_","-")];
+        } catch (error) {
+        }
     }
 
     const editedStyleValue = useSelector((state) => {

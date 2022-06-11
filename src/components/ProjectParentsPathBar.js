@@ -17,7 +17,7 @@ export default function ProjectParentsPathBar() {
                 <div key={node.id}  
                 className="parents-path-item"
                 onClick={() => dispatch(setActiveNodeAndStyle({id:node.id}))}>
-                    {node.name}
+                    {node.id}
                 </div>
             ))}
         </div>
