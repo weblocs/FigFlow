@@ -62,28 +62,30 @@ export const preRenderedNodesSlice = createSlice({
         state.activeNodeParentsPath = [];
         let activeNodeIsFinded = false;
         console.log("--------------");
+
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
+
+                let nodeName = nodes[i]?.class[0]?.name;
+                (nodeName === undefined) && (nodeName = nodes[i]?.type);
 
                 if(nodes.length === (i+1) && !activeNodeIsFinded && nodes[i].children.length === 0 && nodes[i].id !== id) {
                     state.activeNodeParentsPath = []; // tutaj jeszcze zabiera wszystko a nie oddaje elementow ostaniego parenta
                 }
 
                 if (nodes[i].id === id) {
-                    state.activeNodeParentsPath.push(nodes[i]?.class[0]?.name);
+                    state.activeNodeParentsPath.push({id: nodes[i].id , name: nodeName});
                     activeNodeIsFinded = true;
                     break;
                 }
 
                 if (!activeNodeIsFinded) {
                     if(nodes[i].children.length > 0) {
-                        state.activeNodeParentsPath.push(nodes[i]?.class[0]?.name);
+                        state.activeNodeParentsPath.push({id: nodes[i].id , name: nodeName});
                         findNode(nodes[i].children, id);
                     }
                 } 
 
-                
-                
             }
         }
         findNode(state.preRenderedHTMLNodes, state.activeNodeId);
@@ -124,10 +126,7 @@ export const preRenderedNodesSlice = createSlice({
                     } else if(nodes[i-1]) {
                         state.activeNodeId = nodes[i-1].id
                     }
-
                     nodes = nodes.splice(i,1);
-                    
-                    
                     break;
                 }
                 
@@ -173,8 +172,6 @@ export const preRenderedNodesSlice = createSlice({
                     if(nodeIsFolder(nodes[i] || pasteAfter) && (nodes[i].children.length == 0)) {
                         nodes[i].children.splice(i+1,0,state.copiedNodes);
                     } else {
-                        // we also need to reorganize it so paste is in right place
-                        
                         nodes.splice(i+1,0,state.copiedNodes)
                     }
                     break;
@@ -190,8 +187,7 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     setPreRenderedHTMLNodes: (state, action) => {
-        state.preRenderedHTMLNodes = action.payload
-        // console.log(state.preRenderedHTMLNodes)
+        state.preRenderedHTMLNodes = action.payload;
     },
 
     setActiveNodeObject: (state) => {
@@ -232,8 +228,6 @@ export const preRenderedNodesSlice = createSlice({
         }
         findNode(state.preRenderedHTMLNodes, [] , state.activeNodeId);
     },
-
-
 
     addNodeToRenderedHTMLNodesAfterActiveNode: (state, action) => {
         let response;
