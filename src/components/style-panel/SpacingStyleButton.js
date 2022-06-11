@@ -9,9 +9,6 @@ export default function SpacingStyleButton (props) {
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
     const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
 
-    
-
-    
     const dispatch = useDispatch()
     
     const inputRef = useRef();
@@ -38,9 +35,7 @@ export default function SpacingStyleButton (props) {
                 activeNodeUnit = "";
             }
         } catch (error) {
-        }
-        
-        
+        } 
     }
 
     const editedStyleValue = useSelector((state) => {
@@ -59,9 +54,6 @@ export default function SpacingStyleButton (props) {
     
 
     useEffect(() => {
-        
-
-
         if(editedStyleValue.includes("px")) {
             setStyleValueUnit("px");
         } else if(editedStyleValue.includes("%")) {
