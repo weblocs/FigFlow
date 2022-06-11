@@ -561,7 +561,8 @@ a {
 .project-rendered-design {
   overflow-x: hidden;
   background: #fff;
-  width: 100%
+  width: 100%;
+  height: calc(100% - 24px);
 }
 
 .project-rendered-design.state-2 {
@@ -574,4 +575,32 @@ a {
 
 .project-rendered-design.state-4 {
   width:370px;
+}
+
+.parents-path {
+  display: flex;
+  height: 24px;
+  width: 100%;
+  border-top: solid 1px #d3d3d3;
+  position: absolute;
+  bottom: 0;
+  background: #fff;
+}
+
+.parents-path-item {
+  font-size: 11px;
+  border-right: solid 1px #d3d3d3;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  cursor:pointer;
+  transition: background-color .2s;
+}
+
+.parents-path-item:nth-last-child(1) {
+  background: #f0f0f0;
+}
+
+.parents-path-item:hover {
+  background: #f0f0f0;
 }

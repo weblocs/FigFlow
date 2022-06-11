@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject, addSymbolToPreRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
+import {editSelectedFieldInPreRenderedHTMLNode, addSymbolToPreRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
 import CreateNewSymbol from "./CreateNewSymbol";
 
 

@@ -35,7 +35,6 @@ export default function SpacingStyleButton (props) {
         } else {
             activeNodeUnit = "";
         }
-        console.log(getComputedStyle(activeNodeStyle))
     }
 
     const editedStyleValue = useSelector((state) => {
@@ -109,17 +108,17 @@ export default function SpacingStyleButton (props) {
     function handleChangeUnit() {
         
 
-        if(styleValueUnit == "px") {
-            if(styleValue !== undefined) {
-                dispatch(editStyleInPreRenderedStyles([props.style,styleValue+"%"]));
+        if(activeNodeUnit == "px") {
+            if(editedStyleValue !== "empty") {
+                dispatch(editStyleInPreRenderedStyles([props.style,editedStyleValue+"%"]));
             } else {
                 dispatch(editStyleInPreRenderedStyles([props.style,0+"%"]));
             }
             
         }
-        if(styleValueUnit == "%") {
-            if(styleValue !== undefined) {
-                dispatch(editStyleInPreRenderedStyles([props.style,styleValue+"px"]));
+        if(activeNodeUnit == "%") {
+            if(editedStyleValue !== "empty") {
+                dispatch(editStyleInPreRenderedStyles([props.style,editedStyleValue+"px"]));
             } else {
                 dispatch(editStyleInPreRenderedStyles([props.style,0+"px"]));
             }

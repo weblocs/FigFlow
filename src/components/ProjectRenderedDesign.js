@@ -2,6 +2,7 @@ import React from "react"
 import { useSelector, useDispatch } from 'react-redux'
 
 import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeAndStyle} from "../features/pre-rendered-html-nodes"
+import ProjectParentsPathBar from "./ProjectParentsPathBar";
 
 import RenderedNode from "./RenderedNode";
 
@@ -14,6 +15,7 @@ export default function ProjectRenderedDesign() {
     const dispatch = useDispatch()
 
     return (
+
         <div className="Project">
             <style>{postRenderedStyles}</style>
 
@@ -34,6 +36,8 @@ export default function ProjectRenderedDesign() {
                 />
                 ))}
             </div>
+
+            <ProjectParentsPathBar />
         </div>
     )
 }
