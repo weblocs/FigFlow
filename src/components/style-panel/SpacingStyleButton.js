@@ -45,13 +45,12 @@ export default function SpacingStyleButton (props) {
                 activeNodeStyleValue = nodeStyles[activeProjectResolutionStylesListName][props.style].replace("px","").replace("%","");
             }
             return nodeStyles[activeProjectResolutionStylesListName][props.style]
-        } 
-        if (props.placeholder) {
-            activeNodeStyleValue = props.placeholder;   
         }
-        return "empty";    
+        if (props.placeholder) {
+            activeNodeStyleValue = props.placeholder;
+        }
+        return "empty";
     })
-    
 
     useEffect(() => {
         if(editedStyleValue.includes("px")) {
@@ -97,6 +96,7 @@ export default function SpacingStyleButton (props) {
         }
         if(e.key === 'ArrowUp') {
             dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)+1+styleValueUnit]));
+            inputRef.current.value = editedStyleValue;
         }
         if(e.key === 'ArrowDown') {
             dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)-1+styleValueUnit]));
@@ -104,8 +104,6 @@ export default function SpacingStyleButton (props) {
     }
 
     function handleChangeUnit() {
-        
-
         if(activeNodeUnit == "px") {
             if(editedStyleValue !== "empty") {
                 dispatch(editStyleInPreRenderedStyles([props.style,editedStyleValue+"%"]));
@@ -139,7 +137,7 @@ export default function SpacingStyleButton (props) {
                 
                 <input 
                 ref={inputRef}
-                type="number"
+                type="text"
                 onBlur={() => setOpenEditor(false)}
                 onKeyDown={handleKeyPress}
                 className={editorPopUpClass} />
