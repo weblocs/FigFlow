@@ -613,3 +613,106 @@ a {
 .parents-path-item:hover {
   background: #f0f0f0;
 }
+
+.style-edit-input {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 28px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #d3d3d3;
+  background-color: #f5f5f5;
+  font-size: 11px;
+}
+
+.style-edit-value {
+  padding-left: 8px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.style-edit-unit {
+  width: 17.5px;
+  padding: 0 3px;
+  text-transform: uppercase;
+  font-size: 9px;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: background-color .2s;
+  justify-content: center;
+}
+
+.style-edit-unit:hover {
+  background: #eee;
+}
+
+.style-edit-input-text {
+  background: transparent;
+  border: none;
+  max-width: 24px;
+}
+
+.style-edit-text.active {
+  display: none;
+}
+
+.style-edit-input-text.active {
+  display: none;
+}
+
+.style-edit-input-text {
+  font-family: 'Inter';
+  font-size: 11px;
+  color: #333;
+  padding: 0;
+}
+
+.style-title-box .text {
+  padding: 1px 2px;
+  margin-left: -2px;
+}
+
+.style-title-box.active .text {
+  color: #544cca;
+  display: inline-block;
+  background: #f3f3f9;
+  border-radius: 4px;
+}
+
+.style-edit-unit-list {
+  display: none;
+  position: absolute;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #d3d3d3;
+  width: 40px;
+  background-color: #f5f5f5;
+  z-index: 1;
+  right: -1px;
+  top: -1px;
+}
+
+.style-edit-unit-list.active {
+  display: block;
+}
+
+.style-edit-unit-item {
+  height: 20px;
+  display: flex;
+  padding: 2px 7px;
+  cursor: default;
+  text-transform: uppercase;
+  font-size: 9px;
+}
+
+.style-edit-unit-item:hover{
+  background: #ececec;
+}
+
+.style-edit-unit-item.active {
+  background: #dfdfdf;
+}

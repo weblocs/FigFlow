@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 import {JSONtoCSS, getIdOfPreRenderedStyleByName, getIndexOfElementInArrayById, setStylesInActiveNodeAndActiveStyle} from "../utils/nodes-editing"
 import { v4 as uuidv4 } from "uuid";
 
@@ -38,10 +38,6 @@ const initialState = {
   activeProjectResolutionStylesListName: "styles",
   activeNodeParentsPath: [], 
 }
-
-
-// CREATE activeNodeParentsPath
-
 
 
 export const preRenderedNodesSlice = createSlice({
@@ -606,8 +602,10 @@ export const preRenderedNodesSlice = createSlice({
     },
     setProjectCollections: (state, action) => {
         state.projectCollections = action.payload;
-        state.activeProjectCollectionId = state.projectCollections[state.activeProjectCollectionIndex].id;
-        state.activeProjectCollectionItemId = state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].id;
+        if(state.projectCollections.length > 0) {
+            state.activeProjectCollectionId = state.projectCollections[state.activeProjectCollectionIndex].id;
+            state.activeProjectCollectionItemId = state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].id;
+        }
     },
 
     updateProjectPagesBeforeSaving: (state) => {
