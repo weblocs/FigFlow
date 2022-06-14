@@ -1,4 +1,5 @@
 import React from "react";
+import SpaceStyleInput from "./SpaceStyleInput";
 import SpacingStyleButton from "./SpacingStyleButton"
 
 export default function SpacingStylePanel () {
@@ -6,35 +7,35 @@ export default function SpacingStylePanel () {
         <div className="style-panel-box">
             <div className="margin-wrapper">
             <div className="margin-top">
-                <SpacingStyleButton style="margin_top"/>
+                <SpaceStyleInput style="margin_top" />
             </div>
             <div className="margin-inside-wrapper">
                 <div className="margin-left">
-                    <SpacingStyleButton style="margin-left"/>
+                    <SpaceStyleInput style="margin_left" />
                 </div>
                 <div className="padding-wrapper">
                 <div className="padding-top">
-                    <SpacingStyleButton style="padding_top"/>
+                    <SpaceStyleInput style="padding_top" />
                 </div>
                 <div className="margin-inside-wrapper">
                     <div className="padding-left">
-                        <SpacingStyleButton style="padding_left"/>
+                        <SpaceStyleInput style="padding_left" />
                     </div>
                     <div className="padding-inside-wrapper"></div>
                     <div className="padding-left">
-                        <SpacingStyleButton style="padding_right"/>
+                        <SpaceStyleInput style="padding_right" />
                     </div>
                 </div>
                 <div className="padding-top">
-                    <SpacingStyleButton style="padding_bottom"/>
+                    <SpaceStyleInput style="padding_bottom" />
                 </div>
                 </div>
                 <div className="margin-left">
-                    <SpacingStyleButton style="margin_right"/>
+                    <SpaceStyleInput style="margin_right" />
                 </div>
             </div>
             <div className="margin-top">
-                <SpacingStyleButton style="margin_bottom"/>
+                <SpaceStyleInput style="margin_bottom" />
             </div>
             </div>
         </div>

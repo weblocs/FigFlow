@@ -1,7 +1,7 @@
 import React from "react";
 import SpacingStyleButton from "./SpacingStyleButton";
 import ColorStyleInput from "./ColorStyleInput"
-import SpaceStyleInput from "./SpaceStyleInput"
+import SizeStyleInput from "./SizeStyleInput"
 
 export default function TypographyStylePanel () {
 
@@ -21,8 +21,8 @@ export default function TypographyStylePanel () {
             <div className="input"></div>
           </div>
           <div className="_2-col-style-grid">
-              <SpaceStyleInput style="font_size" text="Size" />
-              <SpaceStyleInput style="line_height" text="Height" />
+              <SizeStyleInput style="font_size" text="Size" />
+              <SizeStyleInput style="line_height" text="Height" />
           </div>
           <div className="size-style-box">
             <div className="style-title-box">

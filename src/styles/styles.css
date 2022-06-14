@@ -626,6 +626,16 @@ a {
   font-size: 11px;
 }
 
+.style-edit-input.simple {
+  border: none;
+  height: 18px;
+  width: 36px;
+}
+
+.style-edit-input.simple.active {
+  color: #544cca;
+}
+
 .style-edit-value {
   padding-left: 8px;
   width: 100%;
@@ -707,6 +717,7 @@ a {
   cursor: default;
   text-transform: uppercase;
   font-size: 9px;
+  color: #111;
 }
 
 .style-edit-unit-item:hover{

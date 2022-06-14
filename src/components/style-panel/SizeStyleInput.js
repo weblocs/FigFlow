@@ -21,6 +21,7 @@ export default function SpaceStyleInput (props) {
             return true;
         }
         return false;
+
     });
 
     const editedStyleUnit = useSelector((state) => {
@@ -101,7 +102,11 @@ export default function SpaceStyleInput (props) {
 
 
     return (
-            <div className={"style-edit-input simple" + ((doesStylePropertyBelongToActiveClass) ? " active" : "")}>
+        <div className="size-style-box">
+            <div className={"style-title-box" + ((doesStylePropertyBelongToActiveClass) ? " active" : "")}>
+                <div className="text">{props.text}</div>
+            </div>
+            <div className="style-edit-input">
                 <div className="style-edit-value">
                     <span onClick={() => setIsInputActive(true)} 
                     className={"style-edit-text" + ((isInputActive) ? " active" : "")}>
@@ -134,5 +139,6 @@ export default function SpaceStyleInput (props) {
                     </div>
                 </div>
             </div>
+        </div>
     )
 }
