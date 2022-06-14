@@ -120,9 +120,7 @@ export default function SpacingStyleButton (props) {
             }
         }
     }
-
-
-
+    
     return (
         <div className="text">
             <div className="space-editor">
