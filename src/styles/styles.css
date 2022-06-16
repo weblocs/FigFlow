@@ -683,12 +683,14 @@ a {
 
 .style-title-box .text {
   padding: 1px 2px;
-  margin-left: -2px;
+  position: relative;
+  left: -2px;
+  top: -1px;
+  display: inline-block;
 }
 
 .style-title-box.active .text {
   color: #544cca;
-  display: inline-block;
   background: #f3f3f9;
   border-radius: 4px;
 }

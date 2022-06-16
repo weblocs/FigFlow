@@ -37,6 +37,7 @@ const initialState = {
   activeProjectResolution: "1",
   activeProjectResolutionStylesListName: "styles",
   activeNodeParentsPath: [], 
+  projectUploadedFonts: [{name:"Plus Jakarta"}, {name:"Inter"}, {name:"General Sans"}, {name:"Hauora"}, {name:"Clash Display"}, {name:"Roboto"}],
 }
 
 
@@ -466,7 +467,7 @@ export const preRenderedNodesSlice = createSlice({
         state.preRenderedStyles[state.activeStyleIndex][styleResolution][styleProperty] = styleValue;
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
 
-        console.log(current(state.preRenderedStyles[state.activeStyleIndex] [styleResolution]));
+        // console.log(current(state.preRenderedStyles[state.activeStyleIndex] [styleResolution]));
     },
 
     setActiveNodeAndStyle: (state, action) => {

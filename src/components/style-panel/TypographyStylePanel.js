@@ -2,17 +2,26 @@ import React from "react";
 import SpacingStyleButton from "./SpacingStyleButton";
 import ColorStyleInput from "./ColorStyleInput"
 import SizeStyleInput from "./SizeStyleInput"
+import { useSelector } from "react-redux";
 
 export default function TypographyStylePanel () {
-
+  const projectUploadedFonts = useSelector((state) => state.designerProjectState.projectUploadedFonts)
     return (
         <div className="style-panel-box">
         <div className="_1-col-style-grid">
+          
           <div className="size-style-box">
+
             <div className="style-title-box">
               <div className="text">Font</div>
             </div>
-            <div className="input"></div>
+            <div className="input">
+              <select>
+                {projectUploadedFonts.map((font) => (
+                  <option>{font.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="size-style-box">
             <div className="style-title-box">
@@ -21,8 +30,8 @@ export default function TypographyStylePanel () {
             <div className="input"></div>
           </div>
           <div className="_2-col-style-grid">
-              <SizeStyleInput style="font_size" text="Size" />
-              <SizeStyleInput style="line_height" text="Height" />
+              <SizeStyleInput style="font-size" text="Size" />
+              <SizeStyleInput style="line-height" text="Height" />
           </div>
           <div className="size-style-box">
             <div className="style-title-box">

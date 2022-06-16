@@ -61,7 +61,6 @@ export function JSONtoCSS (_classes, activeResolution) {
     
     // Converting preRenderedStyles (JSON) into renderedStyles (CSS)
     return JSON.stringify(tempClasses)
-    .replaceAll("_","-")
     .replaceAll("[","")
     .replaceAll("]","")
     .replaceAll('"',"")

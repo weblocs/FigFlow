@@ -7,10 +7,10 @@ export default function SizeStylePanel () {
             <div className="_2-col-style-grid">
                 <SizeStyleInput style="width" text="Width" placeholder="auto" />
                 <SizeStyleInput style="height" text="Height" placeholder="auto" />
-                <SizeStyleInput style="min_width" text="Min W"/>
-                <SizeStyleInput style="min_height" text="Min H"/>
-                <SizeStyleInput style="max_width" text="Max W"/>
-                <SizeStyleInput style="max_height" text="Max H"/>
+                <SizeStyleInput style="min-width" text="Min W"/>
+                <SizeStyleInput style="min-height" text="Min H"/>
+                <SizeStyleInput style="max-width" text="Max W"/>
+                <SizeStyleInput style="max-height" text="Max H"/>
             </div>
         </div>
     )
