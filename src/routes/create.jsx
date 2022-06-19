@@ -1,10 +1,10 @@
-import DevMode from "../DevMode";
+import CreatorMode from "../CreatorMode";
 
 export default function Design() {
 
   return (
     <div>
-      <DevMode />
+      <CreatorMode />
     </div>
   );
 }

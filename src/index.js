@@ -7,6 +7,7 @@ import App from "./App";
 
 import Dashboard from "./routes/dashboard";
 import Design from "./routes/design";
+import Create from "./routes/create";
 import Login from "./routes/login";
 import { store } from './app/store'
 import { Provider } from 'react-redux'
@@ -27,6 +28,7 @@ root.render(
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Dashboard />} />
           <Route path="design/:projectSlug" element={<Design />} />
+          <Route path="create/:projectSlug" element={<Create />} />
           
           
         </Routes>

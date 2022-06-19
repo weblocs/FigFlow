@@ -8,7 +8,7 @@ import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "fi
 import { getStorage, ref } from "firebase/storage";
 import { firebaseConfig } from "./firebase-config.js";
 
-import { setProjectCollections, setProjectSymbols, setPreRenderedStyles, setProjectPages, setProjectFirebaseId } from '../features/pre-rendered-html-nodes'
+import { setProjectCollections, setProjectSymbols, setPreRenderedStyles, setProjectPages, setProjectFirebaseId, setProjectSwatches } from '../features/pre-rendered-html-nodes'
 import { setProjectImages } from "../features/project-images"
 
 export default function saveProject(items,preRenderedStyles) {
@@ -44,7 +44,7 @@ export function loadProjectPreRenderedNodesAndStyles(projectId) {
 }
 
 export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSlug) {
-
+  
   const dispatch = useDispatch()
   const projectFirebaseId = useSelector((state) => state.designerProjectState.projectFirebaseId)
   
@@ -60,12 +60,16 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
   });
   
   const projectData = await getDoc(doc(db, "projects", projectFirebaseId));
-
+  
   dispatch(setProjectPages([...projectData.data().pages]));
+  
   dispatch(setProjectCollections([...projectData.data().collections]));
   dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
-  dispatch(setProjectImages([...projectData.data()?.images]));
   dispatch(setProjectSymbols([...projectData.data()?.symbols]));
+  dispatch(setProjectSwatches([...projectData.data()?.swatches]));
+  dispatch(setProjectImages([...projectData.data()?.images]));
+
+  
 
   
 

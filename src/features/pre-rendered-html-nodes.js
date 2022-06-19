@@ -37,7 +37,8 @@ const initialState = {
   activeProjectResolution: "1",
   activeProjectResolutionStylesListName: "styles",
   activeNodeParentsPath: [], 
-  projectUploadedFonts: [{name:"Plus Jakarta"}, {name:"Inter"}, {name:"General Sans"}, {name:"Hauora"}, {name:"Clash Display"}, {name:"Roboto"}],
+  projectUploadedFonts: [{name:"Plus Jakarta"}, {name:"Inter", weights: ["300", "500", "700"]}, {name:"General Sans"}, {name:"Hauora"}, {name:"Clash Display"}, {name:"Roboto"}],
+  projectSwatches: [],
 }
 
 
@@ -52,7 +53,23 @@ export const preRenderedNodesSlice = createSlice({
         if (parseInt(state.activeProjectResolution) >= 2) {
             state.activeNodeStyles = state.preRenderedStyles[state.activeStyleIndex]?.tabletStyles
         }
+    },
 
+    setProjectSwatches: (state, action) => {
+        state.projectSwatches = action.payload;
+    },
+
+    updateSwatch: (state, action) => {
+        let swatchId = action.payload.id;
+        let swatchIndex = state.projectSwatches.map(x => {
+            return x.id;
+          }).indexOf(swatchId);
+        state.projectSwatches[swatchIndex] = action.payload;
+        console.log(current(state.projectSwatches));
+    },
+
+    addSwatch: (state, action) => {
+        state.projectSwatches.push({id: uuidv4(), name: action.payload.name, color: action.payload.color })
     },
 
     setActiveNodeParentsPath: (state) => {
@@ -618,6 +635,7 @@ export const preRenderedNodesSlice = createSlice({
               collections: state.projectCollections,
               preRenderedStyles: state.preRenderedStyles,
               symbols: state.projectSymbols,
+              swatches: state.projectSwatches,
             });
             // state.saveButtonStateText = "Saved" TypeError: Cannot perform 'set' on a proxy that has been revoked
         } 
@@ -794,5 +812,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setActiveNodeParentsPath, updateActiveNodeStyles, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveNodeStyles, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer
