@@ -4,6 +4,7 @@ import ContentEditable from "react-contenteditable";
 import {useSelector, useDispatch} from "react-redux";
 import {setHoveredNodeId, setArrowNavigationOn} from "../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
+import AddSectionButton from "./AddSectionButton";
 
 function RenderedNode(props) {
 
@@ -90,7 +91,67 @@ function RenderedNode(props) {
     </div>
   );
 
-  
+  if (props.type === "sec") {
+    elementHTML = (
+      <div 
+      el_id={props.id}
+      onClick={handleOnClick}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      >
+        {props.children.map((el) => (
+          <RenderedNode
+            data={el}
+            type={el.type}
+            cmsCollectionId={el.cmsCollectionId}
+            cmsFieldId={el.cmsFieldId}
+            id={el.id}
+            key={el.id}
+            itemIndex = {props.itemIndex}
+            renderedCollectionIndex={props.renderedCollectionIndex}
+            title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
+            children={el.children}
+            onChange={(text, id) => props.onChange(text, id)}
+            class={el.class}
+            onClick={([nodeId,className]) => props.onClick([nodeId,className])}
+          />
+        ))}
+        <AddSectionButton sectionId={props.id} />
+      </div>
+    );
+  }
+
+  if (props.type === "sym") {
+    elementHTML = (
+      <div 
+      el_id={props.id}
+      onClick={handleOnClick}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      >
+        {props.children.map((el) => (
+          <RenderedNode
+            data={el}
+            type={el.type}
+            cmsCollectionId={el.cmsCollectionId}
+            cmsFieldId={el.cmsFieldId}
+            id={el.id}
+            key={el.id}
+            itemIndex = {props.itemIndex}
+            renderedCollectionIndex={props.renderedCollectionIndex}
+            title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
+            children={el.children}
+            onChange={(text, id) => props.onChange(text, id)}
+            class={el.class}
+            onClick={([nodeId,className]) => props.onClick([nodeId,className])}
+          />
+        ))}
+        <AddSectionButton />
+      </div>
+    );
+  }
 
   // Collection List
   if (props.type === "col") {
