@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {setHoveredNodeId, setActiveNodeAndStyle} from "../features/pre-rendered-html-nodes"
 
  function NavigationNodeItem ({node, depth}) {
-     const dispatch = useDispatch()
+    const dispatch = useDispatch()
     const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
     const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)

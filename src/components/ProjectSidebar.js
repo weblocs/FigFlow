@@ -9,7 +9,8 @@ export default function ProjectSidebar(){
            <ProjectSidebarButton letter="P" shortcode="P" tab="Pages" />
            <ProjectSidebarButton letter="C" tab="Collections" />
            <ProjectSidebarButton letter="I" tab="Images" />
-           <ProjectSidebarButton letter="S" tab="Symbols" />
+           <ProjectSidebarButton letter="Sy" tab="Symbols" />
+           <ProjectSidebarButton letter="Se" tab="Sections" />
         </div>
     )
 }

@@ -14,11 +14,14 @@ export default function ProjectSettingsPanel() {
     const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
     const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
 
+    const projectSections = useSelector((state) => state.designerProjectState.projectSections)
+    const activeSectionFolder = useSelector((state) => state.designerProjectState.activeSectionFolder)
+
+    
+
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
     
-
-
     let activeNode = {};
 
     let _isNodeCollection = false;
@@ -64,7 +67,6 @@ export default function ProjectSettingsPanel() {
     
 
     function handleUpdatingSymbol() {
-
         dispatch(updateProjectSymbol({id: activeSymbolId, nodes: activeSymbolNodes}));
 
         setUpdateSymbolButtonText("Symbol updated");
@@ -187,14 +189,11 @@ export default function ProjectSettingsPanel() {
             ))}
             </div>) 
             : ("") }
-
-            
             </div>
 
             
             
             <div>
-                
                 {(isNodeInCollection && (activeNodeObject?.type === "h" || activeNodeObject?.type === "p" )) && 
                 <div>
 
@@ -249,8 +248,6 @@ export default function ProjectSettingsPanel() {
                             </div>
                         ))}
                     </div>
-
-                    
                 </div>
                 }
 
@@ -261,9 +258,31 @@ export default function ProjectSettingsPanel() {
                 </div>
                 }
 
-                
-                
-                
+                {(activeNodeObject?.type === "sec"  ) && 
+                <div>
+                    <div style={{marginBottom: "20px"}}>
+                        Section: 
+                        {/* {projectSections?.find(({id}) => id === activeSymbolId)?.name} */}
+                    </div>
+                   
+                    <div>
+                        Sections:
+                        {projectSections.map((folder) => (
+                            <>
+                                <div 
+                                className={"sections-nav-folder-item" + ((activeSectionFolder === folder.id) ? " active" : "" )}
+                                key={folder.id}>
+                                    {folder.name}
+                                </div>
+                                {folder.items.map((section) => (
+                                    <div className="projectPageItem" key={section.id}>{section.name}</div>
+                                ))}
+                            </>
+                        ))}
+                    </div>
+                </div>
+                }
+
                 </div>
         </div>
     )

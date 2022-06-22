@@ -835,3 +835,80 @@ a {
   font-weight: 300;
   cursor: pointer;
 }
+
+.add-section_box {
+  position: absolute;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+}
+
+.add-section_button {
+    padding: 6px 12px;
+    color: #fff;
+    background: #534cca;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background-color .2s;
+}
+
+.add-section_popup-box {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #12121259;
+  position: fixed;
+  z-index: 1;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-section_popup-box.active {
+  display: flex;
+}
+
+.add-section_popup_close-area {
+  position:absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.add-section_popup-list {
+  max-width: 600px;
+  width: 100%;
+  max-height: 500px;
+  height: 100%;
+  background: #fff;
+  padding: 32px; 
+  position: relative;
+  z-index: 1;
+}
+
+.add-section_button:hover {
+  background: #6761cd;
+}
+
+.sections-nav-folder-item {
+  font-size: 11px;
+  padding: 2px 16px 3px;
+  font-size: 12px;
+  background: #f2f2f2;
+  border-bottom: 1px solid #d3d3d3;
+  font-weight: 600;
+  cursor: pointer
+}
+
+.text-h2 {
+  font-size: 16px;
+}
+
+.sections-nav-folder-item.active {
+  background: #e1e1e1;
+}

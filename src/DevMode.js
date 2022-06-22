@@ -11,12 +11,19 @@ import ProjectCollectionsFieldsPanel from "./components/ProjectCollectionsFields
 import ProjectCollectionsItemsPanel from "./components/ProjectCollectionsItemsPanel";
 import ProjectSettingsPanel from "./components/ProjectSettingsPanel";
 import ProjectSymbolsPanel from "./components/ProjectSymbolsPanel"
+import ProjectSectionsPanel from "./components/ProjectSectionsPanel"
 
 import {loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
 import ProjectImagesPanel from "./components/ProjectImagesPanel";
+import { useDispatch } from "react-redux";
 
-export default function FigFlow() {
+import {setProjectMode} from "./features/pre-rendered-html-nodes"
+
+export default function DevMode() {
+  
+  const dispatch = useDispatch();
+  dispatch(setProjectMode("developer"));
 
   loadProjectFromFirebasePreRenderedNodesAndStyles();
   loadShortcuts();
@@ -35,6 +42,7 @@ export default function FigFlow() {
         <ProjectCollectionsItemsPanel />
         <ProjectCollectionsFieldsPanel />
         <ProjectSymbolsPanel />
+        <ProjectSectionsPanel />
 
         <ProjectRenderedDesign />
           
