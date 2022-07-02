@@ -13,6 +13,7 @@ export default function AddSectionPopUp() {
     function handleAddSectionClick(sectionNodes) {
         dispatch(setCopiedSectionNodes(sectionNodes));
         dispatch(addSectionToPreRenderedHTMLNodes());
+        dispatch(setAddSectionPopUpOpened(false));
     }
 
     function handleClickInPopUpCloseArea () {

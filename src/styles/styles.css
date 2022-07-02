@@ -320,6 +320,11 @@ a {
   background-color: #eee;
 }
 
+.addNodeButton.left-margin {
+  margin-left: 24px;
+  border-left: 1px solid #d3d3d3;
+}
+
 .addNodeButton.active {
   background-color: #e8e8e8;
 }
@@ -837,14 +842,21 @@ a {
 }
 
 .add-section_box {
-  position: absolute;
+  display: none;
+  height: 0;
   width: 100%;
   transform: translateY(-50%);
-  display: flex;
   justify-content: center;
 }
 
+.add-section_box.active {
+  display: flex;
+}
+
 .add-section_button {
+    position: relative;
+    top: -17px;
+    height: 21px;
     padding: 6px 12px;
     color: #fff;
     background: #534cca;
@@ -911,4 +923,24 @@ a {
 
 .sections-nav-folder-item.active {
   background: #e1e1e1;
+}
+
+.projectPageItem {
+  position: relative;
+}
+
+.delete-section-item {
+  position: absolute;
+    right: 8px;
+    padding: 0 4px;
+    top: 0;
+    height: 25px;
+    line-height: 25px;
+    align-content: center;
+    transition: .2s;
+    font-size: 11px;
+}
+
+.delete-section-item:hover {
+  opacity: .5;
 }

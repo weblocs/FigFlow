@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import ContentEditable from "react-contenteditable";
 
 import {useSelector, useDispatch} from "react-redux";
-import {setHoveredNodeId, setArrowNavigationOn} from "../features/pre-rendered-html-nodes"
+import {setHoveredNodeId, setArrowNavigationOn, setHoveredSectionId} from "../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./AddSectionButton";
 
@@ -14,6 +14,7 @@ function RenderedNode(props) {
   const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId);
   const projectCollections = useSelector((state) => state.designerProjectState.projectCollections);
   const arrowNavigationOn = useSelector((state) => state.designerProjectState.arrowNavigationOn);
+  const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId);
 
   const { escapeEditableMode } = useKeyboardShortcut(
     ["Escape"],
@@ -60,6 +61,10 @@ function RenderedNode(props) {
     dispatch(setHoveredNodeId(""));
   }
 
+  function handleSectionMouseOver() {
+    dispatch(setHoveredSectionId(props.id));
+  }
+
   const dispatch = useDispatch()
 
   
@@ -93,6 +98,7 @@ function RenderedNode(props) {
 
   if (props.type === "sec") {
     elementHTML = (
+      <div onMouseEnter={handleSectionMouseOver}>
       <div 
       el_id={props.id}
       onClick={handleOnClick}
@@ -117,7 +123,9 @@ function RenderedNode(props) {
             onClick={([nodeId,className]) => props.onClick([nodeId,className])}
           />
         ))}
-        <AddSectionButton sectionId={props.id} />
+        
+      </div>
+      <AddSectionButton sectionId={props.id} />
       </div>
     );
   }
