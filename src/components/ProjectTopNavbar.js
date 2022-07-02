@@ -5,11 +5,11 @@ import {addNodeToRenderedHTMLNodesAfterActiveNode, setActiveProjectResolution} f
 import ProjectRightSidebarButton from "./ProjectRightSidebarButton";
 import SaveButton from "./SaveButton";
 import TopNavbarResolutionChangeButton from "./TopNavbarResolutionChangeButton";
+import ModeChanger from "./ModeChanger";
+
 
 
 export default function ProjectTopNavbar() {
-
-    const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
 
     const dispatch = useDispatch()
 
@@ -26,7 +26,7 @@ export default function ProjectTopNavbar() {
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("sym"))}>Sy</div>
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("sec"))}>Se</div>
 
-          <div className="addNodeButton left-margin">M</div>
+          <ModeChanger />
         </div>
 
         <div className="centerNavbar">
