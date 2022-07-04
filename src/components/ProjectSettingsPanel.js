@@ -261,24 +261,8 @@ export default function ProjectSettingsPanel() {
                 {(activeNodeObject?.type === "sec"  ) && 
                 <div>
                     <div style={{marginBottom: "20px"}}>
-                        Section: 
+                        Section
                         {/* {projectSections?.find(({id}) => id === activeSymbolId)?.name} */}
-                    </div>
-                   
-                    <div>
-                        Sections:
-                        {projectSections.map((folder) => (
-                            <>
-                                <div 
-                                className={"sections-nav-folder-item" + ((activeSectionFolder === folder.id) ? " active" : "" )}
-                                key={folder.id}>
-                                    {folder.name}
-                                </div>
-                                {folder.items.map((section) => (
-                                    <div className="projectPageItem" key={section.id}>{section.name}</div>
-                                ))}
-                            </>
-                        ))}
                     </div>
                 </div>
                 }

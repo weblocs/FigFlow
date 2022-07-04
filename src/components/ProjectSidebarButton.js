@@ -6,6 +6,7 @@ import useKeyboardShortcut from 'use-keyboard-shortcut'
 export default function ProjectSidebarButton(props){
     const dispatch = useDispatch();
     const arrowNavigationOn = useSelector((state) => state.designerProjectState.arrowNavigationOn)
+    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
 
 
     const { openNavigatorShortcut } = useKeyboardShortcut(
@@ -23,7 +24,7 @@ export default function ProjectSidebarButton(props){
     );
     
     return(
-        <div className="projectSidebarButton" onClick={() => dispatch(setActiveProjectTab(props.tab))}>
+        <div className={"projectSidebarButton" + ((activeProjectTab === props.tab) ? " active" : "")} onClick={() => dispatch(setActiveProjectTab(props.tab))}>
            {props.letter}
         </div>
     )

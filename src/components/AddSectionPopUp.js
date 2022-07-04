@@ -1,23 +1,28 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setAddSectionPopUpOpened, setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setActiveSectionFolder} from "../features/pre-rendered-html-nodes"
+import {setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setActiveSectionFolder, setProjectPopUp} from "../features/pre-rendered-html-nodes"
 
 export default function AddSectionPopUp() {
 
     const projectSections = useSelector((state) => state.designerProjectState.projectSections)
     const activeSectionFolder = useSelector((state) => state.designerProjectState.activeSectionFolder)
     const projectMode = useSelector((state) => state.designerProjectState.projectMode)
-    const addSectionPopUpOpened = useSelector((state) => state.designerProjectState.addSectionPopUpOpened)
+    const addSectionPopUpOpened = useSelector((state) => {
+        if(state.designerProjectState.projectPopUp === "addSection") {
+            return true
+        }
+        return false
+    })
     const dispatch = useDispatch()
     
 
     function handleAddSectionClick(sectionNodes) {
         dispatch(setCopiedSectionNodes(sectionNodes));
         dispatch(addSectionToPreRenderedHTMLNodes());
-        dispatch(setAddSectionPopUpOpened(false));
+        dispatch(setProjectPopUp(""));
     }
 
     function handleClickInPopUpCloseArea () {
-        dispatch(setAddSectionPopUpOpened(false));
+        dispatch(setProjectPopUp(""));
     }
 
     if(projectMode === "creator") {
@@ -27,7 +32,7 @@ export default function AddSectionPopUp() {
                 <div className="add-section_popup-list">
                     <div className="text-h2">Add section</div>
                     {projectSections.map((folder) => (
-                        <>
+                        <div key={folder.id}>
                             <div 
                             onClick={() => dispatch(setActiveSectionFolder(folder.id))}
                             className={"sections-nav-folder-item" + ((activeSectionFolder === folder.id) ? " active" : "" )}
@@ -37,7 +42,7 @@ export default function AddSectionPopUp() {
                             {folder.items.map((section) => (
                                 <div className="projectPageItem" onClick={() => handleAddSectionClick({...section.preRenderedHTMLNodes})} key={section.id}>{section.name}</div>
                             ))}
-                        </>
+                        </div>
                     ))}
                 </div>
             </div>

@@ -42,9 +42,10 @@ const initialState = {
   projectUploadedFonts: [{name:"Plus Jakarta"}, {name:"Inter", weights: ["300", "500", "700"]}, {name:"General Sans"}, {name:"Hauora"}, {name:"Clash Display"}, {name:"Roboto"}],
   projectSwatches: [],
   projectSections: [],
-  activeSectionFolder : "",
-  addSectionPopUpOpened: false,
-  hoveredSectionId: ""
+  activeSectionFolder: "",
+  projectPopUp: "",
+  hoveredSectionId: "",
+  projectRichTextElements: [],
 }
 
 export const preRenderedNodesSlice = createSlice({
@@ -56,12 +57,24 @@ export const preRenderedNodesSlice = createSlice({
         state.hoveredSectionId = action.payload;
     },
 
-    setAddSectionPopUpOpened: (state, action) => {
-        state.addSectionPopUpOpened = action.payload;
+    setProjectPopUp: (state, action) => {
+        state.projectPopUp = action.payload;
     },
 
     setProjectMode: (state, action) => {
         state.projectMode = action.payload
+    },
+
+    setRichTextElements: (state, action) => {
+        state.projectRichTextElements = action.payload
+    },
+
+    createNewRichTextElement: (state, action) => {
+        state.projectRichTextElements = [...state.projectRichTextElements, {
+            id: uuidv4(),
+            name: action.payload,
+            preRenderedHTMLNodes: state.activeNodeObject,
+        }];
     },
 
     setProjectSections: (state, action) => {
@@ -73,7 +86,6 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     createNewSection: (state, action) => {
-
         for (let i = 0; i < state.projectSections.length; i++) {
             if(state.projectSections[i].id === state.activeSectionFolder) {
                 state.projectSections[i].items = [...state.projectSections[i].items, {
@@ -225,7 +237,7 @@ export const preRenderedNodesSlice = createSlice({
 
         function findNode(nodes, id) {
             function nodeIsFolder(node) {
-                if(node.type === "div" || node.type === "l" || node.type === "sym" || node.type === "sec") {
+                if(node.type === "div" || node.type === "l" || node.type === "sym" || node.type === "sec" || node.type === "rich") {
                     return true;
                 } else if(node.type === "col" && node.cmsCollectionId) {
                     return true;
@@ -272,20 +284,31 @@ export const preRenderedNodesSlice = createSlice({
         editSectionNodesIds(state.copiedSectionNodes);
 
         function findNode(nodes, id) {
+            
             function nodeIsSection(node) {
+                console.log(node.type);
                 if(node.type === "sec") {
                     return true;
                 } else {
                     return false;
                 }
             }
+            function nodeIsRochText(node) {
+                console.log(node.type);
+                if(node.type === "rich") {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
 
             for (let i = 0; i < nodes.length; i++) {
                 if (nodes[i].id === id) {
                     if(nodeIsSection(nodes[i])) {
                         nodes.splice(i+1,0,state.copiedSectionNodes);
-                    } else {
-                        // find closes section and paste
+                    } else if(nodeIsRochText(nodes[i])) {
+                        nodes[i].children.push(state.copiedSectionNodes);
                     }
                     break;
                 }
@@ -740,6 +763,7 @@ export const preRenderedNodesSlice = createSlice({
               symbols: state.projectSymbols,
               swatches: state.projectSwatches,
               sections: state.projectSections,
+              richTextElements: state.projectRichTextElements,
             });
             // state.saveButtonStateText = "Saved" TypeError: Cannot perform 'set' on a proxy that has been revoked
         } 
@@ -916,5 +940,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setProjectMode, setHoveredSectionId, deleteSection, setAddSectionPopUpOpened, setCopiedSectionNodes, setActiveSectionFolder, addSectionToPreRenderedHTMLNodes, setProjectSections, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveNodeStyles, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setActiveSectionFolder, addSectionToPreRenderedHTMLNodes, setProjectSections, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveNodeStyles, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, updateProjectPagesBeforeSaving, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

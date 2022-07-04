@@ -396,6 +396,10 @@ a {
   transition: background .2s;
 }
 
+.projectSidebarButton.active {
+  background-color: #eee;
+}
+
 .projectSidebarButton:hover {
   background-color: #eee;
 }

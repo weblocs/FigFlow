@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 
 import {setProjectMode} from "./features/pre-rendered-html-nodes"
 import AddSectionPopUp from "./components/AddSectionPopUp";
+import AddRichTextElementPopUp from "./components/AddRichTextElementPopUp";
 
 export default function CreatorMode() {
 
@@ -21,6 +22,7 @@ export default function CreatorMode() {
   return (
     <>
       <AddSectionPopUp />
+      <AddRichTextElementPopUp />
       <ProjectTopNavbar />
       <div className="projectWrapper">
         <ProjectRenderedDesign />
