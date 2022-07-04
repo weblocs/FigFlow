@@ -321,7 +321,7 @@ export const preRenderedNodesSlice = createSlice({
                     return false;
                 }
             }
-            function nodeIsRochText(node) {
+            function nodeIsRichText(node) {
                 console.log(node.type);
                 if(node.type === "rich") {
                     return true;
@@ -333,10 +333,10 @@ export const preRenderedNodesSlice = createSlice({
 
             for (let i = 0; i < nodes.length; i++) {
                 if (nodes[i].id === id) {
-                    if(nodeIsSection(nodes[i])) {
-                        nodes.splice(i+1,0,state.copiedSectionNodes);
-                    } else if(nodeIsRochText(nodes[i])) {
+                    if(nodeIsRichText(nodes[i])) {
                         nodes[i].children.push(state.copiedSectionNodes);
+                    }  else  {
+                        nodes.splice(i+1,0,state.copiedSectionNodes);
                     }
                     break;
                 }

@@ -6,6 +6,7 @@ import {setHoveredNodeId, setArrowNavigationOn, setHoveredSectionId} from "../fe
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./AddSectionButton";
 import AddRichTextElementButton from "./AddRichTextElementButton";
+import RichElementsSettings from "./RichElementsSettings";
 
 function RenderedNode(props) {
 
@@ -14,6 +15,7 @@ function RenderedNode(props) {
   const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
   const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId);
   const projectCollections = useSelector((state) => state.designerProjectState.projectCollections);
+  const projectMode = useSelector((state) => state.designerProjectState.projectMode);
   const arrowNavigationOn = useSelector((state) => state.designerProjectState.arrowNavigationOn);
   const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId);
 
@@ -47,6 +49,10 @@ function RenderedNode(props) {
   function handleOnClick(e) {
     e.stopPropagation();
     props.onClick([props.id, props?.class[0]?.name]);
+    if (projectMode === "creator") {
+      setEditable(true);
+      dispatch(setArrowNavigationOn(false))
+    } 
     if(!editable) {
       dispatch(setArrowNavigationOn(true))
     }
@@ -141,7 +147,8 @@ function RenderedNode(props) {
       className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
       >
         {props.children.map((el) => (
-
+          <>
+          <RichElementsSettings id={el.id} />
           <RenderedNode
             data={el}
             type={el.type}
@@ -158,8 +165,9 @@ function RenderedNode(props) {
             onClick={([nodeId,className]) => props.onClick([nodeId,className])}
           />
           
+          </>
         ))}
-        <AddRichTextElementButton elementId={props.id} />
+        <AddRichTextElementButton elementId={props.id} nodes={props} />
       </div>
     );
   }

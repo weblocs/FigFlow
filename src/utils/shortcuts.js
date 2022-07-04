@@ -19,7 +19,7 @@ export default function loadShortcuts() {
     
 
     const { moveNode } = useKeyboardShortcut(
-      ["P"],
+      ["]"],
       shortcutKeys => {
         dispatch(movePreRenderedNode({moveReverse:false}))
       },
@@ -31,7 +31,7 @@ export default function loadShortcuts() {
     );
 
     const { moveNodeReverse } = useKeyboardShortcut(
-      ["O"],
+      ["["],
       shortcutKeys => {
         dispatch(movePreRenderedNode({moveReverse:true}))
       },

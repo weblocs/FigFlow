@@ -858,16 +858,18 @@ a {
 }
 
 .add-section_button {
-    position: relative;
-    top: -17px;
-    height: 21px;
-    padding: 6px 12px;
-    color: #fff;
-    background: #534cca;
-    border-radius: 4px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: background-color .2s;
+  position: relative;
+  top: -14px;
+  height: 21px;
+  font-size: 13px;
+  padding: 2px 7px;
+  color: #fff;
+  border: 1px solid #c3c3c3;
+  background: #fff;
+  color: #111;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color .2s;
 }
 
 .add-section_popup-box {
@@ -908,7 +910,7 @@ a {
 }
 
 .add-section_button:hover {
-  background: #6761cd;
+  background: #f2f2f2;
 }
 
 .sections-nav-folder-item {
@@ -947,4 +949,40 @@ a {
 
 .delete-section-item:hover {
   opacity: .5;
+}
+
+.rich-element-settings_box {
+  position: relative;
+  display: none;
+  height: 0;
+}
+
+.rich-element-settings_box.active {
+  display: block;
+}
+
+.rich-element-settings {
+  position: absolute;
+  top: 0;
+  display: inline;
+  background: #fff;
+  transform: translateY(-100%);
+  border: 1px solid #c3c3c3;
+  border-right: 0;
+}
+
+.rich-element-settings_flex {
+  display: flex;
+}
+
+.rich-element-settings_button {
+  padding: 4px 8px;
+  border-right: 1px solid #c3c3c3;
+  cursor:pointer;
+  background: #fff;
+  transition: background-color .2s;
+}
+
+.rich-element-settings_button:hover {
+  background: #f4f4f4;
 }

@@ -16,7 +16,7 @@ export default function AddSectionButton({sectionId}) {
         return (
             <div className={"add-section_box" + ((hoveredSectionId === sectionId) ? " active" : "")}>
                 <div className="add-section_button" 
-                onClick={handleAddSectionButtonClick}>Add section</div>
+                onClick={handleAddSectionButtonClick}>+</div>
             </div>
         )
     } 
