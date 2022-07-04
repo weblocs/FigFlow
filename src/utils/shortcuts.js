@@ -2,7 +2,7 @@ import useEventListener from '@use-it/event-listener'
 import { useDispatch } from 'react-redux';
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 
-import {arrowActiveNodeNavigation, setCopiedNodes, pasteCopiedNodes, deleteActiveNode} from "../features/pre-rendered-html-nodes"
+import {arrowActiveNodeNavigation, setCopiedNodes, pasteCopiedNodes, deleteActiveNode, movePreRenderedNode} from "../features/pre-rendered-html-nodes"
 
 let keys = [];
 
@@ -15,6 +15,32 @@ export default function loadShortcuts() {
 
 
     const dispatch = useDispatch()
+
+    
+
+    const { moveNode } = useKeyboardShortcut(
+      ["P"],
+      shortcutKeys => {
+        dispatch(movePreRenderedNode({moveReverse:false}))
+      },
+      { 
+        overrideSystem: false,
+        ignoreInputFields: false, 
+        repeatOnHold: false 
+      }
+    );
+
+    const { moveNodeReverse } = useKeyboardShortcut(
+      ["O"],
+      shortcutKeys => {
+        dispatch(movePreRenderedNode({moveReverse:true}))
+      },
+      { 
+        overrideSystem: false,
+        ignoreInputFields: false, 
+        repeatOnHold: false 
+      }
+    );
 
 
     const { copyShortcut } = useKeyboardShortcut(
