@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import { useSelector, useDispatch } from 'react-redux'
 
-import {editStyleInPreRenderedStyles} from "../../features/pre-rendered-html-nodes"
+import {editStyleInPreRenderedStyles} from "../features/pre-rendered-html-nodes"
 
 export default function ProjectStylePropertyEditor(props) {
 
