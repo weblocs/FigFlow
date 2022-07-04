@@ -17,6 +17,7 @@ export default function ProjectTopNavbar() {
       <div className="addNodeWrapper">
         <div className="projectNavigationLeft">
           <Link to="/"><div className="addNodeButton">we</div></Link>
+          
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("div"))}>D</div>
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("h"))}>H</div>
           <div className="addNodeButton" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode("p"))}>P</div> 
