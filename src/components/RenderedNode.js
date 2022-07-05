@@ -147,7 +147,7 @@ function RenderedNode(props) {
       className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
       >
         {props.children.map((el) => (
-          <>
+          <div key={el.id} >
           <RichElementsSettings id={el.id} />
           <RenderedNode
             data={el}
@@ -165,7 +165,7 @@ function RenderedNode(props) {
             onClick={([nodeId,className]) => props.onClick([nodeId,className])}
           />
           
-          </>
+          </div>
         ))}
         <AddRichTextElementButton elementId={props.id} nodes={props} />
       </div>

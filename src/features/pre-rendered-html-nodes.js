@@ -653,6 +653,12 @@ export const preRenderedNodesSlice = createSlice({
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
     },
 
+    createNewStyle: (state, action) => {
+        let nodeId = state.activeNodeId;
+        let styleName = action.payload;
+        
+    },
+
     connectStyleWithNode: (state, action) => {
         let nodeId = state.activeNodeId;
         let styleName = action.payload;

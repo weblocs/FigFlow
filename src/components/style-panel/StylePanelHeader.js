@@ -42,9 +42,6 @@ export default function StylePanelHeader () {
         }
       );
 
-      
-
-
     useEffect(() => {
         (openEditor === true) ? setEditorPopUpClass("space-editor-popup new-class active") : setEditorPopUpClass("space-editor-popup new-class");
     },[openEditor]);
