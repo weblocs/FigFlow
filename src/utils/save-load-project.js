@@ -68,9 +68,12 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
   dispatch(setProjectSymbols([...projectData.data()?.symbols]));
   dispatch(setProjectSwatches([...projectData.data()?.swatches]));
   dispatch(setProjectSections([...projectData.data()?.sections]));
-  dispatch(setActiveSectionFolder(projectData.data()?.sections?.[0].id));
+  dispatch(setActiveSectionFolder(projectData.data()?.sections?.[0]?.id));
   dispatch(setRichTextElements([...projectData.data()?.richTextElements]));
-  dispatch(setProjectImages([...projectData.data()?.images]));
+  if(projectData.data()?.images !== undefined) {
+    dispatch(setProjectImages([...projectData.data()?.images]));
+  }
+  
   
 
   

@@ -6,8 +6,11 @@ export default function AddSectionPopUp() {
     const projectSections = useSelector((state) => state.designerProjectState.projectSections)
     const activeSectionFolder = useSelector((state) => state.designerProjectState.activeSectionFolder)
     const projectMode = useSelector((state) => state.designerProjectState.projectMode)
+    const projectPopUp = useSelector((state) => state.designerProjectState.projectPopUp)
+
+
     const addSectionPopUpOpened = useSelector((state) => {
-        if(state.designerProjectState.projectPopUp === "addSection") {
+        if(projectPopUp === "addSection") {
             return true
         }
         return false

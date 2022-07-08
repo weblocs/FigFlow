@@ -1,6 +1,7 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { saveProjectToFirebase } from "../features/pre-rendered-html-nodes";
 
 export default function ProjectTopNavbar() {
     const projectModeLink = useSelector((state) => {
@@ -10,10 +11,11 @@ export default function ProjectTopNavbar() {
             return "design"
         }
     });
+    const dispatch = useDispatch();
     let params = useParams();
    
     return (
-        <Link to={"/" + projectModeLink + "/" + params.projectSlug}>
+        <Link to={"/" + projectModeLink + "/" + params.projectSlug} onClick={() => dispatch(saveProjectToFirebase())}>
             <div className="addNodeButton left-margin">M</div>
         </Link>   
     )

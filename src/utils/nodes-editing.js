@@ -37,26 +37,46 @@ export function JSONtoCSS (_classes, activeResolution) {
 
     function createTempClasses(_class, i) {
       tempName = _classes[i].name;
-      (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
+      // (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
       tempClasses.push({name:tempName, styles: _classes[i].styles});
+      _classes[i].childrens.forEach((childStyle) => {
+        childStyle.options.forEach((option) => {
+          tempClasses.push({name: tempName + "." + option.name, styles: option.styles});
+        })
+      });
     }
 
     function createTempClassesTablet(_class, i) {
       tempName = _classes[i].name;
-      (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
+      // (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
       (_classes[i].tabletStyles) && ( tempClasses.push({name:tempName, styles: _classes[i].tabletStyles}));
+      _classes[i].childrens.forEach((childStyle) => {
+        childStyle.options.forEach((option) => {
+          (option.tabletStyles) && ( tempClasses.push({name:tempName + "." + option.name, styles: option.tabletStyles}));
+        })
+      });
     }
 
     function createTempClassesPortrait(_class, i) {
       tempName = _classes[i].name;
-      (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
+      // (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
       (_classes[i].portraitStyles) && ( tempClasses.push({name:tempName, styles: _classes[i].portraitStyles}));
+      _classes[i].childrens.forEach((childStyle) => {
+        childStyle.options.forEach((option) => {
+          (option.portraitStyles) && ( tempClasses.push({name:tempName + "." + option.name, styles: option.portraitStyles}));
+        })
+      });
     }
 
     function createTempClassesMobile(_class, i) {
       tempName = _classes[i].name;
-      (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
+      // (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
       (_classes[i].mobileStyles) && ( tempClasses.push({name:tempName, styles: _classes[i].mobileStyles}));
+      _classes[i].childrens.forEach((childStyle) => {
+        childStyle.options.forEach((option) => {
+          (option.mobileStyles) && ( tempClasses.push({name:tempName + "." + option.name, styles: option.mobileStyles}));
+        })
+      });
     }
     
     // Converting preRenderedStyles (JSON) into renderedStyles (CSS)

@@ -6,8 +6,21 @@ import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features
 export default function SpaceStyleInput (props) {
 
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
+    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
+    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
     const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
+    
+    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
+    const nodeStyles = useSelector((state) => {
+        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
+            return preRenderedStyles[activeStyleIndex];
+        } else {
+            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
+        }   
+    })
+    
     const dispatch = useDispatch();
     const inputRef = useRef();
 
@@ -16,7 +29,6 @@ export default function SpaceStyleInput (props) {
 
 
     const doesStylePropertyBelongToActiveClass = useSelector((state) => {
-        const nodeStyles = state.designerProjectState.preRenderedStyles[activeStyleIndex];
         if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
             return true;
         }
@@ -25,7 +37,6 @@ export default function SpaceStyleInput (props) {
     });
 
     const editedStyleUnit = useSelector((state) => {
-        const nodeStyles = state.designerProjectState.preRenderedStyles[activeStyleIndex];
         if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
             const nodeStyleValue = nodeStyles[activeProjectResolutionStylesListName][props.style];
             return findStyleUnit(nodeStyleValue);
@@ -44,7 +55,6 @@ export default function SpaceStyleInput (props) {
     });
 
     const editedStyleValue = useSelector((state) => {
-        const nodeStyles = state.designerProjectState.preRenderedStyles[activeStyleIndex];
         if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
             return deleteUnits(nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style]);
         } 

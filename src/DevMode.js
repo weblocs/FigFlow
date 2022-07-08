@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 
 import {setProjectMode} from "./features/pre-rendered-html-nodes"
 import ProjectRichTextPanel from "./components/ProjectRichTextPanel";
+import StoreUseEffectUpdates from "./components/StoreUseEffectUpdates";
 
 export default function DevMode() {
   
@@ -31,6 +32,8 @@ export default function DevMode() {
 
   return (
     <>
+
+      <StoreUseEffectUpdates />
       
       <ProjectTopNavbar />
     

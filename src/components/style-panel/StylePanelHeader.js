@@ -1,14 +1,16 @@
 import React, {useState, useEffect, useRef} from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import {connectStyleWithNode, setArrowNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode} from "../../features/pre-rendered-html-nodes"
+import {connectStyleWithNode, setArrowNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, createNewStyle} from "../../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
+import SubStyleSticker from "./SubStyleSticker";
 
 export default function StylePanelHeader () {
 
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const activeStyleName = useSelector((state) => state.designerProjectState.activeStyleName)
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
+    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
 
     const dispatch = useDispatch()
 
@@ -67,7 +69,8 @@ export default function StylePanelHeader () {
     function handleKeyPress(e) {
         if(e.key === 'Enter') {
 
-            dispatch(connectStyleWithNode(e.target.value));
+            // dispatch(connectStyleWithNode(e.target.value));
+            dispatch(createNewStyle(e.target.value));
 
             setOpenEditor(false);
         }
@@ -95,17 +98,37 @@ export default function StylePanelHeader () {
                 onKeyDown={handleKeyPress}
                 className={editorPopUpClass} />
 
-                    {stylesInActiveNode?.map((el) => (
+                    {stylesInActiveNode?.map((el, index) => {
+                    if(index === 0) {
+                        return (
+                            <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"selected-class " + ((activeStyleId == el.id) ? "active" : "")}>
+                                <div className="text">{el.name}</div>
+                                <span 
+                                className="seleted-class-delete-button"
+                                onClick={() => dispatch(deleteStyleFromStylesInActiveNode(el.id))}
+                                > x
+                                </span>
+                            </div>
+                        )
+                    }
+                    })}
 
-                    <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"selected-class " + ((activeStyleId == el.id) ? "active" : "")}>
-                        <div className="text">{el.name}</div>
-                        <span 
-                        className="seleted-class-delete-button"
-                        onClick={() => dispatch(deleteStyleFromStylesInActiveNode(el.id))}
-                        > x
-                        </span>
-                    </div>
-                    ))}
+                    {preRenderedStyles.find(({id}) => id === stylesInActiveNode[0]?.id)?.childrens.map((child,index) => {
+                        let childId = child.options[0].id;
+                        let childName = child.options[0].name;
+                        let styleIsSet = false; 
+                        if (stylesInActiveNode.length > index + 1) {
+                            if(stylesInActiveNode[index+1]?.id !== undefined && stylesInActiveNode[index+1]?.id !== "") {
+                                childId = stylesInActiveNode[index+1]?.id;
+                                childName = stylesInActiveNode[index+1]?.name;
+                                styleIsSet = true;
+                            }
+                        }
+
+                        return (
+                            <SubStyleSticker id={childId} name={childName} index={index} styleIsSet={styleIsSet} key={childId} />
+                        )
+                        })}
 
             </div>
             <div className="style-panel-on-page-box">

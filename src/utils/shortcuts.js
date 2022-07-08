@@ -13,10 +13,7 @@ const DOWN_ARROW = ['40', 'ArrowDown'];
 
 export default function loadShortcuts() {
 
-
     const dispatch = useDispatch()
-
-    
 
     const { moveNode } = useKeyboardShortcut(
       ["]"],

@@ -11,18 +11,49 @@ import DisplayFlexWrapStyleButton from "./DisplayFlexWrapStyleButton";
 export default function DispayFlexStylePanel () {
 
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const displayStyle = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["display"])
+    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
+    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
+    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
+    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
+
+    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
+    const nodeStyles = useSelector((state) => {
+        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
+            return preRenderedStyles[activeStyleIndex];
+        } else {
+            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
+        }   
+    })
+
+    const displayStyle = useSelector((state) => nodeStyles?.[activeProjectResolutionStylesListName] ["display"])
+
+    const directionIsSet = useSelector((state) => {
+        if (nodeStyles?.[activeProjectResolutionStylesListName]?.["flex-direction"] !== undefined) {
+            return true;
+        }
+        return false;
+    });
+
+    const alignIsSet = useSelector((state) => {
+        if (nodeStyles?.[activeProjectResolutionStylesListName]?.["align-items"] !== undefined) {
+            return true;
+        }
+        return false;
+    });
+
+    const justifyIsSet = useSelector((state) => {
+        if (nodeStyles?.[activeProjectResolutionStylesListName]?.["justify-content"] !== undefined) {
+            return true;
+        }
+        return false;
+    });
 
     if(displayStyle === "flex") {
         return (
             <div className="style-panel-box">
 
-                
-
-
-
                 <div className="display-horizontal-grid with-margin">
-                    <div className="style-title-box">
+                    <div className={"style-title-box" + ((directionIsSet) ? " active" : "")}>
                         <div className="text">Direction</div>
                     </div>
                     <div className="display-buttons-box">
@@ -33,7 +64,7 @@ export default function DispayFlexStylePanel () {
                 </div>
 
                 <div className="display-horizontal-grid with-margin">
-                    <div className="style-title-box">
+                    <div className={"style-title-box" + ((alignIsSet) ? " active" : "")}>
                         <div className="text">Align</div>
                     </div>
                     <div className="display-buttons-box">
@@ -46,7 +77,7 @@ export default function DispayFlexStylePanel () {
                 </div>
 
                 <div className="display-horizontal-grid with-margin">
-                    <div className="style-title-box">
+                    <div className={"style-title-box" + ((justifyIsSet) ? " active" : "")}>
                         <div className="text">Justify</div>
                     </div>
                     <div className="display-buttons-box">

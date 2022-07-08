@@ -18,6 +18,7 @@ function RenderedNode(props) {
   const projectMode = useSelector((state) => state.designerProjectState.projectMode);
   const arrowNavigationOn = useSelector((state) => state.designerProjectState.arrowNavigationOn);
   const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId);
+  const dispatch = useDispatch()
 
   const { escapeEditableMode } = useKeyboardShortcut(
     ["Escape"],
@@ -71,8 +72,8 @@ function RenderedNode(props) {
   function handleSectionMouseOver() {
     dispatch(setHoveredSectionId(props.id));
   }
-
-  const dispatch = useDispatch()
+  
+  const listOfNodeStyles = props.class.map((cl) => (cl.name)).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ");
 
   
   let elementHTML = (
@@ -81,7 +82,7 @@ function RenderedNode(props) {
     onClick={handleOnClick}
     onMouseOver={handleMouseOver}
     onMouseOut={handleMouseOut}
-    className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+    className={listOfNodeStyles}
     >
       {props.children.map((el) => (
         <RenderedNode
@@ -111,7 +112,7 @@ function RenderedNode(props) {
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
-      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      className={listOfNodeStyles}
       >
         {props.children.map((el) => (
           <RenderedNode
@@ -144,7 +145,7 @@ function RenderedNode(props) {
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
-      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      className={listOfNodeStyles}
       >
         {props.children.map((el) => (
           <div key={el.id} >
@@ -179,7 +180,7 @@ function RenderedNode(props) {
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
-      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      className={listOfNodeStyles}
       >
         {props.children.map((el) => (
           <RenderedNode
@@ -216,7 +217,7 @@ function RenderedNode(props) {
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
-      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      className={listOfNodeStyles}
           >
             {projectCollections[renderedCollectionIndex]?.items.map((item,itemIndex) => (
               <div key={item.id}> 
@@ -259,7 +260,7 @@ function RenderedNode(props) {
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       el_id={props.id}
-      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      className={listOfNodeStyles}
       />
     );
   }
@@ -272,7 +273,7 @@ function RenderedNode(props) {
         onDoubleClick={handleDoubleClick}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
-        className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+        className={listOfNodeStyles}
         el_id={props.id}
         tagName="h2"
         html={props.title} // innerHTML of the editable div
@@ -285,7 +286,7 @@ function RenderedNode(props) {
   if (props.type === "p") {
     elementHTML = (
       <ContentEditable
-        className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+        className={listOfNodeStyles}
         el_id={props.id}
         tagName="p"
         onClick={handleOnClick}
@@ -306,7 +307,7 @@ function RenderedNode(props) {
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
-      className={(props.class.map((cl) => ( cl.name  ))).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ")}
+      className={listOfNodeStyles}
       >
         {props.children.map((el) => (
           <RenderedNode

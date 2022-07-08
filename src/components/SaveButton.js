@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useSelector, useDispatch } from 'react-redux'
-import {updateProjectPagesBeforeSaving, setSaveButtonStateText} from "../features/pre-rendered-html-nodes"
+import {saveProjectToFirebase, setSaveButtonStateText} from "../features/pre-rendered-html-nodes"
 
 
 export default function SaveButton() {
@@ -10,7 +10,9 @@ export default function SaveButton() {
     
     function handleOnClick() {
       dispatch(setSaveButtonStateText("Saving"));
-      dispatch(updateProjectPagesBeforeSaving());
+
+      dispatch(saveProjectToFirebase());
+
       dispatch(setSaveButtonStateText("Saved"));
       setTimeout(function () {
         dispatch(setSaveButtonStateText("Save"));

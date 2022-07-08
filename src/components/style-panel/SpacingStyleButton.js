@@ -4,10 +4,22 @@ import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features
 
 export default function SpacingStyleButton (props) {
 
-    const activeNodeStyles = useSelector((state) => state.designerProjectState.activeNodeStyles)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
+    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
+    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
     const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
+
+    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
+    const nodeStyles = useSelector((state) => {
+        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
+            return preRenderedStyles[activeStyleIndex];
+        } else {
+            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
+        }   
+    })
+
 
     const dispatch = useDispatch()
     
@@ -39,7 +51,6 @@ export default function SpacingStyleButton (props) {
     }
 
     const editedStyleValue = useSelector((state) => {
-        const nodeStyles = state.designerProjectState.preRenderedStyles[activeStyleIndex];
         if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
             if (props.placeholder) {
                 activeNodeStyleValue = nodeStyles[activeProjectResolutionStylesListName][props.style].replace("px","").replace("%","");

@@ -6,8 +6,19 @@ export default function ColorPicker (props) {
     const projectSwatches = useSelector((state) => state.designerProjectState.projectSwatches);
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex);
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
+    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
+    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
+    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName);
-    const nodeStyles = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]);
+    
+    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
+    const nodeStyles = useSelector((state) => {
+        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
+            return preRenderedStyles[activeStyleIndex];
+        } else {
+            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
+        }   
+    })
 
     const editedStyleValue = useSelector((state) => {
         if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
@@ -112,7 +123,7 @@ export default function ColorPicker (props) {
                 setFormButtonText("Save");
             }, 1000);
         } else if(swatchEditorMode === "add") {
-            dispatch(addSwatch({name: activeSwatch.name, color: activeSwatch.color}));
+            dispatch(addSwatch({name: swatchNameRef.current.value, color: swatchColorRef.current.value}));
             dispatch(editStyleInPreRenderedStyles([props.style, activeSwatch.color]));
             setSwatchEditorMode("edit");
         }

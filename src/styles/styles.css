@@ -986,3 +986,63 @@ a {
 .rich-element-settings_button:hover {
   background: #f4f4f4;
 }
+
+.rich-element-settings_button.styleIsNotSet {
+  background: #dfdfdf;
+}
+
+.selected-class {
+  position: relative;
+}
+
+.selected-class.styleIsNotSet {
+  background: #969696;
+}
+
+.style-options-dropdown {
+  position: absolute;
+    background: #f5f5f5;
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    min-height: 64px;
+    top: 38px;
+    left: -1px;
+    display: none;
+    padding: 8px;
+}
+
+.style-options-dropdown.active {
+  display: block;
+}
+
+.style-option-list {
+  margin-bottom: 4px;
+}
+
+.style-option-item {
+  cursor: pointer;
+  font-size: 11px;
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #736de2;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  color: #fff;
+}
+
+.rich-element-settings_options_list {
+  display: none;
+  position: absolute;
+  min-width: 40px;
+  min-height: 40px;
+  top: 28px;
+  margin-left: -9px;
+  background: #fff;
+  border: 1px solid #aaa;
+  flex-direction: column;
+}
+
+.rich-element-settings_options_list.active {
+  display: flex;
+}

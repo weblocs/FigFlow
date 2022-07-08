@@ -1,9 +1,10 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNodeToRenderedHTMLNodesAfterActiveNode } from "../features/pre-rendered-html-nodes";
 
 export default function AddNodeButtonList() {
 
     const projectMode = useSelector((state) => state.designerProjectState.projectMode)
+    const dispatch = useDispatch()
 
     if (projectMode === "developer") {
         return (
