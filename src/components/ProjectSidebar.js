@@ -5,13 +5,14 @@ export default function ProjectSidebar(){
 
     return(
         <div className="projectSidebar">
-           <ProjectSidebarButton letter="N" shortcode="Z" tab="Navigator" />
-           <ProjectSidebarButton letter="P" shortcode="P" tab="Pages" />
+           <ProjectSidebarButton letter="N"  tab="Navigator" />
+           <ProjectSidebarButton letter="P"  tab="Pages" />
            <ProjectSidebarButton letter="C" tab="Collections" />
            <ProjectSidebarButton letter="I" tab="Images" />
            <ProjectSidebarButton letter="Sy" tab="Symbols" />
-           <ProjectSidebarButton letter="Se" shortcode="S" tab="Sections" />
-           <ProjectSidebarButton letter="R" shortcode="R" tab="Rich Text" />
+           <ProjectSidebarButton letter="Se" tab="Sections" />
+           {/* <ProjectSidebarButton letter="Se" shortcode="S" tab="Sections" /> */}
+           <ProjectSidebarButton letter="R" tab="Rich Text" />
         </div>
     )
 }

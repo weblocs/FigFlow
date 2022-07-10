@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProjectSidebarButton from "./ProjectSidebarButton";
 import CreateNewRichTextElements from "./CreateNewRichTextElements"
@@ -12,6 +12,7 @@ export default function ProjectRichTextPanel(){
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
 
     
+    
     return(
         <div className={"projectPagesPanel "+ ((activeProjectTab === "Rich Text") ? "active" : "" )}>
             <div className="projectTabTitleBox">Rich Text Elements</div>
@@ -19,11 +20,13 @@ export default function ProjectRichTextPanel(){
             <CreateNewRichTextElements />
 
             <div className="pagesList">
-                {projectRichTextElements.map((element) => (
+                {projectRichTextElements.map((element) => {
+                    return(
                     <div onClick={() => dispatch(setActivePageIdAndIndex(element.id))} className="projectPageItem" key={element.id}>
                         {element.name}
+                        <div className={"delete-section-item"}>x</div>
                     </div>
-                ))}
+                )})}
             </div>
         </div>
     )

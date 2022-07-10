@@ -148,24 +148,22 @@ function RenderedNode(props) {
       className={listOfNodeStyles}
       >
         {props.children.map((el) => (
-          <div key={el.id} >
-          <RichElementsSettings id={el.id} />
-          <RenderedNode
-            data={el}
-            type={el.type}
-            cmsCollectionId={el.cmsCollectionId}
-            cmsFieldId={el.cmsFieldId}
-            id={el.id}
-            key={el.id}
-            itemIndex = {props.itemIndex}
-            renderedCollectionIndex={props.renderedCollectionIndex}
-            title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
-            children={el.children}
-            onChange={(text, id) => props.onChange(text, id)}
-            class={el.class}
-            onClick={([nodeId,className]) => props.onClick([nodeId,className])}
-          />
-          
+          <div key={el.id}>
+            <RenderedNode
+              data={el}
+              type={el.type}
+              cmsCollectionId={el.cmsCollectionId}
+              cmsFieldId={el.cmsFieldId}
+              id={el.id}
+              key={el.id}
+              itemIndex = {props.itemIndex}
+              renderedCollectionIndex={props.renderedCollectionIndex}
+              title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
+              children={el.children}
+              onChange={(text, id) => props.onChange(text, id)}
+              class={el.class}
+              onClick={([nodeId,className]) => props.onClick([nodeId,className])}
+            />
           </div>
         ))}
         <AddRichTextElementButton elementId={props.id} nodes={props} />
@@ -267,7 +265,6 @@ function RenderedNode(props) {
 
   if (props.type === "h") {
     elementHTML = (
-      // <div dangerouslySetInnerHTML={{__html: h}} />
       <ContentEditable
         onClick={handleOnClick}
         onDoubleClick={handleDoubleClick}

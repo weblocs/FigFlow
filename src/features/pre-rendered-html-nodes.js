@@ -937,7 +937,6 @@ export const preRenderedNodesSlice = createSlice({
               sections: state.projectSections,
               richTextElements: state.projectRichTextElements,
             });
-            // state.saveButtonStateText = "Saved" TypeError: Cannot perform 'set' on a proxy that has been revoked
         } 
 
         state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;

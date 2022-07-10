@@ -12,7 +12,18 @@ import DisplayGridColumnsRowsEditor from "./DisplayGridColumnsRowsEditor";
 export default function DisplayGridStylePanel () {
 
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const displayStyle = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["display"])
+    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+
+    const displayStyle = useSelector((state) => {
+        if(activeNodeId !== "") {
+            try {
+                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
+                return getComputedStyle(activeNode)?.display;
+            } catch {
+            }
+        }
+    });
+
 
     if(displayStyle === "grid") {
         return (

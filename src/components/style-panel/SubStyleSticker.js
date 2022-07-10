@@ -21,6 +21,8 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     async function handleAddNewStyleOption(e) {
         e.preventDefault();
         dispatch(createNewStyleOption({name: input, childrenIndex: index }));
+        dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length));
+        console.log(stylesInActiveNode.length);
         setInput("");
     };
 
@@ -41,6 +43,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     function handleStyleOptionClick(id,name) {
         dispatch(setStyleOptionInActiveNode({index: index, id: id, name: name}));
         dispatch(setActiveStyleId(id));
+        dispatch(setActiveStyleOptionIndex(index));
     }
 
     function handleClickInSticker(id,index) {

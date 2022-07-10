@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CreateNewSection from "./CreateNewSection";
 import CreateNewSectionFolder from "./CreateNewSectionFolder";
@@ -35,11 +35,13 @@ export default function ProjectPagesPanel () {
                     key={folder.id}>
                         {folder.name}
                     </div>
-                    {folder.items.map((section) => (
-                        <div className="projectPageItem" onClick={() => handleClickInSymbolItem({...section.preRenderedHTMLNodes})} key={section.id}>{section.name}
-                            <div className="delete-section-item" onClick={() => dispatch(deleteSection({id: section.id}))}>x</div>
+                    {folder.items.map((section) => {
+                        return (
+                        <div className="projectPageItem" onClick={() => handleClickInSymbolItem({...section.preRenderedHTMLNodes})} key={section.id}>
+                            {section.name}
+                            <div className={"delete-section-item"} onClick={() => dispatch(deleteSection({id: section.id}))}>x</div>
                         </div>
-                    ))}
+                    )})}
                 </>
             ))}
             </div>

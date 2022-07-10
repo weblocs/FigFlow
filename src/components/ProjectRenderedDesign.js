@@ -2,6 +2,7 @@ import React from "react"
 import { useSelector, useDispatch } from 'react-redux'
 
 import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeAndStyle} from "../features/pre-rendered-html-nodes"
+import ElementSettings from "./ElementSettings";
 import ProjectParentsPathBar from "./ProjectParentsPathBar";
 
 import RenderedNode from "./RenderedNode";
@@ -15,11 +16,13 @@ export default function ProjectRenderedDesign() {
     const dispatch = useDispatch()
 
     return (
-
         <div className="Project">
             <style>{postRenderedStyles}</style>
 
             <div className={"project-rendered-design state-" + activeProjectResolution}>
+
+                <ElementSettings />
+            
                 {preRenderedHTMLNodes.map((el) => (
                 <RenderedNode
                     onChange={(text, id) => dispatch(editSelectedFieldInPreRenderedHTMLNode({id: id, field: 'title', value: text}))}

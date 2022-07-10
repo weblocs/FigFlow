@@ -29,11 +29,12 @@ export default function RichElementSettingsStyle({child, index}) {
     }
 
     return (
-        <div className={"rich-element-settings_button" + isStyleSet}>
+        <div className={"rich-element-settings_button active" + isStyleSet} >
             <div onClick={() => setIsListOpened(!isListOpened)}>{childName}</div>
             <div className={"rich-element-settings_options_list" + ((isListOpened) ? " active" : "")}>
                 {child.options.map((option) => (
-                    <div key={option.id} onClick={() => handleStyleOptionClick(option.id, option.name)}>
+                    <div key={option.id} onClick={() => handleStyleOptionClick(option.id, option.name)} 
+                    className={"rich-element-settings_options-item" + ((childName === option.name) ? " active" : "")}>
                         {option.name}
                     </div>
                 ))}

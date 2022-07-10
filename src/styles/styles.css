@@ -936,6 +936,7 @@ a {
 }
 
 .delete-section-item {
+  /* display: none; */
   position: absolute;
     right: 8px;
     padding: 0 4px;
@@ -945,6 +946,10 @@ a {
     align-content: center;
     transition: .2s;
     font-size: 11px;
+}
+
+.delete-section-item.active {
+  display: block;
 }
 
 .delete-section-item:hover {
@@ -966,7 +971,7 @@ a {
   top: 0;
   display: inline;
   background: #fff;
-  transform: translateY(-100%);
+  transform: translateY(-2px);
   border: 1px solid #c3c3c3;
   border-right: 0;
 }
@@ -976,11 +981,17 @@ a {
 }
 
 .rich-element-settings_button {
+  display: none;
   padding: 4px 8px;
   border-right: 1px solid #c3c3c3;
   cursor:pointer;
   background: #fff;
+  color: #111;
   transition: background-color .2s;
+}
+
+.rich-element-settings_button.active {
+  display: block;
 }
 
 .rich-element-settings_button:hover {
@@ -1040,9 +1051,31 @@ a {
   margin-left: -9px;
   background: #fff;
   border: 1px solid #aaa;
+  border-bottom: 0;
   flex-direction: column;
+}
+
+.rich-element-settings_options-item {
+  padding: 4px 8px;
+  border-bottom: 1px solid #c3c3c3;
+}
+
+.rich-element-settings_options-item.active {
+  background: #f7f7f7;
 }
 
 .rich-element-settings_options_list.active {
   display: flex;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
