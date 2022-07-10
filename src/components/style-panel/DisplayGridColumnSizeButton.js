@@ -69,8 +69,6 @@ export default function DisplayGridColumnSizeButton (props) {
         }
     }
 
-
-
     return (
         <div className="text" style={{lineHeight: "18px"}}>
             <div className="space-editor">

@@ -11,7 +11,35 @@ export default function DisplayGridColumnsRowsEditor (props) {
 
     const editStyle = "grid-template-columns";
     const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const displayStyle = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles [editStyle])
+    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
+    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
+    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
+    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex)
+    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
+
+    const nodeStyles = useSelector((state) => {
+        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
+            return preRenderedStyles[activeStyleIndex];
+        } else {
+            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
+        }   
+    })
+    
+    const displayStyle = useSelector((state) => {
+        
+        return nodeStyles?.[activeProjectResolutionStylesListName] [editStyle]
+        // if(nodeStyles?.[activeProjectResolutionStylesListName] [editStyle] !== undefined) {
+        //     return nodeStyles?.[activeProjectResolutionStylesListName] [editStyle]
+        // }
+        // if(activeNodeId !== "") {
+        //     try {
+        //         const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
+        //         return getComputedStyle(activeNode)?.[editStyle];
+        //     } catch {
+        //     }
+        // }
+    })
     
     const dispatch = useDispatch()
 
@@ -82,6 +110,8 @@ export default function DisplayGridColumnsRowsEditor (props) {
             dispatch(editStyleInPreRenderedStyles(["grid-template-columns", columns.map((column) => column.size ).join(' ') ]))
         }
     },[columns])
+
+    console.log(columns);
 
     return (
         <div className="display-horizontal-grid with-margin">
