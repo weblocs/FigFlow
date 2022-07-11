@@ -2,6 +2,7 @@ import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import {findStyleUnit, deleteUnits} from '../../utils/style-panel'
 import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features/pre-rendered-html-nodes"
+import ProprtyInputLabel from "./ProprtyInputLabel";
 
 export default function SpaceStyleInput (props) {
 
@@ -27,14 +28,6 @@ export default function SpaceStyleInput (props) {
     const [isInputActive, setIsInputActive] = useState(false);
     const [unitEditorOpened, setUnitEditorOpened] = useState(false);
 
-
-    const doesStylePropertyBelongToActiveClass = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
-            return true;
-        }
-        return false;
-
-    });
 
     const editedStyleUnit = useSelector((state) => {
         if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
@@ -79,6 +72,10 @@ export default function SpaceStyleInput (props) {
                 dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+editedStyleUnit]));
             }
             setIsInputActive(false);
+
+            if(props.style === "border-width") {
+                dispatch(editStyleInPreRenderedStyles(["border-style","solid"]));
+            }
         }
         if(e.key === 'ArrowUp') {
             inputRef.current.value = parseInt(editedStyleValue) + 1;
@@ -113,9 +110,10 @@ export default function SpaceStyleInput (props) {
 
     return (
         <div className="size-style-box">
-            <div className={"style-title-box" + ((doesStylePropertyBelongToActiveClass) ? " active" : "")}>
-                <div className="text">{props.text}</div>
-            </div>
+            
+            <ProprtyInputLabel text={props.text} property={props.style} />
+
+
             <div className="style-edit-input">
                 <div className="style-edit-value">
                     <span onClick={() => setIsInputActive(true)} 

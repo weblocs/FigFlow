@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {updateSwatch, addSwatch, setArrowNavigationOn, editStyleInPreRenderedStyles, arrowActiveNodeNavigation} from "../../features/pre-rendered-html-nodes"
+import ProprtyInputLabel from "./ProprtyInputLabel";
 
 export default function ColorPicker (props) {
     const projectSwatches = useSelector((state) => state.designerProjectState.projectSwatches);
@@ -31,13 +32,6 @@ export default function ColorPicker (props) {
             } catch {
             }
         }
-    });
-
-    const doesStylePropertyBelongToActiveClass = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
-            return true;
-        }
-        return false;
     });
     
     const dispatch = useDispatch();
@@ -154,9 +148,9 @@ export default function ColorPicker (props) {
 
     return (
         <div className="size-style-box">
-            <div className={"style-title-box" + ((doesStylePropertyBelongToActiveClass) ? " active" : "")}>
-              <div className="text">Color</div>
-            </div>
+
+            <ProprtyInputLabel text="Color" property={props.style} />
+
             <div className="input color-picker">
                     <div className="color-picker_color-box" style={{backgroundColor: editedStyleValue}} onClick={handleOpeningSwatchesEditor}></div>
                     <div className={"style-edit-text" + ((styleColorInputOpen) ? " active" : "")} onClick={handleColorTextClick}>{activeSwatchNameOrColorValue}</div>

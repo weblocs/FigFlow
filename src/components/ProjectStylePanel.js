@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import DispayFlexStylePanel from "./style-panel/DisplayFlexStylePanel";
 import DisplayGridStylePanel from "./style-panel/DisplayGridStylePanel";
 import DisplayFlexChildStylePanel from "./style-panel/DisplayFlexChildStylePanel";
+import BorderStylePanel from "./style-panel/BorderStylePanel";
 
 export default function ProjectStylePanel() {
 
@@ -82,39 +83,12 @@ export default function ProjectStylePanel() {
       </div>
     </div>
 
-    
-
-    
     <StylePanelTitle title="Background" />
     <BackgroundStylePanel />
     
-
     <StylePanelTitle title="Border" />
+    <BorderStylePanel />
 
-    <div className="style-panel-box">
-      <div className="_1-col-style-grid">
-        <div className="size-style-box">
-          <div className="style-title-box">
-            <div className="text">Radius</div>
-          </div>
-          <div className="input"></div>
-        </div>
-        <div className="_2-col-style-grid">
-          <div className="size-style-box">
-            <div className="style-title-box">
-              <div className="text">Color</div>
-            </div>
-            <div className="input"></div>
-          </div>
-          <div className="size-style-box">
-            <div className="style-title-box">
-              <div className="text">Width</div>
-            </div>
-            <div className="input"></div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
         </>

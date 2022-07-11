@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deletePropertyInPreRenderedStyle } from "../../features/pre-rendered-html-nodes";
 import {doesStylePropertyBelongToActiveStyle} from "../../utils/nodes-editing"
 import AlignStyleInputButton from "./AlignStyleInputButton";
+import ProprtyInputLabel from "./ProprtyInputLabel";
 
 export default function AlignStyleInput () {
 
@@ -12,12 +13,7 @@ export default function AlignStyleInput () {
 
     return (
           <div className="display-horizontal-grid">
-              
-            <div 
-            onClick={() => dispatch(deletePropertyInPreRenderedStyle("text-align"))} 
-            className={"style-title-box" + ((doesStylePropertyBelongToActiveClass) ? " active" : "")}>
-              <div className="text">Align</div>
-            </div>
+            <ProprtyInputLabel text="Align" property="text-align" />
             <div className="display-buttons-box">
               <AlignStyleInputButton letter="L" value="left" />
               <AlignStyleInputButton letter="C" value="center" />

@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features/pre-rendered-html-nodes"
+import ProprtyInputLabel from "./ProprtyInputLabel";
 
 export default function FontStyleEditor () {
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
@@ -20,6 +21,8 @@ export default function FontStyleEditor () {
     })
     const activeNodeFontFamilyNamePreRender = nodeStyles?.[activeProjectResolutionStylesListName]?.['font-family'];
     const activeNodeFontWeightNamePreRender = nodeStyles?.[activeProjectResolutionStylesListName]?.['font-weight'];
+
+    
     
     const fontIsSet = useSelector((state) => {
         if (activeNodeFontFamilyNamePreRender !== undefined) {
@@ -62,9 +65,9 @@ export default function FontStyleEditor () {
     return (
     <div className="_1-col-style-grid">
         <div className="size-style-box">
-            <div className={"style-title-box" + ((fontIsSet) ? " active" : "")}>
-            <div className="text">Font</div>
-            </div>
+            
+            <ProprtyInputLabel text="Font" property="font-family" />
+
             <div className="input">
             <select className="style-panel-select text" onChange={handleFontInputChange} value={activeNodeFontName}>
                 {projectUploadedFonts.map((font) => (
@@ -74,9 +77,8 @@ export default function FontStyleEditor () {
             </div>
         </div>
         <div className="size-style-box">
-            <div className={"style-title-box" + ((activeNodeFontWeightNamePreRender !== undefined) ? " active" : "")}>
-                <div className="text">Weight</div>
-            </div>
+            <ProprtyInputLabel text="Weight" property="font-weight" />
+            
             <div className="input">
                 <select  className="style-panel-select text" onChange={handleFontWeightInputChange} value={activeNodeFontWeightNamePreRender}>
                     {activeFontWeights.map((fontWeight) => (
