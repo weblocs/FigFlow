@@ -8,6 +8,13 @@ export function getIndexOfElementInArrayById(styleNodes, id) {
   return res;
 }
 
+export function doesStylePropertyBelongToActiveStyle(activeStyleObject, property) {
+  if (activeStyleObject?.[property] !== undefined) {
+    return true;
+  }
+  return false;
+}
+
 export function getIdOfPreRenderedStyleByName(styleNodes, styleName, styleParents) {
   let res;
   for (let i = 0; i < styleNodes.length; i++) {

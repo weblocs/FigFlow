@@ -21,9 +21,9 @@ export default function ColorPicker (props) {
     });
 
     const editedStyleValue = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
-            return nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style];
-        }
+        // if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
+        //     return nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style];
+        // }
         if(activeNodeId !== "") {
             try {
                 const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
@@ -87,10 +87,11 @@ export default function ColorPicker (props) {
     }
         
     function rgbToHex(color) {
+        return color;
         color = color.replace("rgb(","").replace(")","");
         const rgbValues = color.split(",");
-        color = "#" + componentToHex(rgbValues[0]) + componentToHex(rgbValues[1]) + componentToHex(rgbValues[2]);
-        return color.replaceAll(" ","");    
+        const hexColor = "#" + componentToHex(rgbValues[0]) + componentToHex(rgbValues[1]) + componentToHex(rgbValues[2]);
+        return hexColor.replaceAll(" ","");
     }
 
     function handleOpeningSwatchesEditor() {
@@ -117,14 +118,14 @@ export default function ColorPicker (props) {
     function handleFormSubmit (e) {
         e.preventDefault();
         if(swatchEditorMode === "edit") {
-            dispatch(updateSwatch(activeSwatch));
+            dispatch(updateSwatch({id: activeSwatch.id, name: swatchNameRef.current.value, color: swatchColorRef.current.value }));
             setFormButtonText("Saved");
             setTimeout(() => {
                 setFormButtonText("Save");
             }, 1000);
         } else if(swatchEditorMode === "add") {
             dispatch(addSwatch({name: swatchNameRef.current.value, color: swatchColorRef.current.value}));
-            dispatch(editStyleInPreRenderedStyles([props.style, activeSwatch.color]));
+            dispatch(editStyleInPreRenderedStyles([props.style, swatchColorRef.current.value]));
             setSwatchEditorMode("edit");
         }
     }
@@ -178,8 +179,8 @@ export default function ColorPicker (props) {
                             ))}
                             <div className="new-swatch" onClick={handleClickNewSwatchButton}>+</div>
                         </div>
-                        <input ref={swatchNameRef} onKeyDown={inputOnChange} className="input change-swatch-input" defaultValue={activeSwatch.name} />
-                        <input ref={swatchColorRef} onKeyDown={inputOnChange} className="input change-swatch-input" defaultValue={activeSwatch.color} />
+                        <input placeholder="swatch name" ref={swatchNameRef} onKeyDown={inputOnChange} className="input change-swatch-input" defaultValue={activeSwatch.name} />
+                        <input placeholder="swatch value" ref={swatchColorRef} onKeyDown={inputOnChange} className="input change-swatch-input" defaultValue={activeSwatch.color} />
                         <button 
                         className="swatch-save-button"
                         >{formButtonText}</button>

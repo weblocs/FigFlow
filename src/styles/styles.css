@@ -704,12 +704,20 @@ a {
   left: -2px;
   top: -1px;
   display: inline-block;
+  cursor: default;
 }
+
+
 
 .style-title-box.active .text {
   color: #544cca;
   background: #f3f3f9;
   border-radius: 4px;
+  transition: background-color .2s;
+}
+
+.style-title-box.active .text:hover {
+  background: #e9e9f1;
 }
 
 .style-edit-unit-list {
