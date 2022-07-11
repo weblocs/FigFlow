@@ -11,13 +11,16 @@ export default function DispayStylePanel () {
     const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
     
     const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
+
     const nodeStyles = useSelector((state) => {
         if(activeStyleId === stylesInActiveNode?.[0]?.id) {
             return preRenderedStyles[activeStyleIndex];
         } else {
             return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
-        }   
-    })
+        }
+    });
+
+    console.log(nodeStyles);
     
     const doesStylePropertyBelongToActiveClass = useSelector((state) => {
         if (nodeStyles?.[activeProjectResolutionStylesListName]?.display !== undefined) {
@@ -25,6 +28,7 @@ export default function DispayStylePanel () {
         }
         return false;
     });
+    
     return (
         <div className="style-panel-box">
             <div className="display-horizontal-grid">

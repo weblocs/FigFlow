@@ -16,7 +16,7 @@ export default function DisplayDirectionStyleButton (props) {
       if(activeStyleId === stylesInActiveNode?.[0]?.id) {
           return preRenderedStyles[activeStyleIndex];
       } else {
-          return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex].options.find(({id}) => id === activeStyleId);
+          return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
       }   
     })
 

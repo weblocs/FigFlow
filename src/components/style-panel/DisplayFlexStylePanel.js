@@ -25,7 +25,17 @@ export default function DispayFlexStylePanel () {
         }   
     })
 
-    const displayStyle = useSelector((state) => nodeStyles?.[activeProjectResolutionStylesListName] ["display"])
+    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
+
+    const displayStyle = useSelector((state) => {
+        if(activeNodeId !== "") {
+            try {
+                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
+                return getComputedStyle(activeNode)?.display;
+            } catch {
+            }
+        }
+    });
 
     const directionIsSet = useSelector((state) => {
         if (nodeStyles?.[activeProjectResolutionStylesListName]?.["flex-direction"] !== undefined) {

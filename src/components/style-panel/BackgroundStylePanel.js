@@ -1,6 +1,5 @@
 import React from "react";
 import ColorPicker from "./ColorPicker";
-import ColorStyleInput from "./ColorStyleInput"
 
 export default function BackgroundStylePanel () {
 

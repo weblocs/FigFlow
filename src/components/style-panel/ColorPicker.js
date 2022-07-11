@@ -18,7 +18,7 @@ export default function ColorPicker (props) {
         } else {
             return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
         }   
-    })
+    });
 
     const editedStyleValue = useSelector((state) => {
         if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {

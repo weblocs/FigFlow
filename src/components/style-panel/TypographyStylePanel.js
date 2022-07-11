@@ -1,8 +1,8 @@
 import React from "react";
-import ColorStyleInput from "./ColorStyleInput"
 import SizeStyleInput from "./SizeStyleInput"
 import FontStyleEditor from "./FontStyleEditor";
 import ColorPicker from "./ColorPicker";
+import AlignStyleInput from "./AlignStyleInput";
 
 export default function TypographyStylePanel () {
     return (
@@ -17,25 +17,8 @@ export default function TypographyStylePanel () {
           </div>
           <ColorPicker style="color" />
           
-          <div className="display-horizontal-grid">
-            <div className="style-title-box">
-              <div className="text">Align</div>
-            </div>
-            <div className="display-buttons-box">
-              <div className="display-button">
-                <div className="text">L</div>
-              </div>
-              <div className="display-button">
-                <div className="text">C</div>
-              </div>
-              <div className="display-button">
-                <div className="text">R</div>
-              </div>
-              <div className="display-button">
-                <div className="text">J</div>
-              </div>
-            </div>
-          </div>
+          <AlignStyleInput />
+
         </div>
       </div>
     )
