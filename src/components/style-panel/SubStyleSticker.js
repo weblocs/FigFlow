@@ -22,7 +22,6 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
         e.preventDefault();
         dispatch(createNewStyleOption({name: input, childrenIndex: index }));
         dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length));
-        console.log(stylesInActiveNode.length);
         setInput("");
     };
 

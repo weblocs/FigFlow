@@ -86,7 +86,6 @@ export default function ProjectSettingsPanel() {
 
             if (nodes[i].id === id) {
 
-                // console.log(nodes[i]);
                 activeNode = nodes[i];
 
                 if(_isNodeCollection && _isNodeInCollection) {

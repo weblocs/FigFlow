@@ -69,7 +69,6 @@ export default function SpaceStyleInput (props) {
     });
 
     function handleKeyPress(e) {
-        console.log(e.key);
         if(e.key === 'Enter') {
             if(editedStyleUnit === "" || editedStyleUnit === "-") {
                 dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+"px"]));

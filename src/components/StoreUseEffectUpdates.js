@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveStyleOptionIndex, updateActiveStyle } from "../features/pre-rendered-html-nodes"
+import { setActiveNodeComputedStyles, setActiveStyleOptionIndex, updateActiveStyle } from "../features/pre-rendered-html-nodes"
 
 
 export default function StoreUseEffectUpdates () {
@@ -19,4 +19,13 @@ export default function StoreUseEffectUpdates () {
     useEffect(() => {
         dispatch(updateActiveStyle());
     },[activeNodeId, activeProjectResolution, preRenderedStyles, activeStyleId]);
+
+    useEffect(() => {
+        dispatch(setActiveNodeComputedStyles());
+    },[activeNodeId, preRenderedStyles]);
+
+
+    
+
+    
 }

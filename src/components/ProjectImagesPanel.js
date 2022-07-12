@@ -39,11 +39,10 @@ export default function ProjectImagesPanel(){
         .then(dataUri => {
             const tempStorageRef = ref(storage, projectFirebaseId+"-"+file.name);
             uploadBytes(tempStorageRef, file).then((snapshot) => {
-                console.log('Uploaded a blob or file!');
+
             });
         })
         .then(async() => {
-            console.log("Setting Doc");
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
             await updateDoc(doc(db, "projects", projectFirebaseId), {

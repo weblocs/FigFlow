@@ -7,20 +7,7 @@ import ProprtyInputLabel from "./ProprtyInputLabel";
 export default function SpaceStyleInput (props) {
 
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
-    
-    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
-    const nodeStyles = useSelector((state) => {
-        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
-            return preRenderedStyles[activeStyleIndex];
-        } else {
-            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
-        }   
-    })
+    const activeStyleObject = useSelector((state) => state.designerProjectState.activeStyleObject);
     
     const dispatch = useDispatch();
     const inputRef = useRef();
@@ -30,8 +17,8 @@ export default function SpaceStyleInput (props) {
 
 
     const editedStyleUnit = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
-            const nodeStyleValue = nodeStyles[activeProjectResolutionStylesListName][props.style];
+        if (activeStyleObject?.[props.style] !== undefined) {
+            const nodeStyleValue = activeStyleObject[props.style];
             return findStyleUnit(nodeStyleValue);
         }
         if(props.placeholder !== undefined) {
@@ -48,8 +35,8 @@ export default function SpaceStyleInput (props) {
     });
 
     const editedStyleValue = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
-            return deleteUnits(nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style]);
+        if (activeStyleObject?.[props.style] !== undefined) {
+            return deleteUnits(activeStyleObject?.[props.style]);
         } 
         if(props.placeholder !== undefined) {
             return props.placeholder;
@@ -64,7 +51,6 @@ export default function SpaceStyleInput (props) {
     });
 
     function handleKeyPress(e) {
-        console.log(e.key);
         if(e.key === 'Enter') {
             if(editedStyleUnit === "" || editedStyleUnit === "-") {
                 dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+"px"]));

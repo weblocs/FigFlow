@@ -41,12 +41,8 @@ export default function ProjectCollectionsFieldsPanel(){
             tempEditedCollectionItemData[editedCollectionItemFieldIndex].fieldValue = fieldValue;
             setEditedCollectionItemData(tempEditedCollectionItemData);
         } else {
-            console.log("1");
             setEditedCollectionItemData(editedCollectionItemData => [...editedCollectionItemData, {fieldId: fieldId, fieldValue: fieldValue}])
         }
-
-        console.log(fieldValue);
-        console.log(editedCollectionItemData);
     }
     
     

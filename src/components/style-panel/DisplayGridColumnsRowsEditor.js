@@ -1,46 +1,17 @@
 import React, { useEffect, useState } from "react";
-
 import { useDispatch, useSelector } from 'react-redux'
 import {editStyleInPreRenderedStyles} from "../../features/pre-rendered-html-nodes"
-
 import { v4 as uuidv4 } from "uuid";
 import DisplayGridColumnSizeButton from "./DisplayGridColumnSizeButton";
 
 
 export default function DisplayGridColumnsRowsEditor (props) {
 
-    const editStyle = "grid-template-columns";
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex)
-    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
+    const activeStyleObject = useSelector((state) => state.designerProjectState.activeStyleObject);
+    const activeNodeComputedStyle = useSelector((state) => state.designerProjectState.activeNodeComputedStyles?.grid_template_columns)
+    const displayStyle = useSelector((state) => activeStyleObject?.["grid-template-columns"])
 
-    const nodeStyles = useSelector((state) => {
-        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
-            return preRenderedStyles[activeStyleIndex];
-        } else {
-            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
-        }   
-    })
-    
-    const displayStyle = useSelector((state) => {
-        
-        return nodeStyles?.[activeProjectResolutionStylesListName] [editStyle]
-        // if(nodeStyles?.[activeProjectResolutionStylesListName] [editStyle] !== undefined) {
-        //     return nodeStyles?.[activeProjectResolutionStylesListName] [editStyle]
-        // }
-        // if(activeNodeId !== "") {
-        //     try {
-        //         const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
-        //         return getComputedStyle(activeNode)?.[editStyle];
-        //     } catch {
-        //     }
-        // }
-    })
-    
+
     const dispatch = useDispatch()
 
     const [columns, setColumns] = useState([]);
@@ -111,7 +82,6 @@ export default function DisplayGridColumnsRowsEditor (props) {
         }
     },[columns])
 
-    console.log(columns);
 
     return (
         <div className="display-horizontal-grid with-margin">

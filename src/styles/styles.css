@@ -707,7 +707,18 @@ a {
   cursor: default;
 }
 
+.possition-select {
+  font-size: 11px;
+}
 
+.position-select-input {
+  max-width: 178px;
+  margin-bottom: 8px;
+}
+
+.input-label-box {
+  padding-top: 4px;
+}
 
 .style-title-box.active .text {
   color: #544cca;

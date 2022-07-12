@@ -1,31 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import DisplayDirectionStyleButton from "./DisplayDirectionStyleButton"
-import DisplayDirectionReverseStyleButton from "./DisplayDirectionReverseStyleButton"
-import DisplayStyleButton from "./DisplayStyleButton";
 import SpacingStyleButton from "./SpacingStyleButton";
-import DisplayFlexWrapStyleButton from "./DisplayFlexWrapStyleButton";
 import DisplayGridColumnsRowsEditor from "./DisplayGridColumnsRowsEditor";
-
-
 
 export default function DisplayGridStylePanel () {
 
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const activeNodeComputedStyle = useSelector((state) => state.designerProjectState.activeNodeComputedStyles?.display)
 
-    const displayStyle = useSelector((state) => {
-        if(activeNodeId !== "") {
-            try {
-                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
-                return getComputedStyle(activeNode)?.display;
-            } catch {
-            }
-        }
-    });
-
-
-    if(displayStyle === "grid") {
+    if(activeNodeComputedStyle === "grid") {
         return (
             <div className="style-panel-box">
 
@@ -53,7 +35,6 @@ export default function DisplayGridStylePanel () {
                         </div>
                     </div>
                 </div>
-
             </div>
         )
     } else {
@@ -61,5 +42,4 @@ export default function DisplayGridStylePanel () {
             <div></div>
         )
     }
-    
 }

@@ -11,7 +11,6 @@ export default function AddRichTextElementButton({elementId, nodes}) {
 
     function handleAddSectionButtonClick (e) {
         dispatch(setActiveNodeAndStyle({id:elementId}));
-        console.log(elementId);
         dispatch(setProjectPopUp("addElement"));
     }
 
