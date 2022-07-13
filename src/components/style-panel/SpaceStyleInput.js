@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import {findStyleUnit, deleteUnits} from '../../utils/style-panel'
-import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features/pre-rendered-html-nodes"
+import {deletePropertyInPreRenderedStyle, editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features/pre-rendered-html-nodes"
 
 export default function SpaceStyleInput (props) {
 
@@ -93,6 +93,16 @@ export default function SpaceStyleInput (props) {
         setUnitEditorOpened(false);
     }
 
+    function handleSetAuto() {
+        dispatch(editStyleInPreRenderedStyles([props.style,"auto"]));
+        setUnitEditorOpened(false);
+    }
+
+    function handleReset() {
+        dispatch(deletePropertyInPreRenderedStyle(props.style));
+        setUnitEditorOpened(false);
+    }
+
     useEffect(() => {
         if(isInputActive === true) {
             inputRef.current.focus();
@@ -139,6 +149,14 @@ export default function SpaceStyleInput (props) {
                     <div className={"style-edit-unit-item" + ((editedStyleUnit === "em") ? " active" : "")}
                     onClick={() => handleUnitItemClick("em")}>
                         em
+                    </div>
+                    <div className={"style-edit-unit-item"}
+                    onClick={handleSetAuto}>
+                        auto
+                    </div>
+                    <div className={"style-edit-unit-item"}
+                    onClick={handleReset}>
+                        reset
                     </div>
                 </div>
             </div>

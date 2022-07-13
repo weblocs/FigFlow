@@ -45,6 +45,7 @@ export default function Dashboard() {
     },[uid]);
 
     return (
+        <div className="user-panel">
 <div className="dashboard-section">
 <div className="container">
   <div className="new-project-header">
@@ -69,6 +70,7 @@ export default function Dashboard() {
         )} 
         <Outlet />
   </div>
+</div>
 </div>
 </div>
     );

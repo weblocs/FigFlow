@@ -22,6 +22,8 @@ import {setProjectMode} from "./features/pre-rendered-html-nodes"
 import ProjectRichTextPanel from "./components/ProjectRichTextPanel";
 import StoreUseEffectUpdates from "./components/StoreUseEffectUpdates";
 import ProjectAddPanel from "./components/ProjectAddPanel";
+import AddSectionPopUp from "./components/AddSectionPopUp";
+import AddRichTextElementPopUp from "./components/AddRichTextElementPopUp";
 
 export default function DevMode() {
   
@@ -36,9 +38,16 @@ export default function DevMode() {
 
       <StoreUseEffectUpdates />
       
-      <ProjectTopNavbar />
+      <div className="user-panel">
+        <ProjectTopNavbar />
+        <AddSectionPopUp />
+        <AddRichTextElementPopUp />
+      </div>
+      
     
       <div className="projectWrapper">
+        
+        <div className="user-panel flex-panel">
         <ProjectSidebar />
         <ProjectNavigator />
         <ProjectAddPanel />
@@ -50,12 +59,15 @@ export default function DevMode() {
         <ProjectSymbolsPanel />
         <ProjectSectionsPanel />
         <ProjectRichTextPanel />
+        </div>
 
         <ProjectRenderedDesign />
           
+        <div className="user-panel">
         <ProjectStylePanel />
         <ProjectSettingsPanel />
-        
+        </div>
+
       </div>
     </>
   );

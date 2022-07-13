@@ -54,6 +54,7 @@ export default function Login() {
     });
 
     return (
+        <div className="user-panel">
         <div className="loginSection">
             { !isLoggedIn ? 
             <button className="new-project-button" onClick={handleSignUpWithGoogle}>Log in with Google</button> :
@@ -63,6 +64,7 @@ export default function Login() {
             <button className="new-project-button outline" onClick={handleSignOut}>Log out</button>
             </div> }
             
+        </div>
         </div>
     )
 }

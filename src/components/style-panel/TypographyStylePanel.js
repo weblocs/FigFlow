@@ -15,6 +15,9 @@ export default function TypographyStylePanel () {
               <SizeStyleInput style="font-size" text="Size" />
               <SizeStyleInput style="line-height" text="Height" />
           </div>
+
+          <SizeStyleInput style="letter-spacing" text="Spacing" />
+
           <ColorPicker style="color" />
           
           <AlignStyleInput />

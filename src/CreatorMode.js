@@ -23,12 +23,14 @@ export default function CreatorMode() {
 
   return (
     <>
+    <div className="user-panel">
       <StoreUseEffectUpdates />
       <ProjectNavigator />
 
       <AddSectionPopUp />
       <AddRichTextElementPopUp />
       <ProjectTopNavbar />
+    </div>
       <div className="projectWrapper">
         <ProjectRenderedDesign />
       </div>

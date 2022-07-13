@@ -28,6 +28,9 @@ export default function ExportButton() {
                 if(type === "rich") {
                     type = "div";
                 }
+                if(type === "h") {
+                    type = "h2";
+                }
                 postRenderedHTML += `<${type} class='${nodes[i].class.map((cl) => cl.name).toString().replaceAll(","," ")}' ${((type === "img") ? " src='https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+nodes[i].src+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'" : "" )}>`;
                 if (nodes[i].children.length > 0) {
                     findNode(nodes[i].children, id);
