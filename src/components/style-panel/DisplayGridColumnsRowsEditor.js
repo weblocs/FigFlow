@@ -38,7 +38,7 @@ export default function DisplayGridColumnsRowsEditor (props) {
             }));
             (setColumns(initColumns));
         }
-    },[]);
+    },[displayStyle]);
 
     function handleEditColumnSize(columnId,value) {
         let tempStyle = [...columns];

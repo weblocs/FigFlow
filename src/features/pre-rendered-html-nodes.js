@@ -63,6 +63,7 @@ export const preRenderedNodesSlice = createSlice({
                 state.activeNodeComputedStyles = {
                     grid_template_columns: getComputedStyle(activeNode)?.["grid-template-columns"],
                     display: getComputedStyle(activeNode)?.display,
+                    opacity: getComputedStyle(activeNode)?.opacity,
                     position: getComputedStyle(activeNode)?.position,
                 };
             } catch {
@@ -181,29 +182,52 @@ export const preRenderedNodesSlice = createSlice({
         state.projectSwatches.push({id: uuidv4(), name: action.payload.name, color: action.payload.color })
     },
 
+    updatePreRenderedNodesWithParentPaths: (state) => {
+        function findNode(nodes, id, parent) {
+            for (let i = 0; i < nodes.length; i++) {
+                // nodes[i].parent = parent;
+                if(nodes[i].children.length > 0) {
+                    findNode(nodes[i].children, id, nodes[i]);
+                }
+            }
+        }
+        findNode(state.preRenderedHTMLNodes, state.activeNodeId, {});
+    },
+
     setActiveNodeParentsPath: (state) => {
-        // state.activeNodeParentsPath = [];
-        // let activeNodeIsFinded = false;
+
+        function isElement(element) {
+            return element instanceof Element || element instanceof HTMLDocument;  
+        }
+
+
+        state.activeNodeParentsPath = [];
         
-        // function findNode(nodes, id, parent) {
-        //     for (let i = 0; i < nodes.length; i++) {
-        //         if(nodes[i].children.length > 0) {
-        //             findNode(nodes[i].children, id, nodes[i]);
+        let elementBase = document.getElementsByClassName('navigation-node active')[0];
+        
+        if(state.activeNodeId !== "") {
+            while (isElement(elementBase)) {
+                if(elementBase?.getAttribute("nodeid") !== null) {
+                    state.activeNodeParentsPath.unshift({ name: elementBase?.getAttribute("nodename"), id: elementBase?.getAttribute("nodeid")});
+                }
+                elementBase = elementBase?.parentNode?.parentNode?.childNodes[0];
+            }
+        }
+        
+        
+        // function setUpParentsPath(node) {
+        //     let nodeName = node?.class[0]?.name;
+        //     (nodeName === undefined) && (nodeName = node?.type);
+
+        //     if(node !== {}) {
+        //         state.activeNodeParentsPath.push({id: nodeName});
+        //         if(node?.parent !== undefined) {
+        //             setUpParentsPath(node.parent);
         //         }
         //     }
         // }
-        // findNode(state.preRenderedHTMLNodes, state.activeNodeId, {});
-
-        // function setUpParentsPath(node) {
-            // let nodeName = node?.class[0]?.name;
-            // (nodeName === undefined) && (nodeName = node?.type);
-
-            // if(node !== {}) {
-                // state.activeNodeParentsPath.push({id: "hi"});
-                // setUpParentsPath(node.parent);
-            // }
-        // }
-        // setUpParentsPath(state.activeNodeObject);
+        
+        // setUpParentsPath(state.activeNodeObject)
     },
 
     setActiveProjectResolution: (state, action) => {
@@ -1125,5 +1149,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setActiveSectionFolder, addSectionToPreRenderedHTMLNodes, setProjectSections, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {updatePreRenderedNodesWithParentPaths, deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setActiveSectionFolder, addSectionToPreRenderedHTMLNodes, setProjectSections, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

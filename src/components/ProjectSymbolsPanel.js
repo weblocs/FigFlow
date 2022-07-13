@@ -4,7 +4,7 @@ import {editSelectedFieldInPreRenderedHTMLNode, addSymbolToPreRenderedHTMLNodesA
 import CreateNewSymbol from "./CreateNewSymbol";
 
 
-export default function ProjectPagesPanel(){
+export default function ProjectSymbolsPanel(){
     const dispatch = useDispatch()
     const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)

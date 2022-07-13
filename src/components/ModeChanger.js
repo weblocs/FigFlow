@@ -16,7 +16,7 @@ export default function ProjectTopNavbar() {
    
     return (
         <Link to={"/" + projectModeLink + "/" + params.projectSlug} onClick={() => dispatch(saveProjectToFirebase())}>
-            <div className="addNodeButton left-margin">M</div>
+            <div className="addNodeButton">M</div>
         </Link>   
     )
 }

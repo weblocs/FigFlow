@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveNodeComputedStyles, setActiveStyleOptionIndex, updateActiveStyle } from "../features/pre-rendered-html-nodes"
+import { checkIfActvieNodeParentDispayStyleIsFlex, setActiveNodeComputedStyles, setActiveNodeObject, setActiveNodeParentsPath, setActiveStyleOptionIndex, updateActiveStyle } from "../features/pre-rendered-html-nodes"
 
 
 export default function StoreUseEffectUpdates () {
@@ -14,6 +14,9 @@ export default function StoreUseEffectUpdates () {
 
     useEffect(() => {
        dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length - 2));
+       dispatch(setActiveNodeObject());
+        dispatch(checkIfActvieNodeParentDispayStyleIsFlex());
+        dispatch(setActiveNodeParentsPath());
     },[activeNodeId]);
 
     useEffect(() => {
@@ -23,9 +26,6 @@ export default function StoreUseEffectUpdates () {
     useEffect(() => {
         dispatch(setActiveNodeComputedStyles());
     },[activeNodeId, preRenderedStyles]);
-
-
-    
 
     
 }

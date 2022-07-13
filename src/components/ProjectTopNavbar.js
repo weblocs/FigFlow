@@ -6,6 +6,7 @@ import TopNavbarResolutionChangeButton from "./TopNavbarResolutionChangeButton";
 import ModeChanger from "./ModeChanger";
 import AddNodeButtonList from "./AddNodeButtonList";
 import RightPanelButtonsList from "./RightPanelButtonsList";
+import ExportButton from "./ExportButton";
 
 export default function ProjectTopNavbar() {
 
@@ -15,7 +16,6 @@ export default function ProjectTopNavbar() {
       <div className="addNodeWrapper">
         <div className="projectNavigationLeft">
           <Link to="/"><div className="addNodeButton">we</div></Link>
-          <AddNodeButtonList />
           <ModeChanger />
         </div>
 
@@ -27,6 +27,7 @@ export default function ProjectTopNavbar() {
         </div>
         
         <div className="projectNavigationRight">
+          <ExportButton />
           <SaveButton />
           <RightPanelButtonsList />
         </div>

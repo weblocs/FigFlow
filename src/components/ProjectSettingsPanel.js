@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
-import {setActiveNodeParentsPath, editSelectedFieldInPreRenderedHTMLNode, checkIfActvieNodeParentDispayStyleIsFlex, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
+import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
 
 export default function ProjectSettingsPanel() {
     
@@ -13,14 +13,6 @@ export default function ProjectSettingsPanel() {
     const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
     const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
     const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
-
-    const projectSections = useSelector((state) => state.designerProjectState.projectSections)
-    const activeSectionFolder = useSelector((state) => state.designerProjectState.activeSectionFolder)
-
-    
-
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
     
     let activeNode = {};
 
@@ -50,17 +42,6 @@ export default function ProjectSettingsPanel() {
     let _elementIdAfterActiveSymbol = "";
 
     const [updateSymbolButtonText, setUpdateSymbolButtonText] = useState("Update symbol");
-    
-    useEffect(() => {
-        dispatch(setActiveNodeObject());
-        dispatch(checkIfActvieNodeParentDispayStyleIsFlex());
-    },[activeNodeId]);
-
-    useEffect(() => {
-        dispatch(setActiveNodeParentsPath());
-    },[activeNodeId]);
-
-    
 
     function handleUpdatingSymbol() {
         dispatch(updateProjectSymbol({id: activeSymbolId, nodes: activeSymbolNodes}));
@@ -263,6 +244,8 @@ export default function ProjectSettingsPanel() {
                 }
 
                 </div>
+
+                
         </div>
     )
 }

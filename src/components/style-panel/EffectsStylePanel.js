@@ -1,11 +1,11 @@
 
-import SizeStyleInput from "./SizeStyleInput"
+import NoUnitInput from "./NoUnitInput"
 
 export default function EffectsStylePanel() {
     return (
         <div className="style-panel-box">
             <div className="_1-col-style-grid">
-                <SizeStyleInput style="opacity" text="Opacity"/>
+                <NoUnitInput style="opacity" text="Opacity"/>
             </div>
         </div>
     )

@@ -5,7 +5,7 @@ import CreateNewSectionFolder from "./CreateNewSectionFolder";
 
 import {setActiveSectionFolder, deleteSection, addSectionToPreRenderedHTMLNodes, setCopiedSectionNodes} from "../features/pre-rendered-html-nodes"
 
-export default function ProjectPagesPanel () {
+export default function ProjectSectionsPanel () {
     const dispatch = useDispatch()
     const projectSections = useSelector((state) => state.designerProjectState.projectSections)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
@@ -18,9 +18,9 @@ export default function ProjectPagesPanel () {
     }
     
     return(
-        <div className={"projectPagesPanel "+ ((activeProjectTab === "Sections") ? "active" : "" )}>
+        <div className={"projectPagesPanel "+ ((activeProjectTab === "Layouts") ? "active" : "" )}>
             
-            <div className="projectTabTitleBox">Sections</div>
+            <div className="projectTabTitleBox">Layouts</div>
 
             <CreateNewSectionFolder />
             <CreateNewSection />
@@ -28,7 +28,7 @@ export default function ProjectPagesPanel () {
             <div className="pagesList">
             
             {projectSections.map((folder) => (
-                <>
+                <div key={folder.id}>
                     <div 
                     onClick={() => dispatch(setActiveSectionFolder(folder.id))}
                     className={"sections-nav-folder-item" + ((activeSectionFolder === folder.id) ? " active" : "" )}
@@ -42,7 +42,7 @@ export default function ProjectPagesPanel () {
                             <div className={"delete-section-item"} onClick={() => dispatch(deleteSection({id: section.id}))}>x</div>
                         </div>
                     )})}
-                </>
+                </div>
             ))}
             </div>
         </div>

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useDispatch } from "react-redux";
-import {createNewPageInProject} from "../features/pre-rendered-html-nodes"
+import {createNewPageInProject, setArrowNavigationOn} from "../features/pre-rendered-html-nodes"
 
 export default function CreateNewPageInProject (props) {
     const dispatch = useDispatch();
@@ -8,24 +8,23 @@ export default function CreateNewPageInProject (props) {
 
     async function handleAddNewPage(e) {
         e.preventDefault();
-        dispatch(createNewPageInProject(input));
+        if(input !== "") {
+            dispatch(createNewPageInProject(input));
+        }
         setInput("");
     };
-        
-        // check if in database we don't have same slug
-        // let sameNameProjects = await getDocs( query( collection(db, "projects"), where("projectId", "==", pageSlug)));
-        // let projectSufixIndex = 1;
-        // let initialpageSlug = pageSlug;
-        // while(sameNameProjects.size > 0) {
-        //     projectSufixIndex++;
-        //     pageSlug = initialpageSlug + '-'+projectSufixIndex;
-        //     sameNameProjects = await getDocs( query( collection(db, "projects"), where("projectId", "==", pageSlug)));
-        // } 
-    
+
+    function handleFocus() {
+        dispatch(setArrowNavigationOn(false));
+    }
+
+    function handleBlur() {
+        dispatch(setArrowNavigationOn(true));
+    }
 
     return (
         <form onSubmit={handleAddNewPage} className="new-page-form">
-            <input className="" value={input} onChange={(e) => setInput(e.target.value)} placeholder="New page" />
+            <input className="" value={input} onFocus={handleFocus} onBlur={handleBlur} onChange={(e) => setInput(e.target.value)} placeholder="New page" />
             <button className="">Add</button>
         </form>
     )

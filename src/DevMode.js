@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux";
 import {setProjectMode} from "./features/pre-rendered-html-nodes"
 import ProjectRichTextPanel from "./components/ProjectRichTextPanel";
 import StoreUseEffectUpdates from "./components/StoreUseEffectUpdates";
+import ProjectAddPanel from "./components/ProjectAddPanel";
 
 export default function DevMode() {
   
@@ -40,6 +41,7 @@ export default function DevMode() {
       <div className="projectWrapper">
         <ProjectSidebar />
         <ProjectNavigator />
+        <ProjectAddPanel />
         <ProjectPagesPanel />
         <ProjectCollectionsPanel />
         <ProjectImagesPanel />

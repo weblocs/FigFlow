@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 import {setProjectMode} from "./features/pre-rendered-html-nodes"
 import AddSectionPopUp from "./components/AddSectionPopUp";
 import AddRichTextElementPopUp from "./components/AddRichTextElementPopUp";
+import StoreUseEffectUpdates from "./components/StoreUseEffectUpdates";
+import ProjectNavigator from "./components/ProjectNavigator";
 
 export default function CreatorMode() {
 
@@ -21,6 +23,9 @@ export default function CreatorMode() {
 
   return (
     <>
+      <StoreUseEffectUpdates />
+      <ProjectNavigator />
+
       <AddSectionPopUp />
       <AddRichTextElementPopUp />
       <ProjectTopNavbar />
