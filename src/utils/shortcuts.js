@@ -68,8 +68,7 @@ export default function loadShortcuts() {
     const { pasteShortcut } = useKeyboardShortcut(
       ["Meta", "V"],
       shortcutKeys => {
-        // console.log(shortcutKeys);
-        dispatch(pasteCopiedNodes({pasteAfter: false, pasteBefore: false}))
+        dispatch(pasteCopiedNodes())
       },
       { 
         overrideSystem: false,

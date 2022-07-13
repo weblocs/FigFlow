@@ -1,6 +1,7 @@
 import React, { useState } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
 import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
+import NodeRepeatableSettings from "./NodeRepeatableSettings";
 
 export default function ProjectSettingsPanel() {
     
@@ -245,7 +246,8 @@ export default function ProjectSettingsPanel() {
 
                 </div>
 
-                
+                <NodeRepeatableSettings />
+
         </div>
     )
 }

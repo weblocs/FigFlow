@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveNodeAndStyle, movePreRenderedNode, setProjectPopUp, deleteActiveNode} from "../features/pre-rendered-html-nodes"
+import {setActiveNodeAndStyle, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes} from "../features/pre-rendered-html-nodes"
 import RichElementSettingsStyle from "./RichElementSettingsStyle"
 
 export default function ElementSettings() {
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const isNodeRepeatable = useSelector((state) => (state.designerProjectState.activeNodeObject?.repeatable) ? true : false )
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
 
     const move = true;
@@ -41,6 +42,11 @@ export default function ElementSettings() {
         return activeNode?.offsetTop - 28;
     });
 
+    function handleDuplicate() {
+        dispatch(setCopiedNodes());
+        dispatch(pasteCopiedNodes());
+    }
+
     return (
             <div className={"rich-element-settings_box active"} 
             style={{ transform: `translate(${activeNodePositionX}px,${activeNodePositionY}px)`}}>
@@ -49,7 +55,7 @@ export default function ElementSettings() {
                         <div className={"rich-element-settings_button" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:true}))}>↑</div>
                         <div className={"rich-element-settings_button" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:false}))}>↓</div>
                         <div className={"rich-element-settings_button" + ((addRich) ? " active" : "")} onClick={() => dispatch(setProjectPopUp("addElement"))}>✎</div>
-                        {/* <div className="rich-element-settings_button">❐</div> */}
+                        <div className={"rich-element-settings_button" + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>❐</div>
                         
                         {preRenderedStyles.find(({id}) => id === stylesInActiveNode[0]?.id)?.childrens.map((child,index) => {
                                 return (
