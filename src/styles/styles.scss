@@ -5,7 +5,11 @@ body {
   margin: 0;
 }
 
-.user-panel, .parents-path {
+img {
+  display: block;
+}
+
+.user-panel, .parents-path, .add-section_popup-box {
   font-family: Inter, sans-serif;
   color: #333;
   font-size: 14px;
@@ -88,74 +92,7 @@ body {
   outline: 1px solid blue;
 }
 
-.add-section_box {
-  display: none;
-  height: 0;
-  width: 100%;
-  transform: translateY(-50%);
-  justify-content: center;
-}
 
-.add-section_box.active {
-  display: flex;
-}
-
-.add-section_button {
-  position: relative;
-  top: -14px;
-  height: 21px;
-  font-size: 13px;
-  padding: 2px 7px;
-  color: #fff;
-  border: 1px solid #c3c3c3;
-  background: #fff;
-  color: #111;
-  border-radius: 0;
-  cursor: pointer;
-  transition: background-color .2s;
-}
-
-.add-section_popup-box {
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #12121259;
-  position: fixed;
-  z-index: 1;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 99;
-}
-
-.add-section_popup-box.active {
-  display: flex;
-}
-
-.add-section_popup_close-area {
-  position:absolute;
-  top:0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.add-section_popup-list {
-  max-width: 600px;
-  width: 100%;
-  max-height: 500px;
-  height: 100%;
-  background: #fff;
-  padding: 32px; 
-  position: relative;
-  z-index: 1;
-}
-
-.add-section_button:hover {
-  background: #f2f2f2;
-}
 
 .sections-nav-folder-item {
   font-size: 11px;
@@ -169,6 +106,7 @@ body {
 
 .text-h2 {
   font-size: 16px;
+  margin-bottom: 8px;
 }
 
 .sections-nav-folder-item.active {
@@ -332,14 +270,153 @@ body {
 }
 
 
+.add-section_box {
+  display: none;
+  height: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  justify-content: center;
+}
+
+.add-section_box.active {
+  display: flex;
+}
+
+.add-section_button {
+  position: relative;
+  top: -14px;
+  height: 18px;
+  font-size: 13px;
+  padding: 2px 7px;
+  color: #fff;
+  border: 1px solid #c3c3c3;
+  background: #fff;
+  color: #111;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color .2s;
+}
+
+.add-section_popup-box {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #12121259;
+  position: fixed;
+  z-index: 1;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+}
+
+.add-section_popup-box.active {
+  display: flex;
+}
 
 
 
+.add-section_popup_close-area {
+  position:absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.add-section_popup-list-box {
+    /* max-width: 600px; */
+    width: calc(100% - 100px);
+    /* max-height: 500px; */
+    height: calc(100% - 100px);
+  background: #fff;
+  padding: 24px; 
+  position: relative;
+  z-index: 1;
+  display: flex;
+}
+
+.present-section-in-popup {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid #ccc;
+  overflow-y: scroll;
+}
+
+.add-section_popup-list {
+  min-width: 180px;
+  margin-right: 24px;
+}
+
+.add-section_button:hover {
+  background: #f2f2f2;
+}
+
+.add-section_popup-button {
+  border-radius: 4px;
+  background-color: #797979;
+  padding: 9px 15px;
+  text-decoration: none;
+  font-weight: 400;
+  text-transform: none;
+  font-size: 13px;
+  color: #fff;
+  outline: none;
+  position: absolute;
+  border: 0;
+  bottom: 23px;
+  width: 185px;
+  cursor: pointer;
+  transition: background-color .2s;
+  box-shadow: none;
+}
+
+.add-section_popup-button.active {
+  background-color: #736de2;
+}
+
+.add-section_popup-button.active:hover {
+  background-color: #635ecf;
+}
+
+.projectTabTitleBox {
+  padding: 5px 16px;
+  font-weight: 600;
+  font-size: 12px;
+  border-bottom: 1px solid #d3d3d3;
+}
+
+.pagesList {
+  border-top: 1px solid #d3d3d3;
+}
+
+.projectPageItem {
+  cursor: pointer;
+  padding: 2px 16px 3px;
+  font-size: 12px;
+  background: #fff;
+  border-bottom: 1px solid #d3d3d3;
+  transition: background-color .2s;
+}
+
+.projectPageItem:hover {
+  background: #f7f7f7;
+}
+
+.projectPageItem.active {
+  background: #ededed;
+}
 
 
+.add-section_popup-box .add-section_button {
+  display: none;
+}
 
-
-
+.add-section_popup-box .renderedNode {
+  outline: none;
+}
 
 
 
@@ -375,6 +452,8 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+
 
 .App {
   font-family: sans-serif;
@@ -758,34 +837,6 @@ a {
 
 .projectCollectionsPanel.active {
   display: block;
-}
-
-.projectTabTitleBox {
-  padding: 5px 16px;
-  font-weight: 600;
-  font-size: 12px;
-  border-bottom: 1px solid #d3d3d3;
-}
-
-.pagesList {
-  border-top: 1px solid #d3d3d3;
-}
-
-.projectPageItem {
-  cursor: pointer;
-  padding: 2px 16px 3px;
-  font-size: 12px;
-  background: #fff;
-  border-bottom: 1px solid #d3d3d3;
-  transition: background-color .2s;
-}
-
-.projectPageItem:hover {
-  background: #f7f7f7;
-}
-
-.projectPageItem.active {
-  background: #ededed;
 }
 
 .projectRightSidebarNav {

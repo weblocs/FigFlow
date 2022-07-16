@@ -5,6 +5,7 @@ import DisplayDirectionReverseStyleButton from "./DisplayDirectionReverseStyleBu
 import DisplayStyleButton from "./DisplayStyleButton";
 import SpacingStyleButton from "./SpacingStyleButton";
 import DisplayFlexWrapStyleButton from "./DisplayFlexWrapStyleButton";
+import ProprtyInputLabel from "./ProprtyInputLabel";
 
 
 
@@ -63,9 +64,7 @@ export default function DispayFlexStylePanel () {
             <div className="style-panel-box">
 
                 <div className="display-horizontal-grid with-margin">
-                    <div className={"style-title-box" + ((directionIsSet) ? " active" : "")}>
-                        <div className="text">Direction</div>
-                    </div>
+                    <ProprtyInputLabel text="Direction" property="flex-direction" />
                     <div className="display-buttons-box">
                         <DisplayDirectionStyleButton value="row" letter="Horizontal"/>
                         <DisplayDirectionStyleButton value="column" letter="Vertical"/>

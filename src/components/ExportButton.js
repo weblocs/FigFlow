@@ -42,7 +42,7 @@ export default function ExportButton() {
         }
         findNode(preRenderedHTMLNodes);
 
-        postRenderedHTML += `<style>body{margin:0;}${postRenderedStyles}</style>`;
+        postRenderedHTML += `<style>body{margin:0;}img{display: block;}${postRenderedStyles}</style>`;
         postRenderedHTML += `</body></html>`;
 
         var zip = new JSZip();

@@ -1,0 +1,171 @@
+.style-panel {
+    height: calc(100vh - 33px);
+    flex-shrink: 0;
+    overflow-y: scroll;
+    border-top: 1px solid #d3d3d3;
+}
+
+.select-class-input {
+    min-height: 30px;
+    position: relative;
+}
+
+.selected-class {
+    cursor: default;
+    z-index: 1;
+}
+
+.selected-class.active {
+    background-color: #534cca;
+}
+
+.seleted-class-delete-button {
+    font-size: 8px;
+    padding: 2px;
+    position: relative;
+    bottom: 1px;
+    margin-left: 6px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.display-button {
+    cursor: pointer;
+    transition: background-color .2s;
+}
+
+.display-button:hover {
+    background-color: #efefef;
+}
+
+.display-button.active {
+    background-color: #e2e2e2;
+}
+
+.space-editor-toggle {
+    cursor: pointer;
+}
+
+.space-editor-toggle.active {
+    color: #534bca;
+}
+
+.space-editor-popup {
+    display: none;
+    width: 40px;
+    height: 24px;
+    position: absolute;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    left: 50%;
+    top: -30px;
+    z-index: 99;
+    background: #ececec;
+    border: 1px solid #c0c0c0;
+    text-align: center;
+    font-size: 11px;
+    color: #333;
+}
+
+.space-editor-popup.color {
+    width: 120px;
+}
+
+.space-editor-popup.new-class {
+    width: 120px;
+    z-index: 9999;
+    border-radius: 2px;
+}
+
+.space-editor-popup.active {
+    display: block;
+}
+
+.space-editor {
+    position: relative;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 8px;
+}
+
+.space-editor-text-box {
+    display: flex;
+}
+
+.space-editor-text-box.active {
+    color: #534cca;
+}
+
+.space-editor-unit-toggle {
+    margin-left: 0px;
+    cursor: w-resize;
+}
+
+.possition-select {
+    width: auto;
+}
+
+.style-panel-box.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+}
+
+.new-class-toggle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.new-project-button {
+    cursor:pointer;
+    padding: 9px 15px; 
+    text-decoration: none;
+    font-weight: 400;
+    text-transform: none;
+    font-size: 14px;
+    color: #fff;
+}
+
+.new-project-button.outline {
+    border: 1px solid #736de2;
+    background: #fff;
+    color: #736de2;
+}
+
+.project-item {
+    color: #333;
+    text-decoration: none;
+    transition: background-color .2s;
+}
+
+.project-item:hover {
+    background-color: #f0f0f0;
+}
+
+.new-project-input {
+    padding: 0 10px;
+}
+
+.user-link {
+    color: #333;
+    text-decoration: none;
+}
+
+.new-page-form {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    grid-column-gap: 8px;
+    grid-row-gap: 8px;
+    margin-bottom: 8px;
+}

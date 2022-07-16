@@ -28,12 +28,14 @@ export default function AddRichTextElementPopUp() {
         return (
             <div className={"add-section_popup-box" + ((addSectionPopUpOpened) ? " active" : "")}>
                 <div className="add-section_popup_close-area" onClick={handleClickInPopUpCloseArea}></div>
-                <div className="add-section_popup-list">
+                <div className="add-section_popup-list-box">
+                    <div className="add-section_popup-list">
                     <div className="text-h2">Add element</div>
 
                     {projectRichTextElements.map((element) => (
                         <div className="projectPageItem" onClick={() => handleAddSectionClick({...element.preRenderedHTMLNodes})} key={element.id}>{element.name}</div>
                     ))}
+                    </div>
                 </div>
             </div>
         )

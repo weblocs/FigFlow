@@ -6,8 +6,8 @@ import {editStyleInPreRenderedStyles} from "../../features/pre-rendered-html-nod
 
 export default function DisplayDirectionStyleButton () {
 
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const displayStyle = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["flex-direction"])
+    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex);
+    const displayStyle = useSelector((state) => state.designerProjectState.activeStyleObject?.["flex-direction"]);
     const isStyleDirectionReversed = displayStyle?.includes("-reverse");
     
     const dispatch = useDispatch()

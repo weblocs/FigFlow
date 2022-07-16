@@ -6,7 +6,7 @@ import {setHoveredNodeId, setArrowNavigationOn, setHoveredSectionId} from "../fe
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./AddSectionButton";
 import AddRichTextElementButton from "./AddRichTextElementButton";
-import RichElementsSettings from "./RichElementsSettings";
+import sanitizeHtml from 'sanitize-html';
 
 function RenderedNode(props) {
 
@@ -19,6 +19,7 @@ function RenderedNode(props) {
   const arrowNavigationOn = useSelector((state) => state.designerProjectState.arrowNavigationOn);
   const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId);
   const dispatch = useDispatch()
+  
 
   const { escapeEditableMode } = useKeyboardShortcut(
     ["Escape"],
@@ -275,7 +276,11 @@ function RenderedNode(props) {
         tagName="h2"
         html={props.title} // innerHTML of the editable div
         disabled={!editable} // use true to disable edition
-        onChange={(e) => props.onChange(e.target.value, props.id)} // handle innerHTML change
+        onChange={(e) => props.onChange(sanitizeHtml(e.target.value , {
+          allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
+          allowedAttributes: {
+            'a': [ 'href' ]
+          }}), props.id)} // handle innerHTML change
       />
     );
   }
@@ -292,7 +297,11 @@ function RenderedNode(props) {
         onMouseOut={handleMouseOut}
         html={props.title} // innerHTML of the editable div
         disabled={!editable} // use true to disable edition
-        onChange={(e) => props.onChange(e.target.value, props.id)} // handle innerHTML change
+        onChange={(e) => props.onChange(sanitizeHtml(e.target.value , {
+          allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
+          allowedAttributes: {
+            'a': [ 'href' ]
+          }}), props.id)} // handle innerHTML change
       />
     );
   }
