@@ -12,7 +12,7 @@ const UP_ARROW = ['38', 'ArrowUp'];
 const DOWN_ARROW = ['40', 'ArrowDown'];
 
 export default function loadShortcuts() {
-
+    
     const dispatch = useDispatch();
 
     const { undoProjectShortcut } = useKeyboardShortcut(

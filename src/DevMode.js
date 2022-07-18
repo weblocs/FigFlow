@@ -34,16 +34,14 @@ export default function DevMode() {
 
   return (
     <>
-
       <StoreUseEffectUpdates />
+      <AddSectionPopUp />
+      <AddRichTextElementPopUp />
       
       <div className="user-panel">
         <ProjectTopNavbar />
-        <AddSectionPopUp />
-        <AddRichTextElementPopUp />
       </div>
       
-    
       <div className="projectWrapper">
         
         <div className="user-panel flex-panel">
