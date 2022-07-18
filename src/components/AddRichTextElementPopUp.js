@@ -4,7 +4,6 @@ import {setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setActiveSectio
 export default function AddRichTextElementPopUp() {
 
     const projectRichTextElements = useSelector((state) => state.designerProjectState.projectRichTextElements)
-    const activeSectionFolder = useSelector((state) => state.designerProjectState.activeSectionFolder)
     const projectMode = useSelector((state) => state.designerProjectState.projectMode)
     const addSectionPopUpOpened = useSelector((state) => {
         if(state.designerProjectState.projectPopUp === "addElement") {

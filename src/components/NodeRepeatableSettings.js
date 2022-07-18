@@ -3,7 +3,7 @@ import { setActiveNodeObject, setActiveNodeRepeatableState } from "../features/p
 
 export default function NodeRepeatableSettings() {
 
-    const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
+    const activeNodeObject = useSelector((state) => ((state.designerProjectState.activeNodeObject) ? true : false))
     const dispatch = useDispatch()
 
     function onInputChange(e) {
@@ -12,7 +12,8 @@ export default function NodeRepeatableSettings() {
     }
     return (
         <div style={{display:"flex"}}>
-            <div>Allow creator duplicating: </div> <input type="checkbox" checked={activeNodeObject?.repeatable} onChange={onInputChange} />
+            <div>Allow creator duplicating: </div> 
+            <input type="checkbox" checked={activeNodeObject?.repeatable} onChange={onInputChange} />
         </div>
     )
 }

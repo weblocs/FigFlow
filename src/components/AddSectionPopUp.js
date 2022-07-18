@@ -34,10 +34,6 @@ export default function AddSectionPopUp() {
         setPresentedSectionNodes(sectionNodes);
     }
 
-    useEffect(() => {
-        console.log(presentedSectionNodes);
-    },[presentedSectionNodes])
-
     function handleClickInPopUpCloseArea () {
         dispatch(setProjectPopUp(""));
     }

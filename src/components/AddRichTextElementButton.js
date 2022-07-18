@@ -4,8 +4,6 @@ import {setActiveNodeAndStyle, setProjectPopUp} from "../features/pre-rendered-h
 export default function AddRichTextElementButton({elementId, nodes}) {
 
     const projectMode = useSelector((state) => state.designerProjectState.projectMode)
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
 
     const dispatch = useDispatch()
 

@@ -183,6 +183,8 @@ img {
   background: #f4f4f4;
 }
 
+
+
 .rich-element-settings_button.styleIsNotSet {
   background: #dfdfdf;
 }
@@ -191,9 +193,7 @@ img {
   position: relative;
 }
 
-.selected-class.styleIsNotSet {
-  background: #969696;
-}
+
 
 .style-options-dropdown {
   position: absolute;
@@ -219,12 +219,33 @@ img {
   cursor: pointer;
   font-size: 11px;
   display: inline-block;
-  padding: 4px 8px;
+  padding: 4px 8px 4px 8px; 
   border-radius: 4px;
   background-color: #736de2;
   margin-right: 4px;
   margin-bottom: 4px;
   color: #fff;
+  display: flex;
+  width: fit-content;
+}
+
+.style-option-item_delete-icon {
+  font-size: 8px;
+  padding: 0 2px 0 4px;
+  transition: opacity .2s;
+}
+
+.style-option-item_delete-icon:hover {
+  opacity: .4;
+}
+
+.style-option-item_icons {
+  margin-left: 4px;
+  display: none;
+}
+
+.style-option-item_icons.active {
+  display: flex;
 }
 
 .rich-element-settings_options_list {
@@ -386,6 +407,9 @@ img {
   font-weight: 600;
   font-size: 12px;
   border-bottom: 1px solid #d3d3d3;
+  position: sticky;
+  top: 0;
+  background: #fff;
 }
 
 .pagesList {
@@ -813,6 +837,10 @@ a {
 
 .projectSidebarButton:hover {
   background-color: #eee;
+}
+
+.projectSidebarButton img {
+  width: 16px;
 }
 
 .projectPagesPanel {
@@ -1309,6 +1337,10 @@ a {
   color: #fff;
 }
 
+.selected-class.styleIsNotSet {
+  background: #969696;
+}
+
 .style-panel-box {
   padding: 12px;
   border-bottom: 1px solid #d3d3d3;
@@ -1711,6 +1743,11 @@ a {
   margin-left: 6px;
   cursor: pointer;
   color: #fff;
+  transition: opacity .2s;
+}
+
+.seleted-class-delete-button:hover {
+  opacity: .5;
 }
 
 .display-button {
@@ -1853,5 +1890,7 @@ a {
   grid-row-gap: 8px;
   margin-bottom: 8px;
 }
+
+
 
 }

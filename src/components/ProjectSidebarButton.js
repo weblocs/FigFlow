@@ -12,7 +12,7 @@ export default function ProjectSidebarButton(props){
     const { openNavigatorShortcut } = useKeyboardShortcut(
         [props.shortcode],
         shortcutKeys => {
-            if(arrowNavigationOn) {
+            if(arrowNavigationOn && !window.event.metaKey) {
                 dispatch(setActiveProjectTab(props.tab))
             }
         },

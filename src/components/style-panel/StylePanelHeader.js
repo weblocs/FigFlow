@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import {connectStyleWithNode, setArrowNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, createNewStyle} from "../../features/pre-rendered-html-nodes"
+import {setArrowNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, createNewStyle, renameMainStyle} from "../../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from "./SubStyleSticker";
 
@@ -15,41 +15,29 @@ export default function StylePanelHeader () {
     const dispatch = useDispatch()
 
     const inputRef = useRef();
+    const renameInputRef = useRef();
 
-    const [openEditor, setOpenEditor] = useState(false);
+    const [isStyleEditorOpen, setIsStyleEditorOpen] = useState(false);
+    const [isAddStyleInputOpen, setIsAddStyleInputOpen] = useState(false);
     const [editorPopUpClass, setEditorPopUpClass] = useState("");
 
+    const shortcutSystemConfig = { overrideSystem: false, ignoreInputFields: false, repeatOnHold: false };
+    const { openClassEditorShortcut } = useKeyboardShortcut(["Meta", "Enter"],
+        shortcutKeys => { handleOpenNewStyleInput() },
+        shortcutSystemConfig
+    );
 
-    const { openClassEditorShortcut } = useKeyboardShortcut(
-        ["Meta", "Enter"],
-        shortcutKeys => {
-            handleOpenNewStyleInput()
-        },
-        { 
-          overrideSystem: false,
-          ignoreInputFields: false, 
-          repeatOnHold: false 
-        }
-      );
-
-      const { closeClassEditorShortcut } = useKeyboardShortcut(
-        ["Escape"],
-        shortcutKeys => {
-            handleCloseNewStyleInput()
-        },
-        { 
-          overrideSystem: false,
-          ignoreInputFields: false, 
-          repeatOnHold: false 
-        }
-      );
+    const { closeClassEditorShortcut } = useKeyboardShortcut(["Escape"],
+        shortcutKeys => { handleCloseNewStyleInput() },
+        shortcutSystemConfig
+    );
 
     useEffect(() => {
-        (openEditor === true) ? setEditorPopUpClass("space-editor-popup new-class active") : setEditorPopUpClass("space-editor-popup new-class");
-    },[openEditor]);
+        (isAddStyleInputOpen === true) ? setEditorPopUpClass("space-editor-popup new-class active") : setEditorPopUpClass("space-editor-popup new-class");
+    },[isAddStyleInputOpen]);
 
     useEffect(() => {
-        if(openEditor === true) {
+        if(isAddStyleInputOpen) {
             inputRef.current.focus();
             inputRef.current.value = "";
             dispatch(setArrowNavigationOn(false));
@@ -59,21 +47,36 @@ export default function StylePanelHeader () {
     },[editorPopUpClass]);
 
     function handleOpenNewStyleInput () {
-        setOpenEditor(!openEditor);
+        setIsAddStyleInputOpen(true);
     }
 
     function handleCloseNewStyleInput () {
-        setOpenEditor(false);
+        setIsAddStyleInputOpen(false);
     }
 
     function handleKeyPress(e) {
         if(e.key === 'Enter') {
-
-            // dispatch(connectStyleWithNode(e.target.value));
             dispatch(createNewStyle(e.target.value));
-
-            setOpenEditor(false);
+            setIsAddStyleInputOpen(false);
         }
+    }
+
+    function handleKeyPressRenameInput(e, id) {
+        if(e.key === 'Enter') {
+            handleRename(id);
+        }
+    }
+
+    function handleRename (id) {
+        dispatch(renameMainStyle({id: id, name: renameInputRef.current.value }));
+        renameInputRef.current.value = "";
+        setIsStyleEditorOpen(false);
+    }
+
+    function handleRemove(id) {
+        dispatch(deleteStyleFromStylesInActiveNode(id));
+        renameInputRef.current.value = "";
+        setIsStyleEditorOpen(false);
     }
 
     return (
@@ -96,18 +99,34 @@ export default function StylePanelHeader () {
                 ref={inputRef}
                 type="text"
                 onKeyDown={handleKeyPress}
+                onBlur={handleCloseNewStyleInput}
                 className={editorPopUpClass} />
 
                     {stylesInActiveNode?.map((el, index) => {
                     if(index === 0) {
                         return (
-                            <div key={el.id} onClick={() => dispatch(setActiveStyleId(el.id))} className={"selected-class " + ((activeStyleId == el.id) ? "active" : "")}>
-                                <div className="text">{el.name}</div>
+                            <div key={el.id}
+                                className={"selected-class " + ((activeStyleId == el.id) ? "active" : "")}
+                                style={{zIndex: stylesInActiveNode.length + 10 }}>
+                                <div className="text" onClick={() => dispatch(setActiveStyleId(el.id))}>{el.name}</div>
                                 <span 
                                 className="seleted-class-delete-button"
-                                onClick={() => dispatch(deleteStyleFromStylesInActiveNode(el.id))}
-                                > x
+                                onClick={() => setIsStyleEditorOpen(!isStyleEditorOpen)}
+                                > ⌄
                                 </span>
+                                <div className={"style-options-dropdown" + ((isStyleEditorOpen) ? " active" : "")}>
+                                    
+                                    <div style={{display: "flex"}}>
+                                    <input 
+                                    onFocus={() => dispatch(setArrowNavigationOn(false))} 
+                                    onBlur={() => dispatch(setArrowNavigationOn(true))}
+                                    onKeyDown={(e) => handleKeyPressRenameInput(e, el.id)}
+                                    ref={renameInputRef}
+                                    placeholder="New style name" />
+                                    <button onClick={() => handleRename(el.id)}>Rename</button>
+                                    </div>
+                                    <button onClick={() => handleRemove(el.id)}>Remove</button>
+                                </div>
                             </div>
                         )
                     }

@@ -17,9 +17,11 @@ import EffectsStylePanel from "./style-panel/EffectsStylePanel";
 import PositionStylePanel from "./PositionStylePanel";
 
 export default function ProjectStylePanel() {
-
+  const projectMode = useSelector((state) => state.designerProjectState.projectMode)
+  
   const activeRightSidebarTab = useSelector((state) => state.designerProjectState.activeRightSidebarTab)
     return (
+      (projectMode === "developer") ?
       <div className={"style-panel "+ ((activeRightSidebarTab === "Style") ? "active" : "" )}>
 
         <StylePanelHeader />
@@ -54,7 +56,8 @@ export default function ProjectStylePanel() {
         <StylePanelTitle title="Effects" />
         <EffectsStylePanel />
 
-      </div>
+      </div> :
+      <></>
     )
     
 }

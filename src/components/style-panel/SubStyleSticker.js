@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveStyleId, setArrowNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeAndStyle, setActiveStyleOptionIndex, deleteStyleOption } from "../../features/pre-rendered-html-nodes";
+import { setActiveStyleId, setArrowNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeAndStyle, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption } from "../../features/pre-rendered-html-nodes";
 
 export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
@@ -11,6 +11,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     
     const dispatch = useDispatch()
 
+    const [editingOptionsTurnOn, setEditingOptionsTurnOn] = useState(false);
     const [openStyleOptionsDropdown, setOpenStyleOptionsDropdown] = useState(false);
     const [input, setInput] = useState("");
 
@@ -20,9 +21,11 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
 
     async function handleAddNewStyleOption(e) {
         e.preventDefault();
-        dispatch(createNewStyleOption({name: input, childrenIndex: index }));
-        dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length));
-        setInput("");
+        if(input !== "") {
+            dispatch(createNewStyleOption({name: input, childrenIndex: index }));
+            dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length));
+            setInput("");
+        }
     };
 
     function handleDeleteStyleOption() {
@@ -50,6 +53,10 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
         dispatch(setActiveStyleOptionIndex(index));
     }
 
+    function handleDeleteStyleSubOption(subOptionId) {
+        dispatch(deleteStyleSubOption({optionIndex: index, subOptionId: subOptionId}));
+    }
+
     return (
         <div key={id} className={"selected-class" + ((activeStyleId === id) ? " active" : "") + ((styleIsSet) ? "" : " styleIsNotSet")} style={{zIndex: stylesInActiveNode.length + 10 - index }}>
             <div  onClick={() => handleClickInSticker(id,index)} className="text">{name}</div>
@@ -62,15 +69,20 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
             <div className={"style-options-dropdown" + ((openStyleOptionsDropdown) ? " active" : "")}>
                 <div className="style-option-list">
                 {preRenderedStyles.find(({id}) => id === stylesInActiveNode[0].id)?.childrens[index].options.map((option) => (
-                    <div onClick={() => handleStyleOptionClick(option.id, option.name)} className="style-option-item" key={option.id}>
-                        {option.name}
+                    <div className="style-option-item" key={option.id}>
+                        <div onClick={() => handleStyleOptionClick(option.id, option.name)}>{option.name}</div>
+                        <div className={"style-option-item_icons" + ((editingOptionsTurnOn) ? " active" : "")}>
+                            <div className="style-option-item_delete-icon" onClick={() => handleDeleteStyleSubOption(option.id)}>x</div>
+                        </div>
                     </div>
                 ))}
                 </div>
                 <form onSubmit={handleAddNewStyleOption}>
-                    <input value={input} onFocus={handleOnFocus} onBlur={handleOnBlur} onChange={(e) => setInput(e.target.value)} placeholder="New style" />
-                    <button>Add</button>
+                    <input value={input} onFocus={handleOnFocus} onBlur={handleOnBlur} onChange={(e) => setInput(e.target.value)} placeholder="New option" />
+                    <button>Add option</button>
                 </form>
+                <button onClick={() => setEditingOptionsTurnOn(!editingOptionsTurnOn)}>Edit options</button>
+                <button onClick={() => dispatch(clearStyleOption({optionIndex: index}))}>Remove/Clear</button>
                 <button onClick={handleDeleteStyleOption}>Delete</button>
             </div>
         </div>
