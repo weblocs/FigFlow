@@ -58,36 +58,20 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
   userProjects.forEach((doc) => {
     dispatch(setProjectFirebaseId(doc.id));
   });
-  
-  const projectData = await getDoc(doc(db, "projects", projectFirebaseId));
-  
-  dispatch(setProjectPages([...projectData.data().pages]));
-  
-  dispatch(setProjectCollections([...projectData.data().collections]));
-  dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
-  dispatch(setProjectSymbols([...projectData.data()?.symbols]));
-  dispatch(setProjectSwatches([...projectData.data()?.swatches]));
-  dispatch(setProjectSections([...projectData.data()?.sections]));
-  dispatch(setActiveSectionFolder(projectData.data()?.sections?.[0]?.id));
-  dispatch(setRichTextElements([...projectData.data()?.richTextElements]));
-  if(projectData.data()?.images !== undefined) {
-    dispatch(setProjectImages([...projectData.data()?.images]));
+
+  if(projectFirebaseId !== "") {
+    const projectData = await getDoc(doc(db, "projects", projectFirebaseId));
+    dispatch(setProjectPages([...projectData.data().pages]));
+    dispatch(setProjectCollections([...projectData.data().collections]));
+    dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
+    dispatch(setProjectSymbols([...projectData.data()?.symbols]));
+    dispatch(setProjectSwatches([...projectData.data()?.swatches]));
+    dispatch(setProjectSections([...projectData.data()?.sections]));
+    dispatch(setActiveSectionFolder(projectData.data()?.sections?.[0]?.id));
+    dispatch(setRichTextElements([...projectData.data()?.richTextElements]));
+    if(projectData.data()?.images !== undefined) {
+      dispatch(setProjectImages([...projectData.data()?.images]));
+    }
   }
-  
-  
-
-  
-
-  
-
-  
-
-
-  // Storage
-
-  // const storage = getStorage(firebaseApp);
-  // const storageRef = ref(storage);
-
-
 }
 

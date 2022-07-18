@@ -28,7 +28,6 @@ import AddRichTextElementPopUp from "./components/AddRichTextElementPopUp";
 export default function DevMode() {
   
   const dispatch = useDispatch();
-  dispatch(setProjectMode("developer"));
 
   loadProjectFromFirebasePreRenderedNodesAndStyles();
   loadShortcuts();

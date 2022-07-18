@@ -7,7 +7,7 @@ import { getFirestore, updateDoc, doc } from "firebase/firestore";
 import { firebaseConfig } from "../utils/firebase-config.js";
 
 const initialState = {
-  projectMode: "", // developer or creator
+  projectMode: "developer", // developer or creator
   activeProjectTab: "",
   activeRightSidebarTab: "Style",
   projectPages: [],
