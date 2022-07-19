@@ -9,13 +9,15 @@ img {
   display: block;
 }
 
-.user-panel, .parents-path, .add-section_popup-box {
+.user-panel, .parents-path, .add-section_popup-box, .projectPageItem {
   font-family: Inter, sans-serif;
   color: #333;
   font-size: 14px;
   line-height: 20px;
   
 }
+
+
 
 .user-panel.flex-panel {
   display: flex;
@@ -423,6 +425,11 @@ img {
   background: #fff;
   border-bottom: 1px solid #d3d3d3;
   transition: background-color .2s;
+}
+
+.projectPageItem.drag {
+  width: 173px !important;
+  height: 22px !important;
 }
 
 .projectPageItem:hover {
@@ -1889,6 +1896,10 @@ a {
   grid-column-gap: 8px;
   grid-row-gap: 8px;
   margin-bottom: 8px;
+}
+
+.drag-knob {
+  width: 8px;
 }
 
 

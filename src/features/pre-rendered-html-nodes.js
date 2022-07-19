@@ -77,7 +77,6 @@ export const preRenderedNodesSlice = createSlice({
     renameMainStyle: (state, action) => {
         const nodeId = action.payload.id;
         const newNodeName = action.payload.name;
-        console.log(current(state.preRenderedStyles));
         for (let i = 0; i < state.preRenderedStyles.length; i++) {
             let node = state.preRenderedStyles[i];
             if(node.id === nodeId) {
@@ -98,7 +97,6 @@ export const preRenderedNodesSlice = createSlice({
             }
         }
 
-        console.log(current(state.projectPages));
 
         state.projectPages.forEach((page) => {
             findNode(page.preRenderedHTMLNodes);
@@ -829,7 +827,6 @@ export const preRenderedNodesSlice = createSlice({
             delete state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id).childrens[state.activeStyleOptionIndex].options.find(({id}) => id === state.activeStyleId)[styleResolution][styleProperty];
         }
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
-        console.log(current(state.preRenderedStyles));
     },
 
     setActiveNodeAndStyle: (state, action) => {
@@ -867,12 +864,8 @@ export const preRenderedNodesSlice = createSlice({
         // add checking if it's a new class
 
         if(state.stylesInActiveNode.length > 0) {
-            console.log("we have class");
-            console.log(current(state.stylesInActiveNode));
-
             state.preRenderedStyles.forEach((style) => {
                 if(style.id === state.stylesInActiveNode[0].id) {
-                    console.log(current(state.preRenderedStyles.find(({id}) => id === style.id)));
 
                     state.preRenderedStyles.find(({id}) => id === style.id).childrens.push({id: uuidv4(), options: [newStyleToConnectWithStyles] } );
 
@@ -892,8 +885,6 @@ export const preRenderedNodesSlice = createSlice({
                 state.preRenderedStyles.push(newStyleToConnectWithStyles);
             }
         }
-
-        console.log(current(state.preRenderedStyles));
         
         
         function findNode(nodes, id) {
@@ -1221,7 +1212,6 @@ export const preRenderedNodesSlice = createSlice({
             }
             findNode(page.preRenderedHTMLNodes, updatedSymbolId); 
         });
-        // console.log(current(state.projectPages))
     },
 
     createNewCollection: (state, action) => {
