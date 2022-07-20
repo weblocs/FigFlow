@@ -14,8 +14,6 @@ import {setHoveredNodeId, setActiveNodeAndStyle, setDragableCopiedNodes, setDrag
 
     const nodeName = (node?.symbolId === undefined) ? ((node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type) : (projectSymbols.find( ({id}) => id === node.symbolId)?.name );
 
-    const [mouseIsOver, setMouseIsOver] = useState(false);
-
     function handleClick (id) {
         dispatch(setActiveNodeAndStyle({id: id}));
     }
@@ -27,38 +25,37 @@ import {setHoveredNodeId, setActiveNodeAndStyle, setDragableCopiedNodes, setDrag
     function handleDragOver (id) {
         event.preventDefault();
 
-        let parentIsNotDraggedNode = true;
-        parents.forEach((parent) => {
-            if(parent.id === dragableCopiedNodes.id) {
-                parentIsNotDraggedNode = false;
-            }
-        })
         
-        if(node.id !== dragableCopiedNodes.id && parentIsNotDraggedNode) {
-            if (event.clientY - document.querySelector(`[nodeid="${node.id}"]`).offsetTop < 10 ) {
-                if(!draggedBefore) {
-                    dispatch(setDraggedBefore(true));
+            let parentIsNotDraggedNode = true;
+            parents.forEach((parent) => {
+                if(parent.id === dragableCopiedNodes.id) {
+                    parentIsNotDraggedNode = false;
+                }
+            })
+            
+            if(node.id !== dragableCopiedNodes.id && parentIsNotDraggedNode) {
+                if (event.clientY - document.querySelector(`[nodeid="${node.id}"]`).offsetTop < 10 ) {
+                    if(!draggedBefore) {
+                        dispatch(setDraggedBefore(true));
+                    }
+                } else {
+                    if(draggedBefore) {
+                        dispatch(setDraggedBefore(false));
+                    }
+                }
+                if(id !== draggedOverNodeId) {
+                    dispatch(setDraggedOverNodeId(id));
                 }
             } else {
-                if(draggedBefore) {
-                    dispatch(setDraggedBefore(false));
+                if ( draggedOverNodeId !== "" ) { 
+                    dispatch(setDraggedOverNodeId(""));
                 }
             }
-            if(id !== draggedOverNodeId) {
-                dispatch(setDraggedOverNodeId(id));
-            }
-        } else {
-            dispatch(setDraggedOverNodeId(""));
-        }
         
     }
 
     function handleDrop (id) {
-        if(!mouseIsOver) {
-            dispatch(pasteDraggedNodes());
-        } else {
-            dispatch(setDraggedOverNodeId(""));
-        }
+        dispatch(pasteDraggedNodes());
     }
 
     return ( 
@@ -71,7 +68,6 @@ import {setHoveredNodeId, setActiveNodeAndStyle, setDragableCopiedNodes, setDrag
             draggable="true"
             onDragStart={() => handleDragStart(node.id)}
             onDragOver={() => handleDragOver(node.id)}
-            onMouseLeave={() => setMouseIsOver(false)}
             onDrop={() => handleDrop(node.id)}
             nodeid={node.id}
             nodename={nodeName}

@@ -17,7 +17,13 @@ img {
   
 }
 
+.projectPageItem.draggedOver {
+  border-top: 3px solid #cdcdcd;
+}
 
+.projectPageItem.draggedOverBottom {
+  border-bottom: 3px solid #cdcdcd;
+}
 
 .user-panel.flex-panel {
   display: flex;
