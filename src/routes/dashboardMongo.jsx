@@ -14,7 +14,6 @@ export default function Dashboard() {
   const [user, setUser] = React.useState(app.currentUser);
   // Create a component that displays the given user's details
   function UserDetail({ user }) {
-    console.log("Successfully logged in!", user);
     return (
       <div>
         <h1>Logged in: {user._profile.data.email}</h1>
@@ -28,7 +27,6 @@ export default function Dashboard() {
     const loginAnonymous = async () => {
       // const user = await app.logIn(Realm.Credentials.anonymous());
       const user = await loginEmailPassword("kocielam@gmail.com", "Maciek123");
-      console.log("Successfully logged in!", user);
       setUser(user);
     };
     return <button onClick={loginAnonymous}>Log In</button>;

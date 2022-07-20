@@ -107,7 +107,6 @@ export default function loadShortcuts() {
       ["Backspace"],
       shortcutKeys => {
         dispatch(deleteActiveNode())
-        console.log("Delete")
       },
       { 
         overrideSystem: false,

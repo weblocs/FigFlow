@@ -2,22 +2,22 @@ import React, {useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import NavigationNodeItem from "./NavigationNodeItem";
 
- function NavigationNodeFolder ({node, depth}) {
+ function NavigationNodeFolder ({parents, node, depth}) {
 
     if(node?.children?.length > 0) {
         return (
             <div>
-                <NavigationNodeItem node={node} depth={depth} />
+                <NavigationNodeItem parents={parents} node={node} depth={depth} />
                 {node.children.map((nodeChild) => (
-                <div className="navigation-node-folder" key={nodeChild.id}>
-                    <NavigationNodeFolder node={nodeChild} depth={depth + 1} /> 
-                </div>
-            ))}
+                    <div className="navigation-node-folder" key={nodeChild.id}>
+                        <NavigationNodeFolder parents={[...parents, {id: node.id, name: node.type }]} node={nodeChild} depth={depth + 1} /> 
+                    </div>
+                ))}
             </div>
         )
     } else {
         return (
-            <NavigationNodeItem node={node} depth={depth} />
+            <NavigationNodeItem  parents={parents} node={node} depth={depth} />
         )
     }
 }

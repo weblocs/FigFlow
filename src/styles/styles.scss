@@ -412,6 +412,7 @@ img {
   position: sticky;
   top: 0;
   background: #fff;
+  z-index: 5;
 }
 
 .pagesList {
@@ -673,8 +674,41 @@ input[type=number] {
 font-size: 12px;
 }
 
+.navigation-node-inside span, .navigation-node-inside {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.navigatorElement::after {
+  content: "";
+  width: 800px;
+  height: 26px;
+  top: -3px;
+  z-index: -1;
+  display: inline-block;
+  position: absolute;
+  left: -460px;
+}
+
+.navigatorElement.active::after {
+  background: #dadada;
+}
+
+.navigatorElement.hovered::after {
+  background: #f0f0f0;
+}
+
 .navigatorElement.hovered {
   background: #f0f0f0;
+}
+
+.navigatorElement.active {
+  background: #dadada;
 }
 
 .navigatorElement.active {
@@ -928,9 +962,10 @@ a {
 
 .navigation-node {
   cursor: default;
-  padding: 3px 0;
-  
+  padding: 0;
 }
+
+
 
 .navigation-node-inside {
   padding-left: 8px;
@@ -943,7 +978,13 @@ a {
 }
 
 .navigation-node-inside.lined {
+  padding: 3px 0 3px 8px;
   border-left: 1px solid #ccc;
+  // transition: border .2s;
+}
+
+.navigation-node-inside.lined.white {
+  border-width: 0;
 }
 
 .plusButton {
@@ -962,9 +1003,13 @@ a {
   background: #ddd;
 }
 
+.navigation-node.dragged-over .navigation-node-inside.lined {
+  border-bottom: 3px solid #ccc;
+}
 
-
-.navigation-node-folder {
+.navigation-node.dragged-over.dragged-before .navigation-node-inside.lined {
+  border-top: 3px solid #ccc;
+  border-bottom: 0;
 }
 
 .display-grid-column {
