@@ -239,7 +239,7 @@ export default function ProjectSettingsPanel() {
                 <div>
                     <div style={{marginBottom: "20px"}}>
                         Section
-                        {/* {projectSections?.find(({id}) => id === activeSymbolId)?.name} */}
+                        {/* {projectLayouts?.find(({id}) => id === activeSymbolId)?.name} */}
                     </div>
                 </div>
                 }

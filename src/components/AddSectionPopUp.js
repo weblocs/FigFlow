@@ -5,7 +5,7 @@ import RenderedNode from "./RenderedNode"
 
 export default function AddSectionPopUp() {
 
-    const projectSections = useSelector((state) => state.designerProjectState.projectSections)
+    const projectLayouts = useSelector((state) => state.designerProjectState.projectLayouts)
     const activeSectionFolder = useSelector((state) => state.designerProjectState.activeSectionFolder)
     const projectMode = useSelector((state) => state.designerProjectState.projectMode)
     const projectPopUp = useSelector((state) => state.designerProjectState.projectPopUp)
@@ -50,7 +50,7 @@ export default function AddSectionPopUp() {
                         <div className="text-h2">Layouts</div>
                         <button className={"add-section_popup-button" + ((presentedSectionNodes?.type === "sec") ? " active" : "")} onClick={handleAddSectionClick}>Add layout</button>
                         
-                        {projectSections.map((folder) => (
+                        {projectLayouts.map((folder) => (
                             <div key={folder.id}>
                                 <div 
                                 onClick={() => dispatch(setActiveSectionFolder(folder.id))}

@@ -7,7 +7,7 @@ import {setActiveSectionFolder, deleteSection, addSectionToPreRenderedHTMLNodes,
 
 export default function ProjectLayoutsPanel () {
     const dispatch = useDispatch()
-    const projectSections = useSelector((state) => state.designerProjectState.projectSections)
+    const projectLayouts = useSelector((state) => state.designerProjectState.projectLayouts)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
     const activeSectionFolder = useSelector((state) => state.designerProjectState.activeSectionFolder)
 
@@ -27,7 +27,7 @@ export default function ProjectLayoutsPanel () {
 
             <div className="pagesList">
             
-            {projectSections.map((folder) => (
+            {projectLayouts.map((folder) => (
                 <div key={folder.id}>
                     <div 
                     onClick={() => dispatch(setActiveSectionFolder(folder.id))}
