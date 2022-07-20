@@ -5,7 +5,7 @@ import CreateNewSectionFolder from "./CreateNewSectionFolder";
 
 import {setActiveSectionFolder, deleteSection, addSectionToPreRenderedHTMLNodes, setCopiedSectionNodes} from "../features/pre-rendered-html-nodes"
 
-export default function ProjectSectionsPanel () {
+export default function ProjectLayoutsPanel () {
     const dispatch = useDispatch()
     const projectSections = useSelector((state) => state.designerProjectState.projectSections)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)

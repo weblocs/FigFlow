@@ -11,7 +11,7 @@ import ProjectCollectionsFieldsPanel from "./components/ProjectCollectionsFields
 import ProjectCollectionsItemsPanel from "./components/ProjectCollectionsItemsPanel";
 import ProjectSettingsPanel from "./components/ProjectSettingsPanel";
 import ProjectSymbolsPanel from "./components/ProjectSymbolsPanel"
-import ProjectSectionsPanel from "./components/ProjectSectionsPanel"
+import ProjectLayoutsPanel from "./components/ProjectLayoutsPanel"
 
 import {loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
@@ -54,7 +54,7 @@ export default function DevMode() {
         <ProjectCollectionsItemsPanel />
         <ProjectCollectionsFieldsPanel />
         <ProjectSymbolsPanel />
-        <ProjectSectionsPanel />
+        <ProjectLayoutsPanel />
         <ProjectRichTextPanel />
         </div>
 
