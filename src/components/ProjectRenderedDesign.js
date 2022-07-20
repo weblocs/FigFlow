@@ -23,6 +23,7 @@ export default function ProjectRenderedDesign() {
 
                 <ElementSettings />
             
+            
                 {preRenderedHTMLNodes.map((el) => (
                 <RenderedNode
                     onChange={(text, id) => dispatch(editSelectedFieldInPreRenderedHTMLNode({id: id, field: 'title', value: text}))}
@@ -35,9 +36,12 @@ export default function ProjectRenderedDesign() {
                     title={el.title}
                     children={el.children}
                     class={el.class}
-                    onClick={([_id,className]) => dispatch(setActiveNodeAndStyle({id: _id}))}
+                    onClick={([_id]) => dispatch(setActiveNodeAndStyle({id: _id}))}
                 />
                 ))}
+
+                
+
             </div>
 
             <ProjectParentsPathBar />
