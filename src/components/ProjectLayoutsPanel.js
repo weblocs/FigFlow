@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateNewSection from "./CreateNewSection";
 import CreateNewSectionFolder from "./CreateNewSectionFolder";
 
-import {setActiveSectionFolder, deleteSection, addSectionToPreRenderedHTMLNodes, setCopiedSectionNodes} from "../features/pre-rendered-html-nodes"
+import {setactiveLayoutFolder, deleteSection, addSectionToPreRenderedHTMLNodes, setCopiedSectionNodes} from "../features/pre-rendered-html-nodes"
 
 export default function ProjectLayoutsPanel () {
     const dispatch = useDispatch()
     const projectLayouts = useSelector((state) => state.designerProjectState.projectLayouts)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-    const activeSectionFolder = useSelector((state) => state.designerProjectState.activeSectionFolder)
+    const activeLayoutFolder = useSelector((state) => state.designerProjectState.activeLayoutFolder)
 
 
     function handleClickInSymbolItem(sectionNodes) {
@@ -30,8 +30,8 @@ export default function ProjectLayoutsPanel () {
             {projectLayouts.map((folder) => (
                 <div key={folder.id}>
                     <div 
-                    onClick={() => dispatch(setActiveSectionFolder(folder.id))}
-                    className={"sections-nav-folder-item" + ((activeSectionFolder === folder.id) ? " active" : "" )}
+                    onClick={() => dispatch(setactiveLayoutFolder(folder.id))}
+                    className={"sections-nav-folder-item" + ((activeLayoutFolder === folder.id) ? " active" : "" )}
                     key={folder.id}>
                         {folder.name}
                     </div>

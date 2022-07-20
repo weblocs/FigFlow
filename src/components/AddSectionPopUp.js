@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setActiveSectionFolder, setProjectPopUp} from "../features/pre-rendered-html-nodes"
+import {setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setactiveLayoutFolder, setProjectPopUp} from "../features/pre-rendered-html-nodes"
 import RenderedNode from "./RenderedNode"
 
 export default function AddSectionPopUp() {
 
     const projectLayouts = useSelector((state) => state.designerProjectState.projectLayouts)
-    const activeSectionFolder = useSelector((state) => state.designerProjectState.activeSectionFolder)
+    const activeLayoutFolder = useSelector((state) => state.designerProjectState.activeLayoutFolder)
     const projectMode = useSelector((state) => state.designerProjectState.projectMode)
     const projectPopUp = useSelector((state) => state.designerProjectState.projectPopUp)
 
@@ -53,8 +53,8 @@ export default function AddSectionPopUp() {
                         {projectLayouts.map((folder) => (
                             <div key={folder.id}>
                                 <div 
-                                onClick={() => dispatch(setActiveSectionFolder(folder.id))}
-                                className={"sections-nav-folder-item" + ((activeSectionFolder === folder.id) ? " active" : "" )}
+                                onClick={() => dispatch(setactiveLayoutFolder(folder.id))}
+                                className={"sections-nav-folder-item" + ((activeLayoutFolder === folder.id) ? " active" : "" )}
                                 key={folder.id}>
                                     {folder.name}
                                 </div>

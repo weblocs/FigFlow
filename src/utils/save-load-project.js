@@ -8,7 +8,7 @@ import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "fi
 import { getStorage, ref } from "firebase/storage";
 import { firebaseConfig } from "./firebase-config.js";
 
-import { setProjectCollections, setRichTextElements, setProjectSymbols, setPreRenderedStyles, setProjectPages, setProjectFirebaseId, setProjectSwatches, setprojectLayouts, setActiveSectionFolder } from '../features/pre-rendered-html-nodes'
+import { setProjectCollections, setRichTextElements, setProjectSymbols, setPreRenderedStyles, setProjectPages, setProjectFirebaseId, setProjectSwatches, setprojectLayouts, setactiveLayoutFolder } from '../features/pre-rendered-html-nodes'
 import { setProjectImages } from "../features/project-images"
 
 export default function saveProject(items,preRenderedStyles) {
@@ -67,7 +67,7 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
     dispatch(setProjectSymbols([...projectData.data()?.symbols]));
     dispatch(setProjectSwatches([...projectData.data()?.swatches]));
     dispatch(setprojectLayouts([...projectData.data()?.sections]));
-    dispatch(setActiveSectionFolder(projectData.data()?.sections?.[0]?.id));
+    dispatch(setactiveLayoutFolder(projectData.data()?.sections?.[0]?.id));
     dispatch(setRichTextElements([...projectData.data()?.richTextElements]));
     if(projectData.data()?.images !== undefined) {
       dispatch(setProjectImages([...projectData.data()?.images]));

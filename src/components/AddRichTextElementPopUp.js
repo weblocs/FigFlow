@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setActiveSectionFolder, setProjectPopUp} from "../features/pre-rendered-html-nodes"
+import {setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setactiveLayoutFolder, setProjectPopUp} from "../features/pre-rendered-html-nodes"
 
 export default function AddRichTextElementPopUp() {
 
