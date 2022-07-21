@@ -12,6 +12,7 @@ export default function ProjectRenderedDesign() {
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const postRenderedStyles = useSelector((state) => state.designerProjectState.postRenderedStyles)
     const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
+    const editLayoutsMode = useSelector((state) => state.designerProjectState.editLayoutsMode)
 
     const dispatch = useDispatch()
 
@@ -22,8 +23,8 @@ export default function ProjectRenderedDesign() {
             <div className={"project-rendered-design state-" + activeProjectResolution}>
 
                 <ElementSettings />
-            
-            
+
+                
                 {preRenderedHTMLNodes.map((el) => (
                 <RenderedNode
                     onChange={(text, id) => dispatch(editSelectedFieldInPreRenderedHTMLNode({id: id, field: 'title', value: text}))}

@@ -12,6 +12,9 @@ export default function StoreUseEffectUpdates () {
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const undoActionActive = useSelector((state) => state.designerProjectState.undoActionActive)
+    const editLayoutsMode = useSelector((state) => state.designerProjectState.editLayoutsMode)
+
+    
     
     const dispatch = useDispatch()
 

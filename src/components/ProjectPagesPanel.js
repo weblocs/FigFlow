@@ -19,7 +19,7 @@ export default function ProjectPagesPanel(){
             <CreateNewPageInProject />
 
             <div className="pagesList">
-            {projectPages.map((page,index) => (
+            {projectPages.map((page) => (
                 <div key={page.pageId} onClick={() => dispatch(setActivePageIdAndIndex(page.pageId))} className={"projectPageItem " + ((activePageId === page.pageId) ? "active" : "") }>
                     {page.pageName}
                 </div>

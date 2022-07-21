@@ -3,18 +3,24 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateNewSection from "./CreateNewSection";
 import CreateNewSectionFolder from "./CreateNewSectionFolder";
 
-import {setactiveLayoutFolder, deleteSection, addSectionToPreRenderedHTMLNodes, setCopiedSectionNodes} from "../features/pre-rendered-html-nodes"
+import {setactiveLayoutFolder, deleteSection, addSectionToPreRenderedHTMLNodes, setCopiedSectionNodes, setEditLayoutsMode, setActiveNodeAndStyle, setPreRenderedHTMLNodes, setActiveLayoutId} from "../features/pre-rendered-html-nodes"
 
 export default function ProjectLayoutsPanel () {
     const dispatch = useDispatch()
     const projectLayouts = useSelector((state) => state.designerProjectState.projectLayouts)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
     const activeLayoutFolder = useSelector((state) => state.designerProjectState.activeLayoutFolder)
+    const activeLayoutId = useSelector((state) => state.designerProjectState.activeLayoutId)
 
 
-    function handleClickInSymbolItem(sectionNodes) {
-        dispatch(setCopiedSectionNodes(sectionNodes));
-        dispatch(addSectionToPreRenderedHTMLNodes());
+    function handleClickInSymbolItem(id, folderId, sectionNodes) {
+        // dispatch(setCopiedSectionNodes(sectionNodes));
+        // dispatch(addSectionToPreRenderedHTMLNodes());
+        dispatch(setEditLayoutsMode(true));
+        dispatch(setPreRenderedHTMLNodes([sectionNodes]));
+        dispatch(setActiveLayoutId(id));
+        dispatch(setactiveLayoutFolder(folderId));
+        // dispatch(setActiveNodeAndStyle(sectionNodes.id));
     }
     
     return(
@@ -37,7 +43,7 @@ export default function ProjectLayoutsPanel () {
                     </div>
                     {folder.items.map((section) => {
                         return (
-                        <div className="projectPageItem" onClick={() => handleClickInSymbolItem({...section.preRenderedHTMLNodes})} key={section.id}>
+                        <div className={"projectPageItem" + ((activeLayoutId === section.id) ? " active" : "" )} onClick={() => handleClickInSymbolItem(section.id, folder.id ,{...section.preRenderedHTMLNodes})} key={section.id}>
                             {section.name}
                             <div className={"delete-section-item"} onClick={() => dispatch(deleteSection({id: section.id}))}>x</div>
                         </div>
