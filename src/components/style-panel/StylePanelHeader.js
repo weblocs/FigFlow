@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import {setArrowNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, createNewStyle, renameMainStyle} from "../../features/pre-rendered-html-nodes"
+import {setKeyboardNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, createNewStyle, renameMainStyle} from "../../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from "./SubStyleSticker";
 
@@ -40,9 +40,9 @@ export default function StylePanelHeader () {
         if(isAddStyleInputOpen) {
             inputRef.current.focus();
             inputRef.current.value = "";
-            dispatch(setArrowNavigationOn(false));
+            dispatch(setKeyboardNavigationOn(false));
         } else {
-            dispatch(setArrowNavigationOn(true));
+            dispatch(setKeyboardNavigationOn(true));
         }
     },[editorPopUpClass]);
 
@@ -118,8 +118,8 @@ export default function StylePanelHeader () {
                                     
                                     <div style={{display: "flex"}}>
                                     <input 
-                                    onFocus={() => dispatch(setArrowNavigationOn(false))} 
-                                    onBlur={() => dispatch(setArrowNavigationOn(true))}
+                                    onFocus={() => dispatch(setKeyboardNavigationOn(false))} 
+                                    onBlur={() => dispatch(setKeyboardNavigationOn(true))}
                                     onKeyDown={(e) => handleKeyPressRenameInput(e, el.id)}
                                     ref={renameInputRef}
                                     placeholder="New style name" />

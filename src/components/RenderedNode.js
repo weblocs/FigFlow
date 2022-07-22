@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import ContentEditable from "react-contenteditable";
 
 import {useSelector, useDispatch} from "react-redux";
-import {setHoveredNodeId, setArrowNavigationOn, setHoveredSectionId} from "../features/pre-rendered-html-nodes"
+import {setHoveredNodeId, setKeyboardNavigationOn, setHoveredSectionId} from "../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./AddSectionButton";
 import AddRichTextElementButton from "./AddRichTextElementButton";
@@ -16,7 +16,7 @@ function RenderedNode(props) {
   const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId);
   const projectCollections = useSelector((state) => state.designerProjectState.projectCollections);
   const projectMode = useSelector((state) => state.designerProjectState.projectMode);
-  const arrowNavigationOn = useSelector((state) => state.designerProjectState.arrowNavigationOn);
+  const keyboardNavigationOn = useSelector((state) => state.designerProjectState.keyboardNavigationOn);
   const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId);
   const dispatch = useDispatch()
   
@@ -26,7 +26,7 @@ function RenderedNode(props) {
     shortcutKeys => {
       if(editable) {
         setEditable(false);
-        dispatch(setArrowNavigationOn(true));
+        dispatch(setKeyboardNavigationOn(true));
       }
     },
     { 
@@ -45,7 +45,7 @@ function RenderedNode(props) {
   function handleDoubleClick(e) {
     e.stopPropagation();
     setEditable(true);
-    dispatch(setArrowNavigationOn(false))
+    dispatch(setKeyboardNavigationOn(false))
   }
 
   function handleOnClick(e) {
@@ -53,10 +53,10 @@ function RenderedNode(props) {
     props.onClick([props.id, props?.class[0]?.name]);
     if (projectMode === "creator") {
       setEditable(true);
-      dispatch(setArrowNavigationOn(false))
+      dispatch(setKeyboardNavigationOn(false))
     } 
     if(!editable) {
-      dispatch(setArrowNavigationOn(true))
+      dispatch(setKeyboardNavigationOn(true))
     }
   }
 

@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features/pre-rendered-html-nodes"
+import {editStyleInPreRenderedStyles, setKeyboardNavigationOn} from "../../features/pre-rendered-html-nodes"
 
 export default function DisplayGridColumnSizeButton (props) {
     let editedStyle = props.size;
@@ -37,9 +37,9 @@ export default function DisplayGridColumnSizeButton (props) {
             } else {
                 inputRef.current.value = editedStyleWithNoUnit;
             }
-            dispatch(setArrowNavigationOn(false));
+            dispatch(setKeyboardNavigationOn(false));
         } else {
-            dispatch(setArrowNavigationOn(true));
+            dispatch(setKeyboardNavigationOn(true));
         }
     },[editorPopUpClass]);
 

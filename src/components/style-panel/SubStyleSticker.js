@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveStyleId, setArrowNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeAndStyle, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption } from "../../features/pre-rendered-html-nodes";
+import { setActiveStyleId, setKeyboardNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeAndStyle, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption } from "../../features/pre-rendered-html-nodes";
 
 export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const activeStyleObject = useSelector((state) => state.designerProjectState.activeStyleObject)
+
+    
 
     
     const dispatch = useDispatch()
@@ -35,11 +38,11 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     }
 
     function handleOnFocus() {
-        dispatch(setArrowNavigationOn(false));
+        dispatch(setKeyboardNavigationOn(false));
     }
 
     function handleOnBlur() {
-        dispatch(setArrowNavigationOn(true));
+        dispatch(setKeyboardNavigationOn(true));
     }
 
     function handleStyleOptionClick(id,name) {

@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features/pre-rendered-html-nodes"
+import {editStyleInPreRenderedStyles, setKeyboardNavigationOn} from "../../features/pre-rendered-html-nodes"
 
 export default function SpacingStyleButton (props) {
 
@@ -86,9 +86,9 @@ export default function SpacingStyleButton (props) {
             } else {
                 inputRef.current.value = activeNodeStyleValue;
             }
-            dispatch(setArrowNavigationOn(false));
+            dispatch(setKeyboardNavigationOn(false));
         } else {
-            dispatch(setArrowNavigationOn(true));
+            dispatch(setKeyboardNavigationOn(true));
         }
     },[editorPopUpClass]);
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import {findStyleUnit, deleteUnits} from '../../utils/style-panel'
-import {deletePropertyInPreRenderedStyle, editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features/pre-rendered-html-nodes"
+import {deletePropertyInPreRenderedStyle, editStyleInPreRenderedStyles, setKeyboardNavigationOn} from "../../features/pre-rendered-html-nodes"
 
 export default function SpaceStyleInput (props) {
 
@@ -111,9 +111,9 @@ export default function SpaceStyleInput (props) {
             } else {
                 inputRef.current.value = editedStyleValue;
             }
-            dispatch(setArrowNavigationOn(false));
+            dispatch(setKeyboardNavigationOn(false));
         } else {
-            dispatch(setArrowNavigationOn(true));
+            dispatch(setKeyboardNavigationOn(true));
         }
     },[isInputActive]);
 

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import {editStyleInPreRenderedStyles, setArrowNavigationOn} from "../../features/pre-rendered-html-nodes"
+import {editStyleInPreRenderedStyles, setKeyboardNavigationOn} from "../../features/pre-rendered-html-nodes"
 import ProprtyInputLabel from "./ProprtyInputLabel";
 
 export default function FontStyleEditor () {

@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import { useDispatch } from "react-redux";
-import {createNewPageInProject, setArrowNavigationOn} from "../features/pre-rendered-html-nodes"
+import {createNewPageInProject, setKeyboardNavigationOn} from "../features/pre-rendered-html-nodes"
 
 export default function CreateNewPageInProject (props) {
     const dispatch = useDispatch();
     const [input, setInput] = useState("");
+    const [folderInput, setFolderInput] = useState("");
 
     async function handleAddNewPage(e) {
         e.preventDefault();
@@ -14,18 +15,32 @@ export default function CreateNewPageInProject (props) {
         setInput("");
     };
 
+    async function handleAddNewPageFolder(e) {
+        e.preventDefault();
+        if(input !== "") {
+            // dispatch(createNewPageInProject(folderInput));
+        }
+        setFolderInput("");
+    };
+
     function handleFocus() {
-        dispatch(setArrowNavigationOn(false));
+        dispatch(setKeyboardNavigationOn(false));
     }
 
     function handleBlur() {
-        dispatch(setArrowNavigationOn(true));
+        dispatch(setKeyboardNavigationOn(true));
     }
 
     return (
-        <form onSubmit={handleAddNewPage} className="new-page-form">
-            <input className="" value={input} onFocus={handleFocus} onBlur={handleBlur} onChange={(e) => setInput(e.target.value)} placeholder="New page" />
-            <button className="">Add</button>
-        </form>
+        <div>
+            <form onSubmit={handleAddNewPageFolder} className="new-page-form">
+                <input className="" value={folderInput} onFocus={handleFocus} onBlur={handleBlur} onChange={(e) => setFolderInput(e.target.value)} placeholder="New folder" />
+                <button className="">Add</button>
+            </form>
+            <form onSubmit={handleAddNewPage} className="new-page-form">
+                <input className="" value={input} onFocus={handleFocus} onBlur={handleBlur} onChange={(e) => setInput(e.target.value)} placeholder="New page" />
+                <button className="">Add</button>
+            </form>
+        </div>
     )
 }

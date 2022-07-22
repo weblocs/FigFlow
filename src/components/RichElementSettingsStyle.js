@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveStyleId, setStyleOptionInActiveNode } from "../features/pre-rendered-html-nodes";
+import { clearStyleOption, setActiveStyleId, setStyleOptionInActiveNode } from "../features/pre-rendered-html-nodes";
 
 
 export default function RichElementSettingsStyle({child, index}) {
@@ -28,9 +28,14 @@ export default function RichElementSettingsStyle({child, index}) {
         setIsListOpened(false);
     }
 
+    function handleClearClick (index) {
+        dispatch(clearStyleOption({optionIndex: index}));
+        setIsListOpened(false);
+    }
+
     return (
         <div className={"rich-element-settings_button active" + isStyleSet} >
-            <div onClick={() => setIsListOpened(!isListOpened)}>{childName}</div>
+            <div className="rich-element-settings_button-text" onClick={() => setIsListOpened(!isListOpened)}>{childName}</div>
             <div className={"rich-element-settings_options_list" + ((isListOpened) ? " active" : "")}>
                 {child.options.map((option) => (
                     <div key={option.id} onClick={() => handleStyleOptionClick(option.id, option.name)} 
@@ -38,6 +43,10 @@ export default function RichElementSettingsStyle({child, index}) {
                         {option.name}
                     </div>
                 ))}
+                <div onClick={() => handleClearClick(index)} 
+                    className="rich-element-settings_options-item">
+                        clear/remove
+                </div>
             </div>
         </div>
     )

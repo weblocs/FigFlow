@@ -1,17 +1,17 @@
 import React, {useState} from "react";
 import { useDispatch } from "react-redux";
-import {createNewSection, setArrowNavigationOn} from "../features/pre-rendered-html-nodes"
+import {createNewSection, setKeyboardNavigationOn} from "../features/pre-rendered-html-nodes"
 
 export default function CreateNewSection (props) {
     const dispatch = useDispatch();
     const [input, setInput] = useState("");
 
     function onInputKeyDown() {
-        dispatch(setArrowNavigationOn(false));   
+        dispatch(setKeyboardNavigationOn(false));   
     }
     
     function onInputBlur() {
-        dispatch(setArrowNavigationOn(true));
+        dispatch(setKeyboardNavigationOn(true));
     }
 
     function onInputChange(e) {

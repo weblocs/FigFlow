@@ -6,12 +6,12 @@ import useKeyboardShortcut from 'use-keyboard-shortcut'
 export default function TopNavbarResolutionChangeButton({resolutionNumber}) {
 
     const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
-    const arrowNavigationOn = useSelector((state) => state.designerProjectState.arrowNavigationOn)
+    const keyboardNavigationOn = useSelector((state) => state.designerProjectState.keyboardNavigationOn)
 
     const { copyShortcut } = useKeyboardShortcut(
         [resolutionNumber],
         shortcutKeys => {
-            (arrowNavigationOn) && (
+            (keyboardNavigationOn) && (
                 dispatch(setActiveProjectResolution(resolutionNumber))
             );
         },

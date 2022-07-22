@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {updateSwatch, addSwatch, setArrowNavigationOn, editStyleInPreRenderedStyles, arrowActiveNodeNavigation} from "../../features/pre-rendered-html-nodes"
+import {updateSwatch, addSwatch, setKeyboardNavigationOn, editStyleInPreRenderedStyles, arrowActiveNodeNavigation} from "../../features/pre-rendered-html-nodes"
 import ProprtyInputLabel from "./ProprtyInputLabel";
 
 export default function ColorPicker (props) {
@@ -50,7 +50,7 @@ export default function ColorPicker (props) {
     useEffect(() => {
         swatchNameRef.current.value = activeSwatch.name;
         swatchColorRef.current.value = activeSwatch.color;
-        dispatch(setArrowNavigationOn(!swatchesEditorOpened));
+        dispatch(setKeyboardNavigationOn(!swatchesEditorOpened));
     },[activeSwatch]);
         
     useEffect(() => {
@@ -72,7 +72,7 @@ export default function ColorPicker (props) {
     },[swatchEditorMode]);
 
     useEffect(() => {
-        dispatch(setArrowNavigationOn(!styleColorInputOpen));
+        dispatch(setKeyboardNavigationOn(!styleColorInputOpen));
     },[styleColorInputOpen]);
 
     function componentToHex(c) {

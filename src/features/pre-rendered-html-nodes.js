@@ -18,6 +18,8 @@ const initialState = {
   activeProjectTab: "Navigator",
   activeRightSidebarTab: "Style",
   projectPages: [],
+  projectPageFolders: [],
+  projectPageFolderStructure: [{id: "123", type: "folder", children: []}, {id:"abc"}, {id: "bcder"}],
   activePageId: "",
   activePageIndex: 0, 
   projectCollections:[],  
@@ -31,10 +33,9 @@ const initialState = {
   postRenderedStyles: "",
   activeNodeId: "",
   activeNodeObject: {},
-  activeNodeStyles: {},
   hoveredNodeId: "",
-  arrowNavigationOn: true,
-  activeStyleObject:  {},
+  keyboardNavigationOn: true,
+  activeStyleObject:  {}, // activeStyleProperties
   activeStyleId: "",
   activeStyleName: "",
   activeStyleIndex: 0,
@@ -59,6 +60,59 @@ const initialState = {
   activeNodeComputedStyles: {},
 }
 
+function findActiveNode(nodes, id) {
+    let response;
+    function findNode(_nodes) {
+        for (let i = 0; i < _nodes.length; i++) {
+            if(_nodes[i].id === id) {
+                response = _nodes[i];
+            }
+            if(_nodes[i].children.length > 0) {
+                findNode(_nodes[i].children);
+            }
+        }
+    }  
+    findNode(nodes);
+    return response;
+} 
+
+function findActiveNodeSiblingArrayAndIndex(nodes, id) {
+    let response;
+    function findNode(_nodes) {
+        for (let i = 0; i < _nodes.length; i++) {
+            if(_nodes[i].id === id) {
+                response = [_nodes[i], _nodes, i];
+            }
+            if(_nodes[i].children.length > 0) {
+                findNode(_nodes[i].children);
+            }
+        }
+    }  
+    findNode(nodes);
+    return response;
+} 
+
+function regenerateIdsInNodes(nodes) {
+    nodes.id = uuidv4();
+    for (let i = 0; i < nodes.children.length; i++) {
+        nodes.children[i].id = uuidv4();
+        
+        if (nodes.children[i].children.length > 0) {
+            regenerateIdsInNodes(nodes.children[i]);
+        }
+    }
+}
+
+function nodeIsFolder(node) {
+    if(node.type === "div" || node.type === "l" || node.type === "sym" || node.type === "sec" || node.type === "rich") {
+        return true;
+    } else if(node.type === "col" && node.cmsCollectionId) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 export const preRenderedNodesSlice = createSlice({
   name: 'preRenderedNodes',
   initialState,
@@ -71,6 +125,7 @@ export const preRenderedNodesSlice = createSlice({
     setActiveLayoutId: (state, action) => {
         state.activeLayoutId = action.payload;
         state.activePageId = "";
+        state.activeNodeId = "";
     },
 
     setDraggedBefore: (state, action) => {
@@ -83,17 +138,7 @@ export const preRenderedNodesSlice = createSlice({
 
     setDragableCopiedNodes: (state, action) => {
         const dragedNodeId = action.payload;
-        function findNode(nodes) {
-            for (let i = 0; i < nodes.length; i++) {
-                if(nodes[i].id === dragedNodeId) {
-                    state.dragableCopiedNodes = nodes[i];
-                }
-                if(nodes[i].children.length > 0) {
-                    findNode(nodes[i].children);
-                }
-            }
-        }  
-        findNode(state.preRenderedHTMLNodes);
+        state.dragableCopiedNodes = findActiveNode(state.preRenderedHTMLNodes, dragedNodeId);
     },
 
     setActiveNodeComputedStyles: (state) => {
@@ -157,20 +202,8 @@ export const preRenderedNodesSlice = createSlice({
 
     clearStyleOption: (state,action) => {
         let optionIndex = action.payload.optionIndex;
-
-        function findNode(nodes) {
-            for (let i = 0; i < nodes.length; i++) {
-                if(nodes[i].id === state.activeNodeId) {
-                    nodes[i].class[optionIndex+1] = {id: "", name: ""}
-                    
-                }
-                if (nodes[i].children) {
-                    findNode(nodes[i].children);
-                }
-            }
-        }
-        findNode(state.preRenderedHTMLNodes);
-
+        let activeNode = findActiveNode(state.preRenderedHTMLNodes,state.activeNodeId);
+        activeNode.class[optionIndex+1] = {id: "", name: ""}
         state.stylesInActiveNode[optionIndex+1] = {id: "", name: ""};
     },
 
@@ -188,19 +221,36 @@ export const preRenderedNodesSlice = createSlice({
                 }
             }
     
-            function findNode(nodes, id) {
-                for (let i = 0; i < nodes.length; i++) {
-                    for(let j = 0; j < nodes[i].class.length; j++) {
-                        if(nodes[i].class[j]?.id === subOptionId) {
-                            nodes[i].class[j] = {id: "", name: ""};
-                        }
-                    }
-                    if (nodes[i].children) {
-                        findNode(nodes[i].children, id);
+            function findNode(nodes) {
+                let activeNode = findActiveNode(nodes,state.activeNodeId);
+                for (let j = 0; j < activeNode.class.length; j++) {
+                    if(activeNode.class[j]?.id === subOptionId) {
+                        activeNode.class[j] = {id: "", name: ""};
                     }
                 }
             }
-            findNode(state.preRenderedHTMLNodes);
+            
+            if(!state.editLayoutsMode) {
+                state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
+            } else {
+               state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes = state.preRenderedHTMLNodes[0];
+            }
+    
+            state.projectPages.forEach((page) => {
+                findNode(page.preRenderedHTMLNodes);
+            });
+    
+            state.projectLayouts.forEach((folder) => {
+                folder.items.forEach((layout) => {
+                    findNode([layout.preRenderedHTMLNodes]);
+                });
+            });
+    
+            if(!state.editLayoutsMode) {
+                state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
+            } else {
+                state.preRenderedHTMLNodes = state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes
+            }
     
             for (let i = 0; i < state.stylesInActiveNode.length; i++) {
                 if(state.stylesInActiveNode[i].id === subOptionId) {
@@ -211,18 +261,8 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     setActiveNodeRepeatableState: (state,action) => {
-        function findNode(nodes, id) {
-            for (let i = 0; i < nodes.length; i++) {
-                if (nodes[i].id === id) {
-                    nodes[i].repeatable = action.payload;
-                    break;
-                }
-                if (nodes[i].children) {
-                    findNode(nodes[i].children, id);
-                }
-            }
-        }
-        findNode(state.preRenderedHTMLNodes, state.activeNodeId);
+        let activeNode = findActiveNode(state.preRenderedHTMLNodes,state.activeNodeId);
+        activeNode.repeatable = action.payload;
     },
 
     setActiveStyleOptionIndex: (state, action) => {
@@ -252,7 +292,7 @@ export const preRenderedNodesSlice = createSlice({
                 }
             } 
         }
-        if(state.arrowNavigationOn) {
+        if(state.keyboardNavigationOn) {
             findNode(state.preRenderedHTMLNodes, state.activeNodeId);
         }
     },
@@ -339,18 +379,6 @@ export const preRenderedNodesSlice = createSlice({
         state.projectSwatches.push({id: uuidv4(), name: action.payload.name, color: action.payload.color })
     },
 
-    updatePreRenderedNodesWithParentPaths: (state) => {
-        function findNode(nodes, id, parent) {
-            for (let i = 0; i < nodes.length; i++) {
-                // nodes[i].parent = parent;
-                if(nodes[i].children.length > 0) {
-                    findNode(nodes[i].children, id, nodes[i]);
-                }
-            }
-        }
-        findNode(state.preRenderedHTMLNodes, state.activeNodeId, {});
-    },
-
     setActiveNodeParentsPath: (state) => {
 
         function isElement(element) {
@@ -381,27 +409,13 @@ export const preRenderedNodesSlice = createSlice({
             }
         }
         findNode(state.preRenderedHTMLNodes);
-        
-        
-        // function setUpParentsPath(node) {
-        //     let nodeName = node?.class[0]?.name;
-        //     (nodeName === undefined) && (nodeName = node?.type);
-
-        //     if(node !== {}) {
-        //         state.activeNodeParentsPath.push({id: nodeName});
-        //         if(node?.parent !== undefined) {
-        //             setUpParentsPath(node.parent);
-        //         }
-        //     }
-        // }
-        
-        // setUpParentsPath(state.activeNodeObject)
     },
 
 
 
     addUndoState: (state) => {
         if(state.preRenderedHTMLNodes.length > 0 && !state.undoActionActive) {
+            
             if(state.activeUndoIndex > 1) {
                 state.activeUndoIndex = 1;
             }
@@ -410,7 +424,6 @@ export const preRenderedNodesSlice = createSlice({
                 preRenderedHTMLNodes: state.preRenderedHTMLNodes,
                 preRenderedStyles: state.preRenderedStyles
             }];
-            
         }
     },
 
@@ -418,8 +431,9 @@ export const preRenderedNodesSlice = createSlice({
         if(state.activeUndoIndex > 1) {
             state.activeUndoIndex--;
             state.undoActionActive = true;
-            state.preRenderedHTMLNodes = state.undoStates[state.undoStates.length - state.activeUndoIndex].preRenderedHTMLNodes;
-            state.preRenderedStyles = state.undoStates[state.undoStates.length - state.activeUndoIndex].preRenderedStyles;
+            const activeUndoNode = state.undoStates[state.undoStates.length - state.activeUndoIndex];
+            state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes;
+            state.preRenderedStyles = activeUndoNode.preRenderedStyles;
         }
     },
 
@@ -427,8 +441,9 @@ export const preRenderedNodesSlice = createSlice({
             if(state.undoStates.length > state.activeUndoIndex + 1) {
                 state.activeUndoIndex++;
                 state.undoActionActive = true;
-                state.preRenderedHTMLNodes = state.undoStates[state.undoStates.length - state.activeUndoIndex].preRenderedHTMLNodes;
-                state.preRenderedStyles = state.undoStates[state.undoStates.length - state.activeUndoIndex].preRenderedStyles;    
+                const activeUndoNode = state.undoStates[state.undoStates.length - state.activeUndoIndex];
+                state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes;
+                state.preRenderedStyles = activeUndoNode.preRenderedStyles;    
             }
     },
 
@@ -456,74 +471,34 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     setCopiedNodes: (state) => {
-        if(state.arrowNavigationOn) {
+        if(state.keyboardNavigationOn) {
             state.copiedNodes = state.activeNodeObject
         }
     },
 
     deleteActiveNode: (state) => {
-        function findNode(nodes) {
-            for (let i = 0; i < nodes.length; i++) {
-                if(nodes[i].id === state.activeNodeId) {
-                    if(nodes[i+1]) {
-                        state.activeNodeId = nodes[i+1].id
-                    } else if(nodes[i-1]) {
-                        state.activeNodeId = nodes[i-1].id
-                    }
-                    nodes = nodes.splice(i,1);
-                    break;
-                }
-                
-                if (nodes[i].children) {
-                    findNode(nodes[i].children);
-                }
-            }
+
+        let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
+        
+        if(activeNodeSiblingArray[activeNodeIndex+1]) {
+            state.activeNodeId = activeNodeSiblingArray[activeNodeIndex+1].id
+        } else if(activeNodeSiblingArray[activeNodeIndex-1]) {
+            state.activeNodeId = activeNodeSiblingArray[activeNodeIndex-1].id
         }
-        if(state.arrowNavigationOn) {
-            findNode(state.preRenderedHTMLNodes);
-        }
+        activeNodeSiblingArray = activeNodeSiblingArray.splice(activeNodeIndex,1);
     },
 
-    pasteCopiedNodes: (state, action) => {
+    pasteCopiedNodes: (state) => {
 
-        function editCopiedNodesIds(nodes) {
-            nodes.id = uuidv4();
-            for (let i = 0; i < nodes.children.length; i++) {
-                nodes.children[i].id = uuidv4();
-                
-                if (nodes.children[i].children.length > 0) {
-                    editCopiedNodesIds(nodes.children[i]);
-                }
-            }
-        }
-        editCopiedNodesIds(state.copiedNodes);
+        regenerateIdsInNodes(state.copiedNodes);
+        let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
 
-        function findNode(nodes, id) {
-            function nodeIsFolder(node) {
-                if(node.type === "div" || node.type === "l" || node.type === "sym" || node.type === "sec" || node.type === "rich") {
-                    return true;
-                } else if(node.type === "col" && node.cmsCollectionId) {
-                    return true;
-                } else {
-                    return false;
-                }
+        if(state.keyboardNavigationOn) {
+            if(nodeIsFolder(activeNode) && (activeNode.children.length == 0)) {
+                activeNode.children.splice(activeNodeIndex+1,0,state.copiedNodes);
+            } else {
+                activeNodeSiblingArray.splice(activeNodeIndex+1,0,state.copiedNodes)
             }
-            for (let i = 0; i < nodes.length; i++) {
-                if (nodes[i].id === id) {
-                    if(nodeIsFolder(nodes[i]) && (nodes[i].children.length == 0)) {
-                        nodes[i].children.splice(i+1,0,state.copiedNodes);
-                    } else {
-                        nodes.splice(i+1,0,state.copiedNodes)
-                    }
-                    break;
-                }
-                if (nodes[i].children) {
-                    findNode(nodes[i].children, id);
-                }
-            }
-        }
-        if(state.arrowNavigationOn) {
-            findNode(state.preRenderedHTMLNodes, state.activeNodeId);
         }
     },
 
@@ -535,9 +510,6 @@ export const preRenderedNodesSlice = createSlice({
                 if(state.dragableCopiedNodes.id === state.draggedOverNodeId) {
                     stopAction = true;
                     break;
-                }
-
-                if(nodes[i].id === state.draggedOverNodeId) {
                 }
 
                 if(nodes[i].id === state.dragableCopiedNodes.id && state.draggedOverNodeId !== "") {
@@ -553,16 +525,6 @@ export const preRenderedNodesSlice = createSlice({
         
 
         function findNode(nodes, id) {
-
-            function nodeIsFolder(node) {
-                if(node.type === "div" || node.type === "l" || node.type === "sym" || node.type === "sec" || node.type === "rich") {
-                    return true;
-                } else if(node.type === "col" && node.cmsCollectionId) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
 
             for (let i = 0; i < nodes.length; i++) {
 
@@ -650,7 +612,7 @@ export const preRenderedNodesSlice = createSlice({
                 }
             }
         }
-        if(state.arrowNavigationOn) {
+        if(state.keyboardNavigationOn) {
             findNode(state.preRenderedHTMLNodes, state.activeNodeId);
         }
     },
@@ -714,15 +676,6 @@ export const preRenderedNodesSlice = createSlice({
         };
 
         function findNode(nodes, id) {
-            function nodeIsFolder(node) {
-                if(node.type === "div" || node.type === "l" || node.type === "sym" || node.type === "rich") {
-                    return true;
-                } else if(node.type === "col" && node.cmsCollectionId) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
             for (let i = 0; i < nodes.length; i++) {
                 if (nodes[i].id === id) {
                     if(nodeIsFolder(nodes[i]) && (nodes[i].children.length == 0)) {
@@ -1058,22 +1011,39 @@ export const preRenderedNodesSlice = createSlice({
         } else {
            state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes = state.preRenderedHTMLNodes[0];
         }
-        state.projectPages.forEach((page) => {
-            function findNode(nodes, id) {
-                for (let i = 0; i < nodes.length; i++) {
-                    if (nodes[i].class[0]?.id === mainStyleId) {
-                        
-
-                        nodes[i].class.splice(childrenIndex+1, 1);
-                    }
-                    if (nodes[i].children) {
-                        findNode(nodes[i].children, id);
-                    }
+        
+        function findNode(nodes, id) {
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].class[0]?.id === mainStyleId) {
+                    nodes[i].class.splice(childrenIndex+1, 1);
+                }
+                if (nodes[i].children) {
+                    findNode(nodes[i].children, id);
                 }
             }
-            findNode(page.preRenderedHTMLNodes, mainStyleId); 
+        }
+
+        if(!state.editLayoutsMode) {
+            state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
+        } else {
+           state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes = state.preRenderedHTMLNodes[0];
+        }
+
+        state.projectPages.forEach((page) => {
+            findNode(page.preRenderedHTMLNodes, mainStyleId);
         });
-        state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
+
+        state.projectLayouts.forEach((folder) => {
+            folder.items.forEach((layout) => {
+                findNode([layout.preRenderedHTMLNodes], mainStyleId);
+            });
+        });
+
+        if(!state.editLayoutsMode) {
+            state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
+        } else {
+            state.preRenderedHTMLNodes = state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes
+        }
     },
 
     setStyleOptionInActiveNode: (state, action) => {
@@ -1201,7 +1171,7 @@ export const preRenderedNodesSlice = createSlice({
             }
         }
 
-        if(state.arrowNavigationOn) {
+        if(state.keyboardNavigationOn) {
             findNode(state.preRenderedHTMLNodes, state.activeNodeId); 
             state.activeNodeId = response;
             [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
@@ -1209,8 +1179,8 @@ export const preRenderedNodesSlice = createSlice({
         }
     },
 
-    setArrowNavigationOn: (state, action) => {
-        state.arrowNavigationOn = action.payload;
+    setKeyboardNavigationOn: (state, action) => {
+        state.keyboardNavigationOn = action.payload;
     },
 
     setProjectFirebaseId: (state, action) => {
@@ -1223,6 +1193,7 @@ export const preRenderedNodesSlice = createSlice({
         // add setActivePageIndex here
         state.activePageId = state.projectPages[state.activePageIndex].pageId;
     },
+
     setProjectCollections: (state, action) => {
         state.projectCollections = action.payload;
         if(state.projectCollections.length > 0) {
@@ -1274,7 +1245,9 @@ export const preRenderedNodesSlice = createSlice({
         state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
         state.activeNodeId = "";
         state.editLayoutsMode = false;
+        state.activeNodeId = "";
     },
+    
     setActiveCollectionIdAndIndex: (state, action) => {
         state.activeProjectCollectionId = action.payload;
         state.activeProjectCollectionIndex = state.projectCollections.map(x => {
@@ -1381,43 +1354,44 @@ export const preRenderedNodesSlice = createSlice({
         ];
     },
     createNewCollectionItems: (state, action) => {
-        let newId = uuidv4();
+        const collectionItemName = action.payload;
         let activeCollectionItems = state.projectCollections[state.activeProjectCollectionIndex].items;
-        activeCollectionItems = [...activeCollectionItems, 
-            {
-                id:newId,
-                name:action.payload,
-                data:[]
-            }
-        ];
-
-        state.projectCollections[state.activeProjectCollectionIndex].items = activeCollectionItems;
+        const collectionItemId = uuidv4();
         
-        state.activeProjectCollectionItemId = newId;
+        activeCollectionItems.push({
+            id: collectionItemId,
+            name: collectionItemName,
+            data:[]
+        });
+
+        state.activeProjectCollectionItemId = collectionItemId;
+        
         state.activeProjectCollectionItemIndex = activeCollectionItems.map(x => {
             return x.id;
         }).indexOf(state.activeProjectCollectionItemId);
 
     },
-    editActiveCollectionItemData: (state, action) => {
-        action.payload.map((item) => {
-            let fieldExistInList = false;
-            state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex]?.data.find(function(value, index) {
-                if(value.fieldId === item.fieldId) {
-                    fieldExistInList = true;
-                    state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].data[index].fieldValue = item.fieldValue;
-                }
-              });
 
-              if(!fieldExistInList) {
-                state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].data = [
-                    ...state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].data,
-                    { fieldId: item.fieldId, fieldValue: item.fieldValue}
-                ];
-              }
+    editActiveCollectionItemData: (state, action) => {
+        const editedItemFieldsData = action.payload;
+        editedItemFieldsData.map((item) => {
+
+            let fieldIsEmpty = true;
+            let colletionItemFields = state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].data;
+
+            colletionItemFields.map((field, index) => {
+                if(field.fieldId === item.fieldId) {
+                    fieldIsEmpty = false;
+                    colletionItemFields[index].fieldValue = item.fieldValue;
+                }
             });
-        
+
+            if(fieldIsEmpty) {
+                colletionItemFields.push({ fieldId: item.fieldId, fieldValue: item.fieldValue});
+            }
+        });
     },
+
     setActiveProjectTab: (state, action) => {
         if(state.activeProjectTab === action.payload) {
             state.activeProjectTab = "";
@@ -1425,6 +1399,7 @@ export const preRenderedNodesSlice = createSlice({
             state.activeProjectTab = action.payload;
         }
     },
+
     setActiveRightSidebarTab: (state, action) => {
         state.activeRightSidebarTab = action.payload;
     },
@@ -1432,5 +1407,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setActiveLayoutId, setEditLayoutsMode, setDraggedBefore, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, undoProject, reUndoProject, setActionActiveFalse, addUndoState, renameMainStyle, clearStyleOption, deleteStyleSubOption, setActiveNodeRepeatableState, updatePreRenderedNodesWithParentPaths, deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setactiveLayoutFolder, addSectionToPreRenderedHTMLNodes, setprojectLayouts, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setArrowNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setActiveLayoutId, setEditLayoutsMode, setDraggedBefore, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, undoProject, reUndoProject, setActionActiveFalse, addUndoState, renameMainStyle, clearStyleOption, deleteStyleSubOption, setActiveNodeRepeatableState, deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setactiveLayoutFolder, addSectionToPreRenderedHTMLNodes, setprojectLayouts, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setKeyboardNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeAndStyle, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

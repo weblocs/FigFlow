@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editStyleInPreRenderedStyles, setArrowNavigationOn } from "../../features/pre-rendered-html-nodes";
+import { editStyleInPreRenderedStyles, setKeyboardNavigationOn } from "../../features/pre-rendered-html-nodes";
 import ProprtyInputLabel from "./ProprtyInputLabel";
 
 export default function NoUnitInput (props) {
@@ -36,9 +36,9 @@ export default function NoUnitInput (props) {
             } else {
                 inputRef.current.value = editedStyleValue;
             }
-            dispatch(setArrowNavigationOn(false));
+            dispatch(setKeyboardNavigationOn(false));
         } else {
-            dispatch(setArrowNavigationOn(true));
+            dispatch(setKeyboardNavigationOn(true));
         }
     },[isInputActive]);
 

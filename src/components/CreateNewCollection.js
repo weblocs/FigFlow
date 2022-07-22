@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useDispatch } from "react-redux";
-import {createNewCollection} from "../features/pre-rendered-html-nodes"
+import {createNewCollection, setKeyboardNavigationOn} from "../features/pre-rendered-html-nodes"
 
 export default function CreateNewPageInProject () {
     const dispatch = useDispatch();
@@ -12,12 +12,24 @@ export default function CreateNewPageInProject () {
             dispatch(createNewCollection(input));
             setInput("");
         }
-        
     };
+
+    function handleFocus() {
+        dispatch(setKeyboardNavigationOn(false));
+    }
+
+    function handleBlur() {
+        dispatch(setKeyboardNavigationOn(true));
+    }
 
     return (
         <form onSubmit={handleAddNewCollection} className="new-page-form">
-            <input className="" value={input} onChange={(e) => setInput(e.target.value)} placeholder="New collection" />
+            <input 
+            value={input} 
+            onFocus={handleFocus} 
+            onBlur={handleBlur}  
+            onChange={(e) => setInput(e.target.value)} 
+            placeholder="New collection" />
             <button className="">Add</button>
         </form>
     )

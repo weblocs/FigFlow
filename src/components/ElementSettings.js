@@ -48,21 +48,21 @@ export default function ElementSettings() {
     }
 
     return (
-            <div className={"rich-element-settings_box active"} 
+            <div className={"rich-element-settings_box" + ((activeNodeId !== "") ? " active" : "")} 
             style={{ transform: `translate(${activeNodePositionX}px,${activeNodePositionY}px)`}}>
                 <div className="rich-element-settings" onClick={handleClick} onMouseOver={handleMouseOver}>
                     <div className="rich-element-settings_flex">
-                        <div className={"rich-element-settings_button" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:true}))}>↑</div>
-                        <div className={"rich-element-settings_button" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:false}))}>↓</div>
-                        <div className={"rich-element-settings_button" + ((addRich) ? " active" : "")} onClick={() => dispatch(setProjectPopUp("addElement"))}>✎</div>
-                        <div className={"rich-element-settings_button" + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>❐</div>
+                        <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:true}))}>↑</div>
+                        <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:false}))}>↓</div>
+                        <div className={"rich-element-settings_button button-centered" + ((addRich) ? " active" : "")} onClick={() => dispatch(setProjectPopUp("addElement"))}>✎</div>
+                        <div className={"rich-element-settings_button button-centered" + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>❐</div>
                         
                         {preRenderedStyles.find(({id}) => id === stylesInActiveNode[0]?.id)?.childrens.map((child,index) => {
                                 return (
                                     <RichElementSettingsStyle child={child} index={index} key={index} />
                                 )
                         })}
-                        <div className={"rich-element-settings_button" + ((deleteNode) ? " active" : "")} onClick={handleClickDelete}>✕</div>
+                        <div className={"rich-element-settings_button button-centered" + ((deleteNode) ? " active" : "")} onClick={handleClickDelete}>✕</div>
 
                     </div>
                 </div>

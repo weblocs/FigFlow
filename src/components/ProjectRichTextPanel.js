@@ -22,14 +22,11 @@ export default function ProjectRichTextPanel(){
 
     function handleDragOver(index,id) {
         event.preventDefault();
-        // setDraggedOverIndex(index);
-
         if (event.clientY - document.querySelector(`[richid="${id}"]`).offsetTop > 20 ) {
             setDraggedOverIndex(index + 1);
         } else {
             setDraggedOverIndex(index);
         }
-        
     }
 
     function handleDrop() {
@@ -47,7 +44,8 @@ export default function ProjectRichTextPanel(){
             <div className="pagesList">
                 {projectRichTextElements.map((element,index) => {
                     return(
-                    <div draggable="true"
+                    <div 
+                    draggable="true"
                     onDragStart={() => setDraggedStartIndex(index)}
                     onDragOver={() => handleDragOver(index,element.id)}
                     onDrop={handleDrop}

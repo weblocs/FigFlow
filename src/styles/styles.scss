@@ -159,7 +159,7 @@ img {
 
 .rich-element-settings {
   position: absolute;
-  top: 0;
+  top: 0px;
   display: inline;
   background: #fff;
   transform: translateY(-2px);
@@ -172,10 +172,11 @@ img {
 }
 
 .rich-element-settings_button {
+  min-height: 28px;
+  min-width: 28px;
   font-size: 14px;
   line-height: 20px;
   display: none;
-  padding: 4px 8px;
   border-right: 1px solid #c3c3c3;
   cursor:pointer;
   background: #fff;
@@ -183,8 +184,17 @@ img {
   transition: background-color .2s;
 }
 
+.rich-element-settings_button.button-centered {
+  justify-content: center;
+  align-items: center;
+}
+
+.rich-element-settings_button-text {
+  padding: 4px 8px;
+}
+
 .rich-element-settings_button.active {
-  display: block;
+  display: flex;
 }
 
 .rich-element-settings_button:hover {
@@ -262,7 +272,7 @@ img {
   min-width: 40px;
   min-height: 40px;
   top: 28px;
-  margin-left: -9px;
+  margin-left: -1px;
   background: #fff;
   border: 1px solid #aaa;
   border-bottom: 0;
