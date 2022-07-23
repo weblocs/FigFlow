@@ -477,15 +477,15 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     deleteActiveNode: (state) => {
-
-        let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
-        
-        if(activeNodeSiblingArray[activeNodeIndex+1]) {
-            state.activeNodeId = activeNodeSiblingArray[activeNodeIndex+1].id
-        } else if(activeNodeSiblingArray[activeNodeIndex-1]) {
-            state.activeNodeId = activeNodeSiblingArray[activeNodeIndex-1].id
+        if(state.keyboardNavigationOn) {
+            let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
+            if(activeNodeSiblingArray[activeNodeIndex+1]) {
+                state.activeNodeId = activeNodeSiblingArray[activeNodeIndex+1].id
+            } else if(activeNodeSiblingArray[activeNodeIndex-1]) {
+                state.activeNodeId = activeNodeSiblingArray[activeNodeIndex-1].id
+            }
+            activeNodeSiblingArray = activeNodeSiblingArray.splice(activeNodeIndex,1);
         }
-        activeNodeSiblingArray = activeNodeSiblingArray.splice(activeNodeIndex,1);
     },
 
     pasteCopiedNodes: (state) => {

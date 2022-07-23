@@ -23,7 +23,6 @@ root.render(
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Dashboard />} />
           <Route path="design/:projectSlug" element={<Design />} />
-          <Route path="create/:projectSlug" element={<Create />} /> 
         </Routes>
       </BrowserRouter>
     </StrictMode>

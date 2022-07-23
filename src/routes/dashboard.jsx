@@ -63,7 +63,7 @@ export default function Dashboard() {
         {projects.map((project) => 
             <Link
                 className="project-item"
-                to={`/create/${project.projectId}`}
+                to={`/design/${project.projectId}`}
                 key={project.projectId}>
                 <div className="project-title">{project.projectId}</div>
             </Link>

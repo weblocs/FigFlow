@@ -794,6 +794,16 @@ a {
     border-right: 1px solid #d3d3d3;
     justify-content: center;
     text-decoration: none;
+    background: #fff;
+}
+
+.addNodeButton.medium {
+  width: 66px;
+  font-size: 9.5px;
+  border-bottom: 1px solid #d3d3d3;
+}
+.addNodeButton.medium:nth-child(3n) {
+  border-right: 0;
 }
 
 .addNodeButton.large {

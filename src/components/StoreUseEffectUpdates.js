@@ -1,3 +1,4 @@
+import { current } from "@reduxjs/toolkit";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addUndoState, checkIfActvieNodeParentDispayStyleIsFlex, setActionActiveFalse, setActiveNodeComputedStyles, setActiveNodeObject, setActiveNodeParentsPath, setActiveStyleOptionIndex, updateActiveStyle } from "../features/pre-rendered-html-nodes"
@@ -12,6 +13,7 @@ export default function StoreUseEffectUpdates () {
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const undoActionActive = useSelector((state) => state.designerProjectState.undoActionActive)
+    const keyboardNavigationOn = useSelector((state) => state.designerProjectState.keyboardNavigationOn)
 
     const dispatch = useDispatch()
 
@@ -37,7 +39,5 @@ export default function StoreUseEffectUpdates () {
     useEffect(() => {
         dispatch(setActionActiveFalse());
     },[undoActionActive]);
-
-    
     
 }

@@ -4,6 +4,6 @@ import { addNodeToRenderedHTMLNodesAfterActiveNode } from "../features/pre-rende
 export default function AddNodeButton({text, type}) {
     const dispatch = useDispatch()
     return (
-        <div className="addNodeButton large" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode(type))}>{text}</div>
+        <div className="addNodeButton medium" onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode(type))}>{text}</div>
     )
 }

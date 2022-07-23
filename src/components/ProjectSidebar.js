@@ -7,7 +7,7 @@ export default function ProjectSidebar(){
     return(
         (projectMode === "developer") ?
         <div className="projectSidebar">
-           <ProjectSidebarButton letter="A" shortcode="A" tab="Add" />
+           {/* <ProjectSidebarButton letter="A" shortcode="A" tab="Add" /> */}
            <ProjectSidebarButton letter="N" shortcode="Z" tab="Navigator" />
            <ProjectSidebarButton letter="P" shortcode="P"  tab="Pages" />
            <ProjectSidebarButton letter="C" tab="Collections" />

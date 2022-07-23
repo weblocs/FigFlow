@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import NavigationNodeFolder from "./NavigationNodeFolder";
 
 import { deleteNodeByIdInPreRenderedHTMLNodes, setActiveNodeAndStyle, setHoveredNodeId, setPreRenderedHTMLNodes } from "../features/pre-rendered-html-nodes";
+import AddNodeButton from "./AddNodeButton";
 
 export default function ProjectNavigator() {
     
@@ -18,7 +19,23 @@ export default function ProjectNavigator() {
     },[preRenderedHTMLNodes]);
     return (
       <div className={"navigatorWrapper "+ ((activeProjectTab === "Navigator") ? "active" : "" )}>
-        <div className="projectTabTitleBox">Navigator</div>
+        
+        <div style={{position: "sticky", top: "0"}}>
+          <div className="projectTabTitleBox">Add</div>
+          <div style={{display: "flex", flexWrap: "wrap"}}>
+              <AddNodeButton type="div" text="Div" />
+              <AddNodeButton type="h" text="Heading" />
+              <AddNodeButton type="p" text="Paragraph" />
+              <AddNodeButton type="img" text="Image" />
+              <AddNodeButton type="l" text="Link" />
+              <AddNodeButton type="col" text="Collection" />
+              <AddNodeButton type="sec" text="Layout Wrap" />
+              <AddNodeButton type="sym" text="Symbol Wrap" />
+              <AddNodeButton type="rich" text="Rich Wrap" />
+          </div>
+          <div className="projectTabTitleBox">Navigator</div>
+        </div>
+        
 
          {preRenderedHTMLNodes.map((node) => (
           <div key={node.id}>

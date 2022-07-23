@@ -4,6 +4,7 @@ import ProjectSidebarButton from "./ProjectSidebarButton";
 import CreateNewPageInProject from "./CreateNewPageInProject"
 import {setActivePageIdAndIndex, setProjectPages} from "../features/pre-rendered-html-nodes"
 import {arrayMoveImmutable} from 'array-move'
+import SettingIcon from '../img/setting.svg';
 
 export default function ProjectPagesPanel(){
     const dispatch = useDispatch()
@@ -45,16 +46,18 @@ export default function ProjectPagesPanel(){
 
             <div className="pagesList">
             {projectPages.map((page,index) => (
-                <div 
-                draggable="true"
-                onDragStart={() => setDraggedStartIndex(index)}
-                onDragOver={() => handleDragOver(index,page.pageId)}
-                onDrop={handleDrop}
-                pageid={page.pageId}
-                key={page.pageId} 
-                onClick={() => dispatch(setActivePageIdAndIndex(page.pageId))} 
-                className={"projectPageItem " + ((activePageId === page.pageId) ? "active " : "") + ((draggedOverIndex === index) ? "draggedOver " : "") + (((draggedOverIndex === index + 1) && (index === projectPages.length - 1)) ? "draggedOverBottom " : "") }>
-                    {page.pageName}
+                <div key={page.pageId} style={{position: "relative"}}>
+                    <div 
+                    draggable="true"
+                    onDragStart={() => setDraggedStartIndex(index)}
+                    onDragOver={() => handleDragOver(index,page.pageId)}
+                    onDrop={handleDrop}
+                    pageid={page.pageId}
+                    onClick={() => dispatch(setActivePageIdAndIndex(page.pageId))} 
+                    className={"projectPageItem " + ((activePageId === page.pageId) ? "active " : "") + ((draggedOverIndex === index) ? "draggedOver " : "") + (((draggedOverIndex === index + 1) && (index === projectPages.length - 1)) ? "draggedOverBottom " : "") }>
+                        {page.pageName}
+                    </div>
+                    <img src={SettingIcon} style={{width: "10px", position: "absolute",right: "8px", top: "7px", cursor: "pointer"}}/>
                 </div>
             ))}
             </div>
