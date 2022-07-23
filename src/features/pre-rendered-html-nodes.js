@@ -20,6 +20,7 @@ const initialState = {
   projectPages: [],
   projectPageFolders: [],
   projectPageFolderStructure: [{id: "123", type: "folder", children: []}, {id:"abc"}, {id: "bcder"}],
+  activePage: {},
   activePageId: "",
   activePageIndex: 0, 
   projectCollections:[],  

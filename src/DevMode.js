@@ -24,6 +24,7 @@ import StoreUseEffectUpdates from "./components/StoreUseEffectUpdates";
 import ProjectAddPanel from "./components/ProjectAddPanel";
 import AddSectionPopUp from "./components/AddSectionPopUp";
 import AddRichTextElementPopUp from "./components/AddRichTextElementPopUp";
+import PageSettingsPanel from "./components/PageSettingsPanel";
 
 export default function DevMode() {
   
@@ -49,6 +50,7 @@ export default function DevMode() {
         <ProjectNavigator />
         <ProjectAddPanel />
         <ProjectPagesPanel />
+        <PageSettingsPanel />
         <ProjectCollectionsPanel />
         <ProjectImagesPanel />
         <ProjectCollectionsItemsPanel />
