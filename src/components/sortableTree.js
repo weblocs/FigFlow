@@ -16,7 +16,7 @@
           <span className="typeSeparator">
             {node.type}
           </span>
-          <span onClick={() => dispatch(setActiveNodeAndStyle({id: node.id}))}>
+          <span onClick={() => dispatch(setActiveNodeId({id: node.id}))}>
             {/* {node.type} */}
             {(node?.symbolId === undefined) ? ((node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type) : (projectSymbols.find( ({id}) => id === node.symbolId)?.name )}
 

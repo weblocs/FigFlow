@@ -1,7 +1,7 @@
 import React from "react"
 import { useSelector, useDispatch } from 'react-redux'
 
-import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeAndStyle} from "../features/pre-rendered-html-nodes"
+import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeId} from "../features/pre-rendered-html-nodes"
 import ElementSettings from "./ElementSettings";
 import ProjectParentsPathBar from "./ProjectParentsPathBar";
 
@@ -12,7 +12,6 @@ export default function ProjectRenderedDesign() {
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const postRenderedStyles = useSelector((state) => state.designerProjectState.postRenderedStyles)
     const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
-    const editLayoutsMode = useSelector((state) => state.designerProjectState.editLayoutsMode)
 
     const dispatch = useDispatch()
 
@@ -37,7 +36,7 @@ export default function ProjectRenderedDesign() {
                     title={el.title}
                     children={el.children}
                     class={el.class}
-                    onClick={([_id]) => dispatch(setActiveNodeAndStyle({id: _id}))}
+                    onClick={([_id]) => dispatch(setActiveNodeId({id: _id}))}
                 />
                 ))}
 

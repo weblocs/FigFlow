@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveNodeAndStyle, setProjectPopUp} from "../features/pre-rendered-html-nodes"
+import {setActiveNodeId, setProjectPopUp} from "../features/pre-rendered-html-nodes"
 
 export default function AddSectionButton({sectionId}) {
 
@@ -8,7 +8,7 @@ export default function AddSectionButton({sectionId}) {
     const dispatch = useDispatch()
 
     function handleAddSectionButtonClick () {
-        dispatch(setActiveNodeAndStyle({id:sectionId}));
+        dispatch(setActiveNodeId({id:sectionId}));
         dispatch(setProjectPopUp("addSection"));
     }
 

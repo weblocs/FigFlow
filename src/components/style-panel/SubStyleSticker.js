@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveStyleId, setKeyboardNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeAndStyle, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption } from "../../features/pre-rendered-html-nodes";
+import { setActiveStyleId, setKeyboardNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeId, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption } from "../../features/pre-rendered-html-nodes";
 
 export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
@@ -33,7 +33,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
 
     function handleDeleteStyleOption() {
         dispatch(deleteStyleOption({index: index}));
-        dispatch(setActiveNodeAndStyle({id:activeNodeId}));
+        dispatch(setActiveNodeId({id:activeNodeId}));
         setOpenStyleOptionsDropdown(false);
     }
 

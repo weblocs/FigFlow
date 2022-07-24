@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveNodeAndStyle, setProjectPopUp} from "../features/pre-rendered-html-nodes"
+import {setActiveNodeId, setProjectPopUp} from "../features/pre-rendered-html-nodes"
 
 export default function AddRichTextElementButton({elementId, nodes}) {
 
@@ -8,7 +8,7 @@ export default function AddRichTextElementButton({elementId, nodes}) {
     const dispatch = useDispatch()
 
     function handleAddSectionButtonClick (e) {
-        dispatch(setActiveNodeAndStyle({id:elementId}));
+        dispatch(setActiveNodeId({id:elementId}));
         dispatch(setProjectPopUp("addElement"));
     }
 

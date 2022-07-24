@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import {setHoveredNodeId, setActiveNodeAndStyle, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, setDraggedBefore} from "../features/pre-rendered-html-nodes"
+import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, setDraggedBefore} from "../features/pre-rendered-html-nodes"
 
  function NavigationNodeItem ({parents, node, depth}) {
     const dispatch = useDispatch()
@@ -15,7 +15,7 @@ import {setHoveredNodeId, setActiveNodeAndStyle, setDragableCopiedNodes, setDrag
     const nodeName = (node?.symbolId === undefined) ? ((node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type) : (projectSymbols.find( ({id}) => id === node.symbolId)?.name );
 
     function handleClick (id) {
-        dispatch(setActiveNodeAndStyle({id: id}));
+        dispatch(setActiveNodeId({id: id}));
     }
 
     function handleDragStart (id) {

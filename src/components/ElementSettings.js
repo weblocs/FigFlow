@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveNodeAndStyle, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes} from "../features/pre-rendered-html-nodes"
+import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes} from "../features/pre-rendered-html-nodes"
 import RichElementSettingsStyle from "./RichElementSettingsStyle"
 
 export default function ElementSettings() {
@@ -16,7 +16,7 @@ export default function ElementSettings() {
 
     function handleClick(e) {
         e.stopPropagation();
-        dispatch(setActiveNodeAndStyle({id:activeNodeId}));
+        dispatch(setActiveNodeId({id:activeNodeId}));
     }
 
     function handleClickDelete(e) {

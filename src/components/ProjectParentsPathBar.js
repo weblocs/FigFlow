@@ -1,6 +1,6 @@
 import React from "react"
 import { useSelector, useDispatch } from 'react-redux'
-import {setActiveNodeAndStyle} from "../features/pre-rendered-html-nodes"
+import {setActiveNodeId} from "../features/pre-rendered-html-nodes"
 
 export default function ProjectParentsPathBar() {
 
@@ -16,7 +16,7 @@ export default function ProjectParentsPathBar() {
             {activeNodeParentsPath.map((node) => (
                 <div key={node.id}  
                 className="parents-path-item"
-                onClick={() => dispatch(setActiveNodeAndStyle({id:node.id}))}>
+                onClick={() => dispatch(setActiveNodeId({id:node.id}))}>
                     {node.name}
                 </div>
             ))}

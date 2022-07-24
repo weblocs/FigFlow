@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import NavigationNodeFolder from "./NavigationNodeFolder";
 
-import { deleteNodeByIdInPreRenderedHTMLNodes, setActiveNodeAndStyle, setHoveredNodeId, setPreRenderedHTMLNodes } from "../features/pre-rendered-html-nodes";
+import { deleteNodeByIdInPreRenderedHTMLNodes, setActiveNodeId, setHoveredNodeId, setPreRenderedHTMLNodes } from "../features/pre-rendered-html-nodes";
 import AddNodeButton from "./AddNodeButton";
 
 export default function ProjectNavigator() {
