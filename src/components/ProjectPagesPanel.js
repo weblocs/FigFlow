@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ProjectSidebarButton from "./ProjectSidebarButton";
 import CreateNewPageInProject from "./CreateNewPageInProject"
-import {setActiveCmsTemplate, setActiveCollectionTemplateId, setActivePageIdAndIndex, setNodesEditMode, setProjectPages} from "../features/pre-rendered-html-nodes"
+import {setActiveCmsTemplate, setActivePageIdAndIndex, setProjectPages} from "../features/pre-rendered-html-nodes"
 import {arrayMoveImmutable} from 'array-move'
 import SettingIcon from '../img/setting.svg';
 import PanelTabTitle from "./PanelTabTitle";
+import PageListFolder from "./PageListFolder";
 
 export default function ProjectPagesPanel(){
     const dispatch = useDispatch()
@@ -13,7 +13,8 @@ export default function ProjectPagesPanel(){
     const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
     const activePageId = useSelector((state) => state.designerProjectState.activePageId)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-    const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId) 
+    const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId)
+    const projectPageFolderStructure = useSelector((state) => state.designerProjectState.projectPageFolderStructure) 
 
     const onSortEnd = (oldIndex, newIndex) => {
         if(newIndex > oldIndex) {
@@ -43,31 +44,38 @@ export default function ProjectPagesPanel(){
     function handleCollectionItemClick (id) {
         dispatch(setActiveCmsTemplate(id));
     }
-
     
     return(
         <div className={"projectPagesPanel "+ ((activeProjectTab === "Pages") ? "active" : "" )}>
-            <div className="projectTabTitleBox">Pages</div>
 
             <PanelTabTitle text="Pages" />
             <CreateNewPageInProject />
             
             <div className="pagesList">
+
+            <PanelTabTitle text="Structure" />
+
+            {projectPageFolderStructure.map((node) => (
+                <PageListFolder node={node} parents={[]} key={node.id} />
+            ))}
+
+
+            {/* <PanelTabTitle text="Pages" />
             {projectPages.map((page,index) => (
-                <div key={page.pageId} style={{position: "relative"}}>
+                <div key={page.id} style={{position: "relative"}}>
                     <div 
                     draggable="true"
                     onDragStart={() => setDraggedStartIndex(index)}
-                    onDragOver={() => handleDragOver(index,page.pageId)}
+                    onDragOver={() => handleDragOver(index,page.id)}
                     onDrop={handleDrop}
-                    pageid={page.pageId}
-                    onClick={() => dispatch(setActivePageIdAndIndex(page.pageId))} 
-                    className={"projectPageItem " + ((activePageId === page.pageId) ? "active " : "") + ((draggedOverIndex === index) ? "draggedOver " : "") + (((draggedOverIndex === index + 1) && (index === projectPages.length - 1)) ? "draggedOverBottom " : "") }>
-                        {page.pageName}
+                    pageid={page.id}
+                    onClick={() => dispatch(setActivePageIdAndIndex(page.id))} 
+                    className={"projectPageItem " + ((activePageId === page.id) ? "active " : "") + ((draggedOverIndex === index) ? "draggedOver " : "") + (((draggedOverIndex === index + 1) && (index === projectPages.length - 1)) ? "draggedOverBottom " : "") }>
+                        {page.name}
                     </div>
                     <img src={SettingIcon} style={{width: "10px", position: "absolute",right: "8px", top: "7px", cursor: "pointer"}}/>
                 </div>
-            ))}
+            ))} */}
             </div>
             <PanelTabTitle text="Collection pages" />
             {projectCollections.map((collection,index) => (

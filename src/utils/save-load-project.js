@@ -8,7 +8,7 @@ import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "fi
 import { getStorage, ref } from "firebase/storage";
 import { firebaseConfig } from "./firebase-config.js";
 
-import { setProjectCollections, setRichTextElements, setProjectSymbols, setPreRenderedStyles, setProjectPages, setProjectFirebaseId, setProjectSwatches, setprojectLayouts, setactiveLayoutFolder } from '../features/pre-rendered-html-nodes'
+import { setProjectCollections, setRichTextElements, setProjectSymbols, setPreRenderedStyles, setProjectPages, setProjectFirebaseId, setProjectSwatches, setprojectLayouts, setactiveLayoutFolder, setProjectPageFolders, setProjectPageFolderStructure } from '../features/pre-rendered-html-nodes'
 import { setProjectImages } from "../features/project-images"
 
 export default function saveProject(items,preRenderedStyles) {
@@ -66,12 +66,12 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
     dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
     dispatch(setProjectSymbols([...projectData.data()?.symbols]));
     dispatch(setProjectSwatches([...projectData.data()?.swatches]));
-    dispatch(setprojectLayouts([...projectData.data()?.sections]));
-    dispatch(setactiveLayoutFolder(projectData.data()?.sections?.[0]?.id));
+    dispatch(setProjectPageFolders([...projectData.data()?.projectPageFolders]));
+    dispatch(setProjectPageFolderStructure([...projectData.data()?.projectPageFolderStructure]));
     dispatch(setRichTextElements([...projectData.data()?.richTextElements]));
-    if(projectData.data()?.images !== undefined) {
-      dispatch(setProjectImages([...projectData.data()?.images]));
-    }
+    dispatch(setProjectImages([...projectData.data()?.images]));
+    dispatch(setprojectLayouts([...projectData.data()?.sections]));
+    
   }
 }
 

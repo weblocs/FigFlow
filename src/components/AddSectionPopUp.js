@@ -48,7 +48,9 @@ export default function AddSectionPopUp() {
                     <div className="add-section_popup-list">
                         
                         <div className="text-h2">Layouts</div>
-                        <button className={"add-section_popup-button" + ((presentedSectionNodes?.type === "sec") ? " active" : "")} onClick={handleAddSectionClick}>Add layout</button>
+                        <button 
+                        className={"add-section_popup-button" + ((presentedSectionNodes?.type === "sec") ? " active" : "")} 
+                        onClick={handleAddSectionClick}>Add layout</button>
                         
                         {projectLayouts.map((folder) => (
                             <div key={folder.id}>

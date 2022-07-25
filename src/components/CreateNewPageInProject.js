@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useDispatch } from "react-redux";
-import {createNewPageInProject, setKeyboardNavigationOn} from "../features/pre-rendered-html-nodes"
+import {createNewPageFolder, createNewPageInProject, setKeyboardNavigationOn} from "../features/pre-rendered-html-nodes"
 
 export default function CreateNewPageInProject (props) {
     const dispatch = useDispatch();
@@ -17,8 +17,8 @@ export default function CreateNewPageInProject (props) {
 
     async function handleAddNewPageFolder(e) {
         e.preventDefault();
-        if(input !== "") {
-            // dispatch(createNewPageInProject(folderInput));
+        if(folderInput !== "") {
+            dispatch(createNewPageFolder(folderInput));
         }
         setFolderInput("");
     };

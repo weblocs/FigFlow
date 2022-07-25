@@ -8,8 +8,8 @@ export default function PageSettingsPanel() {
     const inputRef = useRef();
 
     useEffect(() => {
-        inputRef.current.value = activePage.pageName;
-    },[activePage?.pageId])
+        inputRef.current.value = activePage.name;
+    },[activePage?.id])
 
     return (
         <div className={"projectPagesPanel "+ ((activeProjectTab === "Pages") ? "active" : "" )}>

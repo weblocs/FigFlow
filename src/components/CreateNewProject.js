@@ -31,8 +31,16 @@ export default function CreateNewProject (props) {
             projectId: projectSlug,
             projectName: input,
             userid: props.userid,
-            pages: [{pageName: "Home", pageId: firstPageInProjectId, preRenderedHTMLNodes:[]}],
-            items: [],
+            pages: [{name: "Home", id: firstPageInProjectId, preRenderedHTMLNodes:[]}],
+            projectPageFolderStructure: [{name: "Home", id: firstPageInProjectId}],
+            projectPageFolders: [],
+            collections: [],
+            setPreRenderedStyles: [],
+            symbols: [],
+            swatches: [],
+            sections: [],
+            richTextElements: [],
+            images: [],
             preRenderedStyles: [],
         }).then((res) => {
             window.location.replace("/design/"+projectSlug);

@@ -1973,6 +1973,9 @@ a {
   width: 8px;
 }
 
+.page-item-arrow.expanded {
+  transform: rotate(-90deg);
+}
 
 
 }
