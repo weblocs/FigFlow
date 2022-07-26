@@ -8,13 +8,19 @@ import JSZip from 'jszip';
 export default function ExportButton() {
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const postRenderedStyles = useSelector((state) => state.designerProjectState.postRenderedStyles)
+    const projectPages = useSelector((state) => state.designerProjectState.projectPages)
     const dispatch = useDispatch()
     
     function handleOnClick() {
-        // var blob = new Blob(["Welcome to Websparrow.org."],
-        //         { type: "application/octet-stream" });
-        // saveAs(blob, "static.zip");
-        let postRenderedHTML = `<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></head><body>`;
+
+        function generatePage(nodes) {
+        let postRenderedHTML = `
+        <html>
+        <head>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="./style.css" rel="stylesheet">
+        </head>
+        <body>`;
 
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
@@ -40,13 +46,20 @@ export default function ExportButton() {
                 postRenderedHTML += `</${type}>`;
             }
         }
-        findNode(preRenderedHTMLNodes);
+        findNode(nodes);
 
         postRenderedHTML += `<style>body{margin:0;}img{display: block;}${postRenderedStyles}</style>`;
         postRenderedHTML += `</body></html>`;
+        return postRenderedHTML;
+        }
 
         var zip = new JSZip();
-        zip.file("project/index.html", postRenderedHTML);
+        zip.file("project/index.html", generatePage(projectPages[0].preRenderedHTMLNodes));
+        projectPages.forEach((page,index) => {
+            let pageNodes = projectPages[0].preRenderedHTMLNodes;
+            let pageName = projectPages[0].name;
+            zip.file("project/index.html", generatePage(pageNodes));
+        });
         // var img = zip.folder("images");
         // img.file("smile.gif", imgData, {base64: true});
         zip.generateAsync({type:"blob"})

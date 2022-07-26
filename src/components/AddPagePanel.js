@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setKeyboardNavigationOn, updateProjectPageProperty } from "../features/pre-rendered-html-nodes"
 
-export default function PageSettingsPanel() {
+export default function AddPagePanel() {
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
     const openedSettingsPage = useSelector((state) => state.designerProjectState.openedSettingsPage)
     const dispatch = useDispatch()
@@ -31,7 +31,7 @@ export default function PageSettingsPanel() {
         + ((activeProjectTab === "Pages" && (openedSettingsPage?.id)) ? "active" : "" )
         }>
             <div className="projectTabTitleBox">
-                Page Settings
+                Add page
                 <div className="projectTabTitleButtonsBox">
                 <div>Close</div>
                 <button>Save</button>

@@ -60,6 +60,11 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
         dispatch(deleteStyleSubOption({optionIndex: index, subOptionId: subOptionId}));
     }
 
+    function handleClearClick(index) {
+        setOpenStyleOptionsDropdown(false);
+        dispatch(clearStyleOption({optionIndex: index}));
+    }
+
     return (
         <div key={id} className={"selected-class" + ((activeStyleId === id) ? " active" : "") + ((styleIsSet) ? "" : " styleIsNotSet")} style={{zIndex: stylesInActiveNode.length + 10 - index }}>
             <div  onClick={() => handleClickInSticker(id,index)} className="text">{name}</div>
@@ -85,7 +90,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
                     <button>Add option</button>
                 </form>
                 <button onClick={() => setEditingOptionsTurnOn(!editingOptionsTurnOn)}>Edit options</button>
-                <button onClick={() => dispatch(clearStyleOption({optionIndex: index}))}>Remove/Clear</button>
+                <button onClick={() => handleClearClick(index)}>Remove/Clear</button>
                 <button onClick={handleDeleteStyleOption}>Delete</button>
             </div>
         </div>

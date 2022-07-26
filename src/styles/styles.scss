@@ -428,6 +428,8 @@ img {
   position: sticky;
   top: 0;
   background: #fff;
+  display: flex;
+  justify-content: space-between;
   z-index: 5;
 }
 
@@ -912,10 +914,20 @@ a {
 
 .projectPagesPanel {
   width: 200px;
+  height: 100%;
   flex-shrink: 0;
   border-right: 1px solid #d3d3d3;
   border-top: 1px solid #d3d3d3;
   display: none;
+}
+
+.projectPagesPanel.wider {
+  width: 280px;
+}
+
+.projectTabTitleButtonsBox {
+  display: flex;
+  grid-column-gap: 8px;
 }
 
 .projectPagesPanel.active {
@@ -1977,5 +1989,21 @@ a {
   transform: rotate(-90deg);
 }
 
+.page-item_settings-icon {
+  width: 10px; 
+  position: absolute;
+  right: 8px; 
+  top: 7px;
+  cursor: pointer;
+  display: none;
+}
+
+.page-item_settings-icon.active {
+  display: block;
+}
+
+.item-wrapper {
+  position: relative;
+}
 
 }

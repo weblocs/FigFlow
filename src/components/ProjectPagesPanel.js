@@ -48,12 +48,18 @@ export default function ProjectPagesPanel(){
     return(
         <div className={"projectPagesPanel "+ ((activeProjectTab === "Pages") ? "active" : "" )}>
 
-            <PanelTabTitle text="Pages" />
+            <div className="projectTabTitleBox">
+                Pages
+                <div className="projectTabTitleButtonsBox">
+                <button>P</button>
+                <button>F</button>
+                </div>
+            </div>
             <CreateNewPageInProject />
             
             <div className="pagesList">
 
-            <PanelTabTitle text="Structure" />
+            <PanelTabTitle text="Static pages" />
 
             {projectPageFolderStructure.map((node) => (
                 <PageListFolder node={node} parents={[]} key={node.id} />
@@ -85,7 +91,7 @@ export default function ProjectPagesPanel(){
                     className={"projectPageItem " + ((activeCollectionTemplateId === collection.id) ? "active " : "")}>
                         {collection.name} Template
                     </div>
-                    <img src={SettingIcon} style={{width: "10px", position: "absolute",right: "8px", top: "7px", cursor: "pointer"}}/>
+                    <img src={SettingIcon} className="page-item_settings-icon" />
                 </div>
             ))}
         </div>

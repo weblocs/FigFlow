@@ -26,7 +26,7 @@ export default function StoreUseEffectUpdates () {
 
     useEffect(() => {
         dispatch(updateActiveStyle());
-    },[activeNodeId, activeProjectResolution, preRenderedStyles, activeStyleId]);
+    },[activeNodeId, activeProjectResolution, preRenderedHTMLNodes, preRenderedStyles, activeStyleId]);
 
     useEffect(() => {
         dispatch(setActiveNodeComputedStyles());
@@ -38,10 +38,5 @@ export default function StoreUseEffectUpdates () {
 
     useEffect(() => {
         dispatch(setActionActiveFalse());
-    },[undoActionActive]);
-
-    useEffect(() => {
-        dispatch(setActivePage());
-    },[activePageId]);
-    
+    },[undoActionActive]);    
 }
