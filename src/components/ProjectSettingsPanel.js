@@ -1,6 +1,7 @@
 import React, { useState } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
 import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
+import CMSFieldNodeConnector from "./CMSFieldNodeConnector";
 import NodeRepeatableSettings from "./NodeRepeatableSettings";
 
 export default function ProjectSettingsPanel() {
@@ -53,8 +54,6 @@ export default function ProjectSettingsPanel() {
         }, 2000)
     }
 
-    
-
     function findNode(nodes, id) {
         for (let i = 0; i < nodes.length; i++) {
 
@@ -95,7 +94,6 @@ export default function ProjectSettingsPanel() {
                     isNodeSymbol = false;
                 }
             }
-
             
 
             if(nodes[i].type === "col") {
@@ -146,6 +144,8 @@ export default function ProjectSettingsPanel() {
 
     return (
         <div className={"projectSettingsPanel "+ ((activeRightSidebarTab === "Settings") ? "active" : "" )}>
+
+            
             
             <div>{activeNode?.type}</div>
             <div>
@@ -247,6 +247,7 @@ export default function ProjectSettingsPanel() {
                 </div>
 
                 <NodeRepeatableSettings />
+                <CMSFieldNodeConnector />
 
         </div>
     )

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {editActiveCollectionItemData} from "../features/pre-rendered-html-nodes"
+import {editActiveCollectionItemData, setCollectionPanelState, setKeyboardNavigationOn} from "../features/pre-rendered-html-nodes"
 import CreateNewCollectionField from "./CreateNewCollectionField"
 import FileUploaderToCollectionField from "./FileUploaderToCollectionField";
 
@@ -11,6 +11,7 @@ export default function ProjectCollectionsFieldsPanel(){
     const activeProjectCollectionId = useSelector((state) => state.designerProjectState.activeProjectCollectionId)
     const activeProjectCollectionIndex = useSelector((state) => state.designerProjectState.activeProjectCollectionIndex)
     const activeProjectCollectionItemIndex = useSelector((state) => state.designerProjectState.activeProjectCollectionItemIndex)
+    const collectionPanelState = useSelector((state) => state.designerProjectState.collectionPanelState)
 
     const storedEditedCollectionItemData = useSelector((state) => state.designerProjectState.projectCollections[activeProjectCollectionIndex]?.items[activeProjectCollectionItemIndex]?.data)
     
@@ -44,12 +45,28 @@ export default function ProjectCollectionsFieldsPanel(){
             setEditedCollectionItemData(editedCollectionItemData => [...editedCollectionItemData, {fieldId: fieldId, fieldValue: fieldValue}])
         }
     }
+
+    function handleFocus() {
+        dispatch(setKeyboardNavigationOn(false));
+    }
+
+    function handleBlur() {
+        dispatch(setKeyboardNavigationOn(true));
+    }
     
-    
+    if(collectionPanelState === "fields") {
     return(
         <div className={"projectCollectionsPanel "+ ((activeProjectTab === "Collections") ? "active" : "" )}>
             
-            <div className="projectTabTitleBox">{activeItem?.name}</div>
+            <div className="projectTabTitleBox">
+                <div>
+                <span 
+                className="panel_back-button"
+                onClick={() => dispatch(setCollectionPanelState("items"))}>B</span>
+                {activeItem?.name}
+                </div>
+            </div>
+
             <CreateNewCollectionField />
 
             <div className="pagesList">
@@ -60,7 +77,10 @@ export default function ProjectCollectionsFieldsPanel(){
                         className={"projectPageItem " + ((activeProjectCollectionId === field.id) ? "active" : "") } 
                         >
                             {field.name} : {(storedEditedCollectionItemData?.find(({ fieldId }) => fieldId === field.id)?.fieldValue) ? (storedEditedCollectionItemData.find(({ fieldId }) => fieldId === field.id)?.fieldValue) : ""}
-                            <input onChange={(e) => handleInputChange(field.id, e.target.value, "text")} />
+                            <input
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            onChange={(e) => handleInputChange(field.id, e.target.value, "text")} />
                         </div>
                     } 
                     {(field.type === "img") &&
@@ -84,4 +104,5 @@ export default function ProjectCollectionsFieldsPanel(){
 
         </div>
     )
+    }
 }

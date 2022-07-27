@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CreateNewPageInProject from "./CreateNewPageInProject"
-import {setActiveCmsTemplate, setActivePageIdAndIndex, setProjectPages} from "../features/pre-rendered-html-nodes"
+import CreateNewItemInput from "./CreateNewItemInput"
+import {setActiveCmsTemplate, setActivePageIdAndIndex, setProjectPages, createNewPageInProject, createNewPageFolder} from "../features/pre-rendered-html-nodes"
 import {arrayMoveImmutable} from 'array-move'
 import SettingIcon from '../img/setting.svg';
 import PanelTabTitle from "./PanelTabTitle";
@@ -25,6 +25,9 @@ export default function ProjectPagesPanel(){
 
     const [draggedStartIndex, setDraggedStartIndex] = useState(-1);
     const [draggedOverIndex, setDraggedOverIndex] = useState(-1);
+
+    const [createPageInputVisible, setCreatePageInputVisible] = useState(false);
+    const [createFolderInputVisible, setCreateFolderInputVisible] = useState(false);
 
     function handleDragOver(index,id) {
         event.preventDefault();
@@ -51,11 +54,20 @@ export default function ProjectPagesPanel(){
             <div className="projectTabTitleBox">
                 Pages
                 <div className="projectTabTitleButtonsBox">
-                <button>P</button>
-                <button>F</button>
+                    <button onClick={() => setCreatePageInputVisible(!createPageInputVisible)}>P</button>
+                    <button onClick={() => setCreateFolderInputVisible(!createFolderInputVisible)}>F</button>
                 </div>
             </div>
-            <CreateNewPageInProject />
+            
+            <CreateNewItemInput 
+            visibility={createPageInputVisible} 
+            create={createNewPageInProject} 
+            placeholder="New page" />
+
+            <CreateNewItemInput 
+            visibility={createFolderInputVisible} 
+            create={createNewPageFolder} 
+            placeholder="New folder" />
             
             <div className="pagesList">
 
@@ -65,23 +77,6 @@ export default function ProjectPagesPanel(){
                 <PageListFolder node={node} parents={[]} key={node.id} />
             ))}
 
-
-            {/* <PanelTabTitle text="Pages" />
-            {projectPages.map((page,index) => (
-                <div key={page.id} style={{position: "relative"}}>
-                    <div 
-                    draggable="true"
-                    onDragStart={() => setDraggedStartIndex(index)}
-                    onDragOver={() => handleDragOver(index,page.id)}
-                    onDrop={handleDrop}
-                    pageid={page.id}
-                    onClick={() => dispatch(setActivePageIdAndIndex(page.id))} 
-                    className={"projectPageItem " + ((activePageId === page.id) ? "active " : "") + ((draggedOverIndex === index) ? "draggedOver " : "") + (((draggedOverIndex === index + 1) && (index === projectPages.length - 1)) ? "draggedOverBottom " : "") }>
-                        {page.name}
-                    </div>
-                    <img src={SettingIcon} style={{width: "10px", position: "absolute",right: "8px", top: "7px", cursor: "pointer"}}/>
-                </div>
-            ))} */}
             </div>
             <PanelTabTitle text="Collection pages" />
             {projectCollections.map((collection,index) => (

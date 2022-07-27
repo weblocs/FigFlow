@@ -17,8 +17,7 @@ export default function CreateNewCollectionItem () {
     return (
         <form onSubmit={handleAddNewCollectionItem} className="new-page-form">
             <input className="" value={input} onChange={(e) => setInput(e.target.value)} placeholder="New item" />
-            <button className="">Add</button>
-            
+            <button className="">Add</button>     
         </form>
     )
 }
