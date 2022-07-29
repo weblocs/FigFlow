@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {editActiveCollectionItemData, setCollectionPanelState, setKeyboardNavigationOn} from "../features/pre-rendered-html-nodes"
 import CreateNewCollectionField from "./CreateNewCollectionField"
 import FileUploaderToCollectionField from "./FileUploaderToCollectionField";
+import Arrow from '../img/arrow-left.svg';
 
 
 export default function ProjectCollectionsFieldsPanel(){
@@ -62,7 +63,9 @@ export default function ProjectCollectionsFieldsPanel(){
                 <div>
                 <span 
                 className="panel_back-button"
-                onClick={() => dispatch(setCollectionPanelState("items"))}>B</span>
+                onClick={() => dispatch(setCollectionPanelState("items"))}>
+                    <img src={Arrow} />
+                </span>
                 {activeItem?.name}
                 </div>
             </div>

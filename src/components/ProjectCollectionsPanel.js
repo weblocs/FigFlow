@@ -18,7 +18,7 @@ export default function ProjectCollectionsPanel(){
         dispatch(setCollectionPanelState("items"));
     }
     
-    if(collectionPanelState === "collections") {
+    // if(collectionPanelState === "collections") {
     return(
         <div className={"projectCollectionsPanel "+ ((activeProjectTab === "Collections") ? "active" : "" )}>
 
@@ -46,5 +46,5 @@ export default function ProjectCollectionsPanel(){
             </div>
         </div>
     )
-    }
+    // }
 }

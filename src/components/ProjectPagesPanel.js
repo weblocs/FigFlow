@@ -73,14 +73,14 @@ export default function ProjectPagesPanel(){
 
             <PanelTabTitle text="Static pages" />
 
-            {projectPageFolderStructure.map((node) => (
-                <PageListFolder node={node} parents={[]} key={node.id} />
+            {projectPageFolderStructure.map((node,index) => (
+                <PageListFolder node={node} parents={[]} key={index} />
             ))}
 
             </div>
             <PanelTabTitle text="Collection pages" />
             {projectCollections.map((collection,index) => (
-                <div key={collection.id} style={{position: "relative"}}>
+                <div key={index} style={{position: "relative"}}>
                     <div 
                     onClick={() => handleCollectionItemClick(collection.id)} 
                     className={"projectPageItem " + ((activeCollectionTemplateId === collection.id) ? "active " : "")}>

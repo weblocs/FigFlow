@@ -1968,10 +1968,31 @@ a {
 }
 
 .panel_back-button {
-  margin-right: 6px;
+  margin-right: 8px;
+  margin-left: -9px;
   cursor: pointer;
-  padding: 2px 6px;
+  padding: 2px 5px;
   background: #eee;
+  transition: background-color .2s;
+}
+
+.panel_back-button:hover {
+  background: #ddd;
+}
+
+.panel_back-button img {
+  width: 8px;
+  height: 8px;
+  display: inline;
+}
+
+.fields-select {
+  display: flex;
+}
+
+.fields-item-arrow {
+  width: 9px;
+  margin-left: 12px;
 }
 
 .user-link {

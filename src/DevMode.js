@@ -16,7 +16,7 @@ import ProjectLayoutsPanel from "./components/ProjectLayoutsPanel"
 import {loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-load-project"
 import loadShortcuts from "./utils/shortcuts"
 import ProjectImagesPanel from "./components/ProjectImagesPanel";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {setProjectMode} from "./features/pre-rendered-html-nodes"
 import ProjectRichTextPanel from "./components/ProjectRichTextPanel";
@@ -28,6 +28,7 @@ import PageSettingsPanel from "./components/PageSettingsPanel";
 
 export default function DevMode() {
   
+  const offlineMode = useSelector((state) => state.designerProjectState.offlineMode)
   const dispatch = useDispatch();
 
   loadProjectFromFirebasePreRenderedNodesAndStyles();
@@ -52,7 +53,7 @@ export default function DevMode() {
         <ProjectPagesPanel />
         <PageSettingsPanel />
         <ProjectCollectionsPanel />
-        <ProjectImagesPanel />
+        {(!offlineMode) && <ProjectImagesPanel />}
         <ProjectCollectionsItemsPanel />
         <ProjectCollectionsFieldsPanel />
         <ProjectSymbolsPanel />

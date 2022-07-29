@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
 import CMSFieldNodeConnector from "./CMSFieldNodeConnector";
 import NodeRepeatableSettings from "./NodeRepeatableSettings";
+import Arrow from '../img/arrow-down.svg';
 
 export default function ProjectSettingsPanel() {
     
@@ -145,8 +146,6 @@ export default function ProjectSettingsPanel() {
     return (
         <div className={"projectSettingsPanel "+ ((activeRightSidebarTab === "Settings") ? "active" : "" )}>
 
-            
-            
             <div>{activeNode?.type}</div>
             <div>
 
@@ -168,8 +167,6 @@ export default function ProjectSettingsPanel() {
             : ("") }
             </div>
 
-            
-            
             <div>
                 {(isNodeInCollection && (activeNodeObject?.type === "h" || activeNodeObject?.type === "p" )) && 
                 <div>
@@ -179,15 +176,21 @@ export default function ProjectSettingsPanel() {
                     <div>Field:  {projectCollections.find(({id}) => id === activeCollectionId).fields
                     .find(({id}) => id === activeNodeObject?.cmsFieldId)?.name}</div>
                 </div>
-                
-                <div>Fields:</div>
-                {projectCollections.find(({id}) => id === activeCollectionId).fields
+
+                <div className="fields-select">
+                    Get text from {projectCollections.find(({id}) => id === activeCollectionId)?.name}
+                    <img src={Arrow} className="fields-item-arrow" />
+                </div>
+
+                {projectCollections.find(({id}) => id === activeCollectionId)?.fields
                     .filter(({type}) => type === "text")
                     .map((field) => (
                     <div onClick={() => handleClickInFieldItem(field.id)} key={field.id}>
                         {field.name}
                     </div>
                 ))}
+                
+                
                 </div>
                 }
 

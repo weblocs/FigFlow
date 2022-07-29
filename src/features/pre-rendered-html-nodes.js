@@ -7,6 +7,8 @@ import { getFirestore, updateDoc, doc } from "firebase/firestore";
 import { firebaseConfig } from "../utils/firebase-config.js";
 
 const initialState = {
+  offlineMode: true,
+  offlineProjectName: "projekt1",
   projectMode: "developer", // developer or creator
   projectLayouts: [],
   nodesEditMode: "page", // page, layout, cmsTemplate, richElement
@@ -15,7 +17,7 @@ const initialState = {
   undoStates: [],
   activeUndoIndex: 1,
   undoActionActive: false,
-  activeProjectTab: "Collections",
+  activeProjectTab: "Pages",
   activeRightSidebarTab: "Style",
   projectPages: [],
   projectPageFolders: [],
@@ -1260,23 +1262,38 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     saveProjectToFirebase: (state) => {
-        async function saveProjectToFirebasePreRenderedNodesAndStyles() {
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-            await updateDoc(doc(db, "projects", state.projectFirebaseId), {
-              pages: state.projectPages,
-              projectPageFolders: state.projectPageFolders,
-              projectPageFolderStructure: state.projectPageFolderStructure,
-              collections: state.projectCollections,
-              preRenderedStyles: state.preRenderedStyles,
-              symbols: state.projectSymbols,
-              swatches: state.projectSwatches,
-              sections: state.projectLayouts,
-              richTextElements: state.projectRichTextElements,
-            });
+
+        if(!state.offlineMode) {
+            async function saveProjectToFirebasePreRenderedNodesAndStyles() {
+                const app = initializeApp(firebaseConfig);
+                const db = getFirestore(app);
+                await updateDoc(doc(db, "projects", state.projectFirebaseId), {
+                pages: state.projectPages,
+                projectPageFolders: state.projectPageFolders,
+                projectPageFolderStructure: state.projectPageFolderStructure,
+                collections: state.projectCollections,
+                preRenderedStyles: state.preRenderedStyles,
+                symbols: state.projectSymbols,
+                swatches: state.projectSwatches,
+                sections: state.projectLayouts,
+                richTextElements: state.projectRichTextElements,
+                });
+            }
+            updateNodesLists(state);
+            saveProjectToFirebasePreRenderedNodesAndStyles(); 
+        } else {
+            let slug = state.offlineProjectName;
+            updateNodesLists(state);
+            localStorage.setItem(slug+"pages", JSON.stringify(state.projectPages));
+            localStorage.setItem(slug+"projectPageFolders", JSON.stringify(state.projectPageFolders));
+            localStorage.setItem(slug+"projectPageFolderStructure", JSON.stringify(state.projectPageFolderStructure));
+            localStorage.setItem(slug+"collections", JSON.stringify(state.projectCollections));
+            localStorage.setItem(slug+"preRenderedStyles", JSON.stringify(state.preRenderedStyles));
+            localStorage.setItem(slug+"symbols", JSON.stringify(state.projectSymbols));
+            localStorage.setItem(slug+"swatches", JSON.stringify(state.projectSwatches));
+            localStorage.setItem(slug+"sections", JSON.stringify(state.projectLayouts));
+            localStorage.setItem(slug+"richTextElements", JSON.stringify(state.projectRichTextElements))
         }
-        updateNodesLists(state);
-        saveProjectToFirebasePreRenderedNodesAndStyles(); 
     },
     setSaveButtonStateText: (state,action) => {
         state.saveButtonStateText = action.payload;

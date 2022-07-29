@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {setActiveCollectionItemIdAndIndex, createNewCollectionItems, setActiveCollectionIdAndIndex, setCollectionPanelState} from "../features/pre-rendered-html-nodes"
 import CreateNewItemInput from "./CreateNewItemInput";
-
+import Arrow from '../img/arrow-left.svg';
 
 export default function ProjectCollectionsItemsPanel(){
     const dispatch = useDispatch()
@@ -20,7 +20,7 @@ export default function ProjectCollectionsItemsPanel(){
         dispatch(setCollectionPanelState("fields"));
     }
     
-    if(collectionPanelState === "items") {
+    if(collectionPanelState === "items" || collectionPanelState === "fields") {
     return (
         <div className={"projectCollectionsPanel "+ ((activeProjectTab === "Collections") ? "active" : "" )}>
             
@@ -28,7 +28,9 @@ export default function ProjectCollectionsItemsPanel(){
                 <div>
                 <span 
                 className="panel_back-button"
-                onClick={() => dispatch(setCollectionPanelState("collections"))}>B</span>
+                onClick={() => dispatch(setCollectionPanelState("collections"))}>
+                    <img src={Arrow} />
+                </span>
                 {activeCollection?.name} Items
                 </div>
                 <div className="projectTabTitleButtonsBox">
