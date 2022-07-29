@@ -18,6 +18,9 @@ function RenderedNode(props) {
   const projectMode = useSelector((state) => state.designerProjectState.projectMode);
   const keyboardNavigationOn = useSelector((state) => state.designerProjectState.keyboardNavigationOn);
   const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId);
+  const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode);
+  const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId);
+  
   const dispatch = useDispatch()
   
 
@@ -76,6 +79,7 @@ function RenderedNode(props) {
   
   const listOfNodeStyles = props.class.map((cl) => (cl.name)).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ");
 
+  // "div"
   
   let elementHTML = (
     <div 
@@ -95,7 +99,9 @@ function RenderedNode(props) {
           key={el.id}
           itemIndex = {props.itemIndex}
           renderedCollectionIndex={props.renderedCollectionIndex}
-          title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
+          collectionItems={props.collectionItems}
+          fieldId={props.fieldId}
+          title={el.title}
           children={el.children}
           onChange={(text, id) => props.onChange(text, id)}
           class={el.class}
@@ -125,7 +131,7 @@ function RenderedNode(props) {
             key={el.id}
             itemIndex = {props.itemIndex}
             renderedCollectionIndex={props.renderedCollectionIndex}
-            title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
+            title={el.title}
             children={el.children}
             onChange={(text, id) => props.onChange(text, id)}
             class={el.class}
@@ -159,7 +165,7 @@ function RenderedNode(props) {
               key={el.id}
               itemIndex = {props.itemIndex}
               renderedCollectionIndex={props.renderedCollectionIndex}
-              title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
+              title={el.title}
               children={el.children}
               onChange={(text, id) => props.onChange(text, id)}
               class={el.class}
@@ -191,7 +197,7 @@ function RenderedNode(props) {
             key={el.id}
             itemIndex = {props.itemIndex}
             renderedCollectionIndex={props.renderedCollectionIndex}
-            title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
+            title={el.title}
             children={el.children}
             onChange={(text, id) => props.onChange(text, id)}
             class={el.class}
@@ -231,7 +237,7 @@ function RenderedNode(props) {
                   itemIndex = {itemIndex}
                   renderedCollectionIndex={renderedCollectionIndex}
                   collectionItems={projectCollections[renderedCollectionIndex]?.items[itemIndex].data}
-                  title={ (el.cmsFieldId) ? projectCollections[renderedCollectionIndex]?.items[itemIndex].data.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue : el.title }
+                  title={el.title}
                   children={el.children}
                   onChange={(text, id) => props.onChange(text, id)}
                   class={el.class}
@@ -243,8 +249,6 @@ function RenderedNode(props) {
       </div>
     );
   }
-
-  let h = `<h x-bind:class="(count > 8) ? 'h1' : ''" x-text="count" x-on:click="count = count + 1"></h>`;
 
   if (props.type === "img") {
     let imageSrc = props.data?.src;
@@ -264,6 +268,17 @@ function RenderedNode(props) {
     );
   }
 
+  let nodeText = props.title;
+  if (props.type === "h" || props.type === "p") {
+    
+    if(props.collectionItems) {
+      nodeText = props.collectionItems.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
+    }
+    if(nodesEditMode === "cmsTemplate") {
+      nodeText = projectCollections.find(({ id }) => id === activeCollectionTemplateId)?.items[0].data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
+    }
+  }
+
   if (props.type === "h") {
     elementHTML = (
       <ContentEditable
@@ -274,7 +289,7 @@ function RenderedNode(props) {
         className={listOfNodeStyles}
         el_id={props.id}
         tagName="h2"
-        html={props.title} // innerHTML of the editable div
+        html={nodeText}
         disabled={!editable} // use true to disable edition
         onChange={(e) => props.onChange(sanitizeHtml(e.target.value , {
           allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
@@ -295,7 +310,7 @@ function RenderedNode(props) {
         onDoubleClick={handleDoubleClick}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
-        html={props.title} // innerHTML of the editable div
+        html={(!props.collectionItems) ? props.title : props.collectionItems.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue} // innerHTML of the editable div
         disabled={!editable} // use true to disable edition
         onChange={(e) => props.onChange(sanitizeHtml(e.target.value , {
           allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
@@ -325,7 +340,7 @@ function RenderedNode(props) {
             key={el.id}
             itemIndex = {props.itemIndex}
             renderedCollectionIndex={props.renderedCollectionIndex}
-            title={(props.collectionItems && el.cmsFieldId) ? props.collectionItems.find(({ fieldId }) => fieldId === el.cmsFieldId)?.fieldValue :  el.title}
+            title={el.title}
             children={el.children}
             onChange={(text, id) => props.onChange(text, id)}
             class={el.class}

@@ -8,7 +8,7 @@ import { firebaseConfig } from "../utils/firebase-config.js";
 
 const initialState = {
   offlineMode: true,
-  offlineProjectName: "projekt1", //
+  offlineProjectName: "projekt1", 
   projectMode: "developer", // developer or creator
   projectLayouts: [],
   nodesEditMode: "page", // page, layout, cmsTemplate, richElement
@@ -17,7 +17,7 @@ const initialState = {
   undoStates: [],
   activeUndoIndex: 1,
   undoActionActive: false,
-  activeProjectTab: "Pages",
+  activeProjectTab: "Navigator",
   activeRightSidebarTab: "Style",
   projectPages: [],
   projectPageFolders: [],
