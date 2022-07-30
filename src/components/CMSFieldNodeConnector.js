@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject } from "../features/pre-rendered-html-nodes";
+import { editSelectedFieldInPreRenderedHTMLNode } from "../features/pre-rendered-html-nodes";
 import Arrow from '../img/arrow-down.svg';
 
 export default function CMSFieldNodeConnector() {
@@ -12,7 +12,6 @@ export default function CMSFieldNodeConnector() {
 
     function handleClickInFieldItem(id) {
         dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsFieldId', value:id}));
-        dispatch(setActiveNodeObject());
     }
 
     return (

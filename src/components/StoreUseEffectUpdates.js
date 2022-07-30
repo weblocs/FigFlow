@@ -24,6 +24,8 @@ export default function StoreUseEffectUpdates () {
         dispatch(setActiveNodeParentsPath());
     },[activeNodeId]);
 
+
+
     useEffect(() => {
         dispatch(updateActiveStyle());
     },[activeNodeId, activeProjectResolution, preRenderedHTMLNodes, preRenderedStyles, activeStyleId]);
@@ -31,6 +33,10 @@ export default function StoreUseEffectUpdates () {
     useEffect(() => {
         dispatch(setActiveNodeComputedStyles());
     },[activeNodeId, preRenderedStyles]);
+
+    useEffect(() => {
+        dispatch(setActiveNodeObject());
+    },[preRenderedHTMLNodes, activeNodeId]);
 
     useEffect(() => {
         dispatch(addUndoState());

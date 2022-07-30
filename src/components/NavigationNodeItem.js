@@ -12,7 +12,9 @@ import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOve
     const draggedOverNodeId = useSelector((state) => state.designerProjectState.draggedOverNodeId)
     const draggedBefore = useSelector((state) => (state.designerProjectState.draggedBefore) ? true : false)
 
-    const nodeName = (node?.symbolId === undefined) ? ((node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type) : (projectSymbols.find( ({id}) => id === node.symbolId)?.name );
+    const nodeName = (node?.symbolId === undefined) ? 
+    ((node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type) : 
+    (projectSymbols.find( ({id}) => id === node.symbolId)?.name );
 
     function handleClick (id) {
         dispatch(setActiveNodeId({id: id}));

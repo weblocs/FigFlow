@@ -100,7 +100,24 @@ img {
   outline: 1px solid blue;
 }
 
+.heading-element-settings_list {
+  display: none;
+  margin-top: 0px;
+  margin-left: -1px;
+  border-right: 0;
+  flex-direction: column;
+  position: absolute;
+  border: 1px solid #cecece;
+}
 
+.heading-element-settings_list .rich-element-settings_button {
+  border-right: 0;
+  border-bottom: 1px solid #cecece;
+}
+
+.heading-element-settings_list.active {
+  display: flex;
+}
 
 .sections-nav-folder-item {
   font-size: 11px;
@@ -171,6 +188,8 @@ img {
   display: flex;
 }
 
+
+
 .rich-element-settings_button {
   min-height: 28px;
   min-width: 28px;
@@ -184,9 +203,19 @@ img {
   transition: background-color .2s;
 }
 
+.rich-element-settings_button.text-button {
+  padding: 0 6px;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
 .rich-element-settings_button.button-centered {
   justify-content: center;
   align-items: center;
+}
+
+.rich-element-settings_button.sub-type-active {
+  background-color: #eee;
 }
 
 .rich-element-settings_button-text {
@@ -1071,11 +1100,16 @@ a {
 }
 
 .centerNavbar {
-  transform: translateX(12%);
+  transform: translateX(20%);
   display: flex;
   border-left: 1px solid #d3d3d3;
 }
 
+.centerNavbar.creator-mode-list {
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+}
 
 
 
@@ -2036,6 +2070,12 @@ a {
 
 .item-wrapper {
   position: relative;
+}
+
+.projectNavigationLeft .projectSidebarButton {
+  border-right: 1px solid #cecece;
+  border-bottom: 0;
+  min-width: 32px;
 }
 
 }

@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {editSelectedFieldInPreRenderedHTMLNode, addSymbolToPreRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
-import CreateNewSymbol from "./CreateNewSymbol";
-
+import {createNewSymbol, addSymbolToPreRenderedHTMLNodesAfterActiveNode, transformNodeIntoSymbol} from "../features/pre-rendered-html-nodes"
+import CreateNewItemInput from "./CreateNewItemInput";
 
 export default function ProjectSymbolsPanel(){
     const dispatch = useDispatch()
     const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
 
+    const [createInputVisible, setCreateInputVisible] = useState(false);
 
     function handleClickInSymbolItem(symbolId) {
         dispatch(addSymbolToPreRenderedHTMLNodesAfterActiveNode({id: symbolId}));
@@ -17,9 +17,17 @@ export default function ProjectSymbolsPanel(){
     return(
         <div className={"projectPagesPanel "+ ((activeProjectTab === "Symbols") ? "active" : "" )}>
             
-            <div className="projectTabTitleBox">Symbols</div>
+            <div className="projectTabTitleBox">
+                Symbols
+                <div className="projectTabTitleButtonsBox">
+                    <button onClick={() => setCreateInputVisible(!createInputVisible)}>N</button>
+                </div>
+            </div>
 
-            <CreateNewSymbol />
+            <CreateNewItemInput 
+            visibility={createInputVisible} 
+            create={transformNodeIntoSymbol} 
+            placeholder="New symbol" />
 
             <div className="pagesList">
 

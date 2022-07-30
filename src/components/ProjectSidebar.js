@@ -12,7 +12,7 @@ export default function ProjectSidebar(){
            <ProjectSidebarButton letter="P" shortcode="P"  tab="Pages" />
            <ProjectSidebarButton letter="C" tab="Collections" />
            <ProjectSidebarButton letter="I" tab="Images" />
-           <ProjectSidebarButton letter="S" tab="Symbols" />
+           <ProjectSidebarButton letter="S" shortcode="S" tab="Symbols" />
            <ProjectSidebarButton letter="L"  shortcode="L" tab="Layouts" />
            <ProjectSidebarButton letter="R" tab="Rich Text" />
         </div> :

@@ -1,6 +1,6 @@
 import React, { useState } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
-import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeObject, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
+import {editSelectedFieldInPreRenderedHTMLNode, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
 import CMSFieldNodeConnector from "./CMSFieldNodeConnector";
 import NodeRepeatableSettings from "./NodeRepeatableSettings";
 import Arrow from '../img/arrow-down.svg';
@@ -130,17 +130,15 @@ export default function ProjectSettingsPanel() {
 
     function handleClickInCollectionItem (collectionId) {
         dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsCollectionId', value:collectionId}));
-        dispatch(setActiveNodeObject());
     }
 
     function handleClickInFieldItem(fieldId) {
         dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsFieldId', value:fieldId}));
-        dispatch(setActiveNodeObject());
     }
 
     function handleClickInSymbolItem(symbolId) {
         dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'symbolId', value:symbolId}))
-        dispatch(setActiveNodeObject());
+        // [TO-DO] update nodes with symbol nodes here
     }
 
     return (

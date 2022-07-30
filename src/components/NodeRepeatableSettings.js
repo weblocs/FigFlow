@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { setActiveNodeObject, setActiveNodeRepeatableState } from "../features/pre-rendered-html-nodes";
+import { setActiveNodeRepeatableState } from "../features/pre-rendered-html-nodes";
 
 export default function NodeRepeatableSettings() {
 
@@ -8,7 +8,6 @@ export default function NodeRepeatableSettings() {
 
     function onInputChange(e) {
         dispatch(setActiveNodeRepeatableState(e.target.checked));
-        dispatch(setActiveNodeObject());
     }
     return (
         <div style={{display:"flex"}}>

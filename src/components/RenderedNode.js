@@ -20,7 +20,7 @@ function RenderedNode(props) {
   const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId);
   const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode);
   const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId);
-  
+  const listOfNodeStyles = useSelector((state) => props.class.map((cl) => (cl.name)).toString().replaceAll(","," ") + " renderedNode " + ((state.designerProjectState.activeNodeId === props.id) ? "active " : " ") + ((state.designerProjectState.hoveredNodeId === props.id) ? "hovered" : " "));
   const dispatch = useDispatch()
   
 
@@ -77,7 +77,7 @@ function RenderedNode(props) {
     dispatch(setHoveredSectionId(props.id));
   }
   
-  const listOfNodeStyles = props.class.map((cl) => (cl.name)).toString().replaceAll(","," ") + " renderedNode " + ((activeNodeId === props.id) ? "active " : " ") + ((hoveredNodeId === props.id) ? "hovered" : " ");
+  
 
   // "div"
   
@@ -288,7 +288,7 @@ function RenderedNode(props) {
         onMouseOut={handleMouseOut}
         className={listOfNodeStyles}
         el_id={props.id}
-        tagName="h2"
+        tagName={(props.data?.subtype !== undefined) ? props.data.subtype : "h1"}
         html={nodeText}
         disabled={!editable} // use true to disable edition
         onChange={(e) => props.onChange(sanitizeHtml(e.target.value , {

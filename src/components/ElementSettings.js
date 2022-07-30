@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes} from "../features/pre-rendered-html-nodes"
+import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, clearActiveNode} from "../features/pre-rendered-html-nodes"
+import ElementHeadingSettings from "./ElementHeadingSettings"
 import RichElementSettingsStyle from "./RichElementSettingsStyle"
 
 export default function ElementSettings() {
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const nodeSubType = useSelector((state) => state.designerProjectState.activeNodeObject?.subtype)
     const isNodeRepeatable = useSelector((state) => (state.designerProjectState.activeNodeObject?.repeatable) ? true : false )
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
 
@@ -22,6 +24,11 @@ export default function ElementSettings() {
     function handleClickDelete(e) {
         e.stopPropagation();
         dispatch(deleteActiveNode());
+    }
+
+    function handleClickClearId(e) {
+        e.stopPropagation();
+        dispatch(clearActiveNode());
     }
 
     function handleMouseOver(e) {
@@ -57,12 +64,20 @@ export default function ElementSettings() {
                         <div className={"rich-element-settings_button button-centered" + ((addRich) ? " active" : "")} onClick={() => dispatch(setProjectPopUp("addElement"))}>✎</div>
                         <div className={"rich-element-settings_button button-centered" + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>❐</div>
                         
+                        <ElementHeadingSettings />
+                        
+
                         {preRenderedStyles.find(({id}) => id === stylesInActiveNode[0]?.id)?.childrens.map((child,index) => {
                                 return (
                                     <RichElementSettingsStyle child={child} index={index} key={index} />
                                 )
                         })}
-                        <div className={"rich-element-settings_button button-centered" + ((deleteNode) ? " active" : "")} onClick={handleClickDelete}>✕</div>
+
+                        <div className={"rich-element-settings_button button-centered" + ((deleteNode) ? " active" : "")} 
+                        onClick={handleClickDelete}>✕</div>
+
+                        <div className="rich-element-settings_button button-centered active" 
+                        onClick={handleClickClearId}>✕</div>
 
                     </div>
                 </div>
