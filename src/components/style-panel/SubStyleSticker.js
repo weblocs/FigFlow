@@ -67,6 +67,10 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
 
     return (
         <div key={id} className={"selected-class" + ((activeStyleId === id) ? " active" : "") + ((styleIsSet) ? "" : " styleIsNotSet")} style={{zIndex: stylesInActiveNode.length + 10 - index }}>
+            
+            <div className={"unit-chooser_closer" + ((openStyleOptionsDropdown) ? " active" : "")}
+                onClick={() => setOpenStyleOptionsDropdown(false)}></div>
+            
             <div  onClick={() => handleClickInSticker(id,index)} className="text">{name}</div>
             <span 
             className="seleted-class-delete-button"

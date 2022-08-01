@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import ContentEditable from "react-contenteditable";
 
 import {useSelector, useDispatch} from "react-redux";
-import {setHoveredNodeId, setKeyboardNavigationOn, setHoveredSectionId} from "../features/pre-rendered-html-nodes"
+import {setHoveredNodeId, setKeyboardNavigationOn, setHoveredSectionId, setEditedSymbolId} from "../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./AddSectionButton";
 import AddRichTextElementButton from "./AddRichTextElementButton";
@@ -13,12 +13,14 @@ function RenderedNode(props) {
   const [editable,setEditable] = useState(false);
 
   const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
+  const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject);
   const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId);
   const projectCollections = useSelector((state) => state.designerProjectState.projectCollections);
   const projectMode = useSelector((state) => state.designerProjectState.projectMode);
   const keyboardNavigationOn = useSelector((state) => state.designerProjectState.keyboardNavigationOn);
   const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId);
   const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode);
+  const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId);
   const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId);
   const listOfNodeStyles = useSelector((state) => props.class.map((cl) => (cl.name)).toString().replaceAll(","," ") + " renderedNode " + ((state.designerProjectState.activeNodeId === props.id) ? "active " : " ") + ((state.designerProjectState.hoveredNodeId === props.id) ? "hovered" : " "));
   const dispatch = useDispatch()
@@ -181,12 +183,22 @@ function RenderedNode(props) {
   if (props.type === "sym") {
     elementHTML = (
       <div 
+      id={props.id}
       el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       className={listOfNodeStyles}
       >
+        <div 
+        onDoubleClick={() => (editedSymbolId.symbolId === "") && dispatch(setEditedSymbolId({symbolId:props.data.symbolId, elementId: props.id}))} 
+        className={"symbol-box-wrapper" + 
+        ((editedSymbolId.symbolId === props.data.symbolId &&
+          editedSymbolId.elementId === props.id) ? " active" : "")}
+        style={{position: "relative", height: "0"}}>
+          <div symbol_id={props.id} className="symbol-wrapper" style={{width: "100%", height: "40px"}}></div>
+        </div>
+
         {props.children.map((el) => (
           <RenderedNode
             data={el}

@@ -31,11 +31,21 @@ export default function ProjectSymbolsPanel(){
 
             <div className="pagesList">
 
-            {projectSymbols.map((symbol) => (
-                <div onClick={() => handleClickInSymbolItem(symbol.id)} className="projectPageItem" key={symbol.id}>
-                    {symbol.name}
-                </div>
-            ))}
+            {projectSymbols.map((symbol) => {
+                const [editingIsOn, setEditingIsOn] = useState(false);
+                return (
+                    <div style={{position: "relative"}} key={symbol.id}>
+                    <div onClick={() => handleClickInSymbolItem(symbol.id)} className="projectPageItem">
+                        {(!editingIsOn) ? 
+                        symbol.name :
+                        <input defaultValue={symbol.name} />
+                        }
+                    </div>
+                    <div className={"delete-section-item edit-icon"} onClick={() => setEditingIsOn(!editingIsOn)}>e</div>
+                    <div className={"delete-section-item"}>x</div>
+                    </div>
+                )
+            })}
             </div>
         </div>
     )

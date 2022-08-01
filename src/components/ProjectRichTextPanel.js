@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CreateNewRichTextElements from "./CreateNewRichTextElements"
-import { setRichTextElements} from "../features/pre-rendered-html-nodes"
+import { setRichTextElements, createNewRichTextElement, addSymbolToPreRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
 import DragKnob from '../img/drag.svg';
 import {arrayMoveImmutable} from 'array-move'
+import CreateNewItemInput from "./CreateNewItemInput";
 
 export default function ProjectRichTextPanel(){
     const dispatch = useDispatch()
@@ -19,6 +20,12 @@ export default function ProjectRichTextPanel(){
 
     const [draggedStartIndex, setDraggedStartIndex] = useState(-1);
     const [draggedOverIndex, setDraggedOverIndex] = useState(-1);
+
+    const [createInputVisible, setCreateInputVisible] = useState(false);
+
+    function handleClickInSymbolItem(symbolId) {
+        dispatch(addSymbolToPreRenderedHTMLNodesAfterActiveNode({id: symbolId}));
+    }
 
     function handleDragOver(index,id) {
         event.preventDefault();
@@ -37,9 +44,17 @@ export default function ProjectRichTextPanel(){
     
     return(
         <div className={"projectPagesPanel "+ ((activeProjectTab === "Rich Text") ? "active" : "" )}>
-            <div className="projectTabTitleBox">Rich Text Elements</div>
+            <div className="projectTabTitleBox">
+                Rich Elements
+                <div className="projectTabTitleButtonsBox">
+                    <button onClick={() => setCreateInputVisible(!createInputVisible)}>N</button>
+                </div>
+            </div>
 
-            <CreateNewRichTextElements />
+            <CreateNewItemInput 
+            visibility={createInputVisible} 
+            create={createNewRichTextElement} 
+            placeholder="New element" />
 
             <div className="pagesList">
                 {projectRichTextElements.map((element,index) => {
@@ -52,7 +67,7 @@ export default function ProjectRichTextPanel(){
                     richid={element.id}
                     className={"projectPageItem " + ((draggedOverIndex === index) ? "draggedOver" : "") + (((draggedOverIndex === index + 1) && (index === projectRichTextElements.length - 1)) ? "draggedOverBottom" : "") } key={element.id}>
                         {element.name}
-                        <img src={DragKnob} style={{width: "10px", position: "absolute",right: "8px", top: "7px", cursor: "grab"}}/>
+                        {/* <img src={DragKnob} style={{width: "10px", position: "absolute",right: "8px", top: "7px", cursor: "grab"}}/> */}
                         {/* <div className={"delete-section-item"}>x</div> */}
                     </div>
                 )})}

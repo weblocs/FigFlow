@@ -117,9 +117,10 @@ export default function SpaceStyleInput (props) {
         }
     },[isInputActive]);
 
-
     return (
             <div className={"style-edit-input simple" + ((doesStylePropertyBelongToActiveClass) ? " active" : "")}>
+
+                
                 <div className="style-edit-value">
                     <span onClick={() => setIsInputActive(true)} 
                     className={"style-edit-text" + ((isInputActive) ? " active" : "")}>
@@ -137,7 +138,12 @@ export default function SpaceStyleInput (props) {
                     {editedStyleUnit}
                 </div>
 
-                <div className={"style-edit-unit-list" + ((unitEditorOpened) ? " active" : "")}>
+                
+                <div className={"unit-chooser_closer" + ((unitEditorOpened) ? " active" : "")}
+                onClick={() => setUnitEditorOpened(false)}></div>
+                
+                <div 
+                className={"style-edit-unit-list" + ((unitEditorOpened) ? " active" : "")}>
                     <div className={"style-edit-unit-item" + ((editedStyleUnit === "px") ? " active" : "")}
                     onClick={() => handleUnitItemClick("px")}>
                         px

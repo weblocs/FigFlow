@@ -35,6 +35,10 @@ export default function RichElementSettingsStyle({child, index}) {
 
     return (
         <div className={"rich-element-settings_button active" + isStyleSet} >
+
+            <div className={"unit-chooser_closer" + ((isListOpened) ? " active" : "")}
+                onClick={() => setIsListOpened(false)}></div>
+
             <div className="rich-element-settings_button-text" onClick={() => setIsListOpened(!isListOpened)}>{childName}</div>
             <div className={"rich-element-settings_options_list" + ((isListOpened) ? " active" : "")}>
                 {child.options.map((option) => (

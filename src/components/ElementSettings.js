@@ -2,11 +2,20 @@ import { useDispatch, useSelector } from "react-redux"
 import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, clearActiveNode} from "../features/pre-rendered-html-nodes"
 import ElementHeadingSettings from "./ElementHeadingSettings"
 import RichElementSettingsStyle from "./RichElementSettingsStyle"
+import Delete from '../img/delete.svg';
 
 export default function ElementSettings() {
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const nodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
+    const nodeType = useSelector((state) => state.designerProjectState.activeNodeObject?.type)
     const nodeSubType = useSelector((state) => state.designerProjectState.activeNodeObject?.subtype)
+    const activeSymbolName = useSelector((state) => {
+        const activeSymbolId = state.designerProjectState.activeNodeObject?.symbolId;
+        if(activeSymbolId !== undefined) {
+           return state.designerProjectState.projectSymbols.find(({id}) => id === activeSymbolId).name;
+        } 
+    })
     const isNodeRepeatable = useSelector((state) => (state.designerProjectState.activeNodeObject?.repeatable) ? true : false )
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
 
@@ -59,6 +68,13 @@ export default function ElementSettings() {
             style={{ transform: `translate(${activeNodePositionX}px,${activeNodePositionY}px)`}}>
                 <div className="rich-element-settings" onClick={handleClick} onMouseOver={handleMouseOver}>
                     <div className="rich-element-settings_flex">
+
+                        <div className={"rich-element-settings_button button-centered text-button" + ((nodeType === "sym") ? " active" : "")}>
+                            Symbol: {activeSymbolName}
+                        </div>
+
+                        {(nodeType !== "sym") ? <>
+
                         <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:true}))}>↑</div>
                         <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:false}))}>↓</div>
                         <div className={"rich-element-settings_button button-centered" + ((addRich) ? " active" : "")} onClick={() => dispatch(setProjectPopUp("addElement"))}>✎</div>
@@ -74,10 +90,19 @@ export default function ElementSettings() {
                         })}
 
                         <div className={"rich-element-settings_button button-centered" + ((deleteNode) ? " active" : "")} 
-                        onClick={handleClickDelete}>✕</div>
+                        onClick={handleClickDelete}>
+                            <img src={Delete} style={{width: "14px"}} />
+                        </div>
 
                         <div className="rich-element-settings_button button-centered active" 
                         onClick={handleClickClearId}>✕</div>
+
+                        </> :
+                        <>
+                        <div className="rich-element-settings_button button-centered active">✎</div>
+                        
+                        </>
+                        }
 
                     </div>
                 </div>

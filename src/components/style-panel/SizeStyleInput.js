@@ -118,6 +118,9 @@ export default function SpaceStyleInput (props) {
                     {editedStyleUnit}
                 </div>
 
+                <div className={"unit-chooser_closer" + ((unitEditorOpened) ? " active" : "")}
+                onClick={() => setUnitEditorOpened(false)}></div>
+
                 <div className={"style-edit-unit-list" + ((unitEditorOpened) ? " active" : "")}>
                     <div className={"style-edit-unit-item" + ((editedStyleUnit === "px") ? " active" : "")}
                     onClick={() => handleUnitItemClick("px")}>

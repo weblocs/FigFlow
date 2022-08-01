@@ -149,6 +149,9 @@ export default function ColorPicker (props) {
     return (
         <div className="size-style-box">
 
+            <div className={"unit-chooser_closer" + ((swatchesEditorOpened) ? " active" : "")}
+                onClick={() => setSwatchesEditorOpened(false)}></div>
+
             <ProprtyInputLabel text="Color" property={props.style} />
 
             <div className="input color-picker">

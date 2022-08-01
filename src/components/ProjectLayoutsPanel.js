@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateNewSection from "./CreateNewSection";
 import CreateNewSectionFolder from "./CreateNewSectionFolder";
 
-import {setactiveLayoutFolder, deleteSection, setActiveLayout} from "../features/pre-rendered-html-nodes"
+import {setactiveLayoutFolder, deleteSection, setActiveLayout, createNewSection, createNewSectionFolder} from "../features/pre-rendered-html-nodes"
+import CreateNewItemInput from "./CreateNewItemInput";
 
 export default function ProjectLayoutsPanel () {
     const dispatch = useDispatch()
@@ -13,17 +14,33 @@ export default function ProjectLayoutsPanel () {
     const activeLayoutId = useSelector((state) => state.designerProjectState.activeLayoutId)
 
 
+    const [createPageInputVisible, setCreatePageInputVisible] = useState(false);
+    const [createFolderInputVisible, setCreateFolderInputVisible] = useState(false);
+
     function handleClickInSymbolItem(id, folderId) {
         dispatch(setActiveLayout({id:id, folderId: folderId}));
     }
     
     return(
         <div className={"projectPagesPanel "+ ((activeProjectTab === "Layouts") ? "active" : "" )}>
-            
-            <div className="projectTabTitleBox">Layouts</div>
 
-            <CreateNewSectionFolder />
-            <CreateNewSection />
+            <div className="projectTabTitleBox">
+                Layouts
+                <div className="projectTabTitleButtonsBox">
+                    <button onClick={() => setCreatePageInputVisible(!createPageInputVisible)}>L</button>
+                    <button onClick={() => setCreateFolderInputVisible(!createFolderInputVisible)}>F</button>
+                </div>
+            </div>
+            
+            <CreateNewItemInput 
+            visibility={createPageInputVisible} 
+            create={createNewSection} 
+            placeholder="New layout" />
+
+            <CreateNewItemInput 
+            visibility={createFolderInputVisible} 
+            create={createNewSectionFolder} 
+            placeholder="New folder" />
 
             <div className="pagesList">
             
@@ -37,11 +54,13 @@ export default function ProjectLayoutsPanel () {
                     </div>
                     {folder.items.map((section) => {
                         return (
-                        <div 
-                        className={"projectPageItem" + ((activeLayoutId === section.id) ? " active" : "" )} 
-                        onClick={() => handleClickInSymbolItem(section.id, folder.id)} 
+                        <div style={{position:"relative"}}
                         key={section.id}>
-                            {section.name}
+                            <div 
+                            className={"projectPageItem" + ((activeLayoutId === section.id) ? " active" : "" )} 
+                            onClick={() => handleClickInSymbolItem(section.id, folder.id)}>
+                                {section.name}
+                            </div>
                             <div className={"delete-section-item"} onClick={() => dispatch(deleteSection({id: section.id}))}>x</div>
                         </div>
                     )})}

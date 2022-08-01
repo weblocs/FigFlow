@@ -81,6 +81,9 @@ export default function StylePanelHeader () {
 
     return (
         <div className="style-panel-box sticky">
+            <div className={"unit-chooser_closer" + ((isStyleEditorOpen) ? " active" : "")}
+                onClick={() => setIsStyleEditorOpen(false)}></div>
+
             <div className="style-panel-title-box">
                 <div className="text">{activeStyleName} styles</div>
             </div>
