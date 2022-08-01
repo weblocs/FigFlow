@@ -40,6 +40,7 @@ export default function DevMode() {
       <AddSectionPopUp />
       <AddRichTextElementPopUp />
       
+      
       <div className="user-panel">
         <ProjectTopNavbar />
       </div>
