@@ -2,7 +2,7 @@ import useEventListener from '@use-it/event-listener'
 import { useDispatch } from 'react-redux';
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 
-import {arrowActiveNodeNavigation, setCopiedNodes, pasteCopiedNodes, deleteActiveNode, movePreRenderedNode, undoProject, reUndoProject} from "../features/pre-rendered-html-nodes"
+import {arrowActiveNodeNavigation, setCopiedNodes, pasteCopiedNodes, deleteActiveNode, movePreRenderedNode, undoProject, reUndoProject, deleteActiveNodeShortcut} from "../features/pre-rendered-html-nodes"
 
 let keys = [];
 
@@ -106,7 +106,7 @@ export default function loadShortcuts() {
     const { deleteShortcut } = useKeyboardShortcut(
       ["Backspace"],
       shortcutKeys => {
-        dispatch(deleteActiveNode())
+        dispatch(deleteActiveNodeShortcut())
       },
       { 
         overrideSystem: false,

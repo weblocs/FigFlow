@@ -24,6 +24,7 @@ export default function ProjectTopNavbar() {
           <ProjectSidebarButton letter="C" tab="Collections" />
           </>}
           <ModeChanger />
+          
         </div>
 
         <div className={"centerNavbar" + ((projectMode === "creator") ? " creator-mode-list" : "")}>

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, clearActiveNode} from "../features/pre-rendered-html-nodes"
+import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, clearActiveNode, setEditedSymbolId} from "../features/pre-rendered-html-nodes"
 import ElementHeadingSettings from "./ElementHeadingSettings"
 import RichElementSettingsStyle from "./RichElementSettingsStyle"
 import Delete from '../img/delete.svg';
@@ -7,6 +7,7 @@ import Delete from '../img/delete.svg';
 export default function ElementSettings() {
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId)
     const nodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
     const nodeType = useSelector((state) => state.designerProjectState.activeNodeObject?.type)
     const nodeSubType = useSelector((state) => state.designerProjectState.activeNodeObject?.subtype)
@@ -99,7 +100,9 @@ export default function ElementSettings() {
 
                         </> :
                         <>
-                        <div className="rich-element-settings_button button-centered active">✎</div>
+                        <div className="rich-element-settings_button button-centered active"
+                        onClick={() => (editedSymbolId.symbolId === "") && dispatch(setEditedSymbolId({symbolId:nodeObject.symbolId, elementId: nodeObject.id}))}
+                        >✎</div>
                         
                         </>
                         }

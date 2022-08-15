@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { saveProjectToFirebase, setProjectMode } from "../features/pre-rendered-html-nodes";
 
-export default function ProjectTopNavbar() {
+export default function ModeChanger() {
     const projectMode = useSelector((state) => state.designerProjectState.projectMode);
     const projectModeLink = useSelector((state) => {
         if(state.designerProjectState.projectMode === "developer") {

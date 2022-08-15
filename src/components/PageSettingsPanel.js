@@ -1,16 +1,24 @@
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setKeyboardNavigationOn, updateProjectPageProperty } from "../features/pre-rendered-html-nodes"
+import { setKeyboardNavigationOn, updateProjectPageProperty, setOpenedSettingsPage, clearOpenedSettingPage } from "../features/pre-rendered-html-nodes"
 
 export default function PageSettingsPanel() {
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
     const openedSettingsPage = useSelector((state) => state.designerProjectState.openedSettingsPage)
     const dispatch = useDispatch()
     const inputRef = useRef();
+    const inputSlugRef = useRef();
+    const inputMetaNameRef = useRef();
+
+    
+
+    console.log(openedSettingsPage);
 
     function handleSubmit() {
         event.preventDefault();
         dispatch(updateProjectPageProperty({property: "name", value: inputRef.current.value}));
+        dispatch(updateProjectPageProperty({property: "slug", value: inputSlugRef.current.value}));
+        dispatch(clearOpenedSettingPage());
     }
     
     function handleFocus() {
@@ -23,6 +31,12 @@ export default function PageSettingsPanel() {
 
     useEffect(() => {
         inputRef.current.value = openedSettingsPage.name;
+        
+        inputSlugRef.current.value = openedSettingsPage.slug;
+
+        if(openedSettingsPage.slug === undefined) {
+            inputSlugRef.current.value = "";
+        }
     },[openedSettingsPage]);
 
     return (
@@ -33,15 +47,58 @@ export default function PageSettingsPanel() {
             <div className="projectTabTitleBox">
                 Page Settings
                 <div className="projectTabTitleButtonsBox">
-                <div>Close</div>
-                <button>Save</button>
+                <div className="settings-close-button" onClick={() => dispatch(setOpenedSettingsPage({}))}>Close</div>
+                <button className="settings-button">Save</button>
                 </div>
             </div>
-            <label>Page Name</label>
-            
-                <input ref={inputRef}
+            <div className="page-settings-wrapper">
+                
+                <label className="settings-label">Page Name</label>
+                <input 
+                className="settings-input"
+                ref={inputRef}
                 onFocus={handleFocus} 
                 onBlur={handleBlur}  />
+
+                <label className="settings-label">Page Slug</label>
+                <input
+                className="settings-input"
+                style={{marginBottom: "0"}}
+                ref={inputSlugRef}
+                onFocus={handleFocus} 
+                onBlur={handleBlur}  />
+                <span style={{fontSize: "10px", lineHeight: "10px", marginTop: "4px", marginBottom: "12px", padding: "4px 8px", border: "1px solid #cecece"}}>figflow.com/{openedSettingsPage.slug}</span>
+
+                <label className="settings-label">Title Tag</label>
+                <input 
+                className="settings-input"
+                ref={inputMetaNameRef}
+                onFocus={handleFocus} 
+                onBlur={handleBlur}  />
+
+                <label className="settings-label">Meta Description</label>
+                <input 
+                className="settings-input"
+                ref={inputMetaNameRef}
+                onFocus={handleFocus} 
+                onBlur={handleBlur}  />
+
+                <label className="settings-label">Custom Code Head</label>
+                <input 
+                className="settings-input"
+                ref={inputMetaNameRef}
+                onFocus={handleFocus} 
+                onBlur={handleBlur}  />
+
+                <label className="settings-label">Custom Code Body</label>
+                <input 
+                className="settings-input"
+                ref={inputMetaNameRef}
+                onFocus={handleFocus} 
+                onBlur={handleBlur}  />
+
+            </div>
+                
                 
         </div>
         </form>

@@ -25,6 +25,7 @@ import ProjectAddPanel from "./components/ProjectAddPanel";
 import AddSectionPopUp from "./components/AddSectionPopUp";
 import AddRichTextElementPopUp from "./components/AddRichTextElementPopUp";
 import PageSettingsPanel from "./components/PageSettingsPanel";
+import UpdateSymbolButton from "./components/UpdateSymbolButton";
 
 export default function DevMode() {
   
@@ -38,11 +39,12 @@ export default function DevMode() {
     <>
       <StoreUseEffectUpdates />
       <AddSectionPopUp />
-      <AddRichTextElementPopUp />
       
       
       <div className="user-panel">
         <ProjectTopNavbar />
+        <AddRichTextElementPopUp />
+        <UpdateSymbolButton />
       </div>
       
       <div className="projectWrapper">

@@ -424,7 +424,7 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 99;
+  z-index: 10002;
 }
 
 .add-section_popup-box.active {
@@ -507,6 +507,8 @@ img {
   display: flex;
   justify-content: space-between;
   z-index: 5;
+
+  align-items: center
 }
 
 .pagesList {
@@ -1004,6 +1006,7 @@ a {
 .projectTabTitleButtonsBox {
   display: flex;
   grid-column-gap: 8px;
+  align-items: center;
 }
 
 .projectPagesPanel.active {
@@ -2116,11 +2119,16 @@ transform: translateX(-50%);
 
 .page-item_settings-icon {
   width: 10px; 
+  padding: 4px;
   position: absolute;
-  right: 8px; 
-  top: 7px;
+  right: 4px; 
+  top: 3px;
   cursor: pointer;
   display: none;
+}
+
+.page-item_settings-icon:hover {
+  opacity: .7;
 }
 
 .page-item_settings-icon.active {
@@ -2135,6 +2143,67 @@ transform: translateX(-50%);
   border-right: 1px solid #cecece;
   border-bottom: 0;
   min-width: 32px;
+}
+
+.update-symbol-button {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10001;
+  padding: 16px 32px;
+  background: #fff;
+  border: 1px solid #cecece;
+  cursor: pointer;
+}
+
+.update-symbol-button:hover {
+  background-color: #fbfbfb;
+}
+
+.page-settings-wrapper {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-label {
+  font-size: 11px;
+  line-height: 11px;
+  margin-bottom: 6px;
+}
+
+.settings-input {
+  display: block;
+  border: 1px solid #929292bb;
+  height: 26px;
+  padding-left: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.settings-close-button {
+  font-weight: 300;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.settings-close-button:hover {
+  opacity: .7;
+}
+
+.settings-button {
+  text-transform: none;
+  font-weight: 500;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 5px 8px;
+  background-color: #eee;
+  border: 1px solid #cecece;
+}
+
+.settings-button:hover {
+  background-color: #ebebeb;
 }
 
 }

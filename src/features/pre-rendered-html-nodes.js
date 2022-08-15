@@ -182,7 +182,6 @@ export const preRenderedNodesSlice = createSlice({
     setEditedSymbolId: (state, action) => {
         state.editedSymbolId.symbolId = action.payload.symbolId;
         state.editedSymbolId.elementId = action.payload.elementId;
-        console.log(current(state.editedSymbolId));
     },
 
     setSymbolsHeights: (state) => {
@@ -208,6 +207,9 @@ export const preRenderedNodesSlice = createSlice({
         state.projectPages.find(({id}) => id === state.openedSettingsPage.id)[action.payload.property] = action.payload.value;
         let [settingsOpenedPage, settingsOpenedPageSiblingArray, settingsOpenedPageIndex] = findActiveNodeSiblingArrayAndIndex(state.projectPageFolderStructure,state.openedSettingsPage.id);
         settingsOpenedPage[action.payload.property] = action.payload.value;
+    },
+
+    clearOpenedSettingPage : (state) => {
         state.openedSettingsPage = {};
     },
 
@@ -246,7 +248,6 @@ export const preRenderedNodesSlice = createSlice({
         let activeFolder = findActiveNode(state.projectPageFolderStructure,folderId);
         let expandedState = ((activeFolder?.expanded) ? true : false);
         activeFolder.expanded = !expandedState;
-        console.log(current(state.projectPageFolderStructure));
     },
 
     setNodesEditMode: (state, action) => {
@@ -598,12 +599,26 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     deleteActiveNode: (state) => {
+        let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
+        if(activeNodeSiblingArray[activeNodeIndex+1]) {
+            state.activeNodeId = activeNodeSiblingArray[activeNodeIndex+1].id
+        } else if(activeNodeSiblingArray[activeNodeIndex-1]) {
+            state.activeNodeId = activeNodeSiblingArray[activeNodeIndex-1].id
+        } else {
+            state.activeNodeId = "";
+        }
+        activeNodeSiblingArray = activeNodeSiblingArray.splice(activeNodeIndex,1);
+    },
+
+    deleteActiveNodeShortcut: (state) => {
         if(state.keyboardNavigationOn && state.projectMode === "developer") {
             let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
             if(activeNodeSiblingArray[activeNodeIndex+1]) {
                 state.activeNodeId = activeNodeSiblingArray[activeNodeIndex+1].id
             } else if(activeNodeSiblingArray[activeNodeIndex-1]) {
                 state.activeNodeId = activeNodeSiblingArray[activeNodeIndex-1].id
+            } else {
+                state.activeNodeId = "";
             }
             activeNodeSiblingArray = activeNodeSiblingArray.splice(activeNodeIndex,1);
         }
@@ -1497,7 +1512,37 @@ export const preRenderedNodesSlice = createSlice({
         
     },
 
-    
+    updateEditedSymbol: (state, action) => {
+        const symbolId = state.editedSymbolId.symbolId;
+        const elementId = state.editedSymbolId.elementId;
+        state.activeNodeId = elementId;
+        state.editedSymbolId = {symbolId: "", elementId: ""};
+
+        let updatedSymbolId = symbolId;
+        let updatedSymbolNodes = findActiveNode(state.preRenderedHTMLNodes, elementId);
+
+        state.projectSymbols.find(({id}) => id === updatedSymbolId).preRenderedHTMLNodes = updatedSymbolNodes;
+
+
+        function updateNodes(nodes) {
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].symbolId === updatedSymbolId) {
+                    let editedNodesArray = JSON.parse(JSON.stringify(updatedSymbolNodes));
+                    // console.log(editedNodesArray);
+                    regenerateIdsInNodes(editedNodesArray);
+                    nodes[i] = editedNodesArray;
+                }
+                if (nodes[i].children) {
+                    updateNodes(nodes[i].children);
+                }
+            }
+        }
+        state.activeNodeId = "";
+        updateNodesListsBeforeGlobalChange(state, updateNodes);
+
+
+    },
+
 
     // add dispatch to the action using activeNodeObject
 
@@ -1619,5 +1664,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setEditedSymbolId, setSymbolsHeights, transformNodeIntoSymbol, clearActiveNode, setCollectionPanelState, updateProjectPageProperty, setOpenedSettingsPage, setDraggedPage, setDragOverPage, moveDraggedPaged, toggleFolderExpandedState, setProjectPageFolders, setProjectPageFolderStructure, createNewPageFolder, setNodesEditMode, setActiveCmsTemplate, setActiveCollectionTemplateId, setActiveLayoutId, setActiveLayout, setDraggedBefore, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, undoProject, reUndoProject, setActionActiveFalse, addUndoState, renameMainStyle, clearStyleOption, deleteStyleSubOption, setActiveNodeRepeatableState, deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setactiveLayoutFolder, addSectionToPreRenderedHTMLNodes, setprojectLayouts, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setKeyboardNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeId, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {clearOpenedSettingPage, deleteActiveNodeShortcut, updateEditedSymbol, setEditedSymbolId, setSymbolsHeights, transformNodeIntoSymbol, clearActiveNode, setCollectionPanelState, updateProjectPageProperty, setOpenedSettingsPage, setDraggedPage, setDragOverPage, moveDraggedPaged, toggleFolderExpandedState, setProjectPageFolders, setProjectPageFolderStructure, createNewPageFolder, setNodesEditMode, setActiveCmsTemplate, setActiveCollectionTemplateId, setActiveLayoutId, setActiveLayout, setDraggedBefore, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, undoProject, reUndoProject, setActionActiveFalse, addUndoState, renameMainStyle, clearStyleOption, deleteStyleSubOption, setActiveNodeRepeatableState, deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setactiveLayoutFolder, addSectionToPreRenderedHTMLNodes, setprojectLayouts, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setKeyboardNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeId, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

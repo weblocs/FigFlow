@@ -66,7 +66,7 @@ import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOve
             onMouseOver={() => dispatch(setHoveredNodeId(node.id))}
             onMouseOut={() => dispatch(setHoveredNodeId(""))}
             onClick={() => handleClick(node.id)}
-            onDoubleClick={() => handleDoubleClick(node.id)}
+            // onDoubleClick={() => handleDoubleClick(node.id)} // openSymbol here
             draggable="true"
             onDragStart={() => handleDragStart(node.id)}
             onDragOver={() => handleDragOver(node.id)}
