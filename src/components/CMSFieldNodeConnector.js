@@ -10,8 +10,19 @@ export default function CMSFieldNodeConnector() {
     const activeCollectionTemplateId =  useSelector((state) => state.designerProjectState.activeCollectionTemplateId)
     const isInTemplateEditingPage = useSelector((state) => (state.designerProjectState.nodesEditMode === "cmsTemplate"))
     const activeCmsFieldId = useSelector((state) => state.designerProjectState.activeNodeObject?.cmsFieldId)
-    const isNodeCmsEditable = useSelector((state) => (activeCmsFieldId !== undefined && activeCmsFieldId !== ""));
+    const isNodeCmsEditable = useSelector((state) => (state.designerProjectState.activeNodeObject?.cmsFieldId !== undefined && state.designerProjectState.activeNodeObject?.cmsFieldId !== ""));
     const activeCollectionItems = useSelector((state) => state.designerProjectState.projectCollections?.find(({id}) => id === state.designerProjectState.activeCollectionTemplateId)?.items);
+    
+    const isNodeInCollection = useSelector((state) => {
+        const parentPath = state.designerProjectState.activeNodeParentsPath;
+        for(let i = 0; i < parentPath.length; i++) {
+            if(parentPath[i]?.type === "col") {
+                return true
+            }
+        }
+        return false
+    })
+    
     const dispatch = useDispatch()
 
     function handleClickInFieldItem(id) {
@@ -28,9 +39,7 @@ export default function CMSFieldNodeConnector() {
 
     return (
         <div>
-            
-            {/* ADD HERE (IS NOT IN COLLECTION) */}
-            {(isInTemplateEditingPage ) ? (
+            {(isInTemplateEditingPage && !isNodeInCollection) ? (
                 <>
                 <StylePanelTitle title="Collection Template" />
                 <div className="style-panel-box">
