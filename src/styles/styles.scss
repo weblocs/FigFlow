@@ -899,7 +899,7 @@ a {
 }
 
 .addNodeButton:hover {
-  background-color: #eee;
+  background-color: #f8f8f8;
 }
 
 .addNodeButton.left-margin {
@@ -908,7 +908,7 @@ a {
 }
 
 .addNodeButton.active {
-  background-color: #e8e8e8;
+  background-color: #eee;
 }
 
 .displayButtonsWrapper {
@@ -2263,6 +2263,19 @@ transform: translateX(-50%);
 }
 
 .fields-select_item.active { 
+  background-color: #eee;
+}
+
+.fields-select {
+  margin-bottom: 3px;
+}
+
+.fields-select input[type='checkbox'] {
+  margin-left: 0;
+  margin-right: 4px;
+}
+
+.projectRightSidebarNav.active {
   background-color: #eee;
 }
 

@@ -329,6 +329,7 @@ export const preRenderedNodesSlice = createSlice({
         let activeNode = findActiveNode(state.preRenderedHTMLNodes,state.activeNodeId);
         activeNode.class[optionIndex+1] = {id: "", name: ""}
         state.stylesInActiveNode[optionIndex+1] = {id: "", name: ""};
+        state.activeStyleId = "";
 
     },
 

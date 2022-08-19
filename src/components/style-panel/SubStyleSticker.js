@@ -7,11 +7,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const activeStyleObject = useSelector((state) => state.designerProjectState.activeStyleObject)
 
-    
-
-    
     const dispatch = useDispatch()
 
     const [editingOptionsTurnOn, setEditingOptionsTurnOn] = useState(false);

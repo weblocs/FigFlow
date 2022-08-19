@@ -31,8 +31,10 @@ export default function ProjectTopNavbar() {
 
         <div className={"centerNavbar" + ((projectMode === "creator") ? " creator-mode-list" : "")}>
           <TopNavbarResolutionChangeButton resolutionNumber="1" />
+          {(projectMode === "developer") && (<>
           <TopNavbarResolutionChangeButton resolutionNumber="2" />
           <TopNavbarResolutionChangeButton resolutionNumber="3" />
+          </>)}
           <TopNavbarResolutionChangeButton resolutionNumber="4" />
         </div>
         
