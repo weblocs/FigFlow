@@ -73,6 +73,8 @@ import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOve
             onDrop={() => handleDrop(node.id)}
             nodeid={node.id}
             nodename={nodeName}
+            nodetype={node.type}
+            nodecmscollectionid={node?.cmsCollectionId}
         >
             <div className={"navigation-node-inside" + ((depth >= 0) ? " lined" : "") + ((depth === 0) ? " white" : "")}>
                 <span>{node.type}</span>{nodeName}

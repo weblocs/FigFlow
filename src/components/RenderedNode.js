@@ -289,11 +289,17 @@ function RenderedNode(props) {
     }
 
     if(props.collectionItems) {
-      nodeText = props.collectionItems.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
+      if (props.cmsFieldId === "") {
+        nodeText = props.title;
+      } else {
+        nodeText = props.collectionItems.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
+      }
     }
+
     if(nodeText === undefined) {
-      nodeText = "empty";
+      nodeText = "empty"
     }
+    
   }
 
   if (props.type === "h") {

@@ -517,7 +517,12 @@ export const preRenderedNodesSlice = createSlice({
         if(state.activeNodeId !== "") {
             while (isElement(elementBase)) {
                 if(elementBase?.getAttribute("nodeid") !== null) {
-                    state.activeNodeParentsPath.unshift({ name: elementBase?.getAttribute("nodename"), id: elementBase?.getAttribute("nodeid")});
+                    state.activeNodeParentsPath.unshift({ 
+                        name: elementBase?.getAttribute("nodename"), 
+                        id: elementBase?.getAttribute("nodeid"),
+                        type: elementBase?.getAttribute("nodetype"),
+                        cmscollectionid: elementBase?.getAttribute("nodecmscollectionid"),
+                    });
                 }
                 elementBase = elementBase?.parentNode?.parentNode?.childNodes[0];
             }

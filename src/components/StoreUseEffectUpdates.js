@@ -18,11 +18,11 @@ export default function StoreUseEffectUpdates () {
     const dispatch = useDispatch()
 
     useEffect(() => {
-       dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length - 2));
-       dispatch(setActiveNodeObject());
+        dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length - 2));
+        dispatch(setActiveNodeObject());
         dispatch(checkIfActvieNodeParentDispayStyleIsFlex());
         dispatch(setActiveNodeParentsPath());
-    },[activeNodeId]);
+    },[activeNodeId, preRenderedHTMLNodes]);
 
 
 
