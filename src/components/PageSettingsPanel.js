@@ -10,10 +10,6 @@ export default function PageSettingsPanel() {
     const inputSlugRef = useRef();
     const inputMetaNameRef = useRef();
 
-    
-
-    console.log(openedSettingsPage);
-
     function handleSubmit() {
         event.preventDefault();
         dispatch(updateProjectPageProperty({property: "name", value: inputRef.current.value}));

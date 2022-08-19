@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {editSelectedFieldInPreRenderedHTMLNode, updateProjectSymbol} from "../features/pre-rendered-html-nodes";
 import CMSFieldNodeConnector from "./CMSFieldNodeConnector";
 import NodeRepeatableSettings from "./NodeRepeatableSettings";
+import StylePanelTitle from "./style-panel/StylePanelTitle"
 import Arrow from '../img/arrow-down.svg';
 
 export default function ProjectSettingsPanel() {
@@ -14,7 +15,6 @@ export default function ProjectSettingsPanel() {
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
-    const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
     const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
     
     let activeNode = {};
@@ -43,17 +43,6 @@ export default function ProjectSettingsPanel() {
     let _activeSymbolNodes = [];
 
     let _elementIdAfterActiveSymbol = "";
-
-    const [updateSymbolButtonText, setUpdateSymbolButtonText] = useState("Update symbol");
-
-    function handleUpdatingSymbol() {
-        dispatch(updateProjectSymbol({id: activeSymbolId, nodes: activeSymbolNodes}));
-
-        setUpdateSymbolButtonText("Symbol updated");
-        setTimeout(() => {
-            setUpdateSymbolButtonText("Update symbol");
-        }, 2000)
-    }
 
     function findNode(nodes, id) {
         for (let i = 0; i < nodes.length; i++) {
@@ -136,58 +125,65 @@ export default function ProjectSettingsPanel() {
         dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsFieldId', value:fieldId}));
     }
 
-    function handleClickInSymbolItem(symbolId) {
-        dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'symbolId', value:symbolId}))
-        // [TO-DO] update nodes with symbol nodes here
-    }
-
     return (
         <div className={"projectSettingsPanel "+ ((activeRightSidebarTab === "Settings") ? "active" : "" )}>
 
-            <div>{activeNode?.type}</div>
+            <div className="style-panel-box sticky">
+                <div className="style-panel-title-box"><div className="text">{activeNode?.type} settings</div></div>
+            </div>
+
+
+            {(isNodeCollection || isNodeInCollection) && (
+            <StylePanelTitle title="Collection Settings" />
+            )}
+            
             <div>
+            {(isNodeCollection) && (
+            <div>
+                <div className="style-panel-box">
+                    <div style={{marginBottom: "6px",lineHeight:"11px"}}>Collections:</div>
 
-            {(isNodeCollection) ? (
-            <div style={{marginBottom:"20px"}}>
-                <div>
-                    Collection: {projectCollections.find(({id}) => id === activeNodeObject?.cmsCollectionId)?.name}
-                </div>
-            Collections
-
-            {projectCollections.map((collection) => (
-                <div onClick={() => handleClickInCollectionItem(collection.id)} key={collection.id}>
-                    <div>
-                        {collection.name}
+                    <div className="fields-select_list">
+                    {projectCollections.map((collection) => (
+                        <div className={"fields-select_item" + ((activeNodeObject?.cmsCollectionId === collection.id) ? " active" : "")}
+                        onClick={() => handleClickInCollectionItem(collection.id)} key={collection.id}>
+                            <div>
+                                {collection.name}
+                            </div>
+                        </div>
+                    ))}
                     </div>
                 </div>
-            ))}
-            </div>) 
-            : ("") }
+            </div>)}
             </div>
 
             <div>
                 {(isNodeInCollection && (activeNodeObject?.type === "h" || activeNodeObject?.type === "p" )) && 
                 <div>
-
-                <div style={{marginBottom:"20px"}}>
-                    <div>In Collection:  {projectCollections.find(({id}) => id === activeCollectionId).name}</div>
-                    <div>Field:  {projectCollections.find(({id}) => id === activeCollectionId).fields
-                    .find(({id}) => id === activeNodeObject?.cmsFieldId)?.name}</div>
-                </div>
-
-                <div className="fields-select">
-                    Get text from {projectCollections.find(({id}) => id === activeCollectionId)?.name}
-                    <img src={Arrow} className="fields-item-arrow" />
-                </div>
-
-                {projectCollections.find(({id}) => id === activeCollectionId)?.fields
-                    .filter(({type}) => type === "text")
-                    .map((field) => (
-                    <div onClick={() => handleClickInFieldItem(field.id)} key={field.id}>
-                        {field.name}
+                    <div className="style-panel-box">
+                        <div>In Collection: {projectCollections.find(({id}) => id === activeCollectionId).name} </div>
+                        <div>Field:  {projectCollections.find(({id}) => id === activeCollectionId).fields
+                        .find(({id}) => id === activeNodeObject?.cmsFieldId)?.name}</div>
                     </div>
-                ))}
-                
+
+                    <div className="style-panel-box">
+
+                        <div className="fields-select">
+                            Get text from {projectCollections.find(({id}) => id === activeCollectionId)?.name}
+                            <img src={Arrow} className="fields-item-arrow" />
+                        </div>
+
+                        <div className="fields-select_list">
+                        {projectCollections.find(({id}) => id === activeCollectionId)?.fields
+                            .filter(({type}) => type === "text")
+                            .map((field) => (
+                            <div onClick={() => handleClickInFieldItem(field.id)} key={field.id} 
+                            className={"fields-select_item" + ((activeNodeObject?.cmsFieldId === field.id) ? " active" : "")}>
+                                {field.name}
+                            </div>
+                        ))}
+                    </div>
+                </div>
                 
                 </div>
                 }
@@ -209,46 +205,10 @@ export default function ProjectSettingsPanel() {
                 ))}
                 </div>
                 }
-
-                {(activeNodeObject?.type === "sym"  ) && 
-                <div>
-                    <div style={{marginBottom: "20px"}}>
-                        Symbol: {projectSymbols?.find(({id}) => id === activeSymbolId)?.name}
-                    </div>
-                   
-                    <div>
-                        Symbols:
-                        {projectSymbols.map((symbol) => (
-                            <div onClick={() => handleClickInSymbolItem(symbol.id)} key={symbol.id}>
-                                <div>
-                                    {symbol.name}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                }
-
-                {(isNodeInSymbol) && 
-                <div>
-                    In Symbol: {projectSymbols.find(({id}) => id === activeSymbolId).name}
-                    <button onClick={handleUpdatingSymbol}>{updateSymbolButtonText}</button>
-                </div>
-                }
-
-                {(activeNodeObject?.type === "sec"  ) && 
-                <div>
-                    <div style={{marginBottom: "20px"}}>
-                        Section
-                        {/* {projectLayouts?.find(({id}) => id === activeSymbolId)?.name} */}
-                    </div>
-                </div>
-                }
-
                 </div>
 
-                <NodeRepeatableSettings />
                 <CMSFieldNodeConnector />
+                <NodeRepeatableSettings />
 
         </div>
     )

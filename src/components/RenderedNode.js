@@ -22,7 +22,9 @@ function RenderedNode(props) {
   const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode);
   const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId);
   const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId);
+  const activeCollectionItemTemplateId = useSelector((state) => state.designerProjectState.activeCollectionItemTemplateId);
   const listOfNodeStyles = useSelector((state) => props.class.map((cl) => (cl.name)).toString().replaceAll(","," ") + " renderedNode " + ((state.designerProjectState.activeNodeId === props.id) ? "active " : " ") + ((state.designerProjectState.hoveredNodeId === props.id) ? "hovered" : " "));
+
   const dispatch = useDispatch()
   
 
@@ -282,12 +284,15 @@ function RenderedNode(props) {
 
   let nodeText = props.title;
   if (props.type === "h" || props.type === "p") {
-    
+    if(nodesEditMode === "cmsTemplate" && props.data.cmsFieldId !== "" && props.data.cmsFieldId !== undefined) {
+      nodeText = projectCollections.find(({ id }) => id === activeCollectionTemplateId)?.items?.find(({id}) => id === activeCollectionItemTemplateId).data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
+    }
+
     if(props.collectionItems) {
       nodeText = props.collectionItems.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
     }
-    if(nodesEditMode === "cmsTemplate") {
-      nodeText = projectCollections.find(({ id }) => id === activeCollectionTemplateId)?.items[0].data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
+    if(nodeText === undefined) {
+      nodeText = "empty";
     }
   }
 
@@ -322,7 +327,7 @@ function RenderedNode(props) {
         onDoubleClick={handleDoubleClick}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
-        html={(!props.collectionItems) ? props.title : props.collectionItems.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue} // innerHTML of the editable div
+        html={nodeText}
         disabled={!editable} // use true to disable edition
         onChange={(e) => props.onChange(sanitizeHtml(e.target.value , {
           allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],

@@ -8,6 +8,7 @@ import AddNodeButtonList from "./AddNodeButtonList";
 import RightPanelButtonsList from "./RightPanelButtonsList";
 import ExportButton from "./ExportButton";
 import ProjectSidebarButton from "./ProjectSidebarButton";
+import PageChanger from "./PageChanger";
 
 export default function ProjectTopNavbar() {
 
@@ -19,12 +20,13 @@ export default function ProjectTopNavbar() {
         <div className="projectNavigationLeft">
           <Link to="/"><div className="addNodeButton">we</div></Link>
           
-          {(projectMode === "creator") && <>
-          <ProjectSidebarButton letter="P" tab="Pages" />
-          <ProjectSidebarButton letter="C" tab="Collections" />
-          </>}
           <ModeChanger />
-          
+          {(projectMode === "creator") && 
+          <div style={{display:"flex"}}>
+          <ProjectSidebarButton letter="C" tab="Collections" />
+          </div>}
+          <PageChanger />
+
         </div>
 
         <div className={"centerNavbar" + ((projectMode === "creator") ? " creator-mode-list" : "")}>
