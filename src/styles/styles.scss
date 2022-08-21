@@ -1087,6 +1087,7 @@ a {
 
 
 .navigation-node-inside {
+  display: flex;
   padding-left: 8px;
   font-size: 11px;
 }
@@ -2279,4 +2280,33 @@ transform: translateX(-50%);
   background-color: #eee;
 }
 
+.node-folder-item {
+  display: flex;
+}
+
+.node-folder-arrow {
+  width: 8px;
+  margin-right: 8px;
+  transform: rotate(-90deg);
+}
+
+.node-folder-arrow.expanded {
+  transform: rotate(0);
+}
+
+.navigation-node-folder {
+  display: none;
+}
+
+.navigation-node-folder.opened {
+  display: block;
+}
+
+.symbol-nav-item {
+  background: #c2d5c2;
+}
+
+.symbol-nav-folder {
+  background: #e6eee6;
+}
 }

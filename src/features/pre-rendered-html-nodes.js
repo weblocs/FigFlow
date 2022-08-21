@@ -67,6 +67,7 @@ const initialState = {
   dragOverPage: {},
   collectionPanelState: "collections",
   editedSymbolId: {symbolId: "", elementId: ""},
+  nodeChoosenFromNavigator: false,
 }
 
 function findActiveNode(nodes, id) {
@@ -183,6 +184,9 @@ export const preRenderedNodesSlice = createSlice({
     setEditedSymbolId: (state, action) => {
         state.editedSymbolId.symbolId = action.payload.symbolId;
         state.editedSymbolId.elementId = action.payload.elementId;
+        
+        let tempNode = findActiveNode(state.preRenderedHTMLNodes,state.activeNodeId);
+        tempNode.expanded = true;
     },
 
     setActiveCollectionItemTemplateId: (state, action) => {
@@ -253,6 +257,16 @@ export const preRenderedNodesSlice = createSlice({
         let activeFolder = findActiveNode(state.projectPageFolderStructure,folderId);
         let expandedState = ((activeFolder?.expanded) ? true : false);
         activeFolder.expanded = !expandedState;
+    },
+
+    toggleNodeExpandedState: (state, action) => {
+        const nodeId = action.payload;
+        let tempNode = findActiveNode(state.preRenderedHTMLNodes,nodeId);
+        if(tempNode.type !== "sym") {
+            let expandedState = ((tempNode?.expanded) ? true : false);
+            tempNode.expanded = !expandedState;
+            state.nodeChoosenFromNavigator = true;
+        }
     },
 
     setNodesEditMode: (state, action) => {
@@ -505,6 +519,10 @@ export const preRenderedNodesSlice = createSlice({
         state.projectSwatches.push({id: uuidv4(), name: action.payload.name, color: action.payload.color })
     },
 
+    setNodeChoosenFromNavigator: (state, action) => {
+        state.nodeChoosenFromNavigator = action.payload;
+    },
+
     setActiveNodeParentsPath: (state) => {
 
         function isElement(element) {
@@ -533,7 +551,11 @@ export const preRenderedNodesSlice = createSlice({
         function findNode(nodes) {
             for(let i = 0; i < nodes.length; i++) {
                 if(nodes[i].id === state.activeNodeParentsPath?.[parentPathIndex]?.id) {
-                    nodes[i].expanded = true;
+                   
+                    if(!state.nodeChoosenFromNavigator && nodes[i].type !== "sym") {
+                        nodes[i].expanded = true;
+                    }
+
                     parentPathIndex++;
                     findNode(nodes[i].children);
                 }
@@ -556,8 +578,6 @@ export const preRenderedNodesSlice = createSlice({
                 preRenderedStyles: state.preRenderedStyles
             }];
         }
-
-        // console.log(state.undoStates);
     },
 
     reUndoProject: (state) => {
@@ -848,51 +868,19 @@ export const preRenderedNodesSlice = createSlice({
             state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
         }
         
-
-        // function findNode(nodes, id) {
-        //     for (let i = 0; i < nodes.length; i++) {
-        //     if (nodes[i].id === id) {
-        //         tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
-        //         JSON.stringify(nodes[i]),
-        //         JSON.stringify(nodes[i]) + "," + JSON.stringify(newNode)
-        //         );
-        //         response = JSON.parse(tempPreRenderedHTMLNodes);
-        //         break;
-        //     }
-        //     if (nodes[i].children) {
-        //         findNode(nodes[i].children, id);
-        //     }
-        //     }
-        // }
-        // findNode(state.preRenderedHTMLNodes, activeNodeId);
-        
-        // if(state.activeNodeId !== "") {
-        //     state.preRenderedHTMLNodes = response;
-        // } else {
-        //     // add newNode as last element if activeNode is not selected
-        //     state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
-        // }  
-        
         state.activeNodeId = newNodeId;
         state.stylesInActiveNode = [];
         state.activeStyleName = "";
         state.activeStyleIndex = undefined;
     },
 
+
+
     addSymbolToPreRenderedHTMLNodesAfterActiveNode: (state, action) => {
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
         let activeNodeId = state.activeNodeId;
         let newNodeId = uuidv4();
-
-        // let newNode = {
-        //     id: newNodeId,
-        //     title: "Default text",
-        //     type: "sym",
-        //     symbolId: action.payload.id,
-        //     children: state.projectSymbols.find(({id}) => id === action.payload.id).preRenderedHTMLNodes,
-        //     class: []
-        // };
 
         let newNode = state.projectSymbols.find(({id}) => id === action.payload.id).preRenderedHTMLNodes;
         regenerateIdsInNodes(newNode);
@@ -978,8 +966,6 @@ export const preRenderedNodesSlice = createSlice({
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id) {
-                // simple version
-                // nodes[i][editedField] = editedNodeNewText;
 
                 if(nodes[i] [editedField] === undefined) {
                     tempPreRenderedHTMLNodes = tempPreRenderedHTMLNodes.replace(
@@ -1017,10 +1003,9 @@ export const preRenderedNodesSlice = createSlice({
 
         let tempStyleIndex = state.stylesInActiveNode.map(x => {
             return x.id;
-          }).indexOf(deletedStyleId);
+        }).indexOf(deletedStyleId);
 
-         // state.stylesInActiveNode.splice(tempStyleIndex, 1);
-         state.stylesInActiveNode= [];
+        state.stylesInActiveNode= [];
 
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
@@ -1532,6 +1517,7 @@ export const preRenderedNodesSlice = createSlice({
 
         let updatedSymbolId = symbolId;
         let updatedSymbolNodes = findActiveNode(state.preRenderedHTMLNodes, elementId);
+        updatedSymbolNodes.expanded = false;
 
         state.projectSymbols.find(({id}) => id === updatedSymbolId).preRenderedHTMLNodes = updatedSymbolNodes;
 
@@ -1540,7 +1526,6 @@ export const preRenderedNodesSlice = createSlice({
             for (let i = 0; i < nodes.length; i++) {
                 if (nodes[i].symbolId === updatedSymbolId) {
                     let editedNodesArray = JSON.parse(JSON.stringify(updatedSymbolNodes));
-                    // console.log(editedNodesArray);
                     regenerateIdsInNodes(editedNodesArray);
                     nodes[i] = editedNodesArray;
                 }
@@ -1551,8 +1536,8 @@ export const preRenderedNodesSlice = createSlice({
         }
         state.activeNodeId = "";
         updateNodesListsBeforeGlobalChange(state, updateNodes);
-
-
+        
+        
     },
 
 
@@ -1572,7 +1557,6 @@ export const preRenderedNodesSlice = createSlice({
             for (let i = 0; i < nodes.length; i++) {
                 if (nodes[i].symbolId === updatedSymbolId) {
                     let editedNodesArray = JSON.parse(JSON.stringify(updatedSymbolNodes));
-                    // console.log(editedNodesArray);
                     regenerateIdsInNodeList(editedNodesArray);
                     nodes[i].children = editedNodesArray;
                 }
@@ -1676,5 +1660,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setActiveCollectionItemTemplateId, clearOpenedSettingPage, deleteActiveNodeShortcut, updateEditedSymbol, setEditedSymbolId, setSymbolsHeights, transformNodeIntoSymbol, clearActiveNode, setCollectionPanelState, updateProjectPageProperty, setOpenedSettingsPage, setDraggedPage, setDragOverPage, moveDraggedPaged, toggleFolderExpandedState, setProjectPageFolders, setProjectPageFolderStructure, createNewPageFolder, setNodesEditMode, setActiveCmsTemplate, setActiveCollectionTemplateId, setActiveLayoutId, setActiveLayout, setDraggedBefore, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, undoProject, reUndoProject, setActionActiveFalse, addUndoState, renameMainStyle, clearStyleOption, deleteStyleSubOption, setActiveNodeRepeatableState, deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setactiveLayoutFolder, addSectionToPreRenderedHTMLNodes, setprojectLayouts, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setKeyboardNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeId, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setNodeChoosenFromNavigator, toggleNodeExpandedState, setActiveCollectionItemTemplateId, clearOpenedSettingPage, deleteActiveNodeShortcut, updateEditedSymbol, setEditedSymbolId, setSymbolsHeights, transformNodeIntoSymbol, clearActiveNode, setCollectionPanelState, updateProjectPageProperty, setOpenedSettingsPage, setDraggedPage, setDragOverPage, moveDraggedPaged, toggleFolderExpandedState, setProjectPageFolders, setProjectPageFolderStructure, createNewPageFolder, setNodesEditMode, setActiveCmsTemplate, setActiveCollectionTemplateId, setActiveLayoutId, setActiveLayout, setDraggedBefore, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, undoProject, reUndoProject, setActionActiveFalse, addUndoState, renameMainStyle, clearStyleOption, deleteStyleSubOption, setActiveNodeRepeatableState, deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setactiveLayoutFolder, addSectionToPreRenderedHTMLNodes, setprojectLayouts, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setKeyboardNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeId, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

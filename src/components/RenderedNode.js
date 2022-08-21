@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import ContentEditable from "react-contenteditable";
 
 import {useSelector, useDispatch} from "react-redux";
-import {setHoveredNodeId, setKeyboardNavigationOn, setHoveredSectionId, setEditedSymbolId} from "../features/pre-rendered-html-nodes"
+import {setHoveredNodeId, setKeyboardNavigationOn, setHoveredSectionId, setEditedSymbolId, setNodeChoosenFromNavigator} from "../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./AddSectionButton";
 import AddRichTextElementButton from "./AddRichTextElementButton";
@@ -10,15 +10,11 @@ import sanitizeHtml from 'sanitize-html';
 
 function RenderedNode(props) {
 
-  const [editable,setEditable] = useState(false);
+  const [editable, setEditable] = useState(false);
 
   const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
-  const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject);
-  const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId);
   const projectCollections = useSelector((state) => state.designerProjectState.projectCollections);
   const projectMode = useSelector((state) => state.designerProjectState.projectMode);
-  const keyboardNavigationOn = useSelector((state) => state.designerProjectState.keyboardNavigationOn);
-  const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId);
   const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode);
   const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId);
   const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId);
@@ -57,6 +53,7 @@ function RenderedNode(props) {
 
   function handleOnClick(e) {
     e.stopPropagation();
+    dispatch(setNodeChoosenFromNavigator(false));
     props.onClick([props.id, props?.class[0]?.name]);
     if (projectMode === "creator") {
       setEditable(true);

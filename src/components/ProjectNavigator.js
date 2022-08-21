@@ -20,7 +20,7 @@ export default function ProjectNavigator() {
     return (
       <div className={"navigatorWrapper "+ ((activeProjectTab === "Navigator") ? "active" : "" )}>
         
-        <div style={{position: "sticky", top: "0"}}>
+        <div style={{position: "sticky", top: "0", zIndex: "1"}}>
           <div className="projectTabTitleBox">Add</div>
           <div style={{display: "flex", flexWrap: "wrap"}}>
               <AddNodeButton type="div" text="Div" />

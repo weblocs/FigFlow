@@ -63,7 +63,9 @@ export default function PageSettingsPanel() {
                 ref={inputSlugRef}
                 onFocus={handleFocus} 
                 onBlur={handleBlur}  />
-                <span style={{fontSize: "10px", lineHeight: "10px", marginTop: "4px", marginBottom: "12px", padding: "4px 8px", border: "1px solid #cecece"}}>figflow.com/{openedSettingsPage.slug}</span>
+                <span style={{fontSize: "10px", lineHeight: "10px", marginTop: "4px", marginBottom: "12px", padding: "4px 8px", border: "1px solid #cecece"}}>
+                    figflow.com/{openedSettingsPage.slug}
+                </span>
 
                 <label className="settings-label">Title Tag</label>
                 <input 

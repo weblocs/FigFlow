@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, setDraggedBefore} from "../features/pre-rendered-html-nodes"
+import Arrow from '../img/arrow-down.svg';
+import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, setDraggedBefore, toggleNodeExpandedState, setEditedSymbolId} from "../features/pre-rendered-html-nodes"
 
  function NavigationNodeItem ({parents, node, depth}) {
     const dispatch = useDispatch()
@@ -11,53 +12,60 @@ import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOve
     const dragableCopiedNodes = useSelector((state) => state.designerProjectState.dragableCopiedNodes)
     const draggedOverNodeId = useSelector((state) => state.designerProjectState.draggedOverNodeId)
     const draggedBefore = useSelector((state) => (state.designerProjectState.draggedBefore) ? true : false)
+    const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId)
+    const nodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
 
     const nodeName = (node?.symbolId === undefined) ? 
     ((node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type) : 
     (projectSymbols.find( ({id}) => id === node.symbolId)?.name );
 
-    function handleClick (id) {
-        dispatch(setActiveNodeId({id: id}));
+    function handleClick () {
+        dispatch(setActiveNodeId({id: node.id}));
     }
 
-    function handleDragStart (id) {
-        dispatch(setDragableCopiedNodes(id));
+    function handleDragStart () {
+        dispatch(setDragableCopiedNodes(node.id));
     }
 
-    function handleDragOver (id) {
+    function handleDragOver () {
         event.preventDefault();
-
+        let id = node.id;
+        let parentIsNotDraggedNode = true;
+        parents.forEach((parent) => {
+            if(parent.id === dragableCopiedNodes.id) {
+                parentIsNotDraggedNode = false;
+            }
+        })
         
-            let parentIsNotDraggedNode = true;
-            parents.forEach((parent) => {
-                if(parent.id === dragableCopiedNodes.id) {
-                    parentIsNotDraggedNode = false;
-                }
-            })
-            
-            if(node.id !== dragableCopiedNodes.id && parentIsNotDraggedNode) {
-                if (event.clientY - document.querySelector(`[nodeid="${node.id}"]`).offsetTop < 10 ) {
-                    if(!draggedBefore) {
-                        dispatch(setDraggedBefore(true));
-                    }
-                } else {
-                    if(draggedBefore) {
-                        dispatch(setDraggedBefore(false));
-                    }
-                }
-                if(id !== draggedOverNodeId) {
-                    dispatch(setDraggedOverNodeId(id));
+        if(node.id !== dragableCopiedNodes.id && parentIsNotDraggedNode) {
+            if (event.clientY - document.querySelector(`[nodeid="${node.id}"]`).offsetTop < 10 ) {
+                if(!draggedBefore) {
+                    dispatch(setDraggedBefore(true));
                 }
             } else {
-                if ( draggedOverNodeId !== "" ) { 
-                    dispatch(setDraggedOverNodeId(""));
+                if(draggedBefore) {
+                    dispatch(setDraggedBefore(false));
                 }
             }
+            if(id !== draggedOverNodeId) {
+                dispatch(setDraggedOverNodeId(id));
+            }
+        } else {
+            if ( draggedOverNodeId !== "" ) { 
+                dispatch(setDraggedOverNodeId(""));
+            }
+        }
         
     }
 
-    function handleDrop (id) {
+    function handleDrop () {
         dispatch(pasteDraggedNodes());
+    }
+
+    function handleArrowClick() {
+        if(node.children.length > 0) {
+            dispatch(toggleNodeExpandedState(node.id));
+        }
     }
 
     return ( 
@@ -65,18 +73,24 @@ import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOve
             style={{paddingLeft: depth*8 + "px"}}
             onMouseOver={() => dispatch(setHoveredNodeId(node.id))}
             onMouseOut={() => dispatch(setHoveredNodeId(""))}
-            onClick={() => handleClick(node.id)}
+            onClick={handleClick}
             // onDoubleClick={() => handleDoubleClick(node.id)} // openSymbol here
             draggable="true"
-            onDragStart={() => handleDragStart(node.id)}
-            onDragOver={() => handleDragOver(node.id)}
-            onDrop={() => handleDrop(node.id)}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
             nodeid={node.id}
             nodename={nodeName}
             nodetype={node.type}
             nodecmscollectionid={node?.cmsCollectionId}
         >
-            <div className={"navigation-node-inside" + ((depth >= 0) ? " lined" : "") + ((depth === 0) ? " white" : "")}>
+            <div 
+            onDoubleClick={() => (node.type === "sym" && editedSymbolId.symbolId === "") && dispatch(setEditedSymbolId({symbolId:nodeObject.symbolId, elementId: nodeObject.id}))}
+            className={"navigation-node-inside" + ((node.type === "sym") ? " symbol-nav-item" : "") + ((depth >= 0) ? " lined" : "") + ((depth === 0) ? " white" : "")}
+            onClick={handleArrowClick}>
+                {(node.children.length > 0) && (
+                    <img src={Arrow} className={"node-folder-arrow" + ((node?.expanded) ? " expanded" : "")} />
+                )}
                 <span>{node.type}</span>{nodeName}
             </div>
         </div>
