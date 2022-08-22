@@ -7,6 +7,7 @@ import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./AddSectionButton";
 import AddRichTextElementButton from "./AddRichTextElementButton";
 import sanitizeHtml from 'sanitize-html';
+import Placeholder from '../img/placeholder.svg';
 
 function RenderedNode(props) {
 
@@ -115,6 +116,7 @@ function RenderedNode(props) {
   if (props.type === "sec") {
     elementHTML = (
       <div onMouseEnter={handleSectionMouseOver}>
+
       <div 
       el_id={props.id}
       onClick={handleOnClick}
@@ -142,6 +144,7 @@ function RenderedNode(props) {
         
       </div>
       <AddSectionButton sectionId={props.id} />
+      
       </div>
     );
   }
@@ -269,7 +272,7 @@ function RenderedNode(props) {
     }
     elementHTML = (
       <img 
-      src={"https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+imageSrc+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a"}
+      src={(imageSrc !== undefined) ? "https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+imageSrc+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a" : Placeholder}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}

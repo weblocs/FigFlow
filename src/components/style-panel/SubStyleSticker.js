@@ -92,6 +92,8 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
                 <button onClick={() => setEditingOptionsTurnOn(!editingOptionsTurnOn)}>Edit options</button>
                 <button onClick={() => handleClearClick(index)}>Remove/Clear</button>
                 <button onClick={handleDeleteStyleOption}>Delete</button>
+
+                {/* ADD MOBILE ONLY OPTION */}
             </div>
         </div>
     )

@@ -1,7 +1,7 @@
 import React from "react"
 import { useSelector, useDispatch } from 'react-redux'
 
-import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeId} from "../features/pre-rendered-html-nodes"
+import {editSelectedFieldInPreRenderedHTMLNode, setActiveNodeId, setScrollTopPosition} from "../features/pre-rendered-html-nodes"
 import ElementSettings from "./ElementSettings";
 import ProjectParentsPathBar from "./ProjectParentsPathBar";
 
@@ -16,7 +16,7 @@ export default function ProjectRenderedDesign() {
     const dispatch = useDispatch()
 
     return (
-        <div className="Project">
+        <div className="Project" onWheel={() => dispatch(setScrollTopPosition())}>
             <style>{postRenderedStyles}</style>
 
             <div className={"project-rendered-design state-" + activeProjectResolution}>

@@ -9,14 +9,14 @@ export default function PageChanger() {
     const pageChangerText = useSelector((state) => {
         const projectState = state.designerProjectState;
         if (nodesEditMode === "page") {
-            return "Page: " + projectState.projectPages[projectState.activePageIndex].name;
+            return "Page: " + projectState.projectPages?.[projectState.activePageIndex]?.name;
         } 
         if (nodesEditMode === "cmsTemplate") {
             return "Template: " + projectState.projectCollections.find(({id}) => id === projectState.activeCollectionTemplateId).name;
         } 
         if (nodesEditMode === "layout") {
             return "Layout: " + 
-            projectState.projectLayouts.find(({id}) => id === projectState.activeLayoutFolder).items.find(({id}) => id === projectState.activeLayoutId).name;
+            projectState.projectLayouts?.find(({id}) => id === projectState.activeLayoutFolder)?.items?.find(({id}) => id === projectState.activeLayoutId)?.name;
         } 
     })
     const activeTemplateCollectionItem = useSelector((state) => {

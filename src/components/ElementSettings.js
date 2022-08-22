@@ -1,16 +1,20 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, clearActiveNode, setEditedSymbolId} from "../features/pre-rendered-html-nodes"
+import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, clearActiveNode, setEditedSymbolId, setScrollTopPosition} from "../features/pre-rendered-html-nodes"
 import ElementHeadingSettings from "./ElementHeadingSettings"
 import RichElementSettingsStyle from "./RichElementSettingsStyle"
 import Delete from '../img/delete.svg';
+import { useEffect } from "react";
 
 export default function ElementSettings() {
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const projectMode = useSelector((state) => state.designerProjectState.projectMode)
     const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId)
     const nodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
     const nodeType = useSelector((state) => state.designerProjectState.activeNodeObject?.type)
     const nodeSubType = useSelector((state) => state.designerProjectState.activeNodeObject?.subtype)
+    const scrollTopPosition = useSelector((state) => state.designerProjectState.activeNodeObject?.scrollTopPosition)
+    
     const activeSymbolName = useSelector((state) => {
         const activeSymbolId = state.designerProjectState.activeNodeObject?.symbolId;
         if(activeSymbolId !== undefined) {
@@ -49,14 +53,14 @@ export default function ElementSettings() {
         return document.querySelector(`[el_id="${activeNodeId}"]`)
     });
     const activeNodePositionX = useSelector((state) => {
-        return activeNode?.offsetLeft;
+        if(projectMode === "developer") {
+            return activeNode?.getBoundingClientRect().left - 33;
+        }
+        return activeNode?.getBoundingClientRect().left;
     });
 
     const activeNodePositionY = useSelector((state) => {
-        if(activeNode?.offsetTop < 28) {
-            return 0
-        }
-        return activeNode?.offsetTop - 28;
+        return activeNode?.getBoundingClientRect().top - 61;
     });
 
     function handleDuplicate() {

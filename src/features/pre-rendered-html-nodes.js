@@ -11,6 +11,7 @@ const initialState = {
   offlineProjectName: "projekt1", 
   projectMode: "developer", // developer or creator
   projectLayouts: [],
+  scrollTopPosition: 0,
   nodesEditMode: "page", // page, layout, cmsTemplate, richElement
   activeLayoutFolder: "",
   activeLayoutId: "", 
@@ -180,6 +181,10 @@ export const preRenderedNodesSlice = createSlice({
   name: 'preRenderedNodes',
   initialState,
   reducers: {
+
+    setScrollTopPosition: (state, action) => {
+        state.scrollTopPosition = state.scrollTopPosition+1;
+    },
 
     setEditedSymbolId: (state, action) => {
         state.editedSymbolId.symbolId = action.payload.symbolId;
@@ -839,7 +844,8 @@ export const preRenderedNodesSlice = createSlice({
             title: "Default text",
             type: action.payload,
             children: [],
-            class: []
+            class: [],
+            expanded: true
         };
 
         if(newNode.type === "h") {
@@ -1660,5 +1666,5 @@ export const preRenderedNodesSlice = createSlice({
   }
 })
 
-export const {setNodeChoosenFromNavigator, toggleNodeExpandedState, setActiveCollectionItemTemplateId, clearOpenedSettingPage, deleteActiveNodeShortcut, updateEditedSymbol, setEditedSymbolId, setSymbolsHeights, transformNodeIntoSymbol, clearActiveNode, setCollectionPanelState, updateProjectPageProperty, setOpenedSettingsPage, setDraggedPage, setDragOverPage, moveDraggedPaged, toggleFolderExpandedState, setProjectPageFolders, setProjectPageFolderStructure, createNewPageFolder, setNodesEditMode, setActiveCmsTemplate, setActiveCollectionTemplateId, setActiveLayoutId, setActiveLayout, setDraggedBefore, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, undoProject, reUndoProject, setActionActiveFalse, addUndoState, renameMainStyle, clearStyleOption, deleteStyleSubOption, setActiveNodeRepeatableState, deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setactiveLayoutFolder, addSectionToPreRenderedHTMLNodes, setprojectLayouts, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setKeyboardNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeId, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
+export const {setScrollTopPosition, setNodeChoosenFromNavigator, toggleNodeExpandedState, setActiveCollectionItemTemplateId, clearOpenedSettingPage, deleteActiveNodeShortcut, updateEditedSymbol, setEditedSymbolId, setSymbolsHeights, transformNodeIntoSymbol, clearActiveNode, setCollectionPanelState, updateProjectPageProperty, setOpenedSettingsPage, setDraggedPage, setDragOverPage, moveDraggedPaged, toggleFolderExpandedState, setProjectPageFolders, setProjectPageFolderStructure, createNewPageFolder, setNodesEditMode, setActiveCmsTemplate, setActiveCollectionTemplateId, setActiveLayoutId, setActiveLayout, setDraggedBefore, setDragableCopiedNodes, setDraggedOverNodeId, pasteDraggedNodes, undoProject, reUndoProject, setActionActiveFalse, addUndoState, renameMainStyle, clearStyleOption, deleteStyleSubOption, setActiveNodeRepeatableState, deletePropertyInPreRenderedStyle, setActiveNodeComputedStyles, deleteStyleOption, setActiveStyleOptionIndex, setStyleOptionInActiveNode, createNewStyleOption, setActiveStyle, createNewStyle, movePreRenderedNode, setProjectPopUp, setRichTextElements, createNewRichTextElement, setProjectMode, setHoveredSectionId, deleteSection, setCopiedSectionNodes, setactiveLayoutFolder, addSectionToPreRenderedHTMLNodes, setprojectLayouts, createNewSection, createNewSectionFolder, setProjectSwatches, addSwatch, updateSwatch, setActiveNodeParentsPath, updateActiveStyle, setActiveProjectResolution, checkIfActvieNodeParentDispayStyleIsFlex, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, addSymbolToPreRenderedHTMLNodesAfterActiveNode, updateProjectSymbol, setProjectSymbols, createNewSymbol, setActiveNodeObject,setSaveButtonStateText,editSelectedFieldInPreRenderedHTMLNode, setActiveRightSidebarTab,editActiveCollectionItemData, setActiveCollectionItemIdAndIndex,createNewCollectionItems,createNewCollectionField, setActiveCollectionIdAndIndex,setProjectCollections, createNewCollection, setActiveProjectTab, setActivePageIdAndIndex, createNewPageInProject, saveProjectToFirebase, setProjectPages, setProjectFirebaseId, setKeyboardNavigationOn,deleteStyleFromStylesInActiveNode, arrowActiveNodeNavigation, setHoveredNodeId, addNodeToRenderedHTMLNodesAfterActiveNode, connectStyleWithNode, addPreRenderedStyle, setPreRenderedHTMLNodes, deleteNodeByIdInPreRenderedHTMLNodes, setPreRenderedStyles, setActiveNodeId, setActiveStyleId, editStyleInPreRenderedStyles } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer
