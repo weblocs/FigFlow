@@ -12,8 +12,8 @@ export default function ElementSettings() {
     const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId)
     const nodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
     const nodeType = useSelector((state) => state.designerProjectState.activeNodeObject?.type)
-    const nodeSubType = useSelector((state) => state.designerProjectState.activeNodeObject?.subtype)
-    const scrollTopPosition = useSelector((state) => state.designerProjectState.activeNodeObject?.scrollTopPosition)
+
+    
     
     const activeSymbolName = useSelector((state) => {
         const activeSymbolId = state.designerProjectState.activeNodeObject?.symbolId;
@@ -53,13 +53,14 @@ export default function ElementSettings() {
         return document.querySelector(`[el_id="${activeNodeId}"]`)
     });
     const activeNodePositionX = useSelector((state) => {
-        if(projectMode === "developer") {
-            return activeNode?.getBoundingClientRect().left - 33;
-        }
-        return activeNode?.getBoundingClientRect().left;
+        return activeNode?.getBoundingClientRect().left - 
+            document.getElementsByClassName("project-rendered-design")[0]?.getBoundingClientRect().left;
     });
 
     const activeNodePositionY = useSelector((state) => {
+        if(activeNode?.getBoundingClientRect().top <= 33 && activeNode?.getBoundingClientRect().top > 0) {
+            return 0;
+        }
         return activeNode?.getBoundingClientRect().top - 61;
     });
 
