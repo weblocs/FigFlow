@@ -109,6 +109,7 @@ img {
   position: absolute;
   bottom: 0;
   background: #fff;
+  z-index: 10001;
 }
 
 .parents-path-item {
@@ -2327,6 +2328,13 @@ transform: translateX(-50%);
 
 .symbol-nav-folder .navigation-node.active {
   background: #c9dfcc;
+}
+
+.style-option-checkbox-box {
+  color: #111;
+  font-size: 11px;
+  grid-column-gap: 4px;
+  display: flex;
 }
 
 }

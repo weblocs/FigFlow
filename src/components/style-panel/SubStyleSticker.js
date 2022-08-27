@@ -1,12 +1,24 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveStyleId, setKeyboardNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeId, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption } from "../../features/pre-rendered-html-nodes";
+import { setActiveStyleId, setKeyboardNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeId, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption, editStyleOptionProperty } from "../../features/pre-rendered-html-nodes";
 
 export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+
+
+    const isOnlyForMobile = useSelector((state) => (state.designerProjectState.preRenderedStyles
+    ?.find(({id}) => id === state.designerProjectState.stylesInActiveNode[0].id)
+    ?.childrens[state.designerProjectState.activeStyleOptionIndex]
+    ?.options?.find(({id}) => id === state.designerProjectState.activeStyleId)?.isOnlyForMobile) ? true : false)
+
+    const isOnlyForTablet = useSelector((state) => (state.designerProjectState.preRenderedStyles
+        ?.find(({id}) => id === state.designerProjectState.stylesInActiveNode[0].id)
+        ?.childrens[state.designerProjectState.activeStyleOptionIndex]
+        ?.options?.find(({id}) => id === state.designerProjectState.activeStyleId)?.isOnlyForTablet) ? true : false)
+    
 
     const dispatch = useDispatch()
 
@@ -61,6 +73,14 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
         dispatch(clearStyleOption({optionIndex: index}));
     }
 
+    function handleCheckboxClick(e) {
+        dispatch(editStyleOptionProperty({property:"isOnlyForMobile", value: !isOnlyForMobile, index: index}));
+    }
+
+    function handleCheckboxTabletClick(e) {
+        dispatch(editStyleOptionProperty({property:"isOnlyForTablet", value: !isOnlyForTablet, index: index}));
+    }
+
     return (
         <div key={id} className={"selected-class" + ((activeStyleId === id) ? " active" : "") + ((styleIsSet) ? "" : " styleIsNotSet")} style={{zIndex: stylesInActiveNode.length + 10 - index }}>
             
@@ -94,6 +114,12 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
                 <button onClick={handleDeleteStyleOption}>Delete</button>
 
                 {/* ADD MOBILE ONLY OPTION */}
+                <label className="style-option-checkbox-box">
+                <input type="checkbox" checked={isOnlyForTablet} onChange={handleCheckboxTabletClick}/> Only for tablet
+                </label>
+                <label className="style-option-checkbox-box">
+                <input type="checkbox" checked={isOnlyForMobile} onChange={handleCheckboxClick}/> Only for mobile
+                </label>
             </div>
         </div>
     )
