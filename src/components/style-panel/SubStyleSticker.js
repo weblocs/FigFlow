@@ -2,22 +2,11 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveStyleId, setKeyboardNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeId, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption, editStyleOptionProperty } from "../../features/pre-rendered-html-nodes";
 
-export default function SubStyleSticker ({id, name, index, styleIsSet}) {
+export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyForMobile, isOnlyForTablet, child}) {
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-
-
-    const isOnlyForMobile = useSelector((state) => (state.designerProjectState.preRenderedStyles
-    ?.find(({id}) => id === state.designerProjectState.stylesInActiveNode[0].id)
-    ?.childrens[state.designerProjectState.activeStyleOptionIndex]
-    ?.options?.find(({id}) => id === state.designerProjectState.activeStyleId)?.isOnlyForMobile) ? true : false)
-
-    const isOnlyForTablet = useSelector((state) => (state.designerProjectState.preRenderedStyles
-        ?.find(({id}) => id === state.designerProjectState.stylesInActiveNode[0].id)
-        ?.childrens[state.designerProjectState.activeStyleOptionIndex]
-        ?.options?.find(({id}) => id === state.designerProjectState.activeStyleId)?.isOnlyForTablet) ? true : false)
     
 
     const dispatch = useDispatch()
@@ -74,11 +63,12 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
     }
 
     function handleCheckboxClick(e) {
-        dispatch(editStyleOptionProperty({property:"isOnlyForMobile", value: !isOnlyForMobile, index: index}));
+        dispatch(editStyleOptionProperty({property:"isOnlyForMobile", value: isOnlyForMobile ? false : true, index: index}));
+        console.log(child);
     }
 
     function handleCheckboxTabletClick(e) {
-        dispatch(editStyleOptionProperty({property:"isOnlyForTablet", value: !isOnlyForTablet, index: index}));
+        dispatch(editStyleOptionProperty({property:"isOnlyForTablet", value: isOnlyForTablet ? false : true, index: index}));
     }
 
     return (
@@ -115,10 +105,10 @@ export default function SubStyleSticker ({id, name, index, styleIsSet}) {
 
                 {/* ADD MOBILE ONLY OPTION */}
                 <label className="style-option-checkbox-box">
-                <input type="checkbox" checked={isOnlyForTablet} onChange={handleCheckboxTabletClick}/> Only for tablet
+                <input type="checkbox" checked={isOnlyForTablet ? true : false} onChange={handleCheckboxTabletClick}/> Only for tablet
                 </label>
                 <label className="style-option-checkbox-box">
-                <input type="checkbox" checked={isOnlyForMobile} onChange={handleCheckboxClick}/> Only for mobile
+                <input type="checkbox" checked={isOnlyForMobile ? true : false} onChange={handleCheckboxClick}/> Only for mobile
                 </label>
             </div>
         </div>

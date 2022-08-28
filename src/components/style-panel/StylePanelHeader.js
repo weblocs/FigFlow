@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import {setKeyboardNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, createNewStyle, renameMainStyle} from "../../features/pre-rendered-html-nodes"
+import {setKeyboardNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, createNewStyle, renameMainStyle, setActiveStyleOptionIndex} from "../../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from "./SubStyleSticker";
 
@@ -11,6 +11,9 @@ export default function StylePanelHeader () {
     const activeStyleName = useSelector((state) => state.designerProjectState.activeStyleName)
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
+    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex)
+
+    
 
     const dispatch = useDispatch()
 
@@ -19,7 +22,6 @@ export default function StylePanelHeader () {
 
     const [isStyleEditorOpen, setIsStyleEditorOpen] = useState(false);
     const [isAddStyleInputOpen, setIsAddStyleInputOpen] = useState(false);
-    const [editorPopUpClass, setEditorPopUpClass] = useState("");
 
     const shortcutSystemConfig = { overrideSystem: false, ignoreInputFields: false, repeatOnHold: false };
     const { openClassEditorShortcut } = useKeyboardShortcut(["Meta", "Enter"],
@@ -33,10 +35,6 @@ export default function StylePanelHeader () {
     );
 
     useEffect(() => {
-        (isAddStyleInputOpen === true) ? setEditorPopUpClass("space-editor-popup new-class active") : setEditorPopUpClass("space-editor-popup new-class");
-    },[isAddStyleInputOpen]);
-
-    useEffect(() => {
         if(isAddStyleInputOpen) {
             inputRef.current.focus();
             inputRef.current.value = "";
@@ -44,7 +42,7 @@ export default function StylePanelHeader () {
         } else {
             dispatch(setKeyboardNavigationOn(true));
         }
-    },[editorPopUpClass]);
+    },[isAddStyleInputOpen]);
 
     function handleOpenNewStyleInput () {
         setIsAddStyleInputOpen(true);
@@ -85,25 +83,44 @@ export default function StylePanelHeader () {
                 onClick={() => setIsStyleEditorOpen(false)}></div>
 
             <div className="style-panel-title-box">
-                <div className="text">{activeStyleName} styles</div>
+                <div className="text">{stylesInActiveNode?.[0]?.name} styles</div>
             </div>
             <div className="selector-box">
-                <div className="text">Selector</div>
+                <div 
+                className={"selector-text" + ((activeStyleId === "") ? " active" : "")}
+                onClick={() => dispatch(setActiveStyleId(""))}
+                >Selector</div>
+
                 <div className="inheriting-box">
-                <div className="text">Inheriting</div>
-                <div className="text inheriting-text">1 selector</div>
+                    <div className="text">Inheriting</div>
+                    <div className="text inheriting-text">1 selector</div>
                 </div>
             </div>
             <div className="select-class-input">
 
                 <div className="new-class-toggle" onClick={handleOpenNewStyleInput}></div>
 
-                <input 
-                ref={inputRef}
-                type="text"
-                onKeyDown={handleKeyPress}
-                onBlur={handleCloseNewStyleInput}
-                className={editorPopUpClass} />
+
+                    <div className={"add-class-box" + ((isAddStyleInputOpen) ? " active" : "")}>
+                        New class
+                        <input 
+                        ref={inputRef}
+                        type="text"
+                        className="add-class_input"
+                        onKeyDown={handleKeyPress} />
+                        <div className="add-class_items-list">
+                        {preRenderedStyles.map((style) => (
+                            <div className="add-class_item" key={style.id}>{style.name}</div>
+                        ))}
+                        </div>
+                    </div>
+
+                    {/* <input 
+                    ref={inputRef}
+                    type="text"
+                    onKeyDown={handleKeyPress}
+                    onBlur={handleCloseNewStyleInput}
+                    className={"space-editor-popup new-class" + (isAddStyleInputOpen ? " active" : "")} /> */}
 
                     {stylesInActiveNode?.map((el, index) => {
                     if(index === 0) {
@@ -148,7 +165,15 @@ export default function StylePanelHeader () {
                         }
 
                         return (
-                            <SubStyleSticker id={childId} name={childName} index={index} styleIsSet={styleIsSet} key={childId} />
+                            <SubStyleSticker 
+                            id={childId} 
+                            name={childName} 
+                            index={index} 
+                            styleIsSet={styleIsSet} 
+                            key={childId}
+                            child={child}
+                            isOnlyForMobile={child.isOnlyForMobile}
+                            isOnlyForTablet={child.isOnlyForTablet}  />
                         )
                         })}
 

@@ -1077,13 +1077,12 @@ export const preRenderedNodesSlice = createSlice({
     editStyleOptionProperty: (state,action) => {
         const property = action.payload.property;
         const value = action.payload.value;
+        const index = action.payload.index;
         state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id)
-        .childrens[state.activeStyleOptionIndex]
-        .options.find(({id}) => id === state.activeStyleId)[property] = value;
-        
-        console.log(current(state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id)
-        .childrens[state.activeStyleOptionIndex]
-        .options.find(({id}) => id === state.activeStyleId)));
+        .childrens[index][property] = value;
+
+        // console.log(current(state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id)
+        // .childrens[index]));
     },
 
 
@@ -1092,8 +1091,20 @@ export const preRenderedNodesSlice = createSlice({
         let styleValue = action.payload[1];
         let styleResolution = state.activeProjectResolutionStylesListName;
 
+        // add element inline styling here
+
         if(state.activeStyleId === state.stylesInActiveNode[0].id) {
             state.preRenderedStyles[state.activeStyleIndex][styleResolution][styleProperty] = styleValue;
+        } else if(state.activeStyleId === "") {
+            const node = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId);
+            console.log(current(node));
+            if(node?.styles === undefined) {
+                node.styles = {};
+            }
+            if(node?.styles?.[styleResolution] === undefined) {
+                node.styles[styleResolution] = {};
+            }
+            node.styles[styleResolution][styleProperty] = styleValue;
         } else {
             state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id).childrens[state.activeStyleOptionIndex].options.find(({id}) => id === state.activeStyleId)[styleResolution][styleProperty] = styleValue;
         }
@@ -1673,7 +1684,11 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     setActiveRightSidebarTab: (state, action) => {
-        state.activeRightSidebarTab = action.payload;
+        if(state.activeRightSidebarTab === action.payload) {
+            state.activeRightSidebarTab = "";
+        } else {
+            state.activeRightSidebarTab = action.payload;
+        }
     },
     // Add next reducers here
   }

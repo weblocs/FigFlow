@@ -9,6 +9,7 @@ import RightPanelButtonsList from "./RightPanelButtonsList";
 import ExportButton from "./ExportButton";
 import ProjectSidebarButton from "./ProjectSidebarButton";
 import PageChanger from "./PageChanger";
+import VersionsChanger from "./VersionsChanger";
 
 export default function ProjectTopNavbar() {
 
@@ -26,7 +27,7 @@ export default function ProjectTopNavbar() {
           <ProjectSidebarButton letter="C" tab="Collections" />
           </div>}
           <PageChanger />
-
+          <VersionsChanger />
         </div>
 
         <div className={"centerNavbar" + ((projectMode === "creator") ? " creator-mode-list" : "")}>

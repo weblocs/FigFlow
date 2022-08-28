@@ -8,16 +8,6 @@ export default function RichElementSettingsStyle({child, index}) {
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
 
-    const isOnlyForMobile = useSelector((state) => state.designerProjectState.preRenderedStyles
-    ?.find(({id}) => id === state.designerProjectState.stylesInActiveNode[0].id)
-    ?.childrens[state.designerProjectState.activeStyleOptionIndex]
-    ?.options[index]?.isOnlyForMobile)
-
-    const isOnlyForTablet = useSelector((state) => state.designerProjectState.preRenderedStyles
-    ?.find(({id}) => id === state.designerProjectState.stylesInActiveNode[0].id)
-    ?.childrens[state.designerProjectState.activeStyleOptionIndex]
-    ?.options[index]?.isOnlyForTablet)
-
     const dispatch = useDispatch()
 
     const [isListOpened, setIsListOpened] = useState(false);
@@ -45,14 +35,13 @@ export default function RichElementSettingsStyle({child, index}) {
         setIsListOpened(false);
     }
 
-    if (isOnlyForMobile && activeProjectResolution !== "4") {
+    if (child.isOnlyForMobile === true && activeProjectResolution !== "4") {
 
-    } else if (isOnlyForTablet && activeProjectResolution !== "2") {
+    } else if (child.isOnlyForTablet  === true && activeProjectResolution !== "2") {
         
     } else {
     return (
         <div className={"rich-element-settings_button active" + isStyleSet} >
-
             <div className={"unit-chooser_closer" + ((isListOpened) ? " active" : "")}
                 onClick={() => setIsListOpened(false)}></div>
 
