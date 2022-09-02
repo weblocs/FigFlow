@@ -110,6 +110,12 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
                 <label className="style-option-checkbox-box">
                 <input type="checkbox" checked={isOnlyForMobile ? true : false} onChange={handleCheckboxClick}/> Only for mobile
                 </label>
+
+                <form>
+                    <input onFocus={handleOnFocus} onBlur={handleOnBlur} placeholder="Default name" />
+                    <button>Save</button>
+                </form>
+
             </div>
         </div>
     )

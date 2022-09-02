@@ -1,7 +1,20 @@
 import { useDispatch, useSelector } from "react-redux"
+import { addProjectVersion, clearProjectVersion, setActiveProjectVersion } from "../features/pre-rendered-html-nodes"
+
+function getLetterByIndex(index) {
+    let letter = "A";
+    (index === 1) && (letter = "B");
+    (index === 2) && (letter = "C");
+    (index === 3) && (letter = "D");
+    (index === 4) && (letter = "E");
+    (index === 5) && (letter = "F");
+    return letter;
+}
 
 export default function VersionsChanger() {
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
+    const projectVersions = useSelector((state) => state.designerProjectState.projectVersions)
+    const activeProjectVersionId = useSelector((state) => state.designerProjectState.activeProjectVersionId)    
     const dispatch = useDispatch()
 
     if(activeProjectTab === "Versions") {
@@ -10,17 +23,19 @@ export default function VersionsChanger() {
             <div className="page-changer page-changer_description">
                 Versions
             </div>
-            <div className="page-changer">
-                A
-            </div>
-            <div className="page-changer">
-                B
-            </div>
-            <div className="page-changer">
-                C
-            </div>
-            <div className="page-changer">
+            {projectVersions.map((version, index) => (
+                <div className={"page-changer" + ((activeProjectVersionId === version.id) ? " active" : "")} 
+                onClick={() => dispatch(setActiveProjectVersion(version.id))}
+                key={version.id}>
+                    {getLetterByIndex(index)}
+                </div>
+            ))}
+            <div className="page-changer" 
+            onClick={() => dispatch(addProjectVersion())}>
                 Add
+            </div>
+            <div className="page-changer" onClick={() => dispatch(clearProjectVersion())}>
+                Choose version
             </div>
             </>
         )

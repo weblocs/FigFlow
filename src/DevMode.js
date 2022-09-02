@@ -32,6 +32,8 @@ export default function DevMode() {
   const offlineMode = useSelector((state) => state.designerProjectState.offlineMode)
   const dispatch = useDispatch();
 
+  
+
   loadProjectFromFirebasePreRenderedNodesAndStyles();
   loadShortcuts();
 

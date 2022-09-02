@@ -15,6 +15,20 @@ export default function loadShortcuts() {
     
     const dispatch = useDispatch();
 
+    window.addEventListener(
+      "keydown",
+      (e) => {
+        if (
+          ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(
+            e.code
+          )
+        ) {
+          e.preventDefault();
+        }
+      },
+      false
+    );
+
     const { undoProjectShortcut } = useKeyboardShortcut(
       ["Meta", "Z"],
       shortcutKeys => {
