@@ -46,11 +46,16 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
         dispatch(setStyleOptionInActiveNode({index: index, id: id, name: name}));
         dispatch(setActiveStyleId(id));
         dispatch(setActiveStyleOptionIndex(index));
+        setOpenStyleOptionsDropdown(false);
     }
 
     function handleClickInSticker(id,index) {
-        dispatch(setActiveStyleId(id));
-        dispatch(setActiveStyleOptionIndex(index));
+        if(styleIsSet) {
+            dispatch(setActiveStyleId(id));
+            dispatch(setActiveStyleOptionIndex(index));
+        } else {
+            handleOpenDropdown();
+        }
     }
 
     function handleDeleteStyleSubOption(subOptionId) {
@@ -75,30 +80,33 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
         <div key={id} className={"selected-class" + ((activeStyleId === id) ? " active" : "") + ((styleIsSet) ? "" : " styleIsNotSet")} style={{zIndex: stylesInActiveNode.length + 10 - index }}>
             
             <div className={"unit-chooser_closer" + ((openStyleOptionsDropdown) ? " active" : "")}
-                onClick={() => setOpenStyleOptionsDropdown(false)}></div>
+                onClick={() => setOpenStyleOptionsDropdown(false)}>
+            </div>
             
-            <div  onClick={() => handleClickInSticker(id,index)} className="text">{name}</div>
-            <span 
-            className="seleted-class-delete-button"
+            <div onClick={() => handleClickInSticker(id,index)} className="text">{name}</div>
+            <span className="seleted-class-delete-button"
             onClick={handleOpenDropdown}
             > ⌄
             </span>
 
             <div className={"style-options-dropdown" + ((openStyleOptionsDropdown) ? " active" : "")}>
+                
                 <div className="style-option-list">
                 {preRenderedStyles.find(({id}) => id === stylesInActiveNode[0].id)?.childrens[index].options.map((option) => (
                     <div className="style-option-item" key={option.id}>
-                        <div onClick={() => handleStyleOptionClick(option.id, option.name)}>{option.name}</div>
+                        <div className="style-option-item-text" onClick={() => handleStyleOptionClick(option.id, option.name)}>{option.name}</div>
                         <div className={"style-option-item_icons" + ((editingOptionsTurnOn) ? " active" : "")}>
                             <div className="style-option-item_delete-icon" onClick={() => handleDeleteStyleSubOption(option.id)}>x</div>
                         </div>
                     </div>
                 ))}
                 </div>
+
                 <form onSubmit={handleAddNewStyleOption}>
                     <input value={input} onFocus={handleOnFocus} onBlur={handleOnBlur} onChange={(e) => setInput(e.target.value)} placeholder="New option" />
                     <button>Add option</button>
                 </form>
+
                 <button onClick={() => setEditingOptionsTurnOn(!editingOptionsTurnOn)}>Edit options</button>
                 <button onClick={() => handleClearClick(index)}>Remove/Clear</button>
                 <button onClick={handleDeleteStyleOption}>Delete</button>

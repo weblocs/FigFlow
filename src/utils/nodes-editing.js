@@ -125,9 +125,6 @@ export function setActiveStyleNameByAcitveNode(nodes, id) {
 
 export function setStylesInActiveNodeAndActiveStyle(nodes, id) {
   let response = [];
-
-  
-  
   function findNode(nodes,id) {
     for (let i = 0; i < nodes.length; i++) {
       if (nodes[i].id === id) {

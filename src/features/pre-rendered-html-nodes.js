@@ -594,6 +594,10 @@ export const preRenderedNodesSlice = createSlice({
             const activeUndoNode = state.undoStates[state.undoStates.length - state.activeUndoIndex];
             state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes;
             state.preRenderedStyles = activeUndoNode.preRenderedStyles;
+
+
+            [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
+
         }
     },
 
@@ -603,9 +607,12 @@ export const preRenderedNodesSlice = createSlice({
                 state.undoActionActive = true;
                 const activeUndoNode = state.undoStates[state.undoStates.length - state.activeUndoIndex];
                 state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes;
-                state.preRenderedStyles = activeUndoNode.preRenderedStyles;    
+                state.preRenderedStyles = activeUndoNode.preRenderedStyles;
+
+                [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
+
             }
-    },
+        },
 
     setActionActiveFalse: (state) => {
         state.undoActionActive = false;
@@ -1013,7 +1020,7 @@ export const preRenderedNodesSlice = createSlice({
             return x.id;
         }).indexOf(deletedStyleId);
 
-        state.stylesInActiveNode= [];
+        state.stylesInActiveNode = [];
 
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
@@ -1128,7 +1135,6 @@ export const preRenderedNodesSlice = createSlice({
 
     setActiveNodeId: (state, action) => {
         state.activeNodeId = action.payload.id;
-
         [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
     },

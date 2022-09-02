@@ -8,22 +8,27 @@ import SubStyleSticker from "./SubStyleSticker";
 export default function StylePanelHeader () {
 
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const activeStyleName = useSelector((state) => state.designerProjectState.activeStyleName)
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex)
 
-    
+    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
+    // const stylesInActiveNode = useSelector((state) => state.designerProjectState.activeNodeObject?.class || [])
 
     const dispatch = useDispatch()
 
     const inputRef = useRef();
+    const styleOptionInputRef = useRef();
     const renameInputRef = useRef();
 
     const [isStyleEditorOpen, setIsStyleEditorOpen] = useState(false);
     const [isAddStyleInputOpen, setIsAddStyleInputOpen] = useState(false);
+    const [isAddStyleOptionInputOpen, setIsAddStyleOptionInputOpen] = useState(false);
+
+    
+    const [listOfStyles, setListOfStyles] = useState(preRenderedStyles);
+    const [indexOfActiveStyleInList, setIndexOfActiveStyleInList] = useState(0);
 
     const shortcutSystemConfig = { overrideSystem: false, ignoreInputFields: false, repeatOnHold: false };
+    
     const { openClassEditorShortcut } = useKeyboardShortcut(["Meta", "Enter"],
         shortcutKeys => { handleOpenNewStyleInput() },
         shortcutSystemConfig
@@ -35,27 +40,72 @@ export default function StylePanelHeader () {
     );
 
     useEffect(() => {
-        if(isAddStyleInputOpen) {
-            inputRef.current.focus();
-            inputRef.current.value = "";
+        if(isAddStyleInputOpen || isAddStyleOptionInputOpen) {
+            if(isAddStyleInputOpen) {
+                inputRef.current.focus();
+                inputRef.current.value = "";
+            }
+            if(isAddStyleOptionInputOpen) {
+                styleOptionInputRef.current.focus();
+                styleOptionInputRef.current.value = "";
+            }
             dispatch(setKeyboardNavigationOn(false));
         } else {
             dispatch(setKeyboardNavigationOn(true));
         }
-    },[isAddStyleInputOpen]);
+    },[isAddStyleInputOpen, isAddStyleOptionInputOpen]);
 
     function handleOpenNewStyleInput () {
-        setIsAddStyleInputOpen(true);
+        if(stylesInActiveNode.length === 0) {
+            setIsAddStyleInputOpen(true);
+            setListOfStyles(preRenderedStyles);
+            setIndexOfActiveStyleInList(0);
+        } else {
+            setIsAddStyleOptionInputOpen(true)
+        }
     }
 
     function handleCloseNewStyleInput () {
         setIsAddStyleInputOpen(false);
     }
 
-    function handleKeyPress(e) {
+    function handleItemClick (name) {
+        dispatch(createNewStyle(name));
+        setIsAddStyleInputOpen(false);
+    }
+
+    function handleOptionInputKeyPress(e) {
         if(e.key === 'Enter') {
             dispatch(createNewStyle(e.target.value));
+            setIsAddStyleOptionInputOpen(false);
+        }
+    }
+
+    function handleKeyPress(e) {
+        if(e.key === 'Enter') {
+            if(indexOfActiveStyleInList === 0) {
+                dispatch(createNewStyle(e.target.value));
+            } else {
+                dispatch(createNewStyle(listOfStyles[indexOfActiveStyleInList-1].name));
+            }
             setIsAddStyleInputOpen(false);
+        } else if (e.key === 'ArrowDown') {
+            if(indexOfActiveStyleInList < listOfStyles.length) {
+                setIndexOfActiveStyleInList(indexOfActiveStyleInList + 1);
+            }
+        } else if (e.key === 'ArrowUp') {
+            if(indexOfActiveStyleInList > 0) {
+                setIndexOfActiveStyleInList(indexOfActiveStyleInList - 1);
+            }
+        } else {
+            let updatedListOfStyles = [];
+            console.log(e.target.value);
+            preRenderedStyles.forEach((style) => {
+                if(style.name.includes(e.target.value)) {
+                    updatedListOfStyles.push(style);
+                }
+            })
+            setListOfStyles(updatedListOfStyles);
         }
     }
 
@@ -80,7 +130,18 @@ export default function StylePanelHeader () {
     return (
         <div className="style-panel-box sticky">
             <div className={"unit-chooser_closer" + ((isStyleEditorOpen) ? " active" : "")}
-                onClick={() => setIsStyleEditorOpen(false)}></div>
+                onClick={() => setIsStyleEditorOpen(false)}>
+            </div>
+
+            <div className={"unit-chooser_closer" + ((isAddStyleInputOpen) ? " active" : "")}
+                onClick={() => setIsAddStyleInputOpen(false)}>
+            </div>
+
+            <div className={"unit-chooser_closer" + ((isAddStyleOptionInputOpen) ? " active" : "")}
+                onClick={() => setIsAddStyleOptionInputOpen(false)}>
+            </div>
+
+            
 
             <div className="style-panel-title-box">
                 <div className="text">{stylesInActiveNode?.[0]?.name} styles</div>
@@ -100,19 +161,25 @@ export default function StylePanelHeader () {
 
                 <div className="new-class-toggle" onClick={handleOpenNewStyleInput}></div>
 
-
                     <div className={"add-class-box" + ((isAddStyleInputOpen) ? " active" : "")}>
                         New class
                         <input 
                         ref={inputRef}
                         type="text"
-                        className="add-class_input"
-                        onKeyDown={handleKeyPress} />
+                        className={"add-class_input" + ((indexOfActiveStyleInList === 0) ? " active" : "")}
+                        onKeyUp={handleKeyPress} />
                         <div className="add-class_items-list">
-                        {preRenderedStyles.map((style) => (
-                            <div className="add-class_item" key={style.id}>{style.name}</div>
+                        {listOfStyles.map((style, index) => (
+                            <div className={"add-class_item" + ((indexOfActiveStyleInList === index + 1) ? " active" : "")} 
+                            onClick={() => handleItemClick(style.name)} 
+                            key={style.id}>{style.name}</div>
                         ))}
                         </div>
+                    </div>
+
+                    <div className={"add-class-box option-box" + ((isAddStyleOptionInputOpen) ? " active" : "")}>
+                        New option
+                        <input onKeyDown={handleOptionInputKeyPress} ref={styleOptionInputRef} className="add-class_input" />
                     </div>
 
                     {/* <input 

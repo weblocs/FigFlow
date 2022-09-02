@@ -317,7 +317,6 @@ img {
   cursor: pointer;
   font-size: 11px;
   display: inline-block;
-  padding: 4px 8px 4px 8px; 
   border-radius: 4px;
   background-color: #736de2;
   margin-right: 4px;
@@ -325,6 +324,10 @@ img {
   color: #fff;
   display: flex;
   width: fit-content;
+}
+
+.style-option-item-text {
+  padding: 4px 8px;
 }
 
 .style-option-item_delete-icon {
@@ -1519,8 +1522,6 @@ transform: translateX(-50%);
   display: -ms-flexbox;
   display: flex;
   height: 30px;
-  padding-right: 8px;
-  padding-left: 8px;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
@@ -1532,6 +1533,18 @@ transform: translateX(-50%);
   border-radius: 4px;
   background-color: #736de2;
   color: #fff;
+}
+
+.selected-class .text {
+  padding-left: 8px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.selected-class .text:hover {
+  opacity: .85;
 }
 
 .selected-class.styleIsNotSet {
@@ -1936,10 +1949,13 @@ transform: translateX(-50%);
   padding: 2px;
   position: relative;
   bottom: 1px;
-  margin-left: 6px;
+  padding-left: 6px;
+  padding-right: 8px;
   cursor: pointer;
   color: #fff;
   transition: opacity .2s;
+  height: 26px;
+  padding-top: 5px;
 }
 
 .seleted-class-delete-button:hover {
@@ -2040,6 +2056,7 @@ transform: translateX(-50%);
   top: 0;
   left: 0;
   z-index: 0;
+  cursor: pointer;
 }
 
 .new-project-button {
@@ -2335,30 +2352,48 @@ transform: translateX(-50%);
 .add-class-box {
     display: none;
     position: absolute;
-    top: 48px;
+    top: 0;
     left: 0;
     padding: 8px;
     background: #f5f5f5;
-    width: 236px;
+    width: 226px;
     font-size: 11px;
     line-height: 11px;
     border-radius: 4px;
     border: 1px solid #d3d3d3;
     z-index: 50;
 }
+
+.add-class-box.option-box {
+  top: -70px;
+}
+
 .add-class-box.active {
   display: block;
 }
 
 .add-class_input {
   display: block;
+  border: 1px solid #8c8c8c;
+  height: 26px;
+  border-radius: 4px;
+  margin-top: 6px;
+  width: 208px;
+  padding: 0 8px;
+  font-size: 12px;
 }
+
+.add-class_input.active {
+  border: 1px solid #736de2;
+}
+
+
 
 .add-class_items-list {
   display: flex;
   flex-direction: column;
   grid-row-gap: 4px;
-  height: 140px;
+  max-height: 140px;
   overflow-y: scroll;
   margin-top: 8px;
 }
@@ -2368,6 +2403,15 @@ transform: translateX(-50%);
   border-radius: 4px;
   background-color: #736de2;
   color: #fff;
+  cursor: pointer;
+}
+
+.add-class_item.active {
+  background-color: #5953c8;
+}
+
+.add-class_item:hover {
+  background-color: #6b65d9;
 }
 
 .selector-text {
