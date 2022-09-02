@@ -81,11 +81,16 @@ export default function ElementSettings() {
 
                         {(nodeType !== "sym") ? <>
 
+
+
                         <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:true}))}>↑</div>
                         <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:false}))}>↓</div>
-                        <div className={"rich-element-settings_button button-centered" + ((addRich) ? " active" : "")} onClick={() => dispatch(setProjectPopUp("addElement"))}>✎</div>
-                        <div className={"rich-element-settings_button button-centered" + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>❐</div>
+                       
+                        <div className={"rich-element-settings_button button-centered" + ((addRich) ? " active" : "")} 
+                        onClick={() => dispatch(setProjectPopUp("addElement"))}>+</div>
+
                         
+
                         <ElementHeadingSettings />
                         
 
@@ -95,10 +100,15 @@ export default function ElementSettings() {
                                 )
                         })}
 
+                        <div className={"rich-element-settings_button button-centered" + ((addRich) ? " active" : "")} onClick={() => dispatch(setProjectPopUp("addElement"))}>✎</div>
+                        <div className={"rich-element-settings_button button-centered" + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>❐</div>
+                        
+
                         <div className={"rich-element-settings_button button-centered" + ((deleteNode) ? " active" : "")} 
                         onClick={handleClickDelete}>
                             <img src={Delete} style={{width: "14px"}} />
                         </div>
+                        
 
                         <div className="rich-element-settings_button button-centered active" 
                         onClick={handleClickClearId}>✕</div>
