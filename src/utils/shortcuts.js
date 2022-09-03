@@ -19,7 +19,7 @@ export default function loadShortcuts() {
       "keydown",
       (e) => {
         if (
-          ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(
+          ["ArrowUp", "ArrowDown"].includes(
             e.code
           )
         ) {

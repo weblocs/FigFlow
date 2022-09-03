@@ -4,6 +4,7 @@ import ElementHeadingSettings from "./ElementHeadingSettings"
 import RichElementSettingsStyle from "./RichElementSettingsStyle"
 import Delete from '../img/delete.svg';
 import { useEffect } from "react";
+import AddRichElementButton from "./AddRichElementButton";
 
 export default function ElementSettings() {
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
@@ -86,10 +87,8 @@ export default function ElementSettings() {
                         <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:true}))}>↑</div>
                         <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:false}))}>↓</div>
                        
-                        <div className={"rich-element-settings_button button-centered" + ((addRich) ? " active" : "")} 
-                        onClick={() => dispatch(setProjectPopUp("addElement"))}>+</div>
 
-                        
+                        <AddRichElementButton addRichSetting={true} />
 
                         <ElementHeadingSettings />
                         
@@ -100,7 +99,7 @@ export default function ElementSettings() {
                                 )
                         })}
 
-                        <div className={"rich-element-settings_button button-centered" + ((addRich) ? " active" : "")} onClick={() => dispatch(setProjectPopUp("addElement"))}>✎</div>
+                        <div className={"rich-element-settings_button button-centered active"}>✎</div>
                         <div className={"rich-element-settings_button button-centered" + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>❐</div>
                         
 

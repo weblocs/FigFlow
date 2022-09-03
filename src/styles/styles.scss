@@ -36,6 +36,17 @@ img {
   z-index: 9999;
 }
 
+.renderedNode {
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.renderedNode[contenteditable = true] {
+  cursor: text;
+}
+
 .renderedNode.active > div > .symbol-wrapper {
   opacity: .2;
 }
@@ -152,6 +163,7 @@ img {
   flex-direction: column;
   position: absolute;
   border: 1px solid #cecece;
+  z-index: 9999;
 }
 
 .heading-element-settings_list .rich-element-settings_button {
@@ -2435,6 +2447,11 @@ color: #544cca;
 
 .page-changer.active {
   background-color: #eee;
+}
+
+.style-options-dropdown .input-label {
+  color: #333;
+  font-size: 11px;
 }
 
 }

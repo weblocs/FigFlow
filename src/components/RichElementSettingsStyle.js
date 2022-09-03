@@ -14,13 +14,13 @@ export default function RichElementSettingsStyle({child, index}) {
 
     let childId = child.options[0].id;
     let childName = child.options[0].name;
-    let isStyleSet = " styleIsNotSet";
+    let isStyleSet = false;
 
     if (stylesInActiveNode.length > index + 1) {
         if(stylesInActiveNode[index+1]?.id !== undefined && stylesInActiveNode[index+1]?.id !== "") {
             childId = stylesInActiveNode[index+1]?.id;
             childName = stylesInActiveNode[index+1]?.name;
-            isStyleSet = "";
+            isStyleSet = true;
         }
     }
 
@@ -41,11 +41,13 @@ export default function RichElementSettingsStyle({child, index}) {
         
     } else {
     return (
-        <div className={"rich-element-settings_button active" + isStyleSet} >
+        <div className={"rich-element-settings_button active" + (isStyleSet ? "" : " styleIsNotSet")} >
             <div className={"unit-chooser_closer" + ((isListOpened) ? " active" : "")}
                 onClick={() => setIsListOpened(false)}></div>
 
-            <div className="rich-element-settings_button-text" onClick={() => setIsListOpened(!isListOpened)}>{childName}</div>
+            <div className="rich-element-settings_button-text" onClick={() => setIsListOpened(!isListOpened)}>
+                {isStyleSet ? childName : (child.defaultName || childName)}
+            </div>
             <div className={"rich-element-settings_options_list" + ((isListOpened) ? " active" : "")}>
                 {child.options.map((option) => 
                         <div key={option.id} onClick={() => handleStyleOptionClick(option.id, option.name)} 

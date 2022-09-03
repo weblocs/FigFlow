@@ -302,6 +302,7 @@ function RenderedNode(props) {
     
   }
 
+
   if (props.type === "h") {
     elementHTML = (
       <ContentEditable
@@ -314,11 +315,6 @@ function RenderedNode(props) {
         tagName={(props.data?.subtype !== undefined) ? props.data.subtype : "h1"}
         html={nodeText}
         disabled={!editable} // use true to disable edition
-        onChange={(e) => props.onChange(sanitizeHtml(e.target.value , {
-          allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
-          allowedAttributes: {
-            'a': [ 'href' ]
-          }}), props.id)} // handle innerHTML change
       />
     );
   }
@@ -335,11 +331,11 @@ function RenderedNode(props) {
         onMouseOut={handleMouseOut}
         html={nodeText}
         disabled={!editable} // use true to disable edition
-        onChange={(e) => props.onChange(sanitizeHtml(e.target.value , {
-          allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
-          allowedAttributes: {
-            'a': [ 'href' ]
-          }}), props.id)} // handle innerHTML change
+        // onChange={(e) => props.onChange(sanitizeHtml(e.target.value , {
+        //   allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
+        //   allowedAttributes: {
+        //     'a': [ 'href' ]
+        //   }}), props.id)} // handle innerHTML change
       />
     );
   }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveStyleId, setKeyboardNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeId, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption, editStyleOptionProperty } from "../../features/pre-rendered-html-nodes";
 
@@ -8,12 +8,15 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
     
+    
 
     const dispatch = useDispatch()
 
     const [editingOptionsTurnOn, setEditingOptionsTurnOn] = useState(false);
     const [openStyleOptionsDropdown, setOpenStyleOptionsDropdown] = useState(false);
     const [input, setInput] = useState("");
+
+    const defaultNameRef = useRef();
 
     function handleOpenDropdown() {
         setOpenStyleOptionsDropdown(!openStyleOptionsDropdown);
@@ -27,6 +30,14 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
             setInput("");
         }
     };
+
+    function handleDefaultNameSubmit(e) {
+        e.preventDefault();
+        if(defaultNameRef.current.value !== "") {
+            dispatch(editStyleOptionProperty({property:"defaultName", value: defaultNameRef.current.value, index: index}));
+            defaultNameRef.current.value = "";
+        }
+    }
 
     function handleDeleteStyleOption() {
         dispatch(deleteStyleOption({index: index}));
@@ -69,7 +80,6 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
 
     function handleCheckboxClick(e) {
         dispatch(editStyleOptionProperty({property:"isOnlyForMobile", value: isOnlyForMobile ? false : true, index: index}));
-        console.log(child);
     }
 
     function handleCheckboxTabletClick(e) {
@@ -83,7 +93,9 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
                 onClick={() => setOpenStyleOptionsDropdown(false)}>
             </div>
             
-            <div onClick={() => handleClickInSticker(id,index)} className="text">{name}</div>
+            <div onClick={() => handleClickInSticker(id,index)} className="text">
+                {styleIsSet ? name : (child.defaultName || name)}
+            </div>
             <span className="seleted-class-delete-button"
             onClick={handleOpenDropdown}
             > ⌄
@@ -119,8 +131,9 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
                 <input type="checkbox" checked={isOnlyForMobile ? true : false} onChange={handleCheckboxClick}/> Only for mobile
                 </label>
 
-                <form>
-                    <input onFocus={handleOnFocus} onBlur={handleOnBlur} placeholder="Default name" />
+                <form onSubmit={handleDefaultNameSubmit}>
+                    <div className="input-label">Default name</div>
+                    <input ref={defaultNameRef} onFocus={handleOnFocus} onBlur={handleOnBlur} placeholder="Default name" />
                     <button>Save</button>
                 </form>
 

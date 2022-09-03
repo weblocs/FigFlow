@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateNewSection from "./CreateNewSection";
 import CreateNewSectionFolder from "./CreateNewSectionFolder";
 
-import {setactiveLayoutFolder, deleteSection, setActiveLayout, createNewSection, createNewSectionFolder} from "../features/pre-rendered-html-nodes"
+import {setactiveLayoutFolder, deleteLayout, setActiveLayout, createNewSection, createNewSectionFolder} from "../features/pre-rendered-html-nodes"
 import CreateNewItemInput from "./CreateNewItemInput";
 
 export default function ProjectLayoutsPanel () {
@@ -61,7 +61,8 @@ export default function ProjectLayoutsPanel () {
                             onClick={() => handleClickInSymbolItem(section.id, folder.id)}>
                                 {section.name}
                             </div>
-                            <div className={"delete-section-item"} onClick={() => dispatch(deleteSection({id: section.id}))}>x</div>
+                            <div className={"delete-section-item"} 
+                            onClick={() => dispatch(deleteLayout({id: section.id}))}>x</div>
                         </div>
                     )})}
                 </div>

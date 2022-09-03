@@ -73,9 +73,7 @@ export default function DispayFlexStylePanel () {
                 </div>
 
                 <div className="display-horizontal-grid with-margin">
-                    <div className={"style-title-box" + ((alignIsSet) ? " active" : "")}>
-                        <div className="text">Align</div>
-                    </div>
+                    <ProprtyInputLabel text="Align" property="align-items" />
                     <div className="display-buttons-box">
                         <DisplayStyleButton style="align-items" value="flex-start" letter="S"/>
                         <DisplayStyleButton style="align-items" value="center" letter="C"/>
@@ -86,9 +84,7 @@ export default function DispayFlexStylePanel () {
                 </div>
 
                 <div className="display-horizontal-grid with-margin">
-                    <div className={"style-title-box" + ((justifyIsSet) ? " active" : "")}>
-                        <div className="text">Justify</div>
-                    </div>
+                    <ProprtyInputLabel text="Justify" property="justify-content" />
                     <div className="display-buttons-box">
                         <DisplayStyleButton style="justify-content" value="flex-start" letter="T"/>
                         <DisplayStyleButton style="justify-content" value="center" letter="C"/>

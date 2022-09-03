@@ -99,7 +99,6 @@ export default function StylePanelHeader () {
             }
         } else {
             let updatedListOfStyles = [];
-            console.log(e.target.value);
             preRenderedStyles.forEach((style) => {
                 if(style.name.includes(e.target.value)) {
                     updatedListOfStyles.push(style);
