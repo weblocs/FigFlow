@@ -42,27 +42,29 @@ export default function PageList({node,parents}) {
         <div className="item-wrapper"
         onMouseEnter={() => setItemHovered(true)}
         onMouseLeave={() => setItemHovered(false)}>
-        <div className={"projectPageItem"
-        // + ((draggedBefore) ? " dragged-before " : "") 
-        + ((node === dragOverPage) ? " draggedOverBottom " : " ")
-        + ((node.id == activePageId) ? "active " : " ") 
-        }
-        draggable={(node.id !== projectPages[0].id)}
-        onDragStart={() => handleDragStart(node)}
-        onDragOver={() => handleDragOver(node)}
-        onDrop={handleDrop}
-        onClick={() => handleOnClick(node)} 
-        nodeid={node.id}
-        style={{paddingLeft: (parents.length*16 + 16) + "px", display: "flex"}}>
-            {(node.children) && (
-                <span><img src={Arrow} className={"page-item-arrow" + ((node?.expanded) ? " expanded" : "")} style={{width:"9px", marginTop: "5px", marginRight: "6px"}} /></span>
-            )}
-            {node.name}
-            
-        </div>
-        <img src={SettingIcon} 
-        className={"page-item_settings-icon" + ((itemHovered) ? " active" : "")} 
-        onClick={() => dispatch(setOpenedSettingsPage(node))}/>
+            <div className={"projectPageItem"
+            // + ((draggedBefore) ? " dragged-before " : "") 
+            + ((node === dragOverPage) ? " draggedOverBottom " : " ")
+            + ((node.id == activePageId) ? "active " : " ") 
+            }
+            draggable={(node.id !== projectPages[0].id)}
+            onDragStart={() => handleDragStart(node)}
+            onDragOver={() => handleDragOver(node)}
+            onDrop={handleDrop}
+            onClick={() => handleOnClick(node)} 
+            nodeid={node.id}
+            style={{paddingLeft: (parents.length*16 + 16) + "px", display: "flex"}}>
+                {(node.children) && (
+                    <span><img src={Arrow} className={"page-item-arrow" + ((node?.expanded) ? " expanded" : "")} style={{width:"9px", marginTop: "5px", marginRight: "6px"}} /></span>
+                )}
+                {node.name}
+                
+            </div>
+
+            <img src={SettingIcon} 
+            className={"page-item_settings-icon" + ((itemHovered) ? " active" : "")} 
+            onClick={() => dispatch(setOpenedSettingsPage(node))}/>
+
         </div>
     )
 }

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CreateNewRichTextElements from "./CreateNewRichTextElements"
-import { setRichTextElements, createNewRichTextElement, addSymbolToPreRenderedHTMLNodesAfterActiveNode} from "../features/pre-rendered-html-nodes"
-import DragKnob from '../img/drag.svg';
+import { setRichTextElements, createNewRichTextElement, addSymbolToPreRenderedHTMLNodesAfterActiveNode, setKeyboardNavigationOn, deleteRichElement, editRichElement} from "../features/pre-rendered-html-nodes"
+
 import {arrayMoveImmutable} from 'array-move'
 import CreateNewItemInput from "./CreateNewItemInput";
+import RichElementListItem from "./RichElementListItem";
 
 export default function ProjectRichTextPanel(){
     const dispatch = useDispatch()
@@ -20,12 +20,7 @@ export default function ProjectRichTextPanel(){
 
     const [draggedStartIndex, setDraggedStartIndex] = useState(-1);
     const [draggedOverIndex, setDraggedOverIndex] = useState(-1);
-
     const [createInputVisible, setCreateInputVisible] = useState(false);
-
-    function handleClickInSymbolItem(symbolId) {
-        dispatch(addSymbolToPreRenderedHTMLNodesAfterActiveNode({id: symbolId}));
-    }
 
     function handleDragOver(index,id) {
         event.preventDefault();
@@ -45,7 +40,7 @@ export default function ProjectRichTextPanel(){
     return(
         <div className={"projectPagesPanel "+ ((activeProjectTab === "Rich Text") ? "active" : "" )}>
             <div className="projectTabTitleBox">
-                Rich Elements
+                Blocks
                 <div className="projectTabTitleButtonsBox">
                     <button onClick={() => setCreateInputVisible(!createInputVisible)}>N</button>
                 </div>
@@ -57,20 +52,16 @@ export default function ProjectRichTextPanel(){
             placeholder="New element" />
 
             <div className="pagesList">
-                {projectRichTextElements.map((element,index) => {
-                    return(
-                    <div 
-                    draggable="true"
-                    onDragStart={() => setDraggedStartIndex(index)}
-                    onDragOver={() => handleDragOver(index,element.id)}
-                    onDrop={handleDrop}
-                    richid={element.id}
-                    className={"projectPageItem " + ((draggedOverIndex === index) ? "draggedOver" : "") + (((draggedOverIndex === index + 1) && (index === projectRichTextElements.length - 1)) ? "draggedOverBottom" : "") } key={element.id}>
-                        {element.name}
-                        {/* <img src={DragKnob} style={{width: "10px", position: "absolute",right: "8px", top: "7px", cursor: "grab"}}/> */}
-                        {/* <div className={"delete-section-item"}>x</div> */}
-                    </div>
-                )})}
+                {projectRichTextElements.map((element,index) => (
+                    <RichElementListItem 
+                    key={element.id}
+                    element={element} 
+                    index={index} 
+                    setDraggedStartIndex={setDraggedStartIndex}
+                    handleDragOver={handleDragOver}
+                    handleDrop={handleDrop}
+                    draggedOverIndex={draggedOverIndex} />
+                ))}
             </div>
         </div>
     )

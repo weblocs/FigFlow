@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {createNewSymbol, addSymbolToPreRenderedHTMLNodesAfterActiveNode, transformNodeIntoSymbol} from "../features/pre-rendered-html-nodes"
 import CreateNewItemInput from "./CreateNewItemInput";
+import EditImg from '../img/edit.svg';
 
 export default function ProjectSymbolsPanel(){
     const dispatch = useDispatch()
@@ -33,16 +34,21 @@ export default function ProjectSymbolsPanel(){
 
             {projectSymbols.map((symbol) => {
                 const [editingIsOn, setEditingIsOn] = useState(false);
+                const [isHovered, setIsHovered] = useState(false)
                 return (
-                    <div style={{position: "relative"}} key={symbol.id}>
-                    <div onClick={() => handleClickInSymbolItem(symbol.id)} className="projectPageItem">
-                        {(!editingIsOn) ? 
-                        symbol.name :
-                        <input defaultValue={symbol.name} />
-                        }
-                    </div>
-                    <div className={"delete-section-item edit-icon"} onClick={() => setEditingIsOn(!editingIsOn)}>e</div>
-                    <div className={"delete-section-item"}>x</div>
+                    <div key={symbol.id}
+                    onMouseOver={() => setIsHovered(true)}
+                    onMouseOut={() => setIsHovered(false)}>
+                        <div style={{position: "relative"}}>
+                            <div onClick={() => handleClickInSymbolItem(symbol.id)} 
+                            className="projectPageItem">
+                                {(!editingIsOn) ? 
+                                symbol.name :
+                                <input defaultValue={symbol.name} />
+                                }
+                            </div>
+                            <img className={"block-item_edit " + (isHovered ? " active" : "")} src={EditImg} />
+                        </div>
                     </div>
                 )
             })}

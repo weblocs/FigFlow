@@ -158,7 +158,7 @@ function updateNodesBasedOnList(state) {
     } else if (state.nodesEditMode === "cmsTemplate") {
         state.preRenderedHTMLNodes = state.projectCollections.find(({id}) => id === state.activeCollectionTemplateId).preRenderedHTMLNodes;
     } else if (state.nodesEditMode === "richElement") {
-        state.projectRichTextElements
+        // state.projectRichTextElements
     }
 }
 
@@ -222,8 +222,22 @@ export const preRenderedNodesSlice = createSlice({
 
     updateProjectPageProperty: (state, action) => {
         state.projectPages.find(({id}) => id === state.openedSettingsPage.id)[action.payload.property] = action.payload.value;
-        let [settingsOpenedPage, settingsOpenedPageSiblingArray, settingsOpenedPageIndex] = findActiveNodeSiblingArrayAndIndex(state.projectPageFolderStructure,state.openedSettingsPage.id);
+        let settingsOpenedPage = findActiveNode(state.projectPageFolderStructure,state.openedSettingsPage.id);
         settingsOpenedPage[action.payload.property] = action.payload.value;
+    },
+
+    deleteProjectPage: (state, action) => {
+        const indexProjectPages = state.projectPages.findIndex(({id}) => id === state.openedSettingsPage.id);
+        state.projectPages.splice(indexProjectPages,1);
+        let [settingsOpenedPage, settingsOpenedPageSiblingArray, settingsOpenedPageIndex] = findActiveNodeSiblingArrayAndIndex(state.projectPageFolderStructure,state.openedSettingsPage.id);
+        settingsOpenedPageSiblingArray.splice(settingsOpenedPageIndex,1);
+        state.activeNodeId = "";
+
+        if(state.openedSettingsPage.id === state.activePageId) {
+            state.activePageIndex = 0;
+            state.activePageId = state.projectPages[state.activePageIndex].id;
+            state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
+        }
     },
 
     clearOpenedSettingPage : (state) => {
@@ -465,7 +479,22 @@ export const preRenderedNodesSlice = createSlice({
             id: uuidv4(),
             name: action.payload,
             preRenderedHTMLNodes: state.activeNodeObject,
+            deleted: false,
         }];
+    },
+
+    editRichElement: (state, action) => {
+        const elementIndex = state.projectRichTextElements.findIndex(({id}) => id === action.payload.id);
+        state.projectRichTextElements[elementIndex][action.payload.property] = action.payload.value;
+    },
+
+    deleteRichElement: (state, action) => {
+        // console.log(action.payload);
+
+        // console.log(current(state.projectRichTextElements));
+        const elementIndex = state.projectRichTextElements.findIndex(({id}) => id === action.payload.id);
+        state.projectRichTextElements.splice(elementIndex,1);
+
     },
 
     setprojectLayouts: (state, action) => {
@@ -902,7 +931,6 @@ export const preRenderedNodesSlice = createSlice({
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
         let activeNodeId = state.activeNodeId;
-        let newNodeId = uuidv4();
 
         let newNode = state.projectSymbols.find(({id}) => id === action.payload.id).preRenderedHTMLNodes;
         regenerateIdsInNodes(newNode);
@@ -932,7 +960,7 @@ export const preRenderedNodesSlice = createSlice({
             state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
         }  
         
-        state.activeNodeId = newNodeId;
+        state.activeNodeId = newNode.id;
         state.stylesInActiveNode = [];
         state.activeStyleName = "";
         state.activeStyleIndex = undefined;
@@ -1327,7 +1355,7 @@ export const preRenderedNodesSlice = createSlice({
 
     setHoveredNodeId: (state,action) => {
         if(!state.keyboardNavigationOn && 
-            document.querySelector(`[el_id="${state.activeNodeId}"]`).innerHTML !== undefined) {
+            document.querySelector(`[el_id="${state.activeNodeId}"]`)?.innerHTML !== undefined) {
 
             let activeNode = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId);
             activeNode.title = sanitizeHtml(document.querySelector(`[el_id="${state.activeNodeId}"]`)?.innerHTML, {
@@ -1802,11 +1830,14 @@ export const {
     setStyleOptionInActiveNode, 
     createNewStyleOption, 
     setActiveStyle, 
+    deleteProjectPage,
     createNewStyle, 
     movePreRenderedNode, 
     setProjectPopUp, 
     setRichTextElements, 
     createNewRichTextElement, 
+    editRichElement,
+    deleteRichElement,
     setProjectMode, 
     setHoveredSectionId, 
     deleteLayout, 

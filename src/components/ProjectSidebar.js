@@ -14,7 +14,7 @@ export default function ProjectSidebar(){
            <ProjectSidebarButton letter="I" tab="Images" />
            <ProjectSidebarButton letter="S" shortcode="S" tab="Symbols" />
            <ProjectSidebarButton letter="L"  shortcode="L" tab="Layouts" />
-           <ProjectSidebarButton letter="R" tab="Rich Text" />
+           <ProjectSidebarButton letter="B" tab="Rich Text" />
            <ProjectSidebarButton letter="V" tab="Versions" />
         </div> :
         <></>

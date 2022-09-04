@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setKeyboardNavigationOn, updateProjectPageProperty, setOpenedSettingsPage, clearOpenedSettingPage } from "../features/pre-rendered-html-nodes"
+import { setKeyboardNavigationOn, updateProjectPageProperty, setOpenedSettingsPage, clearOpenedSettingPage, deleteProjectPage } from "../features/pre-rendered-html-nodes"
+import ConfirmPopUpButton from "./DeletePopUpButton"
 
 export default function PageSettingsPanel() {
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
@@ -43,7 +44,10 @@ export default function PageSettingsPanel() {
             <div className="projectTabTitleBox">
                 Page Settings
                 <div className="projectTabTitleButtonsBox">
-                <div className="settings-close-button" onClick={() => dispatch(setOpenedSettingsPage({}))}>Close</div>
+                
+                <ConfirmPopUpButton handleOnClick={() => dispatch(deleteProjectPage())} />
+
+                <div className="settings-button white-button" onClick={() => dispatch(setOpenedSettingsPage({}))}>Close</div>
                 <button className="settings-button">Save</button>
                 </div>
             </div>
@@ -67,33 +71,36 @@ export default function PageSettingsPanel() {
                     figflow.com/{openedSettingsPage.slug}
                 </span>
 
-                <label className="settings-label">Title Tag</label>
-                <input 
-                className="settings-input"
-                ref={inputMetaNameRef}
-                onFocus={handleFocus} 
-                onBlur={handleBlur}  />
+                {!(openedSettingsPage?.children?.length > 0) && 
+                <>
+                    <label className="settings-label">Title Tag</label>
+                    <input 
+                    className="settings-input"
+                    ref={inputMetaNameRef}
+                    onFocus={handleFocus} 
+                    onBlur={handleBlur}  />
 
-                <label className="settings-label">Meta Description</label>
-                <input 
-                className="settings-input"
-                ref={inputMetaNameRef}
-                onFocus={handleFocus} 
-                onBlur={handleBlur}  />
+                    <label className="settings-label">Meta Description</label>
+                    <input 
+                    className="settings-input"
+                    ref={inputMetaNameRef}
+                    onFocus={handleFocus} 
+                    onBlur={handleBlur}  />
 
-                <label className="settings-label">Custom Code Head</label>
-                <input 
-                className="settings-input"
-                ref={inputMetaNameRef}
-                onFocus={handleFocus} 
-                onBlur={handleBlur}  />
+                    <label className="settings-label">Custom Code Head</label>
+                    <input 
+                    className="settings-input"
+                    ref={inputMetaNameRef}
+                    onFocus={handleFocus} 
+                    onBlur={handleBlur}  />
 
-                <label className="settings-label">Custom Code Body</label>
-                <input 
-                className="settings-input"
-                ref={inputMetaNameRef}
-                onFocus={handleFocus} 
-                onBlur={handleBlur}  />
+                    <label className="settings-label">Custom Code Body</label>
+                    <input 
+                    className="settings-input"
+                    ref={inputMetaNameRef}
+                    onFocus={handleFocus} 
+                    onBlur={handleBlur}  />
+                </>}
 
             </div>
                 
