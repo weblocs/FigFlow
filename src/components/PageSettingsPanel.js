@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setKeyboardNavigationOn, updateProjectPageProperty, setOpenedSettingsPage, clearOpenedSettingPage, deleteProjectPage } from "../features/pre-rendered-html-nodes"
-import ConfirmPopUpButton from "./DeletePopUpButton"
+import ConfirmPopUpButton from "./ConfirmPopUpButton"
 
 export default function PageSettingsPanel() {
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
@@ -45,7 +45,11 @@ export default function PageSettingsPanel() {
                 Page Settings
                 <div className="projectTabTitleButtonsBox">
                 
-                <ConfirmPopUpButton handleOnClick={() => dispatch(deleteProjectPage())} />
+                <ConfirmPopUpButton 
+                handleOnClick={() => dispatch(deleteProjectPage())} 
+                deleteItemName={openedSettingsPage?.name}
+                deleteItemType="page" 
+                redButton={false} />
 
                 <div className="settings-button white-button" onClick={() => dispatch(setOpenedSettingsPage({}))}>Close</div>
                 <button className="settings-button">Save</button>

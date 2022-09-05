@@ -2560,7 +2560,7 @@ color: #544cca;
   background: #f4f4f4;
   padding: 8px;
   top: 30px;
-  left: 6px;
+  left: 5px;
   width: 172px;
   cursor: default;
   border: 1px solid #cbcbcb;
@@ -2597,6 +2597,22 @@ color: #544cca;
   padding: 0 8px;
   font-size: 12px;
   margin-bottom: 6px;
+}
+
+.edit-icon_wrapper:hover .block-item_edit {
+  display: block;
+}
+
+.edit-icon_wrap-folder {
+  position: relative;
+}
+
+.sections-nav-folder-item:hover + div .folder-item {
+  display: block;
+}
+
+.folder-item:hover {
+  display: block;
 }
 
 }

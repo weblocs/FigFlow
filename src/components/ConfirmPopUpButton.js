@@ -2,11 +2,15 @@ import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setOpenedSettingsPage } from "../features/pre-rendered-html-nodes";
 
-export default function ConfirmPopUpButton({handleOnClick}) {
+export default function ConfirmPopUpButton({handleOnClick, deleteItemName,  deleteItemType, redButton}) {
     const openedSettingsPage = useSelector((state) => state.designerProjectState.openedSettingsPage)
     const dispatch = useDispatch()
 
     const [confirmPopUpOpened, setConfirmPopUpOpened] = useState(false);
+
+    if(deleteItemType === "page") {
+        deleteItemType = (openedSettingsPage?.children?.length > 0) ? "folder" : "page";
+    }
 
     function confirmClick() {
         handleOnClick();
@@ -21,7 +25,7 @@ export default function ConfirmPopUpButton({handleOnClick}) {
                 <div className="confirm-popup_box">
                     
                 <div className="confirmation-popup_message">
-                    Are you sure you want to delete the "{openedSettingsPage?.name}" {(openedSettingsPage?.children?.length > 0) ? "folder" : "page"}?
+                    Are you sure you want to delete the "{deleteItemName}" {deleteItemType}
                 </div>
                 
 
@@ -36,7 +40,10 @@ export default function ConfirmPopUpButton({handleOnClick}) {
                     
                 </div>
             </div>
-            <div className="settings-close-button" onClick={() => setConfirmPopUpOpened(true)}>Delete</div>
+            {redButton ? 
+            <div className="settings-button delete-button" onClick={() => setConfirmPopUpOpened(true)}>Delete</div> :
+            <div className="settings-close-button" onClick={() => setConfirmPopUpOpened(true)}>Delete</div> 
+            }
         </div>
     )
 }

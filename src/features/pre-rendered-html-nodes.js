@@ -489,12 +489,18 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     deleteRichElement: (state, action) => {
-        // console.log(action.payload);
-
-        // console.log(current(state.projectRichTextElements));
         const elementIndex = state.projectRichTextElements.findIndex(({id}) => id === action.payload.id);
         state.projectRichTextElements.splice(elementIndex,1);
+    },
 
+    editSymbol: (state, action) => {
+        const elementIndex = state.projectSymbols.findIndex(({id}) => id === action.payload.id);
+        state.projectSymbols[elementIndex][action.payload.property] = action.payload.value;
+    },
+
+    deleteSymbol: (state, action) => {
+        const elementIndex = state.projectSymbols.findIndex(({id}) => id === action.payload.id);
+        state.projectSymbols.splice(elementIndex,1);
     },
 
     setprojectLayouts: (state, action) => {
@@ -521,6 +527,19 @@ export const preRenderedNodesSlice = createSlice({
         }
     },
 
+    editLayout: (state, action) => {
+        let sectionId = action.payload.id;
+        let property = action.payload.property;
+        let value = action.payload.value;
+        for (let i = 0; i < state.projectLayouts.length; i++) {
+            for (let j = 0; j < state.projectLayouts[i].items.length; j++) {
+                if(state.projectLayouts[i].items[j].id === sectionId) {
+                    state.projectLayouts[i].items[j][property] = value;
+                }
+            }
+        }
+    },
+
     deleteLayout: (state, action) => {
         let sectionId = action.payload.id;
         for (let i = 0; i < state.projectLayouts.length; i++) {
@@ -537,6 +556,32 @@ export const preRenderedNodesSlice = createSlice({
             }
         }
     }, 
+
+    editLayoutFolder: (state, action) => {
+        let layoutFolderId = action.payload.id;
+        let property = action.payload.property;
+        let value = action.payload.value;
+        for (let i = 0; i < state.projectLayouts.length; i++) {
+            if(state.projectLayouts[i].id === layoutFolderId) {
+                state.projectLayouts[i][property] = value;
+            }
+        }
+    },
+
+    deleteLayoutFolder: (state, action) => {
+        let layoutFolderId = action.payload.id;
+        for (let i = 0; i < state.projectLayouts.length; i++) {
+            if(state.projectLayouts[i].id === layoutFolderId) {
+
+                if(state.activeLayoutFolder === state.projectLayouts[i].id) {
+                    //[TODO] ADD WHAT HAPPEN IF THERE IS ONLY ONE LAYOUT
+                    state.activeLayoutFolder = state.projectLayouts[0].id;
+                }
+
+                state.projectLayouts.splice(i,1);
+            }
+        }
+    },
 
     createNewSectionFolder: (state, action) => {
         state.projectLayouts = [...state.projectLayouts, {
@@ -1841,6 +1886,8 @@ export const {
     setProjectMode, 
     setHoveredSectionId, 
     deleteLayout, 
+    editLayout,
+    editLayoutFolder,
     setCopiedSectionNodes, 
     setactiveLayoutFolder, 
     addSectionToPreRenderedHTMLNodes, 
@@ -1891,5 +1938,8 @@ export const {
     setActiveNodeId, 
     setActiveStyleId, 
     editStyleInPreRenderedStyles,
+    editSymbol,
+    deleteSymbol,
+    deleteLayoutFolder,
 } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

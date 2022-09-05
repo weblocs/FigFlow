@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {createNewSymbol, addSymbolToPreRenderedHTMLNodesAfterActiveNode, transformNodeIntoSymbol} from "../features/pre-rendered-html-nodes"
+import {editSymbol, deleteSymbol, addSymbolToPreRenderedHTMLNodesAfterActiveNode, transformNodeIntoSymbol, setProjectSymbols} from "../features/pre-rendered-html-nodes"
 import CreateNewItemInput from "./CreateNewItemInput";
-import EditImg from '../img/edit.svg';
+import ListItemEditIcon from "./ListItemEditIcon";
+import {arrayMoveImmutable} from 'array-move'
 
 export default function ProjectSymbolsPanel(){
     const dispatch = useDispatch()
@@ -13,6 +14,32 @@ export default function ProjectSymbolsPanel(){
 
     function handleClickInSymbolItem(symbolId) {
         dispatch(addSymbolToPreRenderedHTMLNodesAfterActiveNode({id: symbolId}));
+    }
+
+
+    const [draggedStartIndex, setDraggedStartIndex] = useState(-1);
+    const [draggedOverIndex, setDraggedOverIndex] = useState(-1);
+
+    const onSortEnd = (oldIndex, newIndex) => {
+        if(newIndex > oldIndex) {
+            newIndex--;
+        }
+        dispatch(setProjectSymbols(arrayMoveImmutable(projectSymbols, oldIndex, newIndex)));
+    }
+
+    function handleDragOver(index,id) {
+        event.preventDefault();
+        if (event.clientY - document.querySelector(`[richid="${id}"]`).offsetTop > 20 ) {
+            setDraggedOverIndex(index + 1);
+        } else {
+            setDraggedOverIndex(index);
+        }
+    }
+
+    function handleDrop() {
+        onSortEnd(draggedStartIndex, draggedOverIndex)
+        setDraggedStartIndex(-1);
+        setDraggedOverIndex(-1);
     }
     
     return(
@@ -32,22 +59,29 @@ export default function ProjectSymbolsPanel(){
 
             <div className="pagesList">
 
-            {projectSymbols.map((symbol) => {
-                const [editingIsOn, setEditingIsOn] = useState(false);
-                const [isHovered, setIsHovered] = useState(false)
+            {projectSymbols.map((symbol, index) => {
                 return (
                     <div key={symbol.id}
-                    onMouseOver={() => setIsHovered(true)}
-                    onMouseOut={() => setIsHovered(false)}>
+                    draggable="true"
+                    onDragStart={() => setDraggedStartIndex(index)}
+                    onDragOver={() => handleDragOver(index,symbol.id)}
+                    onDrop={handleDrop}
+                    className="edit-icon_wrapper"
+                    richid={symbol.id}>
                         <div style={{position: "relative"}}>
                             <div onClick={() => handleClickInSymbolItem(symbol.id)} 
-                            className="projectPageItem">
-                                {(!editingIsOn) ? 
-                                symbol.name :
-                                <input defaultValue={symbol.name} />
-                                }
+                            className={"projectPageItem block-item " + ((draggedOverIndex === index) ? "draggedOver" : "") + (((draggedOverIndex === index + 1) && (index === projectSymbols.length - 1)) ? "draggedOverBottom" : "")}>
+                                {symbol.name}
                             </div>
-                            <img className={"block-item_edit " + (isHovered ? " active" : "")} src={EditImg} />
+
+                            <ListItemEditIcon 
+                            text="Edit Symbol"
+                            itemType="symbol"
+                            element={symbol} 
+                            editFx={editSymbol} 
+                            deleteFx={deleteSymbol} 
+                            isDeleteButtonVisible={false}
+                            active={false} />
                         </div>
                     </div>
                 )
