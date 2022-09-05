@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateNewSection from "./CreateNewSection";
 import CreateNewSectionFolder from "./CreateNewSectionFolder";
 
-import {setactiveLayoutFolder, deleteLayout, setActiveLayout, createNewSection, createNewSectionFolder} from "../features/pre-rendered-html-nodes"
+import {editLayout, editLayoutFolder, deleteLayoutFolder, setactiveLayoutFolder, deleteLayout, setActiveLayout, createNewSection, createNewSectionFolder} from "../features/pre-rendered-html-nodes"
 import CreateNewItemInput from "./CreateNewItemInput";
+import ListItemEditIcon from "./ListItemEditIcon";
 
 export default function ProjectLayoutsPanel () {
     const dispatch = useDispatch()
@@ -45,24 +46,47 @@ export default function ProjectLayoutsPanel () {
             <div className="pagesList">
             
             {projectLayouts.map((folder) => (
-                <div key={folder.id}>
+                <div key={folder.id} 
+                className="edit-icon_wrap-folder">
                     <div 
                     onClick={() => dispatch(setactiveLayoutFolder(folder.id))}
                     className={"sections-nav-folder-item" + ((activeLayoutFolder === folder.id) ? " active" : "" )}
                     key={folder.id}>
                         {folder.name}
                     </div>
+
+                        <ListItemEditIcon 
+                            text="Edit Layout Folder"
+                            itemType="layout folder"
+                            element={folder}
+                            editFx={editLayoutFolder} 
+                            deleteFx={deleteLayoutFolder} 
+                            folderItem={true}
+                            active={false}
+                            isDeleteButtonVisible={true} />
+
                     {folder.items.map((section) => {
                         return (
                         <div style={{position:"relative"}}
-                        key={section.id}>
+                        key={section.id}
+                        className="edit-icon_wrapper"
+                        >
                             <div 
-                            className={"projectPageItem" + ((activeLayoutId === section.id) ? " active" : "" )} 
+                            className={"projectPageItem block-item" + ((activeLayoutId === section.id) ? " active" : "" )} 
                             onClick={() => handleClickInSymbolItem(section.id, folder.id)}>
-                                {section.name}
+                                {section.name} 
                             </div>
-                            <div className={"delete-section-item"} 
-                            onClick={() => dispatch(deleteLayout({id: section.id}))}>x</div>
+                        
+                        
+
+                        <ListItemEditIcon 
+                            text="Edit Layout"
+                            itemType="layout"
+                            element={section}
+                            editFx={editLayout} 
+                            deleteFx={deleteLayout} 
+                            active={false}
+                            isDeleteButtonVisible={true} />
                         </div>
                     )})}
                 </div>
