@@ -9,13 +9,13 @@ export default function SaveButton() {
     
     
     function handleOnClick() {
-      dispatch(setSaveButtonStateText("Saving"));
+      dispatch(setSaveButtonStateText("Publishing"));
 
       dispatch(saveProjectToFirebase());
 
-      dispatch(setSaveButtonStateText("Saved"));
+      dispatch(setSaveButtonStateText("Published"));
       setTimeout(function () {
-        dispatch(setSaveButtonStateText("Save"));
+        dispatch(setSaveButtonStateText("Publish"));
     }, 2000);
     }
 

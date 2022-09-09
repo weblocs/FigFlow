@@ -25,7 +25,11 @@ export default function ProjectSidebarButton(props){
     
     return(
         <div className={"projectSidebarButton" + ((activeProjectTab === props.tab) ? " active" : "")} onClick={() => dispatch(setActiveProjectTab(props.tab))}>
-           {props.letter}
+            {props?.img ? 
+            <img className="sidebar-button_image" src={props.img} /> :
+            <div>{props.letter}</div>
+            }
+           
         </div>
     )
 }

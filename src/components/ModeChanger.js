@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { saveProjectToFirebase, setProjectMode } from "../features/pre-rendered-html-nodes";
 
+import ProIcon from '../img/pro.svg';
+
 export default function ModeChanger() {
     const projectMode = useSelector((state) => state.designerProjectState.projectMode);
-    const projectModeLink = useSelector((state) => {
+    const projectModeButtonText = useSelector((state) => {
         if(state.designerProjectState.projectMode === "developer") {
-            return "create"
+            return "Creator Mode"
         } else {
-            return "design"
+            return "Developer Mode"
         }
     });
     const dispatch = useDispatch();
@@ -21,11 +23,11 @@ export default function ModeChanger() {
     }
    
     return (
-        // <Link to={"/" + projectModeLink + "/" + params.projectSlug} onClick={() => dispatch(saveProjectToFirebase())}>
-        //     <div className="addNodeButton">M</div>
-        // </Link> 
-        <div onClick={handleClick}>
-            <div className="addNodeButton">M</div>
-        </div>     
+        <div onClick={handleClick} className="logo-settings-panel-link">{projectModeButtonText}</div>
+        // <div onClick={handleClick}>
+        //     <div className="addNodeButton">
+        //         M
+        //     </div>
+        // </div>     
     )
 }

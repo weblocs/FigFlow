@@ -46,7 +46,7 @@ const initialState = {
   activeStyleIndex: 0,
   stylesInActiveNode: [],
   projectFirebaseId: "",
-  saveButtonStateText: "Save",
+  saveButtonStateText: "Publish",
   copiedNodes: {},
   dragableCopiedNodes: {},
   draggedOverNodeId: "",
@@ -678,7 +678,7 @@ export const preRenderedNodesSlice = createSlice({
 
 
             [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
-
+            state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
         }
     },
 
@@ -691,7 +691,7 @@ export const preRenderedNodesSlice = createSlice({
                 state.preRenderedStyles = activeUndoNode.preRenderedStyles;
 
                 [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
-
+                state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
             }
         },
 

@@ -883,7 +883,7 @@ font-size: 12px;
   position: sticky;
   background: #fff;
   border-bottom: 1px solid #d3d3d3;
-  z-index: 5;
+  z-index: 6;
 }
 
 a {
@@ -903,6 +903,28 @@ a {
     justify-content: center;
     text-decoration: none;
     background: #fff;
+    position: relative;
+}
+
+.logo-settings-panel {
+  display: none;
+  z-index: 99999;
+    position: fixed;
+    top: 6px;
+    left: 6px;
+  background-color: #f8f8f8;
+    border: 1px solid #c3c3c3;
+    border-bottom: 0;
+}
+
+.logo-settings-panel.active {
+  display: block;
+}
+
+.logo-settings-panel-link {
+  padding: 0px 12px 0 8px;
+  border-bottom: 1px solid #c3c3c3;
+  color: #333;
 }
 
 .addNodeButton.medium {
@@ -2607,12 +2629,26 @@ color: #544cca;
   position: relative;
 }
 
-.sections-nav-folder-item:hover + div .folder-item {
-  display: block;
+.folder-add-item {
+  right: 28px;
 }
 
-.folder-item:hover {
-  display: block;
+.projectSidebarButton .sidebar-button_image {
+  width: 16px;
+  opacity: .8;
 }
+
+.project-logo_wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.project-logo_wrapper:hover {
+  background-color: #eee;
+}
+
 
 }
