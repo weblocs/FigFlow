@@ -20,7 +20,7 @@ export default function ProjectLayoutsPanel () {
             <div className="projectTabTitleBox">
                 Layouts
                 <div className="projectTabTitleButtonsBox">
-                    <button onClick={() => setCreatePageInputVisible(!createPageInputVisible)}>L</button>
+                    {/* <button onClick={() => setCreatePageInputVisible(!createPageInputVisible)}>L</button> */}
                     <button onClick={() => setCreateFolderInputVisible(!createFolderInputVisible)}>F</button>
                 </div>
             </div>

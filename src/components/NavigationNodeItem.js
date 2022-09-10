@@ -87,9 +87,11 @@ import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOve
             <div 
             onDoubleClick={() => (node.type === "sym" && editedSymbolId.symbolId === "") && dispatch(setEditedSymbolId({symbolId:nodeObject.symbolId, elementId: nodeObject.id}))}
             className={"navigation-node-inside" + ((node.type === "sym") ? " symbol-nav-item" : "") + ((depth >= 0) ? " lined" : "") + ((depth === 0) ? " white" : "")}
-            onClick={handleArrowClick}>
+            >
                 {(node.children.length > 0) && (
-                    <img src={Arrow} className={"node-folder-arrow" + ((node?.expanded) ? " expanded" : "")} />
+                    <img src={Arrow} 
+                    className={"node-folder-arrow" + ((node?.expanded) ? " expanded" : "")} 
+                    onClick={handleArrowClick}/>
                 )}
                 <span>{node.type}</span>{nodeName}
             </div>

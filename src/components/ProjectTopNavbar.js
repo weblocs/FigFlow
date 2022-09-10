@@ -13,6 +13,7 @@ import PortraitIcon from '../img/portrait.svg';
 import MobileIcon from '../img/mobile.svg';
 import DatabaseIcon from '../img/database.svg';
 import ProjectLogo from "./ProjectLogo";
+import CustomResolutionsButton from "./CustomResolutionsButton";
 
 export default function ProjectTopNavbar() {
 
@@ -34,12 +35,18 @@ export default function ProjectTopNavbar() {
         </div>
 
         <div className={"centerNavbar" + ((projectMode === "creator") ? " creator-mode-list" : "")}>
+
+          <CustomResolutionsButton />
+          
+
           <TopNavbarResolutionChangeButton resolutionNumber="1" image={DesktopIcon} />
           {(projectMode === "developer") && (<>
           <TopNavbarResolutionChangeButton resolutionNumber="2" image={TabletIcon}  />
-          <TopNavbarResolutionChangeButton resolutionNumber="3" image={PortraitIcon}  />
+          {/* <TopNavbarResolutionChangeButton resolutionNumber="3" image={PortraitIcon}  /> */}
           </>)}
           <TopNavbarResolutionChangeButton resolutionNumber="4" image={MobileIcon}  />
+          
+          
         </div>
         
         <div className="projectNavigationRight">

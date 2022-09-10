@@ -366,7 +366,6 @@ export const preRenderedNodesSlice = createSlice({
         activeNode.class[optionIndex+1] = {id: "", name: ""}
         state.stylesInActiveNode[optionIndex+1] = {id: "", name: ""};
         state.activeStyleId = "";
-
     },
 
     deleteStyleSubOption: (state, action) => {
@@ -1186,7 +1185,6 @@ export const preRenderedNodesSlice = createSlice({
             state.preRenderedStyles[state.activeStyleIndex][styleResolution][styleProperty] = styleValue;
         } else if(state.activeStyleId === "") {
             const node = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId);
-            console.log(current(node));
             if(node?.styles === undefined) {
                 node.styles = {};
             }
@@ -1213,6 +1211,13 @@ export const preRenderedNodesSlice = createSlice({
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
     },
 
+    deleteInlineNodeStyleProperty: (state, action) => {
+        let styleProperty = action.payload;
+        let styleResolution = state.activeProjectResolutionStylesListName;
+        const node = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId);
+        delete node.styles[styleResolution][styleProperty];
+    },
+    
     setActiveNodeId: (state, action) => {
         state.activeNodeId = action.payload.id;
         [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
@@ -1223,11 +1228,13 @@ export const preRenderedNodesSlice = createSlice({
         state.activeStyleObject = action.payload;
     },
 
-    updateActiveStyle: (state) => {
+    updateActiveStyleProperties: (state) => {
         if(state.activeStyleId === state.stylesInActiveNode?.[0]?.id) {
             state.activeStyleObject = state.preRenderedStyles[state.activeStyleIndex]?.[state.activeProjectResolutionStylesListName];
-        } else {
-            state.activeStyleObject =  state.preRenderedStyles?.find(({id}) => id === state.stylesInActiveNode?.[0]?.id)?.childrens[state.activeStyleOptionIndex]?.options.find(({id}) => id === state.activeStyleId)?.[state.activeProjectResolutionStylesListName];
+        } else { 
+            state.activeStyleObject = state.preRenderedStyles?.find(({id}) => id === state.stylesInActiveNode?.[0]?.id)?.
+            childrens[state.activeStyleOptionIndex]?.options.find(({id}) => id === state.activeStyleId)?.
+            [state.activeProjectResolutionStylesListName] || {};
         }
     },
 
@@ -1344,58 +1351,6 @@ export const preRenderedNodesSlice = createSlice({
             }
         }
         findNode(state.preRenderedHTMLNodes, state.activeNodeId);
-
-    },
-
-    connectStyleWithNode: (state, action) => {
-        let nodeId = state.activeNodeId;
-        let styleName = action.payload;
-        let styleId = getIdOfPreRenderedStyleByName(state.preRenderedStyles, styleName, state.stylesInActiveNode);
-
-        let isItNewStyle = true;
-        let newStyleId = uuidv4();
-
-        state.preRenderedStyles.map((style) => {
-           
-            if(style.name === styleName) {
-
-                // [to-work-on] For classes with parents we have different id values in styles and nodes
-                if(JSON.stringify(style.parents) === JSON.stringify(state.stylesInActiveNode)) {
-                    isItNewStyle = false;
-                }
-            }
-        });
-
-        let newStyleToConnectWithNodes = {};
-        let newStyleToConnectWithStyles = { name: styleName, id: newStyleId, styles: {}, tabletStyles: {}, portraitStyles: {}, mobileStyles: {}, parents: state.stylesInActiveNode };
-
-
-        if(isItNewStyle) {
-            newStyleToConnectWithNodes = { name: styleName, id: newStyleId };
-            state.preRenderedStyles = [...state.preRenderedStyles, newStyleToConnectWithStyles];
-            state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
-        } else {
-            newStyleToConnectWithNodes = { name: styleName, id: styleId };
-        }
-
-        function findNode(nodes, id) {
-            for (let i = 0; i < nodes.length; i++) {
-            if (nodes[i].id === id) {
-                nodes[i].class.push(newStyleToConnectWithNodes);
-                state.stylesInActiveNode = [...nodes[i].class];
-                break;
-            }
-            if (nodes[i].children) {
-                findNode(nodes[i].children, id);
-            }
-            }
-        }
-        findNode(state.preRenderedHTMLNodes, nodeId);
-
-        state.activeStyleName = styleName;
-        state.activeStyleId = newStyleToConnectWithNodes.id;
-        state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
-        
     },
 
     setHoveredNodeId: (state,action) => {
@@ -1898,7 +1853,7 @@ export const {
     addSwatch, 
     updateSwatch, 
     setActiveNodeParentsPath, 
-    updateActiveStyle, 
+    updateActiveStyleProperties, 
     setActiveProjectResolution, 
     checkIfActvieNodeParentDispayStyleIsFlex, 
     deleteActiveNode, 
@@ -1930,7 +1885,6 @@ export const {
     arrowActiveNodeNavigation, 
     setHoveredNodeId, 
     addNodeToRenderedHTMLNodesAfterActiveNode, 
-    connectStyleWithNode, 
     addPreRenderedStyle, 
     setPreRenderedHTMLNodes, 
     deleteNodeByIdInPreRenderedHTMLNodes, 
@@ -1941,5 +1895,6 @@ export const {
     editSymbol,
     deleteSymbol,
     deleteLayoutFolder,
+    deleteInlineNodeStyleProperty,
 } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

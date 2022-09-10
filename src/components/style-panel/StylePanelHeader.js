@@ -6,7 +6,8 @@ import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from "./SubStyleSticker";
 
 export default function StylePanelHeader () {
-
+    
+    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
 
@@ -147,7 +148,7 @@ export default function StylePanelHeader () {
             </div>
             <div className="selector-box">
                 <div 
-                className={"selector-text" + ((activeStyleId === "") ? " active" : "")}
+                className={"selector-text" + ((activeStyleId === "" && activeNodeId !== "") ? " active" : "")}
                 onClick={() => dispatch(setActiveStyleId(""))}
                 >Selector</div>
 

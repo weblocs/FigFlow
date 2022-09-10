@@ -9,11 +9,14 @@ import AddRichTextElementButton from "./AddRichTextElementButton";
 import sanitizeHtml from 'sanitize-html';
 import Placeholder from '../img/placeholder.svg';
 
+import { camelCase } from "lodash";
+
 function RenderedNode(props) {
 
   const [editable, setEditable] = useState(false);
 
   const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
+  const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution);
   const projectCollections = useSelector((state) => state.designerProjectState.projectCollections);
   const projectMode = useSelector((state) => state.designerProjectState.projectMode);
   const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode);
@@ -78,6 +81,40 @@ function RenderedNode(props) {
   function handleSectionMouseOver() {
     dispatch(setHoveredSectionId(props.id));
   }
+
+  // if(props?.data?.styles !== undefined) {
+  //   console.log(props?.data?.styles);
+  // }
+  
+  let customStyle = {};
+  if (activeProjectResolution === "1") {
+    if(props?.data?.styles?.styles !== undefined) {
+
+      customStyle = props?.data?.styles?.styles;
+      customStyle = Object.fromEntries(
+        Object.entries(customStyle).map(([key, value]) => 
+          // Modify key here
+          [_.camelCase(key), value]
+        )
+      )
+      
+    }
+  }
+  if (activeProjectResolution === "2") {
+    if(props?.data?.styles?.tabletStyles !== undefined) {
+      customStyle = props?.data?.styles?.tabletStyles;
+    }
+  }
+  if (activeProjectResolution === "4") {
+    if(props?.data?.styles?.mobileStyles !== undefined) {
+      customStyle = props?.data?.styles?.mobileStyles;
+    }
+  }
+  if (activeProjectResolution === "3") {
+    if(props?.data?.styles?.portraitStyles !== undefined) {
+      customStyle = props?.data?.styles?.portraitStyles;
+    }
+  }
   
   
 
@@ -85,6 +122,7 @@ function RenderedNode(props) {
   
   let elementHTML = (
     <div 
+    style={customStyle}
     el_id={props.id}
     onClick={handleOnClick}
     onMouseOver={handleMouseOver}
@@ -118,6 +156,7 @@ function RenderedNode(props) {
       <div onMouseEnter={handleSectionMouseOver}>
 
       <div 
+      style={customStyle}
       el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
@@ -152,6 +191,7 @@ function RenderedNode(props) {
   if (props.type === "rich") {
     elementHTML = (
       <div 
+      style={customStyle}
       el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
@@ -185,6 +225,7 @@ function RenderedNode(props) {
   if (props.type === "sym") {
     elementHTML = (
       <div 
+      style={customStyle}
       id={props.id}
       el_id={props.id}
       onClick={handleOnClick}
@@ -232,6 +273,7 @@ function RenderedNode(props) {
 
     elementHTML = (
       <div 
+      style={customStyle}
       el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
@@ -272,6 +314,7 @@ function RenderedNode(props) {
     }
     elementHTML = (
       <img 
+      style={customStyle}
       src={(imageSrc !== undefined) ? "https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+imageSrc+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a" : Placeholder}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
@@ -306,6 +349,7 @@ function RenderedNode(props) {
   if (props.type === "h") {
     elementHTML = (
       <ContentEditable
+        style={customStyle}
         onClick={handleOnClick}
         onDoubleClick={handleDoubleClick}
         onMouseOver={handleMouseOver}
@@ -322,6 +366,7 @@ function RenderedNode(props) {
   if (props.type === "p") {
     elementHTML = (
       <ContentEditable
+        style={customStyle}
         className={listOfNodeStyles}
         el_id={props.id}
         tagName="p"
@@ -343,6 +388,7 @@ function RenderedNode(props) {
   if (props.type === "l") {
     elementHTML = (
       <div 
+      style={customStyle}
       el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}

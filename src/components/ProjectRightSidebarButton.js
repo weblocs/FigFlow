@@ -11,7 +11,7 @@ export default function ProjectRightSidebarButton(props) {
         <div 
         className={"projectRightSidebarNav" + ((activeRightSidebarTab === props.tab) ? " active" : "")}
         onClick={() => dispatch(setActiveRightSidebarTab(props.tab))}>
-            {props.letter}
+            <img src={props.icon} style={{width: "14px"}} />
         </div>
     )
 }

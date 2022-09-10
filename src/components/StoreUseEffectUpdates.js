@@ -1,7 +1,7 @@
 import { current } from "@reduxjs/toolkit";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addUndoState, checkIfActvieNodeParentDispayStyleIsFlex, setSymbolsHeights, setActionActiveFalse, setActiveCollectionTemplateId, setActiveLayoutId, setActiveNodeComputedStyles, setActiveNodeId, setActiveNodeObject, setActiveNodeParentsPath, setActivePage, setActiveStyleOptionIndex, updateActiveStyle } from "../features/pre-rendered-html-nodes"
+import { addUndoState, checkIfActvieNodeParentDispayStyleIsFlex, setSymbolsHeights, setActionActiveFalse, setActiveCollectionTemplateId, setActiveLayoutId, setActiveNodeComputedStyles, setActiveNodeId, setActiveNodeObject, setActiveNodeParentsPath, setActivePage, setActiveStyleOptionIndex, updateActiveStyleProperties } from "../features/pre-rendered-html-nodes"
 
 
 export default function StoreUseEffectUpdates () {
@@ -24,7 +24,11 @@ export default function StoreUseEffectUpdates () {
     },[activeNodeId, preRenderedHTMLNodes]);
 
     useEffect(() => {
-        dispatch(updateActiveStyle());
+        console.log(activeStyleId);
+    },[activeNodeId]);
+
+    useEffect(() => {
+        dispatch(updateActiveStyleProperties());
     },[activeNodeId, activeProjectResolution, preRenderedHTMLNodes, preRenderedStyles, activeStyleId]);
 
     useEffect(() => {
