@@ -13,8 +13,6 @@ export default function ElementSettings() {
     const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId)
     const nodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
     const nodeType = useSelector((state) => state.designerProjectState.activeNodeObject?.type)
-
-    
     
     const activeSymbolName = useSelector((state) => {
         const activeSymbolId = state.designerProjectState.activeNodeObject?.symbolId;

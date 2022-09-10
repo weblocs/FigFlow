@@ -15,6 +15,13 @@ export function doesStylePropertyBelongToActiveStyle(activeStyleObject, property
   return false;
 }
 
+export function doesStylePropertyIsInlineFx(activeNodeObject, property) {
+  if (activeNodeObject?.styles?.styles?.[property] !== undefined) {
+    return true;
+  }
+  return false;
+}
+
 export function getIdOfPreRenderedStyleByName(styleNodes, styleName, styleParents) {
   let res;
   for (let i = 0; i < styleNodes.length; i++) {
@@ -31,14 +38,17 @@ export function JSONtoCSS (_classes, activeResolution) {
     let tempName = "";
     
     _classes.forEach(createTempClasses);
+
     (activeResolution === "2" || activeResolution === "3" || activeResolution === "4") && (
       _classes.forEach(createTempClassesTablet)
     );
+
     (activeResolution === "3" || activeResolution === "4") && (
-      _classes.forEach(createTempClassesPortrait)
-    );
-    (activeResolution === "4") && (
       _classes.forEach(createTempClassesMobile)
+    );
+
+    (activeResolution === "3") && (
+      _classes.forEach(createTempClassesPortrait)
     );
     
 
@@ -127,6 +137,7 @@ export function setStylesInActiveNodeAndActiveStyle(nodes, id) {
   let response = [];
   function findNode(nodes,id) {
     for (let i = 0; i < nodes.length; i++) {
+      
       if (nodes[i].id === id) {
           response[0] = nodes[i]?.class;
           response[1] = nodes[i]?.class[nodes[i].class.length - 1]?.name;
