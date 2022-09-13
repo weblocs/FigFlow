@@ -66,6 +66,7 @@ function RenderedNode(props) {
     if(!editable) {
       dispatch(setKeyboardNavigationOn(true))
     }
+    scrollProjectTo(props.id);
   }
 
   function handleMouseOver(e) {
@@ -81,6 +82,16 @@ function RenderedNode(props) {
   function handleSectionMouseOver() {
     dispatch(setHoveredSectionId(props.id));
   }
+
+  function scrollProjectTo(id) {
+    const scrolltoNodePosition = document.querySelector(`[nodeid="${id}"]`)?.getBoundingClientRect().top;
+    const actualViewPosition = document.getElementById("nodes-navigator").scrollTop;
+    const scrollMargin = 245;
+    document.getElementById("nodes-navigator").scrollTo({
+        top: actualViewPosition + scrolltoNodePosition - scrollMargin,
+        behavior: "smooth"
+    });
+}
 
   // if(props?.data?.styles !== undefined) {
   //   console.log(props?.data?.styles);

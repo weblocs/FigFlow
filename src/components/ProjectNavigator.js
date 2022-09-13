@@ -17,6 +17,9 @@ export default function ProjectNavigator() {
     useEffect(() => {
       setItems(preRenderedHTMLNodes);
     },[preRenderedHTMLNodes]);
+
+
+
     return (
       <div className={"navigatorWrapper "+ ((activeProjectTab === "Navigator") ? "active" : "" )}>
         
@@ -36,7 +39,7 @@ export default function ProjectNavigator() {
           <div className="projectTabTitleBox">Navigator</div>
         </div>
         
-        <div style={{overflowY: "scroll", height: "calc(100vh - 193px)"}}>
+        <div id="nodes-navigator" style={{overflowY: "scroll", height: "calc(100vh - 193px)"}}>
          {preRenderedHTMLNodes.map((node) => (
           <div key={node.id}>
               <NavigationNodeFolder parents={[]} node={node} depth={0} />

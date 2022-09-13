@@ -18,12 +18,10 @@ export default function ProjectRenderedDesign() {
     return (
         <div className="Project" onWheel={() => dispatch(setScrollTopPosition())}>
             <style>{postRenderedStyles}</style>
-
-            <div className={"project-rendered-design state-" + activeProjectResolution}>
+            <div id="project-view" className={"project-rendered-design state-" + activeProjectResolution}>
 
                 <ElementSettings />
 
-                
                 {preRenderedHTMLNodes.map((el) => (
                 <RenderedNode
                     onChange={(text, id) => dispatch(editSelectedFieldInPreRenderedHTMLNode({id: id, field: 'title', value: text}))}
@@ -38,9 +36,7 @@ export default function ProjectRenderedDesign() {
                     class={el.class}
                     onClick={([_id]) => dispatch(setActiveNodeId({id: _id}))}
                 />
-                ))}
-
-                
+                ))}  
 
             </div>
 

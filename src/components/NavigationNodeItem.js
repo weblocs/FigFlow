@@ -21,6 +21,7 @@ import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOve
 
     function handleClick () {
         dispatch(setActiveNodeId({id: node.id}));
+        scrollProjectTo(node.id);
     }
 
     function handleDragStart () {
@@ -66,6 +67,16 @@ import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOve
         if(node.children.length > 0) {
             dispatch(toggleNodeExpandedState(node.id));
         }
+    }
+
+    function scrollProjectTo(id) {
+        const scrolltoNodePosition = document.querySelector(`[el_id="${id}"]`)?.getBoundingClientRect().top;
+        const actualViewPosition = document.getElementById("project-view").scrollTop;
+        const scrollMargin = 100;
+        document.getElementById("project-view").scrollTo({
+            top: actualViewPosition + scrolltoNodePosition - scrollMargin,
+            behavior: "smooth"
+        });
     }
 
     return ( 
