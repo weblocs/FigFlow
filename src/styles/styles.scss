@@ -130,7 +130,6 @@ img {
   display: flex;
   align-items: center;
   cursor:pointer;
-  transition: background-color .2s;
 }
 
 .parents-path-item:nth-last-child(1) {
@@ -207,7 +206,6 @@ img {
     height: 25px;
     line-height: 25px;
     align-content: center;
-    transition: .2s;
     font-size: 11px;
     cursor: pointer;
 }
@@ -262,7 +260,6 @@ img {
   cursor:pointer;
   background: #fff;
   color: #111;
-  transition: background-color .2s;
 }
 
 .rich-element-settings_button.text-button {
@@ -345,7 +342,6 @@ img {
 .style-option-item_delete-icon {
   font-size: 8px;
   padding: 0 2px 0 4px;
-  transition: opacity .2s;
 }
 
 .style-option-item_delete-icon:hover {
@@ -431,7 +427,6 @@ img {
   color: #111;
   border-radius: 0;
   cursor: pointer;
-  transition: background-color .2s;
 }
 
 .add-section_popup-box {
@@ -508,7 +503,6 @@ img {
   bottom: 23px;
   width: 185px;
   cursor: pointer;
-  transition: background-color .2s;
   box-shadow: none;
 }
 
@@ -545,7 +539,6 @@ img {
   font-size: 12px;
   background: #fff;
   border-bottom: 1px solid #d3d3d3;
-  transition: background-color .2s;
 }
 
 .projectPageItem.drag {
@@ -651,7 +644,6 @@ input[type=number] {
   background-color: #eee;
   margin-bottom: 10px;
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
 .todoListItem:hover {
@@ -694,7 +686,6 @@ input[type=number] {
   height: 32px;
   padding: 10px;
   cursor: pointer;
-  transition: background-color 0.2s;
   border-left: 1px solid #d3d3d3;
   font-size: 11px;
   font-weight: 500;
@@ -891,7 +882,6 @@ a {
 }
 
 .addNodeButton {
-    transition: background-color .2s;
     display: flex;
     font-size: 11px;
     cursor: pointer;
@@ -979,7 +969,6 @@ a {
   border: 1px solid #d3d3d3;
   border-left: 0;
   cursor:pointer;
-  transition: background .2s;
 }
 
 .displayButton:hover {
@@ -1028,7 +1017,6 @@ a {
   align-items: center;
   font-size: 11px;
   cursor: pointer;
-  transition: background .2s;
 }
 
 .projectSidebarButton.active {
@@ -1077,7 +1065,6 @@ a {
 }
 
 .projectRightSidebarNav {
-  transition: background-color .2s;
     display: flex;
     font-size: 11px;
     cursor: pointer;
@@ -1150,7 +1137,6 @@ a {
 .navigation-node-inside.lined {
   padding: 3px 0 3px 8px;
   border-left: 1px solid #ccc;
-  // transition: border .2s;
 }
 
 .navigation-node-inside.lined.white {
@@ -1276,7 +1262,6 @@ transform: translateX(-50%);
   height: 100%;
   display: flex;
   align-items: center;
-  transition: background-color .2s;
   justify-content: center;
 }
 
@@ -1343,18 +1328,23 @@ transform: translateX(-50%);
   padding-top: 4px;
 }
 
+.style-title-box .text {
+  border-radius: 4px;
+}
+
+.style-title-box.isSet .text {
+  color: #3d7e2f;
+  background: #dbdbdb;
+}
+
 .style-title-box.active .text {
   color: #544cca;
   background: #f3f3f9;
-  border-radius: 4px;
-  transition: background-color .2s;
 }
 
 .style-title-box.isInline .text {
   color: #3d7e2f;
   background: #eff1d8;
-  border-radius: 4px;
-  transition: background-color .2s;
 }
 
 .style-title-box.active .text:hover {
@@ -2019,7 +2009,6 @@ transform: translateX(-50%);
   padding-right: 8px;
   cursor: pointer;
   color: #fff;
-  transition: opacity .2s;
   height: 26px;
   padding-top: 5px;
 }
@@ -2030,7 +2019,6 @@ transform: translateX(-50%);
 
 .display-button {
   cursor: pointer;
-  transition: background-color .2s;
 }
 
 .display-button:hover {
@@ -2144,7 +2132,6 @@ transform: translateX(-50%);
 .project-item {
   color: #333;
   text-decoration: none;
-  transition: background-color .2s;
 }
 
 .project-item:hover {
@@ -2161,7 +2148,6 @@ transform: translateX(-50%);
   cursor: pointer;
   padding: 2px 5px;
   background: #eee;
-  transition: background-color .2s;
 }
 
 .panel_back-button:hover {

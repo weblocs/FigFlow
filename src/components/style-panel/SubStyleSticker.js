@@ -104,7 +104,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
             <div className={"style-options-dropdown" + ((openStyleOptionsDropdown) ? " active" : "")}>
                 
                 <div className="style-option-list">
-                {preRenderedStyles.find(({id}) => id === stylesInActiveNode[0].id)?.childrens[index].options.map((option) => (
+                {preRenderedStyles.find(({id}) => id === stylesInActiveNode?.[0].id)?.childrens[index].options.map((option) => (
                     <div className="style-option-item" key={option.id}>
                         <div className="style-option-item-text" onClick={() => handleStyleOptionClick(option.id, option.name)}>{option.name}</div>
                         <div className={"style-option-item_icons" + ((editingOptionsTurnOn) ? " active" : "")}>

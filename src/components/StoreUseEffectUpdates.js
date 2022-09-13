@@ -1,7 +1,7 @@
 import { current } from "@reduxjs/toolkit";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addUndoState, checkIfActvieNodeParentDispayStyleIsFlex, setSymbolsHeights, setActionActiveFalse, setActiveCollectionTemplateId, setActiveLayoutId, setActiveNodeComputedStyles, setActiveNodeId, setActiveNodeObject, setActiveNodeParentsPath, setActivePage, setActiveStyleOptionIndex, updateActiveStyleProperties } from "../features/pre-rendered-html-nodes"
+import { addUndoState, checkIfActvieNodeParentDispayStyleIsFlex, setSymbolsHeights, setActionActiveFalse, setActiveCollectionTemplateId, setActiveLayoutId, setActiveNodeComputedStyles, setActiveNodeId, setActiveNodeObject, setActiveNodeParentsPath, setActivePage, setActiveStyleOptionIndex, updateActiveStyleProperties, updateActiveStyleListAndId } from "../features/pre-rendered-html-nodes"
 
 
 export default function StoreUseEffectUpdates () {
@@ -14,18 +14,18 @@ export default function StoreUseEffectUpdates () {
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const undoActionActive = useSelector((state) => state.designerProjectState.undoActionActive)
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length - 2));
+        dispatch(updateActiveStyleListAndId());
+        // dispatch(setActiveStyleOptionIndex(stylesInActiveNode?.length - 2));
+    },[activeNodeId]);
+
+    useEffect(() => {
         dispatch(setActiveNodeObject());
         dispatch(checkIfActvieNodeParentDispayStyleIsFlex());
         dispatch(setActiveNodeParentsPath());
     },[activeNodeId, preRenderedHTMLNodes]);
-
-    useEffect(() => {
-        console.log(activeStyleId);
-    },[activeNodeId]);
 
     useEffect(() => {
         dispatch(updateActiveStyleProperties());
@@ -34,10 +34,6 @@ export default function StoreUseEffectUpdates () {
     useEffect(() => {
         dispatch(setActiveNodeComputedStyles());
     },[activeNodeId, preRenderedStyles]);
-
-    useEffect(() => {
-        dispatch(setActiveNodeObject());
-    },[preRenderedHTMLNodes, activeNodeId]);
 
     useEffect(() => {
         dispatch(addUndoState());

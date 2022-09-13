@@ -42,7 +42,6 @@ const initialState = {
   keyboardNavigationOn: true,
   activeStyleObject:  {}, // activeStyleProperties
   activeStyleId: "",
-  activeStyleName: "",
   activeStyleIndex: 0,
   stylesInActiveNode: [],
   projectFirebaseId: "",
@@ -184,6 +183,18 @@ export const preRenderedNodesSlice = createSlice({
   name: 'preRenderedNodes',
   initialState,
   reducers: {
+
+    updateActiveStyleListAndId: (state, action) => {
+        const activeNode = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId);
+        state.stylesInActiveNode = activeNode?.class;
+        for (let i = 0; i < activeNode?.class.length; i++) {
+            if(activeNode?.class[i]?.id !== undefined && activeNode?.class[i]?.id !== "") {
+                state.activeStyleId = activeNode?.class[i]?.id;
+                state.activeStyleOptionIndex = i-1;
+
+            }
+        }
+    },
 
     setScrollTopPosition: (state, action) => {
         state.scrollTopPosition = state.scrollTopPosition+1;
@@ -674,9 +685,7 @@ export const preRenderedNodesSlice = createSlice({
             const activeUndoNode = state.undoStates[state.undoStates.length - state.activeUndoIndex];
             state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes;
             state.preRenderedStyles = activeUndoNode.preRenderedStyles;
-
-
-            [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
+            
             state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
         }
     },
@@ -689,7 +698,6 @@ export const preRenderedNodesSlice = createSlice({
                 state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes;
                 state.preRenderedStyles = activeUndoNode.preRenderedStyles;
 
-                [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
                 state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
             }
         },
@@ -965,7 +973,6 @@ export const preRenderedNodesSlice = createSlice({
         
         state.activeNodeId = newNodeId;
         state.stylesInActiveNode = [];
-        state.activeStyleName = "";
         state.activeStyleIndex = undefined;
     },
 
@@ -1006,7 +1013,6 @@ export const preRenderedNodesSlice = createSlice({
         
         state.activeNodeId = newNode.id;
         state.stylesInActiveNode = [];
-        state.activeStyleName = "";
         state.activeStyleIndex = undefined;
     },
 
@@ -1220,8 +1226,6 @@ export const preRenderedNodesSlice = createSlice({
     
     setActiveNodeId: (state, action) => {
         state.activeNodeId = action.payload.id;
-        [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
-        state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
     },
 
     setActiveStyle: (state, action) => {
@@ -1230,12 +1234,14 @@ export const preRenderedNodesSlice = createSlice({
 
     updateActiveStyleProperties: (state) => {
         if(state.activeStyleId === state.stylesInActiveNode?.[0]?.id) {
+            console.log("1");
             state.activeStyleObject = state.preRenderedStyles[state.activeStyleIndex]?.[state.activeProjectResolutionStylesListName];
         } else { 
-            state.activeStyleObject = state.preRenderedStyles?.find(({id}) => id === state.stylesInActiveNode?.[0]?.id)?.
-            childrens[state.activeStyleOptionIndex]?.options.find(({id}) => id === state.activeStyleId)?.
-            [state.activeProjectResolutionStylesListName] || {};
+            console.log("2");
+            state.activeStyleObject = state.preRenderedStyles?.find(({id}) => id === state.stylesInActiveNode?.[0]?.id)?.childrens[state.activeStyleOptionIndex]?.options.find(({id}) => id === state.activeStyleId)?.[state.activeProjectResolutionStylesListName] || {};
         }
+        console.log(state.stylesInActiveNode?.[0]?.name)
+        console.log(JSON.parse(JSON.stringify(state.activeStyleObject)));
     },
 
     setActiveStyleId: (state, action) => {
@@ -1290,7 +1296,6 @@ export const preRenderedNodesSlice = createSlice({
         }
         findNode(state.preRenderedHTMLNodes, nodeId);
 
-        state.activeStyleName = styleName;
         state.activeStyleId = newStyleToConnectWithNodes.id;
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
         
@@ -1413,8 +1418,6 @@ export const preRenderedNodesSlice = createSlice({
         if(state.keyboardNavigationOn) {
             findNode(state.preRenderedHTMLNodes, state.activeNodeId); 
             state.activeNodeId = response;
-            [state.stylesInActiveNode, state.activeStyleName, state.activeStyleId] = setStylesInActiveNodeAndActiveStyle(state.preRenderedHTMLNodes,state.activeNodeId);
-            state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles,state.activeStyleId);
         }
     },
 
@@ -1896,5 +1899,6 @@ export const {
     deleteSymbol,
     deleteLayoutFolder,
     deleteInlineNodeStyleProperty,
+    updateActiveStyleListAndId,
 } = preRenderedNodesSlice.actions
 export default preRenderedNodesSlice.reducer

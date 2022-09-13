@@ -91,7 +91,7 @@ export default function ElementSettings() {
                         <ElementHeadingSettings />
                         
 
-                        {preRenderedStyles.find(({id}) => id === stylesInActiveNode[0]?.id)?.childrens.map((child,index) => {
+                        {preRenderedStyles.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens.map((child,index) => {
                                 return (
                                     <RichElementSettingsStyle child={child} index={index} key={index} />
                                 )

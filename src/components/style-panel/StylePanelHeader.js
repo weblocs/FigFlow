@@ -57,12 +57,14 @@ export default function StylePanelHeader () {
     },[isAddStyleInputOpen, isAddStyleOptionInputOpen]);
 
     function handleOpenNewStyleInput () {
-        if(stylesInActiveNode.length === 0) {
-            setIsAddStyleInputOpen(true);
-            setListOfStyles(preRenderedStyles);
-            setIndexOfActiveStyleInList(0);
-        } else {
-            setIsAddStyleOptionInputOpen(true)
+        if(activeNodeId !== "") {
+            if(stylesInActiveNode.length === 0) {
+                setIsAddStyleInputOpen(true);
+                setListOfStyles(preRenderedStyles);
+                setIndexOfActiveStyleInList(0);
+            } else {
+                setIsAddStyleOptionInputOpen(true)
+            }
         }
     }
 
@@ -77,7 +79,12 @@ export default function StylePanelHeader () {
 
     function handleOptionInputKeyPress(e) {
         if(e.key === 'Enter') {
-            dispatch(createNewStyle(e.target.value));
+            if(e.target.value !== "") {
+                dispatch(createNewStyle(e.target.value));
+                setIsAddStyleOptionInputOpen(false);
+            }
+        }
+        if(e.key === 'Escape') {
             setIsAddStyleOptionInputOpen(false);
         }
     }
@@ -219,7 +226,7 @@ export default function StylePanelHeader () {
                     }
                     })}
 
-                    {preRenderedStyles.find(({id}) => id === stylesInActiveNode[0]?.id)?.childrens.map((child,index) => {
+                    {preRenderedStyles.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens.map((child,index) => {
                         let childId = child.options[0].id;
                         let childName = child.options[0].name;
                         let styleIsSet = false; 
