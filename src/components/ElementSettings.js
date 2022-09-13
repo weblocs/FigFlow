@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, clearActiveNode, setEditedSymbolId, setScrollTopPosition} from "../features/pre-rendered-html-nodes"
+import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode, setCopiedNodes, pasteCopiedNodes, clearActiveNode, setEditedSymbolId } from "../features/pre-rendered-html-nodes"
 import ElementHeadingSettings from "./ElementHeadingSettings"
 import RichElementSettingsStyle from "./RichElementSettingsStyle"
 import Delete from '../img/delete.svg';
@@ -68,6 +68,8 @@ export default function ElementSettings() {
         dispatch(pasteCopiedNodes());
     }
 
+    
+
     return (
             <div className={"rich-element-settings_box" + ((activeNodeId !== "") ? " active" : "")} 
             style={{ transform: `translate(${activeNodePositionX}px,${activeNodePositionY}px)`}}>
@@ -97,7 +99,8 @@ export default function ElementSettings() {
                                 )
                         })}
 
-                        <div className={"rich-element-settings_button button-centered active"}>✎</div>
+                        <div className={"rich-element-settings_button button-centered active"}
+                        >✎</div>
                         <div className={"rich-element-settings_button button-centered" + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>❐</div>
                         
 

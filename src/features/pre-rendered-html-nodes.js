@@ -184,19 +184,21 @@ export const preRenderedNodesSlice = createSlice({
   initialState,
   reducers: {
 
-    updateActiveStyleListAndId: (state, action) => {
-        const activeNode = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId);
-        state.stylesInActiveNode = activeNode?.class;
-        for (let i = 0; i < activeNode?.class.length; i++) {
-            if(activeNode?.class[i]?.id !== undefined && activeNode?.class[i]?.id !== "") {
-                state.activeStyleId = activeNode?.class[i]?.id;
-                state.activeStyleOptionIndex = i-1;
+    updateActiveStyleListAndId: (state) => {
 
+        state.stylesInActiveNode = state.activeNodeObject?.class;
+        state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.stylesInActiveNode?.[0]?.id);
+
+        state.stylesInActiveNode?.forEach((item, i) => {
+            if(item?.id !== undefined && item?.id !== "") {
+                state.activeStyleId = item?.id;
+                state.activeStyleOptionIndex = i-1;
             }
-        }
+        });
+
     },
 
-    setScrollTopPosition: (state, action) => {
+    setScrollTopPosition: (state) => {
         state.scrollTopPosition = state.scrollTopPosition+1;
     },
 
@@ -1228,20 +1230,12 @@ export const preRenderedNodesSlice = createSlice({
         state.activeNodeId = action.payload.id;
     },
 
-    setActiveStyle: (state, action) => {
-        state.activeStyleObject = action.payload;
-    },
-
     updateActiveStyleProperties: (state) => {
         if(state.activeStyleId === state.stylesInActiveNode?.[0]?.id) {
-            console.log("1");
             state.activeStyleObject = state.preRenderedStyles[state.activeStyleIndex]?.[state.activeProjectResolutionStylesListName];
         } else { 
-            console.log("2");
             state.activeStyleObject = state.preRenderedStyles?.find(({id}) => id === state.stylesInActiveNode?.[0]?.id)?.childrens[state.activeStyleOptionIndex]?.options.find(({id}) => id === state.activeStyleId)?.[state.activeProjectResolutionStylesListName] || {};
         }
-        console.log(state.stylesInActiveNode?.[0]?.name)
-        console.log(JSON.parse(JSON.stringify(state.activeStyleObject)));
     },
 
     setActiveStyleId: (state, action) => {
@@ -1832,7 +1826,6 @@ export const {
     setActiveStyleOptionIndex, 
     setStyleOptionInActiveNode, 
     createNewStyleOption, 
-    setActiveStyle, 
     deleteProjectPage,
     createNewStyle, 
     movePreRenderedNode, 

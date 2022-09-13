@@ -11,7 +11,7 @@ export default function ProprtyInputLabel ({text,property}) {
 
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode);
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles);
-    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName);
+    const activeResolutionName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName);
 
     
 
@@ -26,22 +26,25 @@ export default function ProprtyInputLabel ({text,property}) {
     // const doesStylePropertyIsSetInAnyClass = useSelector((state) => {
         // let mainStyleId = stylesInActiveNode?.[0]?.id;
         // let activeStyles = preRenderedStyles?.find(({id}) => id ===  mainStyleId);
-        // if (activeStyles?.[activeProjectResolutionStylesListName]?.[property] !== undefined) {
-        // }
-        // return true;
-        //     console.log(activeStyles);
-            
-        // } else {
-            // activeNodeObject?.class?.forEach((item, index) => {
-            //     if(index === 0) {
+        // const activeStyle = activeStyles?.[activeResolutionName];
+        
+        // if (activeStyle?.[property] !== undefined) {
+        //     return true;
+        // } 
 
-            //     } else {
-            //         // console.log(activeStyles?.childrens?.[index]?.options?.find(({id}) => id === item.id));
-            //     }
+        // activeNodeObject?.class?.forEach((item, index) => {
+        //     if(index !== 0) {
+        //         const option = activeStyles?.childrens?.[index-1]?.options?.find(({id}) => id === item.id);
                 
-            // })
-        //     return false;
-        // }
+        //         if(option?.[activeResolutionName]?.[property] !== undefined) {
+        //             // console.log(property);
+        //             return true;
+        //         }
+        //         // console.log(property);
+        //         // console.log(activeStyles?.childrens?.[index-1]?.options?.find(({id}) => id === item.id)?.[activeResolutionName]);
+                
+        //     }
+        // })
     // });
 
     const dispatch = useDispatch();
@@ -57,6 +60,7 @@ export default function ProprtyInputLabel ({text,property}) {
     return (
         <div 
         className={"style-title-box" + 
+        // ((doesStylePropertyIsSetInAnyClass) ? " isSet" : "") +
         ((doesStylePropertyBelongToActiveClass) ? " active" : "") +
         ((doesStylePropertyIsInline) ? " isInline" : "")}
         >
