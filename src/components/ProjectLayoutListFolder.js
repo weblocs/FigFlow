@@ -18,7 +18,7 @@ export default function ProjectLayoutListFolder({folder}) {
         <div key={folder.id} 
                 className="edit-icon_wrap-folder">
                     <div
-                    onClick={() => dispatch(setactiveLayoutFolder(folder.id))}
+                    // onClick={() => dispatch(setactiveLayoutFolder(folder.id))}
                     onMouseOver={() => setIsHovered(true)}
                     onMouseOut={() => setIsHovered(false)}
                     className={"sections-nav-folder-item"}

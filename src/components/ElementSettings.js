@@ -3,13 +3,12 @@ import {setActiveNodeId, movePreRenderedNode, setProjectPopUp, deleteActiveNode,
 import ElementHeadingSettings from "./ElementHeadingSettings"
 import RichElementSettingsStyle from "./RichElementSettingsStyle"
 import Delete from '../img/delete.svg';
-import { useEffect } from "react";
+import Settings from '../img/settings.svg';
 import AddRichElementButton from "./AddRichElementButton";
 
 export default function ElementSettings() {
     const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const projectMode = useSelector((state) => state.designerProjectState.projectMode)
     const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId)
     const nodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
     const nodeType = useSelector((state) => state.designerProjectState.activeNodeObject?.type)
@@ -24,7 +23,6 @@ export default function ElementSettings() {
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
 
     const move = true;
-    const addRich = true;
     const deleteNode = true;
 
     const dispatch = useDispatch();
@@ -80,19 +78,20 @@ export default function ElementSettings() {
                             Symbol: {activeSymbolName}
                         </div>
 
-                        {(nodeType !== "sym") ? <>
-
-
+                        {(nodeType !== "sym") ? 
+                        <>
+                        {(nodeType === "l") && 
+                        <div className="rich-element-settings_button button-centered active">
+                            <img src={Settings} style={{width: "14px"}} />
+                        </div>
+                        }
 
                         <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:true}))}>↑</div>
                         <div className={"rich-element-settings_button button-centered" + ((move) ? " active" : "")} onClick={() => dispatch(movePreRenderedNode({moveReverse:false}))}>↓</div>
                        
-
                         <AddRichElementButton addRichSetting={true} />
-
                         <ElementHeadingSettings />
                         
-
                         {preRenderedStyles.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens.map((child,index) => {
                                 return (
                                     <RichElementSettingsStyle child={child} index={index} key={index} />
@@ -103,22 +102,20 @@ export default function ElementSettings() {
                         >✎</div>
                         <div className={"rich-element-settings_button button-centered" + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>❐</div>
                         
-
                         <div className={"rich-element-settings_button button-centered" + ((deleteNode) ? " active" : "")} 
                         onClick={handleClickDelete}>
                             <img src={Delete} style={{width: "14px"}} />
                         </div>
-                        
 
                         <div className="rich-element-settings_button button-centered active" 
                         onClick={handleClickClearId}>✕</div>
 
                         </> :
+
                         <>
                         <div className="rich-element-settings_button button-centered active"
                         onClick={() => (editedSymbolId.symbolId === "") && dispatch(setEditedSymbolId({symbolId:nodeObject.symbolId, elementId: nodeObject.id}))}
                         >✎</div>
-                        
                         </>
                         }
 

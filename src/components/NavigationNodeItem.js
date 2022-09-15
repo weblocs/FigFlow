@@ -70,13 +70,15 @@ import {setHoveredNodeId, setActiveNodeId, setDragableCopiedNodes, setDraggedOve
     }
 
     function scrollProjectTo(id) {
-        const scrolltoNodePosition = document.querySelector(`[el_id="${id}"]`)?.getBoundingClientRect().top;
-        const actualViewPosition = document.getElementById("project-view").scrollTop;
-        const scrollMargin = 100;
-        document.getElementById("project-view").scrollTo({
-            top: actualViewPosition + scrolltoNodePosition - scrollMargin,
-            behavior: "smooth"
-        });
+        const actualNodePosition = document.querySelector(`[el_id="${id}"]`)?.getBoundingClientRect().top;
+        if(actualNodePosition < 0 || actualNodePosition > window.screen.height - 200) {
+            const actualViewportPosition = document.getElementById("project-view").scrollTop;
+            const scrollMargin = 100;
+            document.getElementById("project-view").scrollTo({
+                top: actualViewportPosition + actualNodePosition - scrollMargin,
+                behavior: "smooth"
+            });
+        }
     }
 
     return ( 

@@ -3,7 +3,7 @@ import {setActiveNodeId, setProjectPopUp} from "../features/pre-rendered-html-no
 
 export default function AddSectionButton({sectionId}) {
 
-    const projectMode = useSelector((state) => state.designerProjectState.projectMode)
+    const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode)
     const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId)
     const dispatch = useDispatch()
 
@@ -12,9 +12,9 @@ export default function AddSectionButton({sectionId}) {
         dispatch(setProjectPopUp("addSection"));
     }
 
-    if(projectMode === "creator") {
+    if(nodesEditMode !== "layout") {
         return (
-            <div className={"add-section_box" + ((hoveredSectionId === sectionId) ? " active" : "")}>
+            <div className={"add-section_box active" + ((hoveredSectionId === sectionId) ? " active" : "")}>
                 <div className="add-section_button" 
                 onClick={handleAddSectionButtonClick}>+</div>
             </div>

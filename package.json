@@ -5,7 +5,7 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
-    "@reduxjs/toolkit": "^1.8.1",
+    "@reduxjs/toolkit": "^1.8.5",
     "@use-it/event-listener": "^0.1.7",
     "alpinejs": "^3.10.2",
     "array-move": "^4.0.0",

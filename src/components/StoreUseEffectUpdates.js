@@ -10,6 +10,7 @@ export default function StoreUseEffectUpdates () {
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
     const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const undoActionActive = useSelector((state) => state.designerProjectState.undoActionActive)
+    const projectMode = useSelector((state) => state.designerProjectState.projectMode)
 
     const dispatch = useDispatch();
 
@@ -18,20 +19,28 @@ export default function StoreUseEffectUpdates () {
     },[activeNodeId, preRenderedHTMLNodes]);
 
     useEffect(() => {
+        
         dispatch(updateActiveStyleListAndId());
+        
     },[activeNodeId]);
 
     useEffect(() => {
-        dispatch(checkIfActvieNodeParentDispayStyleIsFlex());
+        if(projectMode === "developer") {
+            dispatch(checkIfActvieNodeParentDispayStyleIsFlex());
+        }
         dispatch(setActiveNodeParentsPath());
     },[activeNodeId, preRenderedHTMLNodes]);
 
     useEffect(() => {
-        dispatch(updateActiveStyleProperties());
+        if(projectMode === "developer") {
+            dispatch(updateActiveStyleProperties());
+        }
     },[activeNodeId, activeProjectResolution, preRenderedHTMLNodes, preRenderedStyles, activeStyleId]);
 
     useEffect(() => {
-        dispatch(setActiveNodeComputedStyles());
+        if(projectMode === "developer") {
+            dispatch(setActiveNodeComputedStyles());
+        }
     },[activeNodeId, preRenderedStyles]);
 
     useEffect(() => {

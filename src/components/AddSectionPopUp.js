@@ -24,9 +24,13 @@ export default function AddSectionPopUp() {
 
     function handleAddSectionClick() {
         if(presentedSectionNodes?.type === "sec") {
-            dispatch(setCopiedSectionNodes(presentedSectionNodes));
-            dispatch(addSectionToPreRenderedHTMLNodes());
             dispatch(setProjectPopUp(""));
+            dispatch(setCopiedSectionNodes(presentedSectionNodes));
+            setTimeout(() => {
+                dispatch(addSectionToPreRenderedHTMLNodes());
+            },
+            300);
+            
         }
     }
 
@@ -38,7 +42,7 @@ export default function AddSectionPopUp() {
         dispatch(setProjectPopUp(""));
     }
 
-    if(projectMode === "creator") {
+    // if(projectMode === "creator") {
         return (
             <div className={"add-section_popup-box" + ((addSectionPopUpOpened) ? " active" : "")}>
                 <div 
@@ -56,7 +60,7 @@ export default function AddSectionPopUp() {
                             <div key={folder.id}>
                                 <div 
                                 onClick={() => dispatch(setactiveLayoutFolder(folder.id))}
-                                className={"sections-nav-folder-item" + ((activeLayoutFolder === folder.id) ? " active" : "" )}
+                                className={"sections-nav-folder-item"}
                                 key={folder.id}>
                                     {folder.name}
                                 </div>
@@ -87,5 +91,5 @@ export default function AddSectionPopUp() {
                 </div>
             </div>
         )
-    } 
+    // } 
 }

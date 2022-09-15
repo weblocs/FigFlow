@@ -84,14 +84,16 @@ function RenderedNode(props) {
   }
 
   function scrollProjectTo(id) {
-    const scrolltoNodePosition = document.querySelector(`[nodeid="${id}"]`)?.getBoundingClientRect().top;
-    const actualViewPosition = document.getElementById("nodes-navigator").scrollTop;
-    const scrollMargin = 245;
-    document.getElementById("nodes-navigator").scrollTo({
-        top: actualViewPosition + scrolltoNodePosition - scrollMargin,
-        behavior: "smooth"
-    });
-}
+    const actualNodePosition = document.querySelector(`[nodeid="${id}"]`)?.getBoundingClientRect().top;
+    if(actualNodePosition < 172 || actualNodePosition > window.screen.height - 200) {
+      const actualViewPosition = document.getElementById("nodes-navigator").scrollTop;
+      const scrollMargin = 245;
+      document.getElementById("nodes-navigator").scrollTo({
+          top: actualViewPosition + actualNodePosition - scrollMargin,
+          behavior: "smooth"
+      });
+    }
+  }
 
   // if(props?.data?.styles !== undefined) {
   //   console.log(props?.data?.styles);
@@ -194,7 +196,6 @@ function RenderedNode(props) {
         
       </div>
       <AddSectionButton sectionId={props.id} />
-      
       </div>
     );
   }
@@ -270,7 +271,6 @@ function RenderedNode(props) {
             onClick={([nodeId,className]) => props.onClick([nodeId,className])}
           />
         ))}
-        <AddSectionButton />
       </div>
     );
   }

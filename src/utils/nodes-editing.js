@@ -97,7 +97,7 @@ export function JSONtoCSS (_classes, activeResolution) {
     }
     
     // Converting preRenderedStyles (JSON) into renderedStyles (CSS)
-    return JSON.stringify(tempClasses)
+    return "* {-webkit-font-smoothing: antialiased;} " + JSON.stringify(tempClasses)
     .replaceAll("[","")
     .replaceAll("]","")
     .replaceAll('"',"")

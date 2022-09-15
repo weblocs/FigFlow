@@ -107,11 +107,12 @@ function findActiveNodeSiblingArrayAndIndex(nodes, id) {
 
 function regenerateIdsInNodes(nodes) {
     nodes.id = uuidv4();
-    for (let i = 0; i < nodes.children.length; i++) {
-        nodes.children[i].id = uuidv4();
-        
-        if (nodes.children[i].children.length > 0) {
-            regenerateIdsInNodes(nodes.children[i]);
+    if(nodes?.children?.length !== undefined) {
+        for (let i = 0; i < nodes.children.length; i++) {
+            nodes.children[i].id = uuidv4();
+            if (nodes.children[i].children.length > 0) {
+                regenerateIdsInNodes(nodes.children[i]);
+            }
         }
     }
 }
@@ -141,7 +142,12 @@ function updateNodesLists (state) {
     if(state.nodesEditMode === "page") {
         state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
     } else if (state.nodesEditMode === "layout") {
-       state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes = state.preRenderedHTMLNodes[0];
+        if(state.projectLayouts.find(({id}) => id === state.activeLayoutFolder)?.items?.find(({id}) => id === state.activeLayoutId) !== undefined) {
+            state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes = state.preRenderedHTMLNodes[0];
+        } else {
+            console.log("Saving layout not successed, [to-do] layout folder add button should have own state var");
+        }
+       
     } else if (state.nodesEditMode === "cmsTemplate") {
         state.projectCollections.find(({id}) => id === state.activeCollectionTemplateId).preRenderedHTMLNodes = state.preRenderedHTMLNodes;
     }  else if (state.nodesEditMode === "richElement") {
