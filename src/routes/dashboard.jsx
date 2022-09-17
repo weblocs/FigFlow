@@ -7,7 +7,7 @@ import { getFirestore, getDocs, setDoc, doc, where,query, collection } from "fir
 import { func } from "prop-types";
 import { v4 as uuidv4 } from "uuid";
 
-import CreateNewProject from "../components/CreateNewProject"
+import CreateNewProject from "../components/dashboard/CreateNewProject"
 
 export default function Dashboard() {
 

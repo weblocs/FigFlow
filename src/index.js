@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Dashboard from "./routes/dashboard";
 import Design from "./routes/design";
-import Create from "./routes/create";
 import Login from "./routes/login";
 import { store } from './app/store'
 import { Provider } from 'react-redux'

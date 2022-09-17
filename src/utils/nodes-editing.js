@@ -148,3 +148,19 @@ export function setStylesInActiveNodeAndActiveStyle(nodes, id) {
   return response;
 }
 
+
+export function findActiveNode(nodes, id) {
+  let response;
+  function findNode(_nodes) {
+      for (let i = 0; i < _nodes?.length; i++) {
+          if(_nodes[i].id === id) {
+              response = _nodes[i];
+          }
+          if(_nodes[i].children?.length > 0) {
+              findNode(_nodes[i].children);
+          }
+      }
+  }  
+  findNode(nodes);
+  return response;
+} 

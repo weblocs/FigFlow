@@ -191,8 +191,8 @@ export const preRenderedNodesSlice = createSlice({
   reducers: {
 
     updateActiveStyleListAndId: (state) => {
-
         state.stylesInActiveNode = state.activeNodeObject?.class;
+        
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.stylesInActiveNode?.[0]?.id);
 
         state.stylesInActiveNode?.forEach((item, i) => {
@@ -201,7 +201,6 @@ export const preRenderedNodesSlice = createSlice({
                 state.activeStyleOptionIndex = i-1;
             }
         });
-
     },
 
     setScrollTopPosition: (state) => {
@@ -1624,7 +1623,6 @@ export const preRenderedNodesSlice = createSlice({
         state.activeNodeId = "";
         updateNodesListsBeforeGlobalChange(state, updateNodes);
         
-        
     },
 
 
@@ -1683,6 +1681,7 @@ export const preRenderedNodesSlice = createSlice({
             }
         ];
     },
+
     createNewCollectionField: (state, action) => {
         state.projectCollections[state.activeProjectCollectionIndex].fields = [...state.projectCollections[state.activeProjectCollectionIndex].fields, 
             {
@@ -1692,6 +1691,7 @@ export const preRenderedNodesSlice = createSlice({
             }
         ];
     },
+    
     createNewCollectionItems: (state, action) => {
         const collectionItemName = action.payload;
         let activeCollectionItems = state.projectCollections[state.activeProjectCollectionIndex].items;

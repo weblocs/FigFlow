@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import {useState} from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, getDocs, where,query, collection } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { firebaseConfig } from "../utils/firebase-config";
