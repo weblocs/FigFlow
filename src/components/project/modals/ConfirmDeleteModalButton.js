@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setOpenedSettingsPage } from "../../../features/pre-rendered-html-nodes";
+import { openPageSettings } from "../../../features/pre-rendered-html-nodes";
 
 export default function ConfirmDeleteModalButton({handleOnClick, deleteItemName,  deleteItemType, redButton}) {
     const openedSettingsPage = useSelector((state) => state.designerProjectState.openedSettingsPage)
@@ -15,7 +15,7 @@ export default function ConfirmDeleteModalButton({handleOnClick, deleteItemName,
     function confirmClick() {
         handleOnClick();
         setConfirmPopUpOpened(false);
-        dispatch(setOpenedSettingsPage({}));
+        dispatch(openPageSettings({}));
     }
 
     return (

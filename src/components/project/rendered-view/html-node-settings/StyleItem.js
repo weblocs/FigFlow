@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { clearStyleOption, setActiveStyleId, setStyleOptionInActiveNode } from "../../../../features/pre-rendered-html-nodes";
+import { removeStyleOption, setActiveStyleId, setStyleOptionInActiveNode } from "../../../../features/pre-rendered-html-nodes";
 
 
 export default function RichElementSettingsStyle({child, index}) {
@@ -31,7 +31,7 @@ export default function RichElementSettingsStyle({child, index}) {
     }
 
     function handleClearClick (index) {
-        dispatch(clearStyleOption({optionIndex: index}));
+        dispatch(removeStyleOption({optionIndex: index}));
         setIsListOpened(false);
     }
 

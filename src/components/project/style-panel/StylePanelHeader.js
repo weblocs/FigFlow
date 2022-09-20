@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import {setKeyboardNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, createNewStyle, renameMainStyle, setActiveStyleOptionIndex} from "../../../features/pre-rendered-html-nodes"
+import {setKeyboardNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, addStyle, renameStyle, setActiveStyleOptionIndex} from "../../../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from "./SubStyleSticker";
 
@@ -73,14 +73,14 @@ export default function StylePanelHeader () {
     }
 
     function handleItemClick (name) {
-        dispatch(createNewStyle(name));
+        dispatch(addStyle(name));
         setIsAddStyleInputOpen(false);
     }
 
     function handleOptionInputKeyPress(e) {
         if(e.key === 'Enter') {
             if(e.target.value !== "") {
-                dispatch(createNewStyle(e.target.value));
+                dispatch(addStyle(e.target.value));
                 setIsAddStyleOptionInputOpen(false);
             }
         }
@@ -92,9 +92,9 @@ export default function StylePanelHeader () {
     function handleKeyPress(e) {
         if(e.key === 'Enter') {
             if(indexOfActiveStyleInList === 0) {
-                dispatch(createNewStyle(e.target.value));
+                dispatch(addStyle(e.target.value));
             } else {
-                dispatch(createNewStyle(listOfStyles[indexOfActiveStyleInList-1].name));
+                dispatch(addStyle(listOfStyles[indexOfActiveStyleInList-1].name));
             }
             setIsAddStyleInputOpen(false);
         } else if (e.key === 'ArrowDown') {
@@ -123,7 +123,7 @@ export default function StylePanelHeader () {
     }
 
     function handleRename (id) {
-        dispatch(renameMainStyle({id: id, name: renameInputRef.current.value }));
+        dispatch(renameStyle({id: id, name: renameInputRef.current.value }));
         renameInputRef.current.value = "";
         setIsStyleEditorOpen(false);
     }

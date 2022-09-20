@@ -1,4 +1,4 @@
-import { createNewSection, setactiveLayoutFolder } from "../../../../features/pre-rendered-html-nodes"
+import { addLayout, setActiveLayoutFolder } from "../../../../features/pre-rendered-html-nodes"
 
 import Plus from '../../../../img/plus.svg';
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ export default function CreateLayoutButton({id, visibility}) {
 
     function handleClick() {
         setIsInputOpen(!isInputOpen);
-        dispatch(setactiveLayoutFolder(id));
+        dispatch(setActiveLayoutFolder(id));
     }
 
     useEffect(() => {
@@ -32,7 +32,7 @@ export default function CreateLayoutButton({id, visibility}) {
 
             <CreateNewItemInput 
             visibility={isInputOpen}
-            create={createNewSection} 
+            create={addLayout} 
             placeholder="New layout" />
         </>
     )

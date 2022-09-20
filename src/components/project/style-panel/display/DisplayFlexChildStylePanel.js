@@ -1,14 +1,9 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import DisplayFlexChildSizingButton from "./DisplayFlexChildSizingButton";
-
-
 
 export default function DisplayFlexChildStylePanel () {
 
     const isActiveNodeParentDisplayStyleFlex = useSelector((state) => state.designerProjectState.isActiveNodeParentDisplayStyleFlex)
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const displayStyle = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["display"])
 
     if(isActiveNodeParentDisplayStyleFlex) {
         return (
@@ -26,10 +21,5 @@ export default function DisplayFlexChildStylePanel () {
                 </div>
             </div>
         )
-    } else {
-        return (
-            <div></div>
-        )
     }
-    
 }

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveStyleId, setKeyboardNavigationOn, createNewStyleOption, setStyleOptionInActiveNode, setActiveNodeId, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, clearStyleOption, editStyleOptionProperty } from "../../../features/pre-rendered-html-nodes";
+import { setActiveStyleId, setKeyboardNavigationOn, addStyleOption, setStyleOptionInActiveNode, setActiveNodeId, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, removeStyleOption, editStyleOption } from "../../../features/pre-rendered-html-nodes";
 
 export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyForMobile, isOnlyForTablet, child}) {
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
@@ -25,7 +25,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
     async function handleAddNewStyleOption(e) {
         e.preventDefault();
         if(input !== "") {
-            dispatch(createNewStyleOption({name: input, childrenIndex: index }));
+            dispatch(addStyleOption({name: input, childrenIndex: index }));
             dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length));
             setInput("");
         }
@@ -34,7 +34,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
     function handleDefaultNameSubmit(e) {
         e.preventDefault();
         if(defaultNameRef.current.value !== "") {
-            dispatch(editStyleOptionProperty({property:"defaultName", value: defaultNameRef.current.value, index: index}));
+            dispatch(editStyleOption({property:"defaultName", value: defaultNameRef.current.value, index: index}));
             defaultNameRef.current.value = "";
         }
     }
@@ -75,15 +75,15 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
 
     function handleClearClick(index) {
         setOpenStyleOptionsDropdown(false);
-        dispatch(clearStyleOption({optionIndex: index}));
+        dispatch(removeStyleOption({optionIndex: index}));
     }
 
     function handleCheckboxClick(e) {
-        dispatch(editStyleOptionProperty({property:"isOnlyForMobile", value: isOnlyForMobile ? false : true, index: index}));
+        dispatch(editStyleOption({property:"isOnlyForMobile", value: isOnlyForMobile ? false : true, index: index}));
     }
 
     function handleCheckboxTabletClick(e) {
-        dispatch(editStyleOptionProperty({property:"isOnlyForTablet", value: isOnlyForTablet ? false : true, index: index}));
+        dispatch(editStyleOption({property:"isOnlyForTablet", value: isOnlyForTablet ? false : true, index: index}));
     }
 
     return (

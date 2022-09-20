@@ -2,7 +2,7 @@ import React, {useState, useEffect, useMemo} from "react";
 import ContentEditable from "react-contenteditable";
 
 import {useSelector, useDispatch} from "react-redux";
-import {setHoveredNodeId, setKeyboardNavigationOn, setHoveredSectionId, setEditedSymbolId, setNodeChoosenFromNavigator} from "../../../features/pre-rendered-html-nodes"
+import {setHoveredNodeId, setKeyboardNavigationOn, makeSymbolEditable, setIsNodeSelectedFromNavigator} from "../../../features/pre-rendered-html-nodes"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./_atoms/AddSectionButton";
 import Placeholder from '../../../img/placeholder.svg';
@@ -11,19 +11,27 @@ import { camelCase } from "lodash";
 
 function RenderedNode(props) {
 
+  // console.log("render node")
+
   const [editable, setEditable] = useState(false);
 
-  const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
+  // const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
   const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution);
-  const projectCollections = useSelector((state) => state.designerProjectState.projectCollections);
+  const collections = useSelector((state) => state.designerProjectState.collections);
   const projectMode = useSelector((state) => state.designerProjectState.projectMode);
   const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode);
   const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId);
   const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId);
   const activeCollectionItemTemplateId = useSelector((state) => state.designerProjectState.activeCollectionItemTemplateId);
-  const listOfNodeStyles = useSelector((state) => props.class.map((cl) => (cl.name)).toString().replaceAll(","," ") + " renderedNode " + ((state.designerProjectState.activeNodeId === props.id) ? "active " : " ") + ((state.designerProjectState.hoveredNodeId === props.id) ? "hovered" : " "));
+  const listOfNodeStyles = useSelector((state) => props.class.map((cl) => 
+  (cl.name)).toString().replaceAll(","," ") + 
+  " renderedNode " 
+  // + ((state.designerProjectState.activeNodeId === props.id) ? "active " : " ") 
+  // + ((state.designerProjectState.hoveredNodeId === props.id) ? "hovered" : " ")
+  );
 
   const dispatch = useDispatch()
+
 
   // const options = useMemo(
   //   () => ({
@@ -57,11 +65,11 @@ function RenderedNode(props) {
     }
   );
 
-  useEffect(() => {
-    if(activeNodeId !== props.id) {
-      setEditable(false);
-    }
-  },[activeNodeId])
+  // useEffect(() => {
+  //   if(activeNodeId !== props.id) {
+  //     setEditable(false);
+  //   }
+  // },[activeNodeId])
 
   function handleDoubleClick(e) {
     e.stopPropagation();
@@ -71,7 +79,7 @@ function RenderedNode(props) {
 
   function handleOnClick(e) {
     e.stopPropagation();
-    dispatch(setNodeChoosenFromNavigator(false));
+    dispatch(setIsNodeSelectedFromNavigator(false));
     props.onClick([props.id, props?.class[0]?.name]);
     if (projectMode === "creator") {
       setEditable(true);
@@ -80,7 +88,6 @@ function RenderedNode(props) {
     if(!editable) {
       dispatch(setKeyboardNavigationOn(true))
     }
-    scrollProjectTo(props.id);
   }
 
   function handleMouseOver(e) {
@@ -94,24 +101,8 @@ function RenderedNode(props) {
   }
 
   function handleSectionMouseOver() {
-    dispatch(setHoveredSectionId(props.id));
+    
   }
-
-  function scrollProjectTo(id) {
-    const actualNodePosition = document.querySelector(`[nodeid="${id}"]`)?.getBoundingClientRect().top;
-    if(actualNodePosition < 172 || actualNodePosition > window.screen.height - 200) {
-      const actualViewPosition = document.getElementById("nodes-navigator").scrollTop;
-      const scrollMargin = 245;
-      document.getElementById("nodes-navigator").scrollTo({
-          top: actualViewPosition + actualNodePosition - scrollMargin,
-          behavior: "smooth"
-      });
-    }
-  }
-
-  // if(props?.data?.styles !== undefined) {
-  //   console.log(props?.data?.styles);
-  // }
   
   let customStyle = {};
   if (activeProjectResolution === "1") {
@@ -200,7 +191,7 @@ function RenderedNode(props) {
             itemIndex = {props.itemIndex}
             renderedCollectionIndex={props.renderedCollectionIndex}
             title={el.title}
-            children={el.children}
+            children={useMemo(()=> el.children)}
             onChange={(text, id) => props.onChange(text, id)}
             class={el.class}
             onClick={([nodeId,className]) => props.onClick([nodeId,className])}
@@ -258,7 +249,7 @@ function RenderedNode(props) {
       className={listOfNodeStyles}
       >
         <div 
-        onDoubleClick={() => (editedSymbolId.symbolId === "") && dispatch(setEditedSymbolId({symbolId:props.data.symbolId, elementId: props.id}))} 
+        onDoubleClick={() => (editedSymbolId.symbolId === "") && dispatch(makeSymbolEditable({symbolId:props.data.symbolId, elementId: props.id}))} 
         className={"symbol-box-wrapper" + 
         ((editedSymbolId.symbolId === props.data.symbolId &&
           editedSymbolId.elementId === props.id) ? " active" : "")}
@@ -290,7 +281,7 @@ function RenderedNode(props) {
   // Collection List
   if (props.type === "col") {
 
-    let renderedCollectionIndex = projectCollections.map(x => {
+    let renderedCollectionIndex = collections.map(x => {
       return x.id;
     }).indexOf(props.cmsCollectionId);
 
@@ -303,7 +294,7 @@ function RenderedNode(props) {
       onMouseOut={handleMouseOut}
       className={listOfNodeStyles}
           >
-            {projectCollections[renderedCollectionIndex]?.items.map((item,itemIndex) => (
+            {collections[renderedCollectionIndex]?.items.map((item,itemIndex) => (
               <div key={item.id}> 
               {props.children.map((el) => (
                 <RenderedNode
@@ -315,7 +306,7 @@ function RenderedNode(props) {
                   key={el.id}
                   itemIndex = {itemIndex}
                   renderedCollectionIndex={renderedCollectionIndex}
-                  collectionItems={projectCollections[renderedCollectionIndex]?.items[itemIndex].data}
+                  collectionItems={collections[renderedCollectionIndex]?.items[itemIndex].data}
                   title={el.title}
                   children={el.children}
                   onChange={(text, id) => props.onChange(text, id)}
@@ -333,7 +324,7 @@ function RenderedNode(props) {
     let imageSrc = props.data?.src;
     
     if(props.data.cmsFieldId) {
-      imageSrc = projectCollections[props.renderedCollectionIndex]?.items[props.itemIndex].data.find(({ fieldId }) => fieldId === props.data.cmsFieldId)?.fieldValue
+      imageSrc = collections[props.renderedCollectionIndex]?.items[props.itemIndex].data.find(({ fieldId }) => fieldId === props.data.cmsFieldId)?.fieldValue
     }
     elementHTML = (
       <img 
@@ -351,7 +342,7 @@ function RenderedNode(props) {
   let nodeText = props.title;
   if (props.type === "h" || props.type === "p") {
     if(nodesEditMode === "cmsTemplate" && props.data.cmsFieldId !== "" && props.data.cmsFieldId !== undefined) {
-      nodeText = projectCollections.find(({ id }) => id === activeCollectionTemplateId)?.items?.find(({id}) => id === activeCollectionItemTemplateId).data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
+      nodeText = collections.find(({ id }) => id === activeCollectionTemplateId)?.items?.find(({id}) => id === activeCollectionItemTemplateId).data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
     }
 
     if(props.collectionItems) {
@@ -442,4 +433,4 @@ function RenderedNode(props) {
   return elementHTML;
 }
 
-export default RenderedNode;
+export default React.memo(RenderedNode);

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { deleteRichElement, editRichElement, setKeyboardNavigationOn } from "../../../../features/pre-rendered-html-nodes";
+import { deleteBlock, editBlock, setKeyboardNavigationOn } from "../../../../features/pre-rendered-html-nodes";
 
 import ListItemEditIcon from "../_atoms/ListItemEditIcon";
 
@@ -25,8 +25,8 @@ export default function RichElementListItem({element, index, setDraggedStartInde
             text="Edit Block"
             itemType="block"
             element={element}
-            editFx={editRichElement} 
-            deleteFx={deleteRichElement} 
+            editFx={editBlock} 
+            deleteFx={deleteBlock} 
             active={false}
             isDeleteButtonVisible={true} />
 

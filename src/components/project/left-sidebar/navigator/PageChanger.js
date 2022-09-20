@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveCollectionItemTemplateId, setActiveProjectTab} from "../../../../features/pre-rendered-html-nodes"
+import {setActiveCollectionItemTemplate, setActiveProjectTab} from "../../../../features/pre-rendered-html-nodes"
 
 
 export default function PageChanger() {
     const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode);
-    const activeCollectionItems = useSelector((state) => state.designerProjectState.projectCollections?.find(({id}) => id === state.designerProjectState.activeCollectionTemplateId)?.items);
+    const activeCollectionItems = useSelector((state) => state.designerProjectState.collections?.find(({id}) => id === state.designerProjectState.activeCollectionTemplateId)?.items);
     const pageChangerText = useSelector((state) => {
         const projectState = state.designerProjectState;
         if (nodesEditMode === "page") {
             return "Page: " + projectState.projectPages?.[projectState.activePageIndex]?.name;
         } 
         if (nodesEditMode === "cmsTemplate") {
-            return "Template: " + projectState.projectCollections.find(({id}) => id === projectState.activeCollectionTemplateId).name;
+            return "Template: " + projectState.collections.find(({id}) => id === projectState.activeCollectionTemplateId).name;
         } 
         if (nodesEditMode === "layout") {
             return "Layout: " + 
@@ -34,7 +34,7 @@ export default function PageChanger() {
 
     function handleItemClick(id) {
         setItemsChangerOpened(false);
-        dispatch(setActiveCollectionItemTemplateId(id))
+        dispatch(setActiveCollectionItemTemplate(id))
     }
 
     function handleButtonClick () {

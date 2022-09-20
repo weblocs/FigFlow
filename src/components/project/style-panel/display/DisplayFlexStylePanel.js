@@ -9,21 +9,6 @@ import ProprtyInputLabel from "../ProprtyInputLabel";
 
 export default function DispayFlexStylePanel () {
 
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
-
-    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
-    const nodeStyles = useSelector((state) => {
-        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
-            return preRenderedStyles[activeStyleIndex];
-        } else {
-            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
-        }   
-    })
-
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
 
     const displayStyle = useSelector((state) => {
@@ -34,27 +19,6 @@ export default function DispayFlexStylePanel () {
             } catch {
             }
         }
-    });
-
-    const directionIsSet = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.["flex-direction"] !== undefined) {
-            return true;
-        }
-        return false;
-    });
-
-    const alignIsSet = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.["align-items"] !== undefined) {
-            return true;
-        }
-        return false;
-    });
-
-    const justifyIsSet = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.["justify-content"] !== undefined) {
-            return true;
-        }
-        return false;
     });
 
     if(displayStyle === "flex") {

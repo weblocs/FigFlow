@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setRichTextElements, createNewRichTextElement, addSymbolToPreRenderedHTMLNodesAfterActiveNode, setKeyboardNavigationOn, deleteRichElement, editRichElement} from "../../../../features/pre-rendered-html-nodes"
-
-import {arrayMoveImmutable} from 'array-move'
-import CreateNewItemInput from "../navigator/CreateNewItemInput";;
+import { setBlocks, addBlock } from "../../../../features/pre-rendered-html-nodes";
+import {arrayMoveImmutable} from 'array-move';
+import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import RichElementListItem from "./RichElementListItem";
 
 export default function ProjectRichTextPanel(){
@@ -15,7 +14,7 @@ export default function ProjectRichTextPanel(){
         if(newIndex > oldIndex) {
             newIndex--;
         }
-        dispatch(setRichTextElements(arrayMoveImmutable(projectRichTextElements, oldIndex, newIndex)));
+        dispatch(setBlocks(arrayMoveImmutable(projectRichTextElements, oldIndex, newIndex)));
     }
 
     const [draggedStartIndex, setDraggedStartIndex] = useState(-1);
@@ -48,7 +47,7 @@ export default function ProjectRichTextPanel(){
 
             <CreateNewItemInput 
             visibility={createInputVisible} 
-            create={createNewRichTextElement} 
+            create={addBlock} 
             placeholder="New element" />
 
             <div className="pagesList">

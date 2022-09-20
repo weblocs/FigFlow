@@ -1,15 +1,15 @@
 import React, {useRef} from "react";
 import { useDispatch } from "react-redux";
-import {createNewCollection, setKeyboardNavigationOn} from "../../../../features/pre-rendered-html-nodes"
+import {addCollection, setKeyboardNavigationOn} from "../../../../features/pre-rendered-html-nodes"
 
-export default function CreateNewPageInProject () {
+export default function AddCollection () {
     const dispatch = useDispatch();
     const inputRef = useRef();
 
     async function handleAddNewCollection(e) {
         e.preventDefault();
         if(inputRef.current.value !== "") {
-            dispatch(createNewCollection(inputRef.current.value));
+            dispatch(addCollection(inputRef.current.value));
         }
     };
 

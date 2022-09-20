@@ -6,7 +6,7 @@ import {
     setCopiedNodes,
     pasteCopiedNodes,
     clearActiveNode,
-    setEditedSymbolId 
+    makeSymbolEditable 
 } from "../../../../features/pre-rendered-html-nodes"
 import HeadingButton from "./HeadingButton";
 import StyleItem from "./StyleItem";
@@ -79,6 +79,9 @@ export default function ElementSettings() {
     return (
             <div className={"rich-element-settings_box" + ((activeNodeId !== "") ? " active" : "")} 
             style={{ transform: `translate(${activeNodePositionX}px,${activeNodePositionY}px)`}}>
+
+                
+
                 <div className="rich-element-settings" onClick={handleClick} onMouseOver={handleMouseOver}>
                     <div className="rich-element-settings_flex">
 
@@ -122,7 +125,7 @@ export default function ElementSettings() {
 
                         <>
                         <div className="rich-element-settings_button button-centered active"
-                        onClick={() => (editedSymbolId.symbolId === "") && dispatch(setEditedSymbolId({symbolId:nodeObject.symbolId, elementId: nodeObject.id}))}
+                        onClick={() => (editedSymbolId.symbolId === "") && dispatch(makeSymbolEditable({symbolId:nodeObject.symbolId, elementId: nodeObject.id}))}
                         >✎</div>
                         </>
                         }

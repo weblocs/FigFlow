@@ -8,9 +8,9 @@ import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "fi
 import { getStorage, ref } from "firebase/storage";
 import { firebaseConfig } from "./firebase-config.js";
 import { v4 as uuidv4 } from "uuid";
-
-import { setProjectCollections, setRichTextElements, setProjectSymbols, setPreRenderedStyles, setProjectPages, setProjectFirebaseId, setProjectSwatches, setprojectLayouts, setactiveLayoutFolder, setProjectPageFolders, setProjectPageFolderStructure } from '../features/pre-rendered-html-nodes'
+import { setCollections, setBlocks, setSymbols, setPreRenderedStyles, setPages, setProjectFirebaseId, setSwatches, setLayouts, setPageFolders, setPagesNestedStructure } from '../features/pre-rendered-html-nodes'
 import { setProjectImages } from "../features/project-images"
+
 
 export default function saveProject(items,preRenderedStyles) {
   axios
@@ -66,36 +66,36 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
 
     if(projectFirebaseId !== "" ) {
       const projectData = await getDoc(doc(db, "projects", projectFirebaseId));
-      dispatch(setProjectPages([...projectData.data().pages]));
-      dispatch(setProjectCollections([...projectData.data().collections]));
+      dispatch(setPages([...projectData.data().pages]));
+      dispatch(setCollections([...projectData.data().collections]));
       dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
-      dispatch(setProjectSymbols([...projectData.data()?.symbols]));
-      dispatch(setProjectSwatches([...projectData.data()?.swatches]));
-      dispatch(setProjectPageFolders([...projectData.data()?.projectPageFolders]));
-      dispatch(setProjectPageFolderStructure([...projectData.data()?.projectPageFolderStructure]));
-      dispatch(setRichTextElements([...projectData.data()?.richTextElements]));
+      dispatch(setSymbols([...projectData.data()?.symbols]));
+      dispatch(setSwatches([...projectData.data()?.swatches]));
+      dispatch(setPageFolders([...projectData.data()?.projectPageFolders]));
+      dispatch(setPagesNestedStructure([...projectData.data()?.projectPageFolderStructure]));
+      dispatch(setBlocks([...projectData.data()?.richTextElements]));
       dispatch(setProjectImages([...projectData.data()?.images]));
-      dispatch(setprojectLayouts([...projectData.data()?.sections]));
+      dispatch(setLayouts([...projectData.data()?.sections]));
     }
   } else {
     let projectPagesStorage = localStorage.getItem(offlineProjectName+"pages");
     if (JSON.stringify(projectPagesStorage) !== "null" ) {
-      dispatch(setProjectPages(JSON.parse(projectPagesStorage)));
-      dispatch(setProjectPageFolderStructure(JSON.parse(localStorage.getItem(offlineProjectName+"projectPageFolderStructure"))));
+      dispatch(setPages(JSON.parse(projectPagesStorage)));
+      dispatch(setPagesNestedStructure(JSON.parse(localStorage.getItem(offlineProjectName+"projectPageFolderStructure"))));
     } else {
       let firstPageInProjectId = uuidv4();
-      dispatch(setProjectPages([{name: "Home", id: firstPageInProjectId, preRenderedHTMLNodes:[]}]));
-      dispatch(setProjectPageFolderStructure([{name: "Home", id: firstPageInProjectId}]));
+      dispatch(setPages([{name: "Home", id: firstPageInProjectId, preRenderedHTMLNodes:[]}]));
+      dispatch(setPagesNestedStructure([{name: "Home", id: firstPageInProjectId}]));
     }
     if(JSON.stringify(localStorage.getItem(offlineProjectName+"collections")) !== "null") {
-      dispatch(setProjectCollections(JSON.parse(localStorage.getItem(offlineProjectName+"collections"))));
+      dispatch(setCollections(JSON.parse(localStorage.getItem(offlineProjectName+"collections"))));
       dispatch(setPreRenderedStyles(JSON.parse(localStorage.getItem(offlineProjectName+"preRenderedStyles"))));
-      dispatch(setProjectSymbols(JSON.parse(localStorage.getItem(offlineProjectName+"symbols"))));
-      dispatch(setProjectSwatches(JSON.parse(localStorage.getItem(offlineProjectName+"swatches"))));
-      dispatch(setProjectPageFolders(JSON.parse(localStorage.getItem(offlineProjectName+"projectPageFolders"))));
-      dispatch(setRichTextElements(JSON.parse(localStorage.getItem(offlineProjectName+"richTextElements"))));
+      dispatch(setSymbols(JSON.parse(localStorage.getItem(offlineProjectName+"symbols"))));
+      dispatch(setSwatches(JSON.parse(localStorage.getItem(offlineProjectName+"swatches"))));
+      dispatch(setPageFolders(JSON.parse(localStorage.getItem(offlineProjectName+"projectPageFolders"))));
+      dispatch(setBlocks(JSON.parse(localStorage.getItem(offlineProjectName+"richTextElements"))));
       dispatch(setProjectImages(JSON.parse(localStorage.getItem(offlineProjectName+"images"))));
-      dispatch(setprojectLayouts(JSON.parse(localStorage.getItem(offlineProjectName+"sections"))));
+      dispatch(setLayouts(JSON.parse(localStorage.getItem(offlineProjectName+"sections"))));
     }
   }
 }

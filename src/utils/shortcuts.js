@@ -2,7 +2,7 @@ import useEventListener from '@use-it/event-listener'
 import { useDispatch } from 'react-redux';
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 
-import {arrowActiveNodeNavigation, setCopiedNodes, pasteCopiedNodes, deleteActiveNode, movePreRenderedNode, undoProject, reUndoProject, deleteActiveNodeShortcut} from "../features/pre-rendered-html-nodes"
+import {handleArrowNodesNavigation, setCopiedNodes, pasteCopiedNodes, deleteActiveNode, movePreRenderedNode, undoProject, reUndoProject, deleteActiveNodeShortcut} from "../features/pre-rendered-html-nodes"
 
 let keys = [];
 
@@ -138,16 +138,16 @@ function handleKeyDown({ key }) {
     }
 
     if (RIGHT_ARROW.includes(String(key))) {
-      dispatch(arrowActiveNodeNavigation({key: "right"}))
+      dispatch(handleArrowNodesNavigation({key: "right"}))
     }
     if (LEFT_ARROW.includes(String(key))) {
-      dispatch(arrowActiveNodeNavigation({key: "left"}))
+      dispatch(handleArrowNodesNavigation({key: "left"}))
     }
     if (UP_ARROW.includes(String(key))) {
-        dispatch(arrowActiveNodeNavigation({key: "up"}))
+        dispatch(handleArrowNodesNavigation({key: "up"}))
       }
       if (DOWN_ARROW.includes(String(key))) {
-        dispatch(arrowActiveNodeNavigation({key: "down"}))
+        dispatch(handleArrowNodesNavigation({key: "down"}))
       }
   }
 

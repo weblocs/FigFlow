@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import { useDispatch } from "react-redux";
-import {createNewCollectionField} from "../../../../features/pre-rendered-html-nodes"
+import {addCollectionField} from "../../../../features/pre-rendered-html-nodes"
 
-export default function CreateNewCollectionField () {
+export default function AddCollectionField () {
     const dispatch = useDispatch();
     const [input, setInput] = useState("");
     const [typeInput, setTypeInput] = useState("text");
@@ -10,7 +10,7 @@ export default function CreateNewCollectionField () {
     async function handleAddNewCollectionField(e) {
         e.preventDefault();
         if(input !== "") {
-            dispatch(createNewCollectionField({name: input, type:typeInput}));
+            dispatch(addCollectionField({name: input, type:typeInput}));
             setInput("");
         }
     };

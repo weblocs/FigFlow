@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import {updateEditedSymbol} from "../../../../features/pre-rendered-html-nodes"
+import {editSymbolNodes} from "../../../../features/pre-rendered-html-nodes"
 
 
 export default function UpdateSymbolButton() {
@@ -10,7 +10,7 @@ export default function UpdateSymbolButton() {
     if(editedSymbolId.symbolId !== "") {
         return (
             <div className="update-symbol-button" 
-            onClick={() => dispatch(updateEditedSymbol())}>
+            onClick={() => dispatch(editSymbolNodes())}>
                 Update Symbol: {editedSymbolName}
             </div>
         )

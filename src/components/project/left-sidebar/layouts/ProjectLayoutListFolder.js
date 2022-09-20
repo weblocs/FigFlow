@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { editLayout, editLayoutFolder, deleteLayoutFolder, setactiveLayoutFolder, deleteLayout, setActiveLayout }  from "../../../../features/pre-rendered-html-nodes"
+import { editLayout, editLayoutFolder, deleteLayoutFolder, deleteLayout, setActiveLayout }  from "../../../../features/pre-rendered-html-nodes"
 import CreateLayoutButton from "./CreateLayoutButton"
 import ListItemEditIcon from "../_atoms/ListItemEditIcon"
 
@@ -18,7 +18,6 @@ export default function ProjectLayoutListFolder({folder}) {
         <div key={folder.id} 
                 className="edit-icon_wrap-folder">
                     <div
-                    // onClick={() => dispatch(setactiveLayoutFolder(folder.id))}
                     onMouseOver={() => setIsHovered(true)}
                     onMouseOut={() => setIsHovered(false)}
                     className={"sections-nav-folder-item"}

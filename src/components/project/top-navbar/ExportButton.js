@@ -1,14 +1,11 @@
-import React, { useState } from "react"
 import { useSelector, useDispatch } from 'react-redux'
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
-
 export default function ExportButton() {
-    const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
     const postRenderedStyles = useSelector((state) => state.designerProjectState.postRenderedStyles)
     const projectPages = useSelector((state) => state.designerProjectState.projectPages)
-    const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
+    const collections = useSelector((state) => state.designerProjectState.collections)
     const projectPageFolderStructure = useSelector((state) => state.designerProjectState.projectPageFolderStructure)
     const dispatch = useDispatch()
     
@@ -121,7 +118,7 @@ export default function ExportButton() {
 
         var zip = new JSZip();
         // zip.file("project/index.html", generatePage(projectPages[0].preRenderedHTMLNodes));
-        
+            
 
         let firstPage = true;
         function renderPages(pages,parents) {
@@ -149,10 +146,11 @@ export default function ExportButton() {
                 }
             });
         }
+
         renderPages(projectPageFolderStructure, ["project"]);
         zip.file('project/style.css', `body{margin:0;}img{display: block;}${postRenderedStyles}`);
 
-        projectCollections.forEach(collection => {
+        collections.forEach(collection => {
             collection.items.forEach(item => {
                 zip.file(`project/${collection.slug}/${item.slug}.html`, generateCollectionPage(collection.preRenderedHTMLNodes));
             })

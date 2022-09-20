@@ -1,5 +1,5 @@
 import { createSlice, current } from '@reduxjs/toolkit'
-import {JSONtoCSS, getIdOfPreRenderedStyleByName, getIndexOfElementInArrayById, setStylesInActiveNodeAndActiveStyle} from "../utils/nodes-editing"
+import {JSONtoCSS, getIndexOfElementInArrayById} from "../utils/nodes-editing"
 import { v4 as uuidv4 } from "uuid";
 import sanitizeHtml from 'sanitize-html';
 
@@ -11,28 +11,44 @@ const initialState = {
   offlineMode: true,
   offlineProjectName: "projekt1", 
   projectMode: "developer", // developer or creator
-  projectLayouts: [],
-  scrollTopPosition: 0,
+
+  scrollCount: 0,
   nodesEditMode: "page", // page, layout, cmsTemplate, richElement
+
+  projectLayouts: [],
   activeLayoutFolder: "",
   activeLayoutId: "", 
+  
   undoStates: [],
   activeUndoIndex: 1,
   undoActionActive: false,
   activeProjectTab: "",
   activeRightSidebarTab: "Style",
+
   projectPages: [],
   projectPageFolders: [],
   projectPageFolderStructure: [],
-  openedSettingsPage : {},
   activePageId: "",
   activePageIndex: 0, 
-  projectCollections:[],  
-  activeProjectCollectionId: "",
+  openedSettingsPage : {},
+  draggedPage: {},
+  dragOverPage: {},
+
+  collections:[],  
+  activeCollection: {},
+  activeCollectionItem: {},
+
+  activeCollectionId: "",
   activeProjectCollectionIndex: 0,
-  activeProjectCollectionItemId: "",
+  activeCollectionItemId: "",
   activeProjectCollectionItemIndex: 0,
+  activeCollectionTemplateId: "",
+  activeCollectionItemTemplateId: "",
+  collectionPanelState: "collections",
+
   projectSymbols: [],
+  editedSymbolId: {symbolId: "", elementId: ""},
+
   preRenderedHTMLNodes: [],
   preRenderedStyles: [],
   postRenderedStyles: "",
@@ -47,9 +63,9 @@ const initialState = {
   projectFirebaseId: "",
   saveButtonStateText: "Publish",
   copiedNodes: {},
-  dragableCopiedNodes: {},
+  draggedNavigatorNodes: {},
   draggedOverNodeId: "",
-  draggedBefore: false,
+  navigatorItemDragBehindState: false,
   copiedSectionNodes: {},
   isActiveNodeParentDisplayStyleFlex: false,
   activeProjectResolution: "1",
@@ -58,17 +74,12 @@ const initialState = {
   projectUploadedFonts: [{name:"Plus Jakarta"}, {name:"Inter", weights: ["300", "500", "700"]}, {name:"General Sans"}, {name:"Hauora"}, {name:"Clash Display"}, {name:"Roboto"}],
   projectSwatches: [],
   projectPopUp: "",
-  hoveredSectionId: "",
   projectRichTextElements: [],
   activeStyleOptionIndex: 0,
   activeNodeComputedStyles: {},
-  activeCollectionTemplateId: "",
-  activeCollectionItemTemplateId: "",
-  draggedPage: {},
-  dragOverPage: {},
-  collectionPanelState: "collections",
-  editedSymbolId: {symbolId: "", elementId: ""},
-  nodeChoosenFromNavigator: false,
+
+
+  isNodeSelectedFromNavigator: false,
   projectVersions: [{id: "1"}],
   activeProjectVersionId: "1",
 }
@@ -136,8 +147,6 @@ function nodeIsFolder(node) {
     }
 }
 
-
-
 function updateNodesLists (state) {
     if(state.nodesEditMode === "page") {
         state.projectPages[state.activePageIndex].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
@@ -149,7 +158,7 @@ function updateNodesLists (state) {
         }
        
     } else if (state.nodesEditMode === "cmsTemplate") {
-        state.projectCollections.find(({id}) => id === state.activeCollectionTemplateId).preRenderedHTMLNodes = state.preRenderedHTMLNodes;
+        state.collections.find(({id}) => id === state.activeCollectionTemplateId).preRenderedHTMLNodes = state.preRenderedHTMLNodes;
     }  else if (state.nodesEditMode === "richElement") {
         
     }
@@ -161,7 +170,7 @@ function updateNodesBasedOnList(state) {
     } else if (state.nodesEditMode === "layout") {
         state.preRenderedHTMLNodes = [state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes];
     } else if (state.nodesEditMode === "cmsTemplate") {
-        state.preRenderedHTMLNodes = state.projectCollections.find(({id}) => id === state.activeCollectionTemplateId).preRenderedHTMLNodes;
+        state.preRenderedHTMLNodes = state.collections.find(({id}) => id === state.activeCollectionTemplateId).preRenderedHTMLNodes;
     } else if (state.nodesEditMode === "richElement") {
         // state.projectRichTextElements
     }
@@ -190,6 +199,89 @@ export const preRenderedNodesSlice = createSlice({
   initialState,
   reducers: {
 
+    /* Collections 
+    setActiveCollection,
+    addCollectionItem,
+    setActiveCollectionItem,
+    editCollectionItem, 
+    addCollectionField, 
+    setActiveCollectionTemplate, 
+    setActiveCollectionItemTemplate, 
+    setCollectionPanelState, */
+
+    setCollections: (state, action) => {
+        state.collections = action.payload;
+        state.activeCollectionId = state.collections?.[0]?.id || "";
+        state.activeCollectionItemId = state.collections?.[0]?.items?.[0]?.id || "";
+    },
+
+    addCollection: (state, action) => {
+        const collectionName = action.payload;
+        state.collections.push(
+            {
+                id: uuidv4(),
+                name: collectionName, 
+                slug: collectionName.toLowerCase().replaceAll(" ","-"), 
+                fields: [],
+                items: [],
+                preRenderedHTMLNodes: [],
+            }
+        );
+    },
+
+    setActiveCollection: (state, action) => {
+        state.activeCollection = action.payload;
+        state.activeCollectionId = action.payload.id;
+        
+        state.activeProjectCollectionIndex = state.collections.map(x => {
+            return x.id;
+        }).indexOf(state.activeCollectionId);
+
+
+        state.activeProjectCollectionItemIndex = 0;
+        state.activeCollectionItemId = state.collections[state.activeProjectCollectionIndex].items[0]?.id;
+    },
+
+    setActiveCollectionItem: (state, action) => {
+        state.activeCollectionItem = action.payload;
+        state.activeCollectionItemId = action.payload.id;
+
+        let activeCollectionsItems = state.collections[state.activeProjectCollectionIndex].items;
+        state.activeProjectCollectionItemIndex = activeCollectionsItems.map(x => {
+            return x.id;
+        }).indexOf(state.activeCollectionItemId);
+    },
+
+    addCollectionField: (state, action) => {
+        state.collections[state.activeProjectCollectionIndex].fields = [...state.collections[state.activeProjectCollectionIndex].fields, 
+            {
+                id:uuidv4(),
+                name:action.payload.name,
+                type:action.payload.type,
+            }
+        ];
+    },
+    
+    addCollectionItem: (state, action) => {
+        const collectionItemName = action.payload;
+        let activeCollectionItems = state.collections[state.activeProjectCollectionIndex].items;
+        const collectionItemId = uuidv4();
+        
+        activeCollectionItems.push({
+            id: collectionItemId,
+            name: collectionItemName,
+            slug: collectionItemName.toLowerCase().replaceAll(" ","-"),
+            data:[]
+        });
+
+        state.activeCollectionItemId = collectionItemId;
+        
+        state.activeProjectCollectionItemIndex = activeCollectionItems.map(x => {
+            return x.id;
+        }).indexOf(state.activeCollectionItemId);
+
+    },
+
     updateActiveStyleListAndId: (state) => {
         state.stylesInActiveNode = state.activeNodeObject?.class;
         
@@ -203,11 +295,11 @@ export const preRenderedNodesSlice = createSlice({
         });
     },
 
-    setScrollTopPosition: (state) => {
-        state.scrollTopPosition = state.scrollTopPosition+1;
+    updateStateOnScroll: (state) => {
+        state.scrollCount = state.scrollCount+1;
     },
 
-    setEditedSymbolId: (state, action) => {
+    makeSymbolEditable: (state, action) => {
         state.editedSymbolId.symbolId = action.payload.symbolId;
         state.editedSymbolId.elementId = action.payload.elementId;
         
@@ -215,11 +307,11 @@ export const preRenderedNodesSlice = createSlice({
         tempNode.expanded = true;
     },
 
-    setActiveCollectionItemTemplateId: (state, action) => {
+    setActiveCollectionItemTemplate: (state, action) => {
         state.activeCollectionItemTemplateId = action.payload;
     },
 
-    setSymbolsHeights: (state) => {
+    editSymbolsClickableArea: (state) => {
         function findNode(_nodes) {
             for (let i = 0; i < _nodes?.length; i++) {
                 if(_nodes[i].type === "sym") {
@@ -238,13 +330,13 @@ export const preRenderedNodesSlice = createSlice({
         state.collectionPanelState = action.payload;
     },
 
-    updateProjectPageProperty: (state, action) => {
+    editPage: (state, action) => {
         state.projectPages.find(({id}) => id === state.openedSettingsPage.id)[action.payload.property] = action.payload.value;
         let settingsOpenedPage = findActiveNode(state.projectPageFolderStructure,state.openedSettingsPage.id);
         settingsOpenedPage[action.payload.property] = action.payload.value;
     },
 
-    deleteProjectPage: (state, action) => {
+    deletePage: (state, action) => {
         const indexProjectPages = state.projectPages.findIndex(({id}) => id === state.openedSettingsPage.id);
         state.projectPages.splice(indexProjectPages,1);
         let [settingsOpenedPage, settingsOpenedPageSiblingArray, settingsOpenedPageIndex] = findActiveNodeSiblingArrayAndIndex(state.projectPageFolderStructure,state.openedSettingsPage.id);
@@ -258,11 +350,11 @@ export const preRenderedNodesSlice = createSlice({
         }
     },
 
-    clearOpenedSettingPage : (state) => {
+    closePageSettings : (state) => {
         state.openedSettingsPage = {};
     },
 
-    setOpenedSettingsPage: (state, action) => {
+    openPageSettings: (state, action) => {
         state.openedSettingsPage = action.payload;
     },
 
@@ -292,7 +384,7 @@ export const preRenderedNodesSlice = createSlice({
         state.dragOverPage = "";
     },
 
-    toggleFolderExpandedState: (state, action) => {
+    togglePageFolderExpandState: (state, action) => {
         const folderId = action.payload;
         let activeFolder = findActiveNode(state.projectPageFolderStructure,folderId);
         let expandedState = ((activeFolder?.expanded) ? true : false);
@@ -305,7 +397,7 @@ export const preRenderedNodesSlice = createSlice({
         if(tempNode.type !== "sym") {
             let expandedState = ((tempNode?.expanded) ? true : false);
             tempNode.expanded = !expandedState;
-            state.nodeChoosenFromNavigator = true;
+            state.isNodeSelectedFromNavigator = true;
         }
     },
 
@@ -313,26 +405,16 @@ export const preRenderedNodesSlice = createSlice({
         state.nodesEditMode = action.payload;
     },
 
-    setActiveCollectionTemplateId: (state, action) => {
-        state.activeCollectionTemplateId = action.payload;
+    setNavigatorItemDragBehindState: (state, action) => {
+        state.navigatorItemDragBehindState = action.payload;
     },
 
-    setActiveLayoutId: (state, action) => {
-        state.activeLayoutId = action.payload;
-        state.activeNodeId = "";
-    },
-
-    setDraggedBefore: (state, action) => {
-        state.draggedBefore = action.payload;
-    },
-
-    setDraggedOverNodeId: (state, action) => {
+    setDraggedOverNavigatorItemId: (state, action) => {
         state.draggedOverNodeId = action.payload;
     },
 
-    setDragableCopiedNodes: (state, action) => {
-        const dragedNodeId = action.payload;
-        state.dragableCopiedNodes = findActiveNode(state.preRenderedHTMLNodes, dragedNodeId);
+    setDraggedNavigatorNodes: (state, action) => {
+        state.draggedNavigatorNodes = findActiveNode(state.preRenderedHTMLNodes, action.payload);
     },
 
     setActiveNodeComputedStyles: (state) => {
@@ -350,7 +432,7 @@ export const preRenderedNodesSlice = createSlice({
         }
     },
 
-    renameMainStyle: (state, action) => {
+    renameStyle: (state, action) => {
         const nodeId = action.payload.id;
         const newNodeName = action.payload.name;
         for (let i = 0; i < state.preRenderedStyles.length; i++) {
@@ -378,7 +460,7 @@ export const preRenderedNodesSlice = createSlice({
         state.stylesInActiveNode[0].name = newNodeName;
     },
 
-    clearStyleOption: (state,action) => {
+    removeStyleOption: (state,action) => {
         let optionIndex = action.payload.optionIndex;
         let activeNode = findActiveNode(state.preRenderedHTMLNodes,state.activeNodeId);
         activeNode.class[optionIndex+1] = {id: "", name: ""}
@@ -464,10 +546,6 @@ export const preRenderedNodesSlice = createSlice({
         }
     },
 
-    setHoveredSectionId: (state, action) => {
-        state.hoveredSectionId = action.payload;
-    },
-
     setProjectPopUp: (state, action) => {
         state.projectPopUp = action.payload;
     },
@@ -485,13 +563,11 @@ export const preRenderedNodesSlice = createSlice({
         }
     },
 
-    setRichTextElements: (state, action) => {
+    setBlocks: (state, action) => {
         state.projectRichTextElements = action.payload
     },
 
-    
-
-    createNewRichTextElement: (state, action) => {
+    addBlock: (state, action) => {
         state.projectRichTextElements = [...state.projectRichTextElements, {
             id: uuidv4(),
             name: action.payload,
@@ -500,17 +576,17 @@ export const preRenderedNodesSlice = createSlice({
         }];
     },
 
-    editRichElement: (state, action) => {
+    editBlock: (state, action) => {
         const elementIndex = state.projectRichTextElements.findIndex(({id}) => id === action.payload.id);
         state.projectRichTextElements[elementIndex][action.payload.property] = action.payload.value;
     },
 
-    deleteRichElement: (state, action) => {
+    deleteBlock: (state, action) => {
         const elementIndex = state.projectRichTextElements.findIndex(({id}) => id === action.payload.id);
         state.projectRichTextElements.splice(elementIndex,1);
     },
 
-    editSymbol: (state, action) => {
+    editSymbolName: (state, action) => {
         const elementIndex = state.projectSymbols.findIndex(({id}) => id === action.payload.id);
         state.projectSymbols[elementIndex][action.payload.property] = action.payload.value;
     },
@@ -520,15 +596,15 @@ export const preRenderedNodesSlice = createSlice({
         state.projectSymbols.splice(elementIndex,1);
     },
 
-    setprojectLayouts: (state, action) => {
+    setLayouts: (state, action) => {
         state.projectLayouts = action.payload
     },
 
-    setactiveLayoutFolder: (state, action) => {
+    setActiveLayoutFolder: (state, action) => {
         state.activeLayoutFolder = action.payload
     },
 
-    createNewSection: (state, action) => {
+    addLayout: (state, action) => {
         for (let i = 0; i < state.projectLayouts.length; i++) {
             if(state.projectLayouts[i].id === state.activeLayoutFolder && state.activeNodeId !== "") {
                 state.projectLayouts[i].items = [...state.projectLayouts[i].items, {
@@ -600,7 +676,7 @@ export const preRenderedNodesSlice = createSlice({
         }
     },
 
-    createNewSectionFolder: (state, action) => {
+    addLayoutFolder: (state, action) => {
         state.projectLayouts = [...state.projectLayouts, {
             id: uuidv4(),
             name: action.payload,
@@ -608,11 +684,11 @@ export const preRenderedNodesSlice = createSlice({
         }]
     },
 
-    setProjectSwatches: (state, action) => {
+    setSwatches: (state, action) => {
         state.projectSwatches = action.payload;
     },
 
-    updateSwatch: (state, action) => {
+    editSwatch: (state, action) => {
         let swatchId = action.payload.id;
         let swatchIndex = state.projectSwatches.map(x => {
             return x.id;
@@ -624,11 +700,11 @@ export const preRenderedNodesSlice = createSlice({
         state.projectSwatches.push({id: uuidv4(), name: action.payload.name, color: action.payload.color })
     },
 
-    setNodeChoosenFromNavigator: (state, action) => {
-        state.nodeChoosenFromNavigator = action.payload;
+    setIsNodeSelectedFromNavigator: (state, action) => {
+        state.isNodeSelectedFromNavigator = action.payload;
     },
 
-    setActiveNodeParentsPath: (state) => {
+    setActiveNodeParentsPathAndExpandNodes: (state) => {
 
         function isElement(element) {
             return element instanceof Element || element instanceof HTMLDocument;  
@@ -657,7 +733,7 @@ export const preRenderedNodesSlice = createSlice({
             for(let i = 0; i < nodes.length; i++) {
                 if(nodes[i].id === state.activeNodeParentsPath?.[parentPathIndex]?.id) {
                    
-                    if(!state.nodeChoosenFromNavigator && nodes[i].type !== "sym") {
+                    if(!state.isNodeSelectedFromNavigator && nodes[i].type !== "sym") {
                         nodes[i].expanded = true;
                     }
 
@@ -778,17 +854,17 @@ export const preRenderedNodesSlice = createSlice({
         }
     },
 
-    pasteDraggedNodes: (state) => {
+    dropDraggedNavigatorNodes: (state) => {
         let stopAction = false;
         function deleteOldNode(nodes) {
             for (let i = 0; i < nodes.length; i++) {
 
-                if(state.dragableCopiedNodes.id === state.draggedOverNodeId) {
+                if(state.draggedNavigatorNodes.id === state.draggedOverNodeId) {
                     stopAction = true;
                     break;
                 }
 
-                if(nodes[i].id === state.dragableCopiedNodes.id && state.draggedOverNodeId !== "") {
+                if(nodes[i].id === state.draggedNavigatorNodes.id && state.draggedOverNodeId !== "") {
                     nodes.splice(i,1);
                     break;
                 }
@@ -807,19 +883,19 @@ export const preRenderedNodesSlice = createSlice({
                 if (nodes[i].id === id) {
                     
                     if( nodeIsFolder(nodes[i])) {
-                        if(state.draggedBefore) {
-                            nodes.splice(i,0,state.dragableCopiedNodes);
+                        if(state.navigatorItemDragBehindState) {
+                            nodes.splice(i,0,state.draggedNavigatorNodes);
                             break;
                         } else {
-                            nodes[i].children.splice(0,0,state.dragableCopiedNodes);
+                            nodes[i].children.splice(0,0,state.draggedNavigatorNodes);
                             break;
                         }
                     } else {
-                        if(state.draggedBefore) {
-                            nodes.splice(i,0,state.dragableCopiedNodes);
+                        if(state.navigatorItemDragBehindState) {
+                            nodes.splice(i,0,state.draggedNavigatorNodes);
                             break;
                         } else {
-                            nodes.splice(i+1,0,state.dragableCopiedNodes);
+                            nodes.splice(i+1,0,state.draggedNavigatorNodes);
                             break;
                         }
                     }
@@ -834,7 +910,7 @@ export const preRenderedNodesSlice = createSlice({
         if(!stopAction) {
             findNode(state.preRenderedHTMLNodes, state.draggedOverNodeId);
         }
-        state.dragableCopiedNodes = {};
+        state.draggedNavigatorNodes = {};
         state.draggedOverNodeId = "";
     },
 
@@ -898,20 +974,7 @@ export const preRenderedNodesSlice = createSlice({
     },
 
     setActiveNodeObject: (state) => {
-        let response;
-        function findNode(nodes, id) {
-            for (let i = 0; i < nodes.length; i++) {
-                if (nodes[i].id === id) {
-                    response = nodes[i];
-                    break;
-                }
-                if (nodes[i].children) {
-                    findNode(nodes[i].children, id);
-                }
-            }
-        }
-        findNode(state.preRenderedHTMLNodes, state.activeNodeId);
-        state.activeNodeObject = response;
+        state.activeNodeObject = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId);
     },
 
     // [TODO] add posibilty to check for sub classes and rensposiveness
@@ -983,9 +1046,7 @@ export const preRenderedNodesSlice = createSlice({
         state.activeStyleIndex = undefined;
     },
 
-
-
-    addSymbolToPreRenderedHTMLNodesAfterActiveNode: (state, action) => {
+    addSymbolToProject: (state, action) => {
         let response;
         let tempPreRenderedHTMLNodes = JSON.stringify(state.preRenderedHTMLNodes);
         let activeNodeId = state.activeNodeId;
@@ -1023,21 +1084,11 @@ export const preRenderedNodesSlice = createSlice({
         state.activeStyleIndex = undefined;
     },
 
-    setProjectSymbols: (state, action) => {
+    setSymbols: (state, action) => {
         state.projectSymbols = action.payload;
     },
 
-    createNewSymbol: (state, action) => {
-        state.projectSymbols = [...state.projectSymbols, 
-            {
-                id: uuidv4(),
-                name: action.payload,  
-                preRenderedHTMLNodes: [],
-            }
-        ];
-    },
-
-    transformNodeIntoSymbol: (state, action) => {
+    addSymbol: (state, action) => {
         let symbolId = uuidv4();
         let newNode = {
             id: uuidv4(),
@@ -1055,6 +1106,7 @@ export const preRenderedNodesSlice = createSlice({
             }
         ];
         let activeNode = findActiveNode(state.preRenderedHTMLNodes,state.activeNodeId);
+
         activeNode.type = "sym";
         activeNode.title = "";
         activeNode.symbolId = symbolId;
@@ -1163,19 +1215,12 @@ export const preRenderedNodesSlice = createSlice({
         state.preRenderedHTMLNodes = response;
     },
 
-    // not used (was using in first basic add style form)(missing style id)
-    addPreRenderedStyle: (state, action) => {
-        let newStyle = {name: action.payload, styles: {}};
-        state.preRenderedStyles = [...state.preRenderedStyles, newStyle];
-        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
-    },
-
     setPreRenderedStyles: (state,action) => {
         state.preRenderedStyles = [...action.payload];
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
     },
 
-    editStyleOptionProperty: (state,action) => {
+    editStyleOption: (state,action) => {
         const property = action.payload.property;
         const value = action.payload.value;
         const index = action.payload.index;
@@ -1248,7 +1293,7 @@ export const preRenderedNodesSlice = createSlice({
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
     },
 
-    createNewStyle: (state, action) => {
+    addStyle: (state, action) => {
         let nodeId = state.activeNodeId;
         let styleName = action.payload;
         let newStyleId = uuidv4();
@@ -1300,7 +1345,7 @@ export const preRenderedNodesSlice = createSlice({
         
     },
 
-    createNewStyleOption: (state, action) => {
+    addStyleOption: (state, action) => {
         let styleOptionName = action.payload.name;
         let childrenIndex = action.payload.childrenIndex;
         let mainStyleId = state.stylesInActiveNode[0].id;
@@ -1372,7 +1417,7 @@ export const preRenderedNodesSlice = createSlice({
         state.hoveredNodeId = action.payload;
     },
 
-    arrowActiveNodeNavigation: (state,action) => {
+    handleArrowNodesNavigation: (state,action) => {
         let response = state.activeNodeId;
         let pressedKey = action.payload.key;
         let parentNodes = [];
@@ -1428,19 +1473,11 @@ export const preRenderedNodesSlice = createSlice({
         state.projectFirebaseId = action.payload;
     },
 
-    setProjectPages: (state, action) => {
+    setPages: (state, action) => {
         state.projectPages = action.payload;
         state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
         // add setActivePageIndex here
         state.activePageId = state.projectPages[state.activePageIndex].id;
-    },
-
-    setProjectCollections: (state, action) => {
-        state.projectCollections = action.payload;
-        if(state.projectCollections.length > 0) {
-            state.activeProjectCollectionId = state.projectCollections[state.activeProjectCollectionIndex].id;
-            state.activeProjectCollectionItemId = state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex]?.id;
-        }
     },
 
     saveProjectToFirebase: (state) => {
@@ -1453,7 +1490,7 @@ export const preRenderedNodesSlice = createSlice({
                 pages: state.projectPages,
                 projectPageFolders: state.projectPageFolders,
                 projectPageFolderStructure: state.projectPageFolderStructure,
-                collections: state.projectCollections,
+                collections: state.collections,
                 preRenderedStyles: state.preRenderedStyles,
                 symbols: state.projectSymbols,
                 swatches: state.projectSwatches,
@@ -1469,7 +1506,7 @@ export const preRenderedNodesSlice = createSlice({
             localStorage.setItem(slug+"pages", JSON.stringify(state.projectPages));
             localStorage.setItem(slug+"projectPageFolders", JSON.stringify(state.projectPageFolders));
             localStorage.setItem(slug+"projectPageFolderStructure", JSON.stringify(state.projectPageFolderStructure));
-            localStorage.setItem(slug+"collections", JSON.stringify(state.projectCollections));
+            localStorage.setItem(slug+"collections", JSON.stringify(state.collections));
             localStorage.setItem(slug+"preRenderedStyles", JSON.stringify(state.preRenderedStyles));
             localStorage.setItem(slug+"symbols", JSON.stringify(state.projectSymbols));
             localStorage.setItem(slug+"swatches", JSON.stringify(state.projectSwatches));
@@ -1481,14 +1518,14 @@ export const preRenderedNodesSlice = createSlice({
         state.saveButtonStateText = action.payload;
     },
 
-    setActiveCmsTemplate: (state, action) => {
+    setActiveCollectionTemplate: (state, action) => {
         updateNodesLists(state);
         state.nodesEditMode = "cmsTemplate";
         state.activeLayoutId = "";
         state.activePageId = "";
 
         state.activeCollectionTemplateId = action.payload;
-        state.activeCollectionItemTemplateId = state.projectCollections.find(({id}) => id === state.activeCollectionTemplateId).items[0].id;
+        state.activeCollectionItemTemplateId = state.collections.find(({id}) => id === state.activeCollectionTemplateId).items[0].id;
         
         updateNodesBasedOnList(state);
         state.activeNodeId = "";
@@ -1511,7 +1548,7 @@ export const preRenderedNodesSlice = createSlice({
         state.activeNodeId = "";
     },
 
-    setActivePageIdAndIndex: (state, action) => {
+    setActivePage: (state, action) => {
         //update previos page before creating a new one
         updateNodesLists(state);
         state.activeLayoutId = "";
@@ -1526,32 +1563,16 @@ export const preRenderedNodesSlice = createSlice({
         updateNodesBasedOnList(state);
         state.activeNodeId = "";
     },
-    
-    setActiveCollectionIdAndIndex: (state, action) => {
-        state.activeProjectCollectionId = action.payload;
-        state.activeProjectCollectionIndex = state.projectCollections.map(x => {
-            return x.id;
-        }).indexOf(state.activeProjectCollectionId);
-        state.activeProjectCollectionItemIndex = 0;
-        state.activeProjectCollectionItemId = state.projectCollections[state.activeProjectCollectionIndex].items[0]?.id;
-    },
-    setActiveCollectionItemIdAndIndex: (state, action) => {
-        state.activeProjectCollectionItemId = action.payload;
-        let activeCollectionsItems = state.projectCollections[state.activeProjectCollectionIndex].items;
-        state.activeProjectCollectionItemIndex = activeCollectionsItems.map(x => {
-            return x.id;
-        }).indexOf(state.activeProjectCollectionItemId);
-    },
 
-    setProjectPageFolders: (state, action) => {
+    setPageFolders: (state, action) => {
         state.projectPageFolders = action.payload;
     },
 
-    setProjectPageFolderStructure: (state, action) => {
+    setPagesNestedStructure: (state, action) => {
         state.projectPageFolderStructure = action.payload;
     },
 
-    createNewPageInProject: (state, action) => {
+    addPage: (state, action) => {
         //update previos page before creating a new one
         updateNodesLists(state);
         state.nodesEditMode = "page";
@@ -1580,7 +1601,7 @@ export const preRenderedNodesSlice = createSlice({
         state.activeNodeId = "";
     },
 
-    createNewPageFolder: (state, action) => {
+    addPageFolder: (state, action) => {
         const folderName = action.payload;
         const folderSlug = folderName.toLowerCase().replaceAll(" ","-");
         const folder = {
@@ -1595,7 +1616,7 @@ export const preRenderedNodesSlice = createSlice({
         
     },
 
-    updateEditedSymbol: (state, action) => {
+    editSymbolNodes: (state, action) => {
         const symbolId = state.editedSymbolId.symbolId;
         const elementId = state.editedSymbolId.elementId;
         state.activeNodeId = elementId;
@@ -1625,99 +1646,12 @@ export const preRenderedNodesSlice = createSlice({
         
     },
 
-
-    // add dispatch to the action using activeNodeObject
-
-    updateProjectSymbol: (state, action) => {
-
-        let updatedSymbolId = action.payload.id;
-        let updatedSymbolNodes = action.payload.nodes;
-        
-
-        // update symbol root
-        state.projectSymbols.find(({id}) => id === updatedSymbolId).preRenderedHTMLNodes = updatedSymbolNodes;
-
-
-        function updateNodes(nodes) {
-            for (let i = 0; i < nodes.length; i++) {
-                if (nodes[i].symbolId === updatedSymbolId) {
-                    let editedNodesArray = JSON.parse(JSON.stringify(updatedSymbolNodes));
-                    regenerateIdsInNodeList(editedNodesArray);
-                    nodes[i].children = editedNodesArray;
-                }
-                if (nodes[i].children) {
-                    updateNodes(nodes[i].children);
-                }
-            }
-        }
-        state.activeNodeId = "";
-        updateNodesListsBeforeGlobalChange(state, updateNodes);
-
-        // // update nodes which is seleceted symbol 
-        // state.projectPages.forEach((page) => {
-        //     function findNode(nodes, id) {
-        //         for (let i = 0; i < nodes.length; i++) {
-        //             if (nodes[i].symbolId === id) {
-        //                 nodes[i].children = updatedSymbolNodes;
-        //             }
-        //             if (nodes[i].children) {
-        //                 findNode(nodes[i].children, id);
-        //             }
-        //         }
-        //     }
-        //     findNode(page.preRenderedHTMLNodes, updatedSymbolId); 
-        // });
-    },
-
-    createNewCollection: (state, action) => {
-        state.projectCollections = [...state.projectCollections, 
-            {
-                id:uuidv4(),
-                name:action.payload, 
-                slug:action.payload.toLowerCase().replaceAll(" ","-"), 
-                fields:[],
-                items:[],
-                preRenderedHTMLNodes: [],
-            }
-        ];
-    },
-
-    createNewCollectionField: (state, action) => {
-        state.projectCollections[state.activeProjectCollectionIndex].fields = [...state.projectCollections[state.activeProjectCollectionIndex].fields, 
-            {
-                id:uuidv4(),
-                name:action.payload.name,
-                type:action.payload.type,
-            }
-        ];
-    },
-    
-    createNewCollectionItems: (state, action) => {
-        const collectionItemName = action.payload;
-        let activeCollectionItems = state.projectCollections[state.activeProjectCollectionIndex].items;
-        const collectionItemId = uuidv4();
-        
-        activeCollectionItems.push({
-            id: collectionItemId,
-            name: collectionItemName,
-            slug: collectionItemName.toLowerCase().replaceAll(" ","-"),
-            data:[]
-        });
-
-        state.activeProjectCollectionItemId = collectionItemId;
-        
-        state.activeProjectCollectionItemIndex = activeCollectionItems.map(x => {
-            return x.id;
-        }).indexOf(state.activeProjectCollectionItemId);
-
-    },
-
-    editActiveCollectionItemData: (state, action) => {
+    editCollectionItem: (state, action) => {
         const editedItemFieldsData = action.payload;
         editedItemFieldsData.map((item) => {
 
             let fieldIsEmpty = true;
-            let colletionItemFields = state.projectCollections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].data;
+            let colletionItemFields = state.collections[state.activeProjectCollectionIndex].items[state.activeProjectCollectionItemIndex].data;
 
             colletionItemFields.map((field, index) => {
                 if(field.fieldId === item.fieldId) {
@@ -1747,7 +1681,8 @@ export const preRenderedNodesSlice = createSlice({
             state.activeRightSidebarTab = action.payload;
         }
     },
-    setActiveProjectVersion: (state, action) => {
+
+    setActiveVersion: (state, action) => {
         let activeProjectVersion = state.projectVersions.find(({id}) => id === state.activeProjectVersionId);
         console.log(current(activeProjectVersion));
         activeProjectVersion.preRenderedHTMLNodes = state.preRenderedHTMLNodes;
@@ -1761,7 +1696,8 @@ export const preRenderedNodesSlice = createSlice({
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
         
     },
-    addProjectVersion: (state) => {
+
+    addVersion: (state) => {
         const versionId = uuidv4();
         if(state.projectVersions.length === 1) {
             state.projectVersions[0].preRenderedHTMLNodes = state.preRenderedHTMLNodes;
@@ -1774,7 +1710,8 @@ export const preRenderedNodesSlice = createSlice({
         });
         state.activeProjectVersionId = versionId;
     },
-    clearProjectVersion: (state) => {
+
+    clearVersions: (state) => {
         state.projectVersions = [{id: "1"}];
         state.activeProjectVersionId = "1";
     },
@@ -1783,121 +1720,149 @@ export const preRenderedNodesSlice = createSlice({
 })
 
 export const {
-    updateProjectVersions, 
-    addProjectVersion, 
-    clearProjectVersion, 
-    setActiveProjectVersion, 
-    editStyleOptionProperty, 
-    setScrollTopPosition, 
-    setNodeChoosenFromNavigator, 
-    toggleNodeExpandedState, 
-    setActiveCollectionItemTemplateId, 
-    clearOpenedSettingPage, 
-    deleteActiveNodeShortcut, 
-    updateEditedSymbol, 
-    setEditedSymbolId, 
-    setSymbolsHeights, 
-    transformNodeIntoSymbol, 
-    clearActiveNode, 
+    
+    /* Collections */
+    setCollections, 
+    addCollection, 
+    setActiveCollection,
+    addCollectionItem,
+    setActiveCollectionItem,
+    editCollectionItem, 
+    addCollectionField, 
+    setActiveCollectionTemplate, 
+    setActiveCollectionItemTemplate, 
     setCollectionPanelState, 
-    updateProjectPageProperty, 
-    setOpenedSettingsPage, 
+    // [add] deleteCollection, editCollection, deleteCollectionItem, deleteCollectionField, editCollectionField
+
+    /* Versions */
+    addVersion, 
+    clearVersions,
+    setActiveVersion, 
+
+    /* Symbols */
+    setSymbols, 
+    addSymbol, 
+    editSymbolName,
+    deleteSymbol,
+    addSymbolToProject,
+    makeSymbolEditable,
+    editSymbolNodes, 
+    editSymbolsClickableArea, 
+    
+    /* Pages */
+    setPages, 
+    setPageFolders, 
+    setPagesNestedStructure, 
+    addPage, 
+    editPage, //[to-do] editPageFolder
+    deletePage, //[to-do] deletePageFolder
+    setActivePage, 
+    addPageFolder, 
+    openPageSettings,
+    closePageSettings, 
     setDraggedPage, 
     setDragOverPage, 
     moveDraggedPaged, 
-    toggleFolderExpandedState, 
-    setProjectPageFolders, 
-    setProjectPageFolderStructure, 
-    createNewPageFolder, 
-    setNodesEditMode, 
-    setActiveCmsTemplate, 
-    setActiveCollectionTemplateId, 
-    setActiveLayoutId, 
-    setActiveLayout, 
-    setDraggedBefore, 
-    setDragableCopiedNodes, 
-    setDraggedOverNodeId, 
-    pasteDraggedNodes, 
-    undoProject, 
-    reUndoProject, 
-    setActionActiveFalse, 
-    addUndoState, 
-    renameMainStyle, 
-    clearStyleOption, 
+    togglePageFolderExpandState, 
+    
+    /* Styles */
+    addStyle, 
+    renameStyle, 
+
+    addStyleOption, 
+    editStyleOption, 
+    removeStyleOption, 
+    deleteStyleOption, 
+
     deleteStyleSubOption, 
-    setActiveNodeRepeatableState,
+
+    
     deletePropertyInPreRenderedStyle, 
     setActiveNodeComputedStyles, 
-    deleteStyleOption, 
+    
     setActiveStyleOptionIndex, 
     setStyleOptionInActiveNode, 
-    createNewStyleOption, 
-    deleteProjectPage,
-    createNewStyle, 
-    movePreRenderedNode, 
-    setProjectPopUp, 
-    setRichTextElements, 
-    createNewRichTextElement, 
-    editRichElement,
-    deleteRichElement,
-    setProjectMode, 
-    setHoveredSectionId, 
-    deleteLayout, 
-    editLayout,
-    editLayoutFolder,
-    setCopiedSectionNodes, 
-    setactiveLayoutFolder, 
-    addSectionToPreRenderedHTMLNodes, 
-    setprojectLayouts, 
-    createNewSection, 
-    createNewSectionFolder, 
-    setProjectSwatches, 
-    addSwatch, 
-    updateSwatch, 
-    setActiveNodeParentsPath, 
+    
     updateActiveStyleProperties, 
-    setActiveProjectResolution, 
-    checkIfActvieNodeParentDispayStyleIsFlex, 
+
+    setPreRenderedStyles, 
+    editStyleInPreRenderedStyles,
+    setActiveStyleId, 
+    updateActiveStyleListAndId,
+    
+    /* Html */
     deleteActiveNode, 
     setCopiedNodes, 
     pasteCopiedNodes, 
-    addSymbolToPreRenderedHTMLNodesAfterActiveNode, 
-    updateProjectSymbol, 
-    setProjectSymbols, 
-    createNewSymbol, 
+    setActiveNodeId, 
     setActiveNodeObject,
-    setSaveButtonStateText,
-    editSelectedFieldInPreRenderedHTMLNode, 
-    setActiveRightSidebarTab,
-    editActiveCollectionItemData, 
-    setActiveCollectionItemIdAndIndex,
-    createNewCollectionItems,
-    createNewCollectionField, 
-    setActiveCollectionIdAndIndex,
-    setProjectCollections, 
-    createNewCollection, 
-    setActiveProjectTab, 
-    setActivePageIdAndIndex, 
-    createNewPageInProject, 
-    saveProjectToFirebase, 
-    setProjectPages, 
-    setProjectFirebaseId, 
-    setKeyboardNavigationOn,
-    deleteStyleFromStylesInActiveNode, 
-    arrowActiveNodeNavigation, 
-    setHoveredNodeId, 
-    addNodeToRenderedHTMLNodesAfterActiveNode, 
-    addPreRenderedStyle, 
     setPreRenderedHTMLNodes, 
     deleteNodeByIdInPreRenderedHTMLNodes, 
-    setPreRenderedStyles, 
-    setActiveNodeId, 
-    setActiveStyleId, 
-    editStyleInPreRenderedStyles,
-    editSymbol,
-    deleteSymbol,
-    deleteLayoutFolder,
+    movePreRenderedNode, 
+    addSectionToPreRenderedHTMLNodes,
+    editSelectedFieldInPreRenderedHTMLNode,
+    toggleNodeExpandedState, 
+    deleteActiveNodeShortcut, 
+    setNodesEditMode, 
+    setDraggedNavigatorNodes,
+    setDraggedOverNavigatorItemId, 
+    dropDraggedNavigatorNodes, 
+    setNavigatorItemDragBehindState, 
+    checkIfActvieNodeParentDispayStyleIsFlex, 
+    setActiveNodeRepeatableState,
+    setActiveNodeParentsPathAndExpandNodes,
+    deleteStyleFromStylesInActiveNode, 
+    handleArrowNodesNavigation, 
+    setHoveredNodeId, 
+    addNodeToRenderedHTMLNodesAfterActiveNode, 
+    clearActiveNode,
     deleteInlineNodeStyleProperty,
-    updateActiveStyleListAndId,
+
+    /* Layouts */
+    setLayouts, 
+    addLayout, 
+    deleteLayout, 
+    editLayout,
+    addLayoutFolder, 
+    editLayoutFolder,
+    deleteLayoutFolder,
+    setActiveLayout,
+    setActiveLayoutFolder,
+
+    setCopiedSectionNodes, 
+
+    /* Blocks */
+    setBlocks, 
+    addBlock, 
+    editBlock,
+    deleteBlock,
+
+    /* Undo */
+    undoProject, 
+    reUndoProject, 
+    setActionActiveFalse, // [to-do] avoid hacks
+    addUndoState, 
+
+    /* Swatches */
+    setSwatches, 
+    addSwatch, 
+    editSwatch,
+
+    /* Firebase */
+    saveProjectToFirebase, 
+    setProjectFirebaseId,
+
+    /* Others */
+    setIsNodeSelectedFromNavigator, // [to-do] propably no longer needed
+    updateStateOnScroll, 
+    setActiveProjectTab, 
+    setKeyboardNavigationOn,
+    setProjectPopUp, 
+    setProjectMode, 
+    setSaveButtonStateText,
+    setActiveRightSidebarTab,
+    setActiveProjectResolution, 
+
 } = preRenderedNodesSlice.actions
+
 export default preRenderedNodesSlice.reducer

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {updateSwatch, addSwatch, setKeyboardNavigationOn, editStyleInPreRenderedStyles, arrowActiveNodeNavigation} from "../../../features/pre-rendered-html-nodes"
+import {editSwatch, addSwatch, setKeyboardNavigationOn, editStyleInPreRenderedStyles, handleArrowNodesNavigation} from "../../../features/pre-rendered-html-nodes"
 import ProprtyInputLabel from "./ProprtyInputLabel";
 
 export default function ColorPicker (props) {
@@ -112,7 +112,7 @@ export default function ColorPicker (props) {
     function handleFormSubmit (e) {
         e.preventDefault();
         if(swatchEditorMode === "edit") {
-            dispatch(updateSwatch({id: activeSwatch.id, name: swatchNameRef.current.value, color: swatchColorRef.current.value }));
+            dispatch(editSwatch({id: activeSwatch.id, name: swatchNameRef.current.value, color: swatchColorRef.current.value }));
             setFormButtonText("Saved");
             setTimeout(() => {
                 setFormButtonText("Save");

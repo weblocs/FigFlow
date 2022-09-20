@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {createNewSectionFolder} from "../../../../features/pre-rendered-html-nodes"
+import {addLayoutFolder} from "../../../../features/pre-rendered-html-nodes"
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import ListItemEditIcon from "../_atoms/ListItemEditIcon";
 import CreateLayoutButton from "./CreateLayoutButton";
@@ -27,7 +27,7 @@ export default function ProjectLayoutsPanel () {
 
             <CreateNewItemInput 
             visibility={createFolderInputVisible} 
-            create={createNewSectionFolder} 
+            create={addLayoutFolder} 
             placeholder="New folder" />
 
             <div className="pagesList">

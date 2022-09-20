@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addUndoState, checkIfActvieNodeParentDispayStyleIsFlex, setSymbolsHeights, setActionActiveFalse, setActiveNodeComputedStyles, setActiveNodeObject, setActiveNodeParentsPath, updateActiveStyleProperties, updateActiveStyleListAndId } from "../features/pre-rendered-html-nodes"
+import { addUndoState, checkIfActvieNodeParentDispayStyleIsFlex, editSymbolsClickableArea, setActionActiveFalse, setActiveNodeComputedStyles, setActiveNodeObject, setActiveNodeParentsPathAndExpandNodes, updateActiveStyleProperties, updateActiveStyleListAndId } from "../features/pre-rendered-html-nodes"
 
 export default function StoreUseEffectUpdates () {
 
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const hoveredNodeId = useSelector((state) => state.designerProjectState.hoveredNodeId)
+    
     const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
     const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
     const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
@@ -19,17 +21,16 @@ export default function StoreUseEffectUpdates () {
     },[activeNodeId, preRenderedHTMLNodes]);
 
     useEffect(() => {
-        
         dispatch(updateActiveStyleListAndId());
-        
     },[activeNodeId]);
 
     useEffect(() => {
         if(projectMode === "developer") {
             dispatch(checkIfActvieNodeParentDispayStyleIsFlex());
         }
-        dispatch(setActiveNodeParentsPath());
     },[activeNodeId, preRenderedHTMLNodes]);
+
+    
 
     useEffect(() => {
         if(projectMode === "developer") {
@@ -52,7 +53,40 @@ export default function StoreUseEffectUpdates () {
     },[undoActionActive]);  
 
     useEffect(() => {
-        dispatch(setSymbolsHeights());
+        dispatch(editSymbolsClickableArea());
     },[preRenderedHTMLNodes, preRenderedStyles]);  
+
+
+    useEffect(() => {
+        document.querySelector(`.navigation-node.hovered`)?.classList.remove("hovered");
+        document.querySelector(`[nodeid='${hoveredNodeId}']`)?.classList.add("hovered");
+        document.querySelector(`.renderedNode.hovered`)?.classList.remove("hovered");
+        document.querySelector(`[el_id='${hoveredNodeId}']`)?.classList.add("hovered");
+    },[hoveredNodeId])
+
+    useEffect(() => {
+        document.querySelector(`.navigation-node.active`)?.classList.remove("active");
+        document.querySelector(`[nodeid='${activeNodeId}']`)?.classList.add("active");
+        document.querySelector(`.renderedNode.active`)?.classList.remove("active");
+        document.querySelector(`[el_id='${activeNodeId}']`)?.classList.add("active");
+    },[activeNodeId, preRenderedHTMLNodes])
+
+    useEffect(() => {
+        dispatch(setActiveNodeParentsPathAndExpandNodes());
+    },[activeNodeId, preRenderedHTMLNodes]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            const actualNodePosition = document.querySelector(`[nodeid="${activeNodeId}"]`)?.getBoundingClientRect().top;
+            if(actualNodePosition < 172 || actualNodePosition > window.screen.height - 200) {
+            const actualViewPosition = document.getElementById("nodes-navigator").scrollTop;
+            const scrollMargin = 245;
+            document.getElementById("nodes-navigator").scrollTo({
+                top: actualViewPosition + actualNodePosition - scrollMargin,
+                behavior: "smooth"
+            });
+            }
+        },1);
+    },[activeNodeId]);    
  
 }

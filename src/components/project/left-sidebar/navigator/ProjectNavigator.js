@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import NavigationNodeFolder from "./NavigationNodeFolder";
 
 import { deleteNodeByIdInPreRenderedHTMLNodes, setActiveNodeId, setHoveredNodeId, setPreRenderedHTMLNodes } from "../../../../features/pre-rendered-html-nodes";
 import AddNodeButton from "./AddNodeButton";
+import NavigationNodeSection from "./NavigationNodeSection";
 
 export default function ProjectNavigator() {
     
@@ -40,11 +41,15 @@ export default function ProjectNavigator() {
           </div>
           
           <div id="nodes-navigator" style={{overflowY: "scroll", height: "calc(100vh - 193px)"}}>
-           {preRenderedHTMLNodes.map((node) => (
-            <div key={node.id}>
-                <NavigationNodeFolder parents={[]} node={node} depth={0} />
-            </div>
-          ))} 
+
+           {preRenderedHTMLNodes.map((node) => 
+                <NavigationNodeFolder parents={[]} node={node} depth={0} key={node.id} />
+           )}
+
+            {/* {preRenderedHTMLNodes.map((node) => 
+                <NavigationNodeSection key={node.id} node={node} />
+            )} */}
+
           </div>
         </div>
       )

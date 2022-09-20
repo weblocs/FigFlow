@@ -5,13 +5,13 @@ import StylePanelTitle from "../style-panel/StylePanelTitle";
 
 export default function CMSFieldNodeConnector() {
     const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
-    const projectCollections =  useSelector((state) => state.designerProjectState.projectCollections)
+    const collections =  useSelector((state) => state.designerProjectState.collections)
     const activeNodeId =  useSelector((state) => state.designerProjectState.activeNodeId)
     const activeCollectionTemplateId =  useSelector((state) => state.designerProjectState.activeCollectionTemplateId)
     const isInTemplateEditingPage = useSelector((state) => (state.designerProjectState.nodesEditMode === "cmsTemplate"))
     const activeCmsFieldId = useSelector((state) => state.designerProjectState.activeNodeObject?.cmsFieldId)
     const isNodeCmsEditable = useSelector((state) => (state.designerProjectState.activeNodeObject?.cmsFieldId !== undefined && state.designerProjectState.activeNodeObject?.cmsFieldId !== ""));
-    const activeCollectionItems = useSelector((state) => state.designerProjectState.projectCollections?.find(({id}) => id === state.designerProjectState.activeCollectionTemplateId)?.items);
+    const activeCollectionItems = useSelector((state) => state.designerProjectState.collections?.find(({id}) => id === state.designerProjectState.activeCollectionTemplateId)?.items);
     
     const isNodeInCollection = useSelector((state) => {
         const parentPath = state.designerProjectState.activeNodeParentsPath;
@@ -55,11 +55,11 @@ export default function CMSFieldNodeConnector() {
                 (
                     <div>
                         <div className="fields-select">
-                            Get text from {projectCollections.find(({id}) => id === activeCollectionTemplateId)?.name}
+                            Get text from {collections.find(({id}) => id === activeCollectionTemplateId)?.name}
                             <img src={Arrow} className="fields-item-arrow" />
                         </div>
                         <div className="fields-select_list">
-                            {projectCollections.find(({id}) => id === activeCollectionTemplateId)?.fields
+                            {collections.find(({id}) => id === activeCollectionTemplateId)?.fields
                                 .filter(({type}) => type === "text")
                                 .map((field) => (
                                 <div onClick={() => handleClickInFieldItem(field.id)} key={field.id} 

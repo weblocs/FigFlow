@@ -1,6 +1,6 @@
 import React, { useState } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
-import {editSelectedFieldInPreRenderedHTMLNode, updateProjectSymbol} from "../../../features/pre-rendered-html-nodes";
+import {editSelectedFieldInPreRenderedHTMLNode} from "../../../features/pre-rendered-html-nodes";
 import CMSFieldNodeConnector from "./CMSFieldNodeConnector";
 import NodeRepeatableSettings from "./NodeRepeatableSettings";
 import StylePanelTitle from "../style-panel/StylePanelTitle"
@@ -12,7 +12,7 @@ export default function ProjectSettingsPanel() {
 
     const activeRightSidebarTab = useSelector((state) => state.designerProjectState.activeRightSidebarTab)
     const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
+    const collections = useSelector((state) => state.designerProjectState.collections)
     const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
     const isNodeCmsEditable = useSelector((state) => (state.designerProjectState.activeNodeObject?.cmsFieldId !== undefined && state.designerProjectState.activeNodeObject?.cmsFieldId !== ""));
 
@@ -49,7 +49,7 @@ export default function ProjectSettingsPanel() {
         }
     })
 
-    const activeCollectionItems = useSelector((state) => state.designerProjectState.projectCollections?.find(({id}) => id === activeCollectionId)?.items);
+    const activeCollectionItems = useSelector((state) => state.designerProjectState.collections?.find(({id}) => id === activeCollectionId)?.items);
 
     function handleClickInCollectionItem (collectionId) {
         dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeCollectionNodeId, field:'cmsCollectionId', value:collectionId}));
@@ -81,8 +81,8 @@ export default function ProjectSettingsPanel() {
             {(isNodeCollection || isNodeInCollection) && (
             <div>
                 <div className="style-panel-box">
-                    <div>In Collection: {projectCollections.find(({id}) => id === activeCollectionId)?.name} </div>
-                    <div>Field:  {projectCollections.find(({id}) => id === activeCollectionId)?.fields
+                    <div>In Collection: {collections.find(({id}) => id === activeCollectionId)?.name} </div>
+                    <div>Field:  {collections.find(({id}) => id === activeCollectionId)?.fields
                     .find(({id}) => id === activeNodeObject?.cmsFieldId)?.name}</div>
                 </div>
 
@@ -90,7 +90,7 @@ export default function ProjectSettingsPanel() {
                     <div style={{marginBottom: "6px",lineHeight:"11px"}}>Collections:</div>
 
                     <div className="fields-select_list">
-                    {projectCollections.map((collection) => (
+                    {collections.map((collection) => (
                         <div className={"fields-select_item" + ((activeCollectionId === collection.id) ? " active" : "")}
                         onClick={() => handleClickInCollectionItem(collection.id)} key={collection.id}>
                             <div>
@@ -110,12 +110,12 @@ export default function ProjectSettingsPanel() {
 
                         <div className="fields-select">
                             <input type="checkbox" checked={isNodeCmsEditable} onChange={handleCheckboxClick} />
-                            Get text from {projectCollections.find(({id}) => id === activeCollectionId)?.name}
+                            Get text from {collections.find(({id}) => id === activeCollectionId)?.name}
                             <img src={Arrow} className="fields-item-arrow" />
                         </div>
 
                         <div className="fields-select_list">
-                        {projectCollections.find(({id}) => id === activeCollectionId)?.fields
+                        {collections.find(({id}) => id === activeCollectionId)?.fields
                             .filter(({type}) => type === "text")
                             .map((field) => (
                             <div onClick={() => handleClickInFieldItem(field.id)} key={field.id} 
@@ -135,12 +135,12 @@ export default function ProjectSettingsPanel() {
                 <div>
 
                 <div style={{marginBottom:"20px"}}>
-                    <div>In Collection:  {projectCollections.find(({id}) => id === activeCollectionId).name}</div>
-                    <div>Field:  {projectCollections.find(({id}) => id === activeCollectionId).fields.filter(({type}) => type === "img").find(({id}) => id === activeNodeObject?.cmsFieldId)?.name}</div>
+                    <div>In Collection:  {collections.find(({id}) => id === activeCollectionId).name}</div>
+                    <div>Field:  {collections.find(({id}) => id === activeCollectionId).fields.filter(({type}) => type === "img").find(({id}) => id === activeNodeObject?.cmsFieldId)?.name}</div>
                 </div>
 
                 <div>Fields:</div>
-                {projectCollections.find(({id}) => id === activeCollectionId).fields
+                {collections.find(({id}) => id === activeCollectionId).fields
                     .filter(({type}) => type === "img").map((field) => (
                     <div onClick={() => handleClickInFieldItem(field.id)} key={field.id}>
                         {field.name}

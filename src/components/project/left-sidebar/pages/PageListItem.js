@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { moveDraggedPaged, setActivePageIdAndIndex, setDraggedPage, setDragOverPage, setOpenedSettingsPage, toggleFolderExpandedState } from "../../../../features/pre-rendered-html-nodes";
+import { moveDraggedPaged, setActivePage, setDraggedPage, setDragOverPage, openPageSettings, togglePageFolderExpandState } from "../../../../features/pre-rendered-html-nodes";
 import Arrow from '../../../../img/arrow-down.svg';
 import SettingIcon from '../../../../img/setting.svg';
 
@@ -32,9 +32,9 @@ export default function PageList({node,parents}) {
 
     function handleOnClick(node) {
         if (!node?.children) {
-            dispatch(setActivePageIdAndIndex(node.id));
+            dispatch(setActivePage(node.id));
         } else {
-            dispatch(toggleFolderExpandedState(node.id));
+            dispatch(togglePageFolderExpandState(node.id));
         }
     }
 
@@ -43,7 +43,7 @@ export default function PageList({node,parents}) {
         onMouseEnter={() => setItemHovered(true)}
         onMouseLeave={() => setItemHovered(false)}>
             <div className={"projectPageItem"
-            // + ((draggedBefore) ? " dragged-before " : "") 
+            // + ((navigatorItemDragBehindState) ? " dragged-before " : "") 
             + ((node === dragOverPage) ? " draggedOverBottom " : " ")
             + ((node.id == activePageId) ? "active " : " ") 
             }
@@ -63,7 +63,7 @@ export default function PageList({node,parents}) {
 
             <img src={SettingIcon} 
             className={"page-item_settings-icon" + ((itemHovered) ? " active" : "")} 
-            onClick={() => dispatch(setOpenedSettingsPage(node))}/>
+            onClick={() => dispatch(openPageSettings(node))}/>
 
         </div>
     )

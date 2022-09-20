@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {editSymbol, deleteSymbol, addSymbolToPreRenderedHTMLNodesAfterActiveNode, transformNodeIntoSymbol, setProjectSymbols} from "../../../../features/pre-rendered-html-nodes"
+import {editSymbolName, deleteSymbol, addSymbolToProject, addSymbol, setSymbols} from "../../../../features/pre-rendered-html-nodes"
 import CreateNewItemInput from "../navigator/CreateNewItemInput";;
 import ListItemEditIcon from "../_atoms/ListItemEditIcon";
 import {arrayMoveImmutable} from 'array-move'
@@ -13,7 +13,7 @@ export default function ProjectSymbolsPanel(){
     const [createInputVisible, setCreateInputVisible] = useState(false);
 
     function handleClickInSymbolItem(symbolId) {
-        dispatch(addSymbolToPreRenderedHTMLNodesAfterActiveNode({id: symbolId}));
+        dispatch(addSymbolToProject({id: symbolId}));
     }
 
 
@@ -24,7 +24,7 @@ export default function ProjectSymbolsPanel(){
         if(newIndex > oldIndex) {
             newIndex--;
         }
-        dispatch(setProjectSymbols(arrayMoveImmutable(projectSymbols, oldIndex, newIndex)));
+        dispatch(setSymbols(arrayMoveImmutable(projectSymbols, oldIndex, newIndex)));
     }
 
     function handleDragOver(index,id) {
@@ -54,7 +54,7 @@ export default function ProjectSymbolsPanel(){
 
             <CreateNewItemInput 
             visibility={createInputVisible} 
-            create={transformNodeIntoSymbol} 
+            create={addSymbol} 
             placeholder="New symbol" />
 
             <div className="pagesList">
@@ -78,7 +78,7 @@ export default function ProjectSymbolsPanel(){
                             text="Edit Symbol"
                             itemType="symbol"
                             element={symbol} 
-                            editFx={editSymbol} 
+                            editFx={editSymbolName} 
                             deleteFx={deleteSymbol} 
                             isDeleteButtonVisible={false}
                             active={false} />

@@ -1054,14 +1054,14 @@ a {
   display: block;
 }
 
-.projectCollectionsPanel  {
+.collectionsPanel  {
   width: 200px;
   flex-shrink: 0;
   border-right: 1px solid #d3d3d3;
   display: none;
 }
 
-.projectCollectionsPanel.active {
+.collectionsPanel.active {
   display: block;
 }
 
@@ -2713,4 +2713,7 @@ font-weight: 700;
     color: #5b5b5b;
 }
 
+
+
 }
+

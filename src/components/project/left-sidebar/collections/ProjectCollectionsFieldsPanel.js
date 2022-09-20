@@ -1,31 +1,24 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {editActiveCollectionItemData, setCollectionPanelState, setKeyboardNavigationOn} from "../../../../features/pre-rendered-html-nodes"
-import CreateNewCollectionField from "./CreateNewCollectionField"
+import {editCollectionItem, setCollectionPanelState, setKeyboardNavigationOn} from "../../../../features/pre-rendered-html-nodes"
+import AddCollectionField from "./AddCollectionField";
 import FileUploaderToCollectionField from "./FileUploaderToCollectionField";
 import Arrow from '../../../../img/arrow-left.svg';
 
 
 export default function ProjectCollectionsFieldsPanel(){
     const dispatch = useDispatch()
-    const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
-    const activeProjectCollectionId = useSelector((state) => state.designerProjectState.activeProjectCollectionId)
-    const activeProjectCollectionIndex = useSelector((state) => state.designerProjectState.activeProjectCollectionIndex)
-    const activeProjectCollectionItemIndex = useSelector((state) => state.designerProjectState.activeProjectCollectionItemIndex)
-    const collectionPanelState = useSelector((state) => state.designerProjectState.collectionPanelState)
-
-    const storedEditedCollectionItemData = useSelector((state) => state.designerProjectState.projectCollections[activeProjectCollectionIndex]?.items[activeProjectCollectionItemIndex]?.data)
-    
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-
-    let activeCollection = useSelector((state) => state.designerProjectState.projectCollections[activeProjectCollectionIndex])
-    let activeItem =  useSelector((state) => state.designerProjectState.projectCollections[activeProjectCollectionIndex]?.items[activeProjectCollectionItemIndex])
-    let activeItemData =  useSelector((state) => state.designerProjectState.projectCollections[activeProjectCollectionIndex]?.items[activeProjectCollectionItemIndex]?.data)
-
+    const collectionPanelState = useSelector((state) => state.designerProjectState.collectionPanelState)
+    const activeCollection = useSelector((state) => state.designerProjectState.activeCollection)
+    const activeCollectionId = useSelector((state) => state.designerProjectState.activeCollectionId)
+    const activeCollectionItem =  useSelector((state) => state.designerProjectState.activeCollectionItem)
+    const activeCollectionItemData = useSelector((state) => state.designerProjectState.activeCollectionItem?.data)
+    
     const [editedCollectionItemData,setEditedCollectionItemData] = useState([]);
 
-    function handleEditActiveCollectionItemData() {
-        dispatch(editActiveCollectionItemData(editedCollectionItemData));
+    function handleEditCollectionItem() {
+        dispatch(editCollectionItem(editedCollectionItemData));
         setEditedCollectionItemData([]);
     }
 
@@ -57,7 +50,7 @@ export default function ProjectCollectionsFieldsPanel(){
     
     if(collectionPanelState === "fields") {
     return(
-        <div className={"projectCollectionsPanel "+ ((activeProjectTab === "Collections") ? "active" : "" )}>
+        <div className={"collectionsPanel "+ ((activeProjectTab === "Collections") ? "active" : "" )}>
             
             <div className="projectTabTitleBox">
                 <div>
@@ -66,20 +59,20 @@ export default function ProjectCollectionsFieldsPanel(){
                 onClick={() => dispatch(setCollectionPanelState("items"))}>
                     <img src={Arrow} />
                 </span>
-                {activeItem?.name}
+                {activeCollectionItem?.name}
                 </div>
             </div>
 
-            <CreateNewCollectionField />
+            <AddCollectionField />
 
             <div className="pagesList">
             {activeCollection?.fields.map((field) => (
                 <div key={field.id}>
                     {(field.type === "text") &&
                         <div 
-                        className={"projectPageItem " + ((activeProjectCollectionId === field.id) ? "active" : "") } 
+                        className={"projectPageItem " + ((activeCollectionId === field.id) ? "active" : "") } 
                         >
-                            {field.name} : {(storedEditedCollectionItemData?.find(({ fieldId }) => fieldId === field.id)?.fieldValue) ? (storedEditedCollectionItemData.find(({ fieldId }) => fieldId === field.id)?.fieldValue) : ""}
+                            {field.name} : {(activeCollectionItemData?.find(({ fieldId }) => fieldId === field.id)?.fieldValue) ? (activeCollectionItemData.find(({ fieldId }) => fieldId === field.id)?.fieldValue) : ""}
                             <input
                             onFocus={handleFocus}
                             onBlur={handleBlur}
@@ -88,12 +81,12 @@ export default function ProjectCollectionsFieldsPanel(){
                     } 
                     {(field.type === "img") &&
                         <div 
-                        className={"projectPageItem " + ((activeProjectCollectionId === field.id) ? "active" : "") } >
+                        className={"projectPageItem " + ((activeCollectionId === field.id) ? "active" : "") } >
 
                             <div>
                                 {field.name}
                             </div>
-                            <img className="libraryImage" src={"https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+storedEditedCollectionItemData.find(({ fieldId }) => fieldId === field.id)?.fieldValue+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a"} />
+                            <img className="libraryImage" src={"https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+activeCollectionItemData.find(({ fieldId }) => fieldId === field.id)?.fieldValue+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a"} />
                             <FileUploaderToCollectionField handleInputChange={(fieldValue) => handleInputChange(field.id, fieldValue, "img")} />
                         </div>
                     }
@@ -102,7 +95,7 @@ export default function ProjectCollectionsFieldsPanel(){
                 </div>
             ))}
 
-            <button onClick={handleEditActiveCollectionItemData}>Save</button>
+            <button onClick={handleEditCollectionItem}>Save</button>
             </div>
 
         </div>

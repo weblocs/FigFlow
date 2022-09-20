@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setactiveLayoutFolder, setProjectPopUp} from "../../../features/pre-rendered-html-nodes"
+import {setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setProjectPopUp} from "../../../features/pre-rendered-html-nodes"
 import RenderedNode from "../rendered-view/RenderedNode"
 
 export default function AddSectionModal() {
 
     const projectLayouts = useSelector((state) => state.designerProjectState.projectLayouts)
-    const activeLayoutFolder = useSelector((state) => state.designerProjectState.activeLayoutFolder)
-    const projectMode = useSelector((state) => state.designerProjectState.projectMode)
     const projectPopUp = useSelector((state) => state.designerProjectState.projectPopUp)
 
 
@@ -42,54 +40,51 @@ export default function AddSectionModal() {
         dispatch(setProjectPopUp(""));
     }
 
-    // if(projectMode === "creator") {
-        return (
-            <div className={"add-section_popup-box" + ((addSectionPopUpOpened) ? " active" : "")}>
-                <div 
-                className="add-section_popup_close-area"
-                onClick={handleClickInPopUpCloseArea}></div>
-                <div className="add-section_popup-list-box">
-                    <div className="add-section_popup-list">
-                        
-                        <div className="text-h2">Layouts</div>
-                        <button 
-                        className={"add-section_popup-button" + ((presentedSectionNodes?.type === "sec") ? " active" : "")} 
-                        onClick={handleAddSectionClick}>Add layout</button>
-                        
-                        {projectLayouts.map((folder) => (
-                            <div key={folder.id}>
-                                <div 
-                                onClick={() => dispatch(setactiveLayoutFolder(folder.id))}
-                                className={"sections-nav-folder-item"}
-                                key={folder.id}>
-                                    {folder.name}
-                                </div>
-                                {folder.items.map((section) => (
-                                    <div className="projectPageItem" onClick={() => handleShowSection({...section.preRenderedHTMLNodes})} key={section.id}>
-                                        {section.name}
-                                    </div>
-                                ))}
-                            
-                            </div>
-                        ))}
-                    </div>
-                    <div className="present-section-in-popup">
+    return (
+        <div className={"add-section_popup-box" + ((addSectionPopUpOpened) ? " active" : "")}>
+            <div 
+            className="add-section_popup_close-area"
+            onClick={handleClickInPopUpCloseArea}></div>
+            <div className="add-section_popup-list-box">
+                <div className="add-section_popup-list">
                     
+                    <div className="text-h2">Layouts</div>
+                    <button 
+                    className={"add-section_popup-button" + ((presentedSectionNodes?.type === "sec") ? " active" : "")} 
+                    onClick={handleAddSectionClick}>Add layout</button>
+                    
+                    {projectLayouts.map((folder) => (
+                        <div key={folder.id}>
+                            <div 
+                            className={"sections-nav-folder-item"}
+                            key={folder.id}>
+                                {folder.name}
+                            </div>
+                            {folder.items.map((section) => (
+                                <div className="projectPageItem" onClick={() => handleShowSection({...section.preRenderedHTMLNodes})} key={section.id}>
+                                    {section.name}
+                                </div>
+                            ))}
                         
-                         <RenderedNode
-                            data={presentedSectionNodes}
-                            cmsCollectionId={presentedSectionNodes.cmsCollectionId}
-                            cmsFieldId={presentedSectionNodes.cmsFieldId}
-                            type={presentedSectionNodes.type}
-                            id={presentedSectionNodes.id}
-                            key={presentedSectionNodes.id}
-                            title={presentedSectionNodes.title}
-                            children={presentedSectionNodes.children}
-                            class={presentedSectionNodes.class}
-                        />
-                    </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="present-section-in-popup">
+                
+                    
+                        <RenderedNode
+                        data={presentedSectionNodes}
+                        cmsCollectionId={presentedSectionNodes.cmsCollectionId}
+                        cmsFieldId={presentedSectionNodes.cmsFieldId}
+                        type={presentedSectionNodes.type}
+                        id={presentedSectionNodes.id}
+                        key={presentedSectionNodes.id}
+                        title={presentedSectionNodes.title}
+                        children={presentedSectionNodes.children}
+                        class={presentedSectionNodes.class}
+                    />
                 </div>
             </div>
-        )
-    // } 
+        </div>
+    )
 }

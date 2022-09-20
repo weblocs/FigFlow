@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { addProjectVersion, clearProjectVersion, setActiveProjectVersion } from "../../../features/pre-rendered-html-nodes"
+import { addVersion, clearVersions, setActiveVersion } from "../../../features/pre-rendered-html-nodes"
 
 function getLetterByIndex(index) {
     let letter = "A";
@@ -25,16 +25,16 @@ export default function VersionsChanger() {
             </div>
             {projectVersions.map((version, index) => (
                 <div className={"page-changer" + ((activeProjectVersionId === version.id) ? " active" : "")} 
-                onClick={() => dispatch(setActiveProjectVersion(version.id))}
+                onClick={() => dispatch(setActiveVersion(version.id))}
                 key={version.id}>
                     {getLetterByIndex(index)}
                 </div>
             ))}
             <div className="page-changer" 
-            onClick={() => dispatch(addProjectVersion())}>
+            onClick={() => dispatch(addVersion())}>
                 Add
             </div>
-            <div className="page-changer" onClick={() => dispatch(clearProjectVersion())}>
+            <div className="page-changer" onClick={() => dispatch(clearVersions())}>
                 Choose version
             </div>
             </>

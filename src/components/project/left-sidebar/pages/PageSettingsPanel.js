@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setKeyboardNavigationOn, updateProjectPageProperty, setOpenedSettingsPage, clearOpenedSettingPage, deleteProjectPage } from "../../../../features/pre-rendered-html-nodes"
+import { setKeyboardNavigationOn, editPage, openPageSettings, closePageSettings, deletePage } from "../../../../features/pre-rendered-html-nodes"
 import ConfirmDeleteModalButton from "../../modals/ConfirmDeleteModalButton"
 
 export default function PageSettingsPanel() {
@@ -13,9 +13,9 @@ export default function PageSettingsPanel() {
 
     function handleSubmit() {
         event.preventDefault();
-        dispatch(updateProjectPageProperty({property: "name", value: inputRef.current.value}));
-        dispatch(updateProjectPageProperty({property: "slug", value: inputSlugRef.current.value}));
-        dispatch(clearOpenedSettingPage());
+        dispatch(editPage({property: "name", value: inputRef.current.value}));
+        dispatch(editPage({property: "slug", value: inputSlugRef.current.value}));
+        dispatch(closePageSettings());
     }
     
     function handleFocus() {
@@ -46,12 +46,12 @@ export default function PageSettingsPanel() {
                 <div className="projectTabTitleButtonsBox">
                 
                 <ConfirmDeleteModalButton 
-                handleOnClick={() => dispatch(deleteProjectPage())} 
+                handleOnClick={() => dispatch(deletePage())} 
                 deleteItemName={openedSettingsPage?.name}
                 deleteItemType="page" 
                 redButton={false} />
 
-                <div className="settings-button white-button" onClick={() => dispatch(setOpenedSettingsPage({}))}>Close</div>
+                <div className="settings-button white-button" onClick={() => dispatch(openPageSettings({}))}>Close</div>
                 <button className="settings-button">Save</button>
                 </div>
             </div>

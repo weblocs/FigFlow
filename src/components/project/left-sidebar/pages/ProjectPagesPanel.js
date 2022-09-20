@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
-import {setActiveCmsTemplate, setActivePageIdAndIndex, setProjectPages, createNewPageInProject, createNewPageFolder} from "../../../../features/pre-rendered-html-nodes"
+import {setActiveCollectionTemplate, setActivePage, setPages, addPage, addPageFolder} from "../../../../features/pre-rendered-html-nodes"
 import {arrayMoveImmutable} from 'array-move'
 import SettingIcon from '../../../../img/setting.svg';
 import PanelTabTitle from "../_atoms/PanelTabTitle";
@@ -10,7 +10,7 @@ import PageListFolder from "./PageListFolder";
 export default function ProjectPagesPanel(){
     const dispatch = useDispatch()
     const projectPages = useSelector((state) => state.designerProjectState.projectPages)
-    const projectCollections = useSelector((state) => state.designerProjectState.projectCollections)
+    const collections = useSelector((state) => state.designerProjectState.collections)
     const activePageId = useSelector((state) => state.designerProjectState.activePageId)
     const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
     const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId)
@@ -20,7 +20,7 @@ export default function ProjectPagesPanel(){
         if(newIndex > oldIndex) {
             newIndex--;
         }
-        dispatch(setProjectPages(arrayMoveImmutable(projectPages, oldIndex, newIndex)));
+        dispatch(setPages(arrayMoveImmutable(projectPages, oldIndex, newIndex)));
     }
 
     const [draggedStartIndex, setDraggedStartIndex] = useState(-1);
@@ -45,7 +45,7 @@ export default function ProjectPagesPanel(){
     }
 
     function handleCollectionItemClick (id) {
-        dispatch(setActiveCmsTemplate(id));
+        dispatch(setActiveCollectionTemplate(id));
     }
     
     return(
@@ -61,12 +61,12 @@ export default function ProjectPagesPanel(){
             
             <CreateNewItemInput 
             visibility={createPageInputVisible} 
-            create={createNewPageInProject} 
+            create={addPage} 
             placeholder="New page" />
 
             <CreateNewItemInput 
             visibility={createFolderInputVisible} 
-            create={createNewPageFolder} 
+            create={addPageFolder} 
             placeholder="New folder" />
             
             <div className="pagesList">
@@ -79,7 +79,7 @@ export default function ProjectPagesPanel(){
 
             </div>
             <PanelTabTitle text="Collection pages" />
-            {projectCollections.map((collection,index) => (
+            {collections.map((collection,index) => (
                 <div key={index} style={{position: "relative"}}>
                     <div 
                     onClick={() => handleCollectionItemClick(collection.id)} 

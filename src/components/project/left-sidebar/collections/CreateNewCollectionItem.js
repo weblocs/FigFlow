@@ -1,15 +1,15 @@
 import React, {useState} from "react";
 import { useDispatch } from "react-redux";
-import {createNewCollectionItems} from "../../../../features/pre-rendered-html-nodes"
+import {addCollectionItem} from "../../../../features/pre-rendered-html-nodes"
 
-export default function CreateNewCollectionItem () {
+export default function addCollectionItem () {
     const dispatch = useDispatch();
     const [input, setInput] = useState("");
 
     async function handleAddNewCollectionItem(e) {
         e.preventDefault();
         if(input !== "") {
-            dispatch(createNewCollectionItems(input));
+            dispatch(addCollectionItem(input));
             setInput("");
         }
     };

@@ -59,7 +59,7 @@ export default function ProjectImagesPanel(){
 
     return(
 
-        <div className={"projectCollectionsPanel "+ ((activeProjectTab === "Images") ? "active" : "" )}>
+        <div className={"collectionsPanel "+ ((activeProjectTab === "Images") ? "active" : "" )}>
             <div className="projectTabTitleBox">Images</div>
             <div style={{overflow:"hidden"}}>
                 <input type="file" onChange={(event) => imageUploading(event.target.files[0] || null)} />
