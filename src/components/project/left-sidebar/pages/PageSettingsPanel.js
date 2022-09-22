@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setKeyboardNavigationOn, editPage, openPageSettings, closePageSettings, deletePage } from "../../../../features/pre-rendered-html-nodes"
+import { setKeyboardNavigationOn, editPage, openPageSettings, closePageSettings, deletePage } from "../../../../features/project"
 import ConfirmDeleteModalButton from "../../modals/ConfirmDeleteModalButton"
 
 export default function PageSettingsPanel() {
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-    const openedSettingsPage = useSelector((state) => state.designerProjectState.openedSettingsPage)
+    const activeTab = useSelector((state) => state.project.activeTab)
+    const openedSettingsPage = useSelector((state) => state.project.openedSettingsPage)
     const dispatch = useDispatch()
     const inputRef = useRef();
     const inputSlugRef = useRef();
@@ -39,7 +39,7 @@ export default function PageSettingsPanel() {
     return (
         <form onSubmit={handleSubmit}>
         <div className={"projectPagesPanel wider "
-        + ((activeProjectTab === "Pages" && (openedSettingsPage?.id)) ? "active" : "" )
+        + ((activeTab === "Pages" && (openedSettingsPage?.id)) ? "active" : "" )
         }>
             <div className="projectTabTitleBox">
                 Page Settings

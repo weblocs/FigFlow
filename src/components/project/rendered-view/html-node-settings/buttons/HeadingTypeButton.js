@@ -1,18 +1,18 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { editSelectedFieldInPreRenderedHTMLNode } from "../../../../features/pre-rendered-html-nodes"
+import { editHtmlNode } from "../../../../../features/project"
 
-export default function ElementHeadingSettings() {
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const nodeType = useSelector((state) => state.designerProjectState.activeNodeObject?.type)
-    const nodeSubType = useSelector((state) => state.designerProjectState.activeNodeObject?.subtype)
+export default function HeadingTypeButton() {
+    const activeNodeId = useSelector((state) => state.project.activeNodeId)
+    const nodeType = useSelector((state) => state.project.activeNodeObject?.type)
+    const nodeSubType = useSelector((state) => state.project.activeNodeObject?.subtype)
     const dispatch = useDispatch()
 
     const [isListOpen, setIsListOpen] = useState(false);
 
     function handleOptionClick(subtype) {
         setIsListOpen(false);
-        dispatch(editSelectedFieldInPreRenderedHTMLNode({ id: activeNodeId, field: "subtype", value: subtype }));
+        dispatch(editHtmlNode({ id: activeNodeId, field: "subtype", value: subtype }));
     }
 
     if (nodeType === "h") {

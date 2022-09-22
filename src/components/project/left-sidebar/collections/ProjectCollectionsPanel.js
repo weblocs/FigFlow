@@ -1,26 +1,26 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AddCollection from "./AddCollection";
-import {setCollectionPanelState, addCollection, setActiveCollection} from "../../../../features/pre-rendered-html-nodes"
+import {setCollectionPanelState, addCollection, setActiveCollection} from "../../../../features/project"
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
 
 
 export default function ProjectCollectionsPanel(){
     const dispatch = useDispatch()
-    const collections = useSelector((state) => state.designerProjectState.collections)
-    const activeCollectionId = useSelector((state) => state.designerProjectState.activeCollectionId)
-    const collectionPanelState = useSelector((state) => state.designerProjectState.collectionPanelState)
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
+    const collections = useSelector((state) => state.project.collections)
+    const activeCollectionId = useSelector((state) => state.project.activeCollectionId)
+    const collectionPanelState = useSelector((state) => state.project.collectionPanelState)
+    const activeTab = useSelector((state) => state.project.activeTab)
     const [createInputVisible, setCreateInputVisible] = useState(false);
 
-    function handleItemClick(collection) {
-        dispatch(setActiveCollection(collection));
+    function handleItemClick(id) {
+        dispatch(setActiveCollection(id));
         dispatch(setCollectionPanelState("items"));
     }
     
     // if(collectionPanelState === "collections") {
     return(
-        <div className={"collectionsPanel "+ ((activeProjectTab === "Collections") ? "active" : "" )}>
+        <div className={"collectionsPanel "+ ((activeTab === "Collections") ? "active" : "" )}>
 
             <div className="projectTabTitleBox">
                 Collections
@@ -37,7 +37,7 @@ export default function ProjectCollectionsPanel(){
             <div className="pagesList">
             {collections.map((collection) => (
                 <div 
-                onClick={() => handleItemClick(collection)} 
+                onClick={() => handleItemClick(collection.id)} 
                 className={"projectPageItem " + ((activeCollectionId === collection.id) ? "active" : "") } 
                 key={collection.id}>
                     {collection.name}

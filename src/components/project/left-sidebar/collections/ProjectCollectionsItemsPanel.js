@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {setActiveCollectionItem, addCollectionItem, setCollectionPanelState} from "../../../../features/pre-rendered-html-nodes"
+import {setActiveCollectionItem, addCollectionItem, setCollectionPanelState} from "../../../../features/project"
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import Arrow from '../../../../img/arrow-left.svg';
+import { activeCollectionSelector } from "../../../../selectors/active-collection";
 
 export default function ProjectCollectionsItemsPanel(){
     
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-    const collectionPanelState = useSelector((state) => state.designerProjectState.collectionPanelState)
-    const activeCollection = useSelector((state) => state.designerProjectState.activeCollection)
-    const activeCollectionItemId = useSelector((state) => state.designerProjectState.activeCollectionItemId)
+    const activeTab = useSelector((state) => state.project.activeTab)
+    const collectionPanelState = useSelector((state) => state.project.collectionPanelState)
+    const activeCollection =  useSelector((state) =>  activeCollectionSelector(state));
+    const activeCollectionItemId = useSelector((state) => state.project.activeCollectionItemId)
 
     const dispatch = useDispatch()
 
     const [createInputVisible, setCreateInputVisible] = useState(false);
 
-    function handleItemClick(item) {
-        dispatch(setActiveCollectionItem(item));
+    function handleItemClick(id) {
+        dispatch(setActiveCollectionItem(id));
         dispatch(setCollectionPanelState("fields"));
     }
     
     if(collectionPanelState === "items" || collectionPanelState === "fields") {
     return (
-        <div className={"collectionsPanel "+ ((activeProjectTab === "Collections") ? "active" : "" )}>
+        <div className={"collectionsPanel "+ ((activeTab === "Collections") ? "active" : "" )}>
             
             <div className="projectTabTitleBox">
                 <div>
@@ -46,7 +47,7 @@ export default function ProjectCollectionsItemsPanel(){
             <div className="pagesList">
             {activeCollection?.items.map((item) => (
                 <div 
-                onClick={() => handleItemClick(item)} 
+                onClick={() => handleItemClick(item.id)} 
                 className={"projectPageItem " + ((activeCollectionItemId === item.id) ? "active" : "") } 
                 key={item.id}>
                     {item.name}

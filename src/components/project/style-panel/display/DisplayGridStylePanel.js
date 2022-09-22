@@ -5,7 +5,7 @@ import DisplayGridColumnsRowsEditor from "./DisplayGridColumnsRowsEditor";
 
 export default function DisplayGridStylePanel () {
 
-    const activeNodeComputedStyle = useSelector((state) => state.designerProjectState.activeNodeComputedStyles?.display)
+    const activeNodeComputedStyle = useSelector((state) => state.project.activeNodeComputedStyles?.display)
 
     if(activeNodeComputedStyle === "grid") {
         return (

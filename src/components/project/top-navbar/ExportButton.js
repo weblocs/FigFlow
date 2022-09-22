@@ -3,10 +3,10 @@ import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
 export default function ExportButton() {
-    const postRenderedStyles = useSelector((state) => state.designerProjectState.postRenderedStyles)
-    const projectPages = useSelector((state) => state.designerProjectState.projectPages)
-    const collections = useSelector((state) => state.designerProjectState.collections)
-    const projectPageFolderStructure = useSelector((state) => state.designerProjectState.projectPageFolderStructure)
+    const postRenderedStyles = useSelector((state) => state.project.postRenderedStyles)
+    const projectPages = useSelector((state) => state.project.projectPages)
+    const collections = useSelector((state) => state.project.collections)
+    const projectPageFolderStructure = useSelector((state) => state.project.projectPageFolderStructure)
     const dispatch = useDispatch()
     
     function handleOnClick() {

@@ -1,8 +1,8 @@
 import { createSelector } from 'reselect';
 import { findActiveNode } from '../utils/nodes-editing';
 
-const preRenderedHTMLNodes = state => state.designerProjectState.preRenderedHTMLNodes;
-const activeNodeId = state => state.designerProjectState.activeNodeId;
+const preRenderedHTMLNodes = state => state.project.preRenderedHTMLNodes;
+const activeNodeId = state => state.project.activeNodeId;
 
 export const activeHTMLNode = createSelector(
     [preRenderedHTMLNodes, activeNodeId],
@@ -10,5 +10,3 @@ export const activeHTMLNode = createSelector(
        return findActiveNode(preRenderedHTMLNodes, activeNodeId)
     }
 );
-
-findNode(state.preRenderedHTMLNodes, state.activeNodeId);

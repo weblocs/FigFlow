@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { addNodeToRenderedHTMLNodesAfterActiveNode } from "../../../../features/pre-rendered-html-nodes";
+import { addHtmlNode } from "../../../../features/project";
 
 
 
@@ -14,7 +14,7 @@ const AddNodeButton: React.FC<AddNodeButtonProps> = ({text, type}) => {
     return (
         <div 
         className="addNodeButton medium" 
-        onClick={() => dispatch(addNodeToRenderedHTMLNodesAfterActiveNode(type))}>
+        onClick={() => dispatch(addHtmlNode(type))}>
             {text}
         </div>
     )

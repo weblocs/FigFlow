@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setBlocks, addBlock } from "../../../../features/pre-rendered-html-nodes";
+import { setBlocks, addBlock } from "../../../../features/project";
 import {arrayMoveImmutable} from 'array-move';
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import RichElementListItem from "./RichElementListItem";
 
 export default function ProjectRichTextPanel(){
     const dispatch = useDispatch()
-    const projectRichTextElements = useSelector((state) => state.designerProjectState.projectRichTextElements)
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
+    const projectRichTextElements = useSelector((state) => state.project.projectRichTextElements)
+    const activeTab = useSelector((state) => state.project.activeTab)
 
     const onSortEnd = (oldIndex, newIndex) => {
         if(newIndex > oldIndex) {
@@ -37,7 +37,7 @@ export default function ProjectRichTextPanel(){
     }
     
     return(
-        <div className={"projectPagesPanel "+ ((activeProjectTab === "Rich Text") ? "active" : "" )}>
+        <div className={"projectPagesPanel "+ ((activeTab === "Rich Text") ? "active" : "" )}>
             <div className="projectTabTitleBox">
                 Blocks
                 <div className="projectTabTitleButtonsBox">

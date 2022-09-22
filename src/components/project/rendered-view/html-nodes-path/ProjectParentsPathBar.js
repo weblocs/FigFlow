@@ -1,12 +1,12 @@
 import React from "react"
 import { useSelector, useDispatch } from 'react-redux'
-import {setActiveNodeId} from "../../../../features/pre-rendered-html-nodes"
+import {setActiveHtmlNode} from "../../../../features/project"
 
 export default function ProjectParentsPathBar() {
 
-    const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
-    const postRenderedStyles = useSelector((state) => state.designerProjectState.postRenderedStyles)
-    const activeNodeParentsPath = useSelector((state) => state.designerProjectState.activeNodeParentsPath)
+    const preRenderedHTMLNodes = useSelector((state) => state.project.preRenderedHTMLNodes)
+    const postRenderedStyles = useSelector((state) => state.project.postRenderedStyles)
+    const activeNodeParentsPath = useSelector((state) => state.project.activeNodeParentsPath)
 
     const dispatch = useDispatch()
 
@@ -16,7 +16,7 @@ export default function ProjectParentsPathBar() {
             {activeNodeParentsPath.map((node) => (
                 <div key={node.id}  
                 className="parents-path-item"
-                onClick={() => dispatch(setActiveNodeId({id:node.id}))}>
+                onClick={() => dispatch(setActiveHtmlNode({id:node.id}))}>
                     {node.name}
                 </div>
             ))}

@@ -3,10 +3,10 @@ import { useAppSelector } from "../../../../app/hooks";
 
 export default function ProjectAddPanel() {
 
-    const activeProjectTab = useAppSelector((state) => state.designerProjectState.activeProjectTab)
+    const activeTab = useAppSelector((state) => state.project.activeTab)
 
     return (
-      <div className={"navigatorWrapper "+ ((activeProjectTab === "Add") ? "active" : "" )}>
+      <div className={"navigatorWrapper "+ ((activeTab === "Add") ? "active" : "" )}>
         <div className="projectTabTitleBox">Add</div>
             <div style={{display: "flex", flexWrap: "wrap"}}>
                 <AddNodeButton type="div" text="Div" />

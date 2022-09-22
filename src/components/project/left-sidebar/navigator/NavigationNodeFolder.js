@@ -6,7 +6,7 @@ import NavigationNodeItem from "./NavigationNodeItem";
     if(node?.children?.length > 0) {
         return (
             <div className={((node.type === "sym") ? " symbol-nav-folder" : "")}>
-                <NavigationNodeItem  parents={parents} node={node} depth={depth} />
+                <NavigationNodeItem parents={parents} node={node} depth={depth} />
                 {
                     node.children.map((nodeChild) => (
                     <div className={"navigation-node-folder" + ((node?.expanded) ? " opened" : "")} key={nodeChild.id}>

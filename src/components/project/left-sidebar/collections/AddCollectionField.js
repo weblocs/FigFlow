@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useDispatch } from "react-redux";
-import {addCollectionField} from "../../../../features/pre-rendered-html-nodes"
+import {addCollectionField} from "../../../../features/project"
 
 export default function AddCollectionField () {
     const dispatch = useDispatch();

@@ -1,24 +1,26 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import {findStyleUnit, deleteUnits} from '../../../utils/style-panel'
-import {deletePropertyInPreRenderedStyle, editStyleInPreRenderedStyles, setKeyboardNavigationOn} from "../../../features/pre-rendered-html-nodes"
+import {deleteStyleProperty, editStyleProperty, setKeyboardNavigationOn} from "../../../features/project"
+import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
-export default function SpaceStyleInput (props) {
+function SpaceStyleInput (props) {
 
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
+    const activeNodeId = useSelector((state) => state.project.activeNodeId)
+    const activeStyleId = useSelector((state) => state.project.activeStyleId)
+    const stylesInActiveNode = useSelector((state) => state.project.stylesInActiveNode)
+    const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
+    const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex)
+    const activeProjectResolutionStylesListName = useSelector((state) => state.project.activeProjectResolutionStylesListName)
     
-    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
+    const activeStyleOptionIndex = useSelector((state) => state.project.activeStyleOptionIndex);
+    
     const nodeStyles = useSelector((state) => {
         if(activeStyleId === stylesInActiveNode?.[0]?.id) {
             return preRenderedStyles[activeStyleIndex];
         } else {
             return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
-        }   
+        }
     })
     
     const dispatch = useDispatch();
@@ -71,35 +73,35 @@ export default function SpaceStyleInput (props) {
     function handleKeyPress(e) {
         if(e.key === 'Enter') {
             if(editedStyleUnit === "" || editedStyleUnit === "-") {
-                dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+"px"]));
+                dispatch(editStyleProperty([props.style,e.target.value+"px"]));
             } else {
-                dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+editedStyleUnit]));
+                dispatch(editStyleProperty([props.style,e.target.value+editedStyleUnit]));
             }
             setIsInputActive(false);
         }
         if(e.key === 'ArrowUp') {
             inputRef.current.value = parseInt(editedStyleValue) + 1;
-            dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)+editedStyleUnit]));
+            dispatch(editStyleProperty([props.style,parseInt(e.target.value)+editedStyleUnit]));
             
         }
         if(e.key === 'ArrowDown') {
             inputRef.current.value = parseInt(editedStyleValue) - 1;
-            dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)+editedStyleUnit]));
+            dispatch(editStyleProperty([props.style,parseInt(e.target.value)+editedStyleUnit]));
         }
     }
 
     function handleUnitItemClick(unit) {
-        dispatch(editStyleInPreRenderedStyles([props.style,editedStyleValue+unit]));
+        dispatch(editStyleProperty([props.style,editedStyleValue+unit]));
         setUnitEditorOpened(false);
     }
 
     function handleSetAuto() {
-        dispatch(editStyleInPreRenderedStyles([props.style,"auto"]));
+        dispatch(editStyleProperty([props.style,"auto"]));
         setUnitEditorOpened(false);
     }
 
     function handleReset() {
-        dispatch(deletePropertyInPreRenderedStyle(props.style));
+        dispatch(deleteStyleProperty(props.style));
         setUnitEditorOpened(false);
     }
 
@@ -138,9 +140,9 @@ export default function SpaceStyleInput (props) {
                     {editedStyleUnit}
                 </div>
 
-                
-                <div className={"unit-chooser_closer" + ((unitEditorOpened) ? " active" : "")}
-                onClick={() => setUnitEditorOpened(false)}></div>
+                <ModalBackgroundCloser 
+                handleClick={() => setUnitEditorOpened(false)} 
+                isActiveIf={unitEditorOpened} />
                 
                 <div 
                 className={"style-edit-unit-list" + ((unitEditorOpened) ? " active" : "")}>
@@ -168,3 +170,5 @@ export default function SpaceStyleInput (props) {
             </div>
     )
 }
+
+export default React.memo(SpaceStyleInput)

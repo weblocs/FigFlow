@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { deleteBlock, editBlock, setKeyboardNavigationOn } from "../../../../features/pre-rendered-html-nodes";
+import { deleteBlock, editBlock, setKeyboardNavigationOn } from "../../../../features/project";
 
 import ListItemEditIcon from "../_atoms/ListItemEditIcon";
 
 export default function RichElementListItem({element, index, setDraggedStartIndex, handleDragOver, handleDrop, draggedOverIndex}) {
     
-    const projectRichTextElements = useSelector((state) => state.designerProjectState.projectRichTextElements)
+    const projectRichTextElements = useSelector((state) => state.project.projectRichTextElements)
     const dispatch = useDispatch()
 
     

@@ -1,11 +1,11 @@
 import { createSelector } from 'reselect';
 
-const activeStyleId = state => state.designerProjectState.activeStyleId;
-const stylesInActiveNode = state => state.designerProjectState.stylesInActiveNode;
-const preRenderedStyles = state => state.designerProjectState.preRenderedStyles;
-const activeStyleIndex = state => state.designerProjectState.activeStyleIndex;
-const activeStyleOptionIndex = state => state.designerProjectState.activeStyleOptionIndex;
-const activeProjectResolutionStylesListName = state => state.designerProjectState.activeProjectResolutionStylesListName;
+const activeStyleId = state => state.project.activeStyleId;
+const stylesInActiveNode = state => state.project.stylesInActiveNode;
+const preRenderedStyles = state => state.project.preRenderedStyles;
+const activeStyleIndex = state => state.project.activeStyleIndex;
+const activeStyleOptionIndex = state => state.project.activeStyleOptionIndex;
+const activeProjectResolutionStylesListName = state => state.project.activeProjectResolutionStylesListName;
 
 export const activeStyleProperties = createSelector(
     [activeStyleId, stylesInActiveNode, preRenderedStyles, activeStyleIndex, activeStyleOptionIndex, activeProjectResolutionStylesListName],

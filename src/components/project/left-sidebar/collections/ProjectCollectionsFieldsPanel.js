@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {editCollectionItem, setCollectionPanelState, setKeyboardNavigationOn} from "../../../../features/pre-rendered-html-nodes"
+import {editCollectionItem, setCollectionPanelState, setKeyboardNavigationOn} from "../../../../features/project"
 import AddCollectionField from "./AddCollectionField";
 import FileUploaderToCollectionField from "./FileUploaderToCollectionField";
 import Arrow from '../../../../img/arrow-left.svg';
+import { activeCollectionItemSelector, activeCollectionSelector } from "../../../../selectors/active-collection";
 
 
 export default function ProjectCollectionsFieldsPanel(){
     const dispatch = useDispatch()
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-    const collectionPanelState = useSelector((state) => state.designerProjectState.collectionPanelState)
-    const activeCollection = useSelector((state) => state.designerProjectState.activeCollection)
-    const activeCollectionId = useSelector((state) => state.designerProjectState.activeCollectionId)
-    const activeCollectionItem =  useSelector((state) => state.designerProjectState.activeCollectionItem)
-    const activeCollectionItemData = useSelector((state) => state.designerProjectState.activeCollectionItem?.data)
+    const activeTab = useSelector((state) => state.project.activeTab)
+    const collectionPanelState = useSelector((state) => state.project.collectionPanelState)
+    const activeCollectionId = useSelector((state) => state.project.activeCollectionId)
     
+    const activeCollection =  useSelector((state) =>  activeCollectionSelector(state));
+    const activeCollectionItem =  useSelector((state) =>  activeCollectionItemSelector(state));
+
     const [editedCollectionItemData,setEditedCollectionItemData] = useState([]);
 
     function handleEditCollectionItem() {
@@ -50,7 +51,7 @@ export default function ProjectCollectionsFieldsPanel(){
     
     if(collectionPanelState === "fields") {
     return(
-        <div className={"collectionsPanel "+ ((activeProjectTab === "Collections") ? "active" : "" )}>
+        <div className={"collectionsPanel "+ ((activeTab === "Collections") ? "active" : "" )}>
             
             <div className="projectTabTitleBox">
                 <div>
@@ -72,7 +73,7 @@ export default function ProjectCollectionsFieldsPanel(){
                         <div 
                         className={"projectPageItem " + ((activeCollectionId === field.id) ? "active" : "") } 
                         >
-                            {field.name} : {(activeCollectionItemData?.find(({ fieldId }) => fieldId === field.id)?.fieldValue) ? (activeCollectionItemData.find(({ fieldId }) => fieldId === field.id)?.fieldValue) : ""}
+                            {field.name} : {(activeCollectionItem?.data?.find(({ fieldId }) => fieldId === field.id)?.fieldValue) ? (activeCollectionItem?.data.find(({ fieldId }) => fieldId === field.id)?.fieldValue) : ""}
                             <input
                             onFocus={handleFocus}
                             onBlur={handleBlur}
@@ -86,7 +87,7 @@ export default function ProjectCollectionsFieldsPanel(){
                             <div>
                                 {field.name}
                             </div>
-                            <img className="libraryImage" src={"https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+activeCollectionItemData.find(({ fieldId }) => fieldId === field.id)?.fieldValue+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a"} />
+                            <img className="libraryImage" src={"https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+activeCollectionItem?.data.find(({ fieldId }) => fieldId === field.id)?.fieldValue+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a"} />
                             <FileUploaderToCollectionField handleInputChange={(fieldValue) => handleInputChange(field.id, fieldValue, "img")} />
                         </div>
                     }

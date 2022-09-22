@@ -1,18 +1,19 @@
 import React, {useState, useEffect, useRef} from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import {setKeyboardNavigationOn, setActiveStyleId, deleteStyleFromStylesInActiveNode, addStyle, renameStyle, setActiveStyleOptionIndex} from "../../../features/pre-rendered-html-nodes"
+import {setKeyboardNavigationOn, setActiveStyleId, removeActiveHtmlNodeStyle, addStyle, renameStyle, setActiveStyleOptionIndex} from "../../../features/project"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from "./SubStyleSticker";
+import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 export default function StylePanelHeader () {
     
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
+    const activeNodeId = useSelector((state) => state.project.activeNodeId)
+    const activeStyleId = useSelector((state) => state.project.activeStyleId)
+    const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
 
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    // const stylesInActiveNode = useSelector((state) => state.designerProjectState.activeNodeObject?.class || [])
+    const stylesInActiveNode = useSelector((state) => state.project.stylesInActiveNode)
+    // const stylesInActiveNode = useSelector((state) => state.project.activeNodeObject?.class || [])
 
     const dispatch = useDispatch()
 
@@ -124,31 +125,29 @@ export default function StylePanelHeader () {
 
     function handleRename (id) {
         dispatch(renameStyle({id: id, name: renameInputRef.current.value }));
+        dispatch(setActiveHtmlNodeParentsPath());
         renameInputRef.current.value = "";
         setIsStyleEditorOpen(false);
     }
 
     function handleRemove(id) {
-        dispatch(deleteStyleFromStylesInActiveNode(id));
+        dispatch(removeActiveHtmlNodeStyle(id));
         renameInputRef.current.value = "";
         setIsStyleEditorOpen(false);
     }
 
     return (
         <div className="style-panel-box sticky">
-            <div className={"unit-chooser_closer" + ((isStyleEditorOpen) ? " active" : "")}
-                onClick={() => setIsStyleEditorOpen(false)}>
-            </div>
 
-            <div className={"unit-chooser_closer" + ((isAddStyleInputOpen) ? " active" : "")}
-                onClick={() => setIsAddStyleInputOpen(false)}>
-            </div>
-
-            <div className={"unit-chooser_closer" + ((isAddStyleOptionInputOpen) ? " active" : "")}
-                onClick={() => setIsAddStyleOptionInputOpen(false)}>
-            </div>
-
-            
+            <ModalBackgroundCloser 
+            handleClick={() => setIsStyleEditorOpen(false)} 
+            isActiveIf={isStyleEditorOpen} />
+            <ModalBackgroundCloser 
+            handleClick={() => setIsAddStyleInputOpen(false)} 
+            isActiveIf={isAddStyleInputOpen} />
+            <ModalBackgroundCloser 
+            handleClick={() => setIsAddStyleOptionInputOpen(false)} 
+            isActiveIf={isAddStyleOptionInputOpen} />
 
             <div className="style-panel-title-box">
                 <div className="text">{stylesInActiveNode?.[0]?.name} styles</div>

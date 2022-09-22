@@ -17,7 +17,7 @@ import CustomResolutionsButton from "./CustomResolutionsButton";
 
 export default function TopNavbar() {
 
-    const projectMode = useSelector((state) => state.designerProjectState.projectMode);
+    const projectMode = useSelector((state) => state.project.projectMode);
     const dispatch = useDispatch()
 
     return (

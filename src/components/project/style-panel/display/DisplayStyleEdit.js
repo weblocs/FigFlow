@@ -2,13 +2,13 @@ import React, {useState, useEffect} from "react";
 
 
 import { useDispatch, useSelector } from 'react-redux'
-import {editStyleInPreRenderedStyles} from "../../../features/pre-rendered-html-nodes"
+import {editStyleProperty} from "../../../features/pre-rendered-html-nodes"
 
 
 export default function DisplayStyleEdit () {
 
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const displayStyle = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["display"])
+    const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex)
+    const displayStyle = useSelector((state) => state.project.preRenderedStyles[activeStyleIndex]?.styles ["display"])
 
     const dispatch = useDispatch()
 
@@ -18,32 +18,32 @@ export default function DisplayStyleEdit () {
             <div className="displayButtonsWrapper">
                 <div
                     className={"displayButton " + ((displayStyle === "block") ? "active" : "")}
-                    onClick={() => dispatch(editStyleInPreRenderedStyles(["display", "block"]))}
+                    onClick={() => dispatch(editStyleProperty(["display", "block"]))}
                 >
                     B
                 </div>
                 <div className={"displayButton " + ((displayStyle === "flex") ? "active" : "")}
-                    onClick={() => dispatch(editStyleInPreRenderedStyles(["display", "flex"]))}
+                    onClick={() => dispatch(editStyleProperty(["display", "flex"]))}
                 >
                     F
                 </div>
                 <div className={"displayButton " + ((displayStyle === "grid") ? "active" : "")}
-                    onClick={() => dispatch(editStyleInPreRenderedStyles(["display", "grid"]))}
+                    onClick={() => dispatch(editStyleProperty(["display", "grid"]))}
                 >
                     G
                 </div>
                 <div className={"displayButton " + ((displayStyle === "inline-block") ? "active" : "")}
-                    onClick={() => dispatch(editStyleInPreRenderedStyles(["display", "inline-block"]))}
+                    onClick={() => dispatch(editStyleProperty(["display", "inline-block"]))}
                 >
                     IB
                 </div>
                 <div className={"displayButton " + ((displayStyle === "inline") ? "active" : "")}
-                    onClick={() => dispatch(editStyleInPreRenderedStyles(["display", "inline"]))}
+                    onClick={() => dispatch(editStyleProperty(["display", "inline"]))}
                 >
                     I
                 </div>
                 <div className={"displayButton " + ((displayStyle === "none") ? "active" : "")}
-                    onClick={() => dispatch(editStyleInPreRenderedStyles(["display", "none"]))}
+                    onClick={() => dispatch(editStyleProperty(["display", "none"]))}
                 >
                     N
                 </div>

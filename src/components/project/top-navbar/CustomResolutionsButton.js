@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { setActiveProjectResolution } from "../../../features/pre-rendered-html-nodes";
+import { setActiveProjectResolution } from "../../../features/project";
 import ResolutionSettingsIcon from '../../../img/dots-vertical.svg';
+import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 export default function CustomResolutionsButton() {
-    const projectMode = useSelector((state) => state.designerProjectState.projectMode)
-    const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
+    const projectMode = useSelector((state) => state.project.projectMode)
+    const activeProjectResolution = useSelector((state) => state.project.activeProjectResolution)
     const dispatch = useDispatch()
 
     const [listIsOpened, setListIsOpened] = useState(false);
@@ -18,9 +19,10 @@ export default function CustomResolutionsButton() {
     if (projectMode === "developer") {
         return (
             <>
-            <div style={{width: "150vw", left: "-50vw"}} className={"unit-chooser_closer" + ((listIsOpened) ? " active" : "")}
-            onClick={() => setListIsOpened(false)}>
-            </div>
+
+            <ModalBackgroundCloser 
+            handleClick={() => setListIsOpened(false)} 
+            isActiveIf={listIsOpened} />
 
             <div style={{position: "relative"}}>
                 
@@ -28,8 +30,6 @@ export default function CustomResolutionsButton() {
                 onClick={() => setListIsOpened(true)}>
                     <img src={ResolutionSettingsIcon} />
                 </div>
-
-                
 
                 <div className={"custom-resolutions-list" + ((listIsOpened) ? " active" : "")}>
                     <div className="custom-resolutions-list_item label-item">

@@ -13,7 +13,7 @@ import VersionsIcon from '../../../img/capacitor.svg';
 
 
 export default function LeftSidebar(){
-    const projectMode = useSelector((state) => state.designerProjectState.projectMode);
+    const projectMode = useSelector((state) => state.project.projectMode);
     return(
         (projectMode === "developer") ?
         <div className="projectSidebar">

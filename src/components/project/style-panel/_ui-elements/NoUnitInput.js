@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editStyleInPreRenderedStyles, setKeyboardNavigationOn } from "../../../../features/pre-rendered-html-nodes";
+import { editStyleProperty, setKeyboardNavigationOn } from "../../../../features/project";
 import ProprtyInputLabel from "../ProprtyInputLabel";
 
 export default function NoUnitInput (props) {
     
-    const editedStyleValue = useSelector((state) => state.designerProjectState.activeStyleObject?.[props.style]);
-    const activeNodeComputedStyle = useSelector((state) => state.designerProjectState.activeNodeComputedStyles?.[props.style]);
+    const editedStyleValue = useSelector((state) => state.project.activeStyleObject?.[props.style]);
+    const activeNodeComputedStyle = useSelector((state) => state.project.activeNodeComputedStyles?.[props.style]);
 
     const dispatch = useDispatch();
     const inputRef = useRef();
@@ -14,17 +14,17 @@ export default function NoUnitInput (props) {
 
     function handleKeyPress(e) {
         if(e.key === 'Enter') {
-            dispatch(editStyleInPreRenderedStyles([props.style,e.target.value]));
+            dispatch(editStyleProperty([props.style,e.target.value]));
             setIsInputActive(false);
         }
         if(e.key === 'ArrowUp') {
             inputRef.current.value = editedStyleValue + 0.1;
-            dispatch(editStyleInPreRenderedStyles([props.style,e.target.value]));
+            dispatch(editStyleProperty([props.style,e.target.value]));
             
         }
         if(e.key === 'ArrowDown') {
             inputRef.current.value = editedStyleValue - 0.1;
-            dispatch(editStyleInPreRenderedStyles([props.style,e.target.value]));
+            dispatch(editStyleProperty([props.style,e.target.value]));
         }
     }
 

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from "uuid";
-import { editStyleInPreRenderedStyles } from "../../../../features/pre-rendered-html-nodes";
+import { editStyleProperty } from "../../../../features/project";
 import DisplayGridColumnSizeButton from "./DisplayGridColumnSizeButton";
 
 
 export default function DisplayGridColumnsRowsEditor (props) {
 
-    const activeStyleObject = useSelector((state) => state.designerProjectState.activeStyleObject);
-    const activeNodeComputedStyle = useSelector((state) => state.designerProjectState.activeNodeComputedStyles?.grid_template_columns)
+    const activeStyleObject = useSelector((state) => state.project.activeStyleObject);
+    const activeNodeComputedStyle = useSelector((state) => state.project.activeNodeComputedStyles?.grid_template_columns)
     const displayStyle = useSelector((state) => activeStyleObject?.["grid-template-columns"])
 
 
@@ -78,7 +78,7 @@ export default function DisplayGridColumnsRowsEditor (props) {
 
     useEffect(() => {
         if(columns.length > 0) {
-            dispatch(editStyleInPreRenderedStyles(["grid-template-columns", columns.map((column) => column.size ).join(' ') ]))
+            dispatch(editStyleProperty(["grid-template-columns", columns.map((column) => column.size ).join(' ') ]))
         }
     },[columns])
 

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from 'react-redux'
-import { editStyleInPreRenderedStyles } from "../../../../features/pre-rendered-html-nodes";
+import { editStyleProperty } from "../../../../features/project";
 
 
 export default function DisplayFlexChildSizingButton (props) {
 
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
+    const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex)
 
-    const styleFlexGrow = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["flex-grow"])
-    const styleFlexShrink = useSelector((state) => state.designerProjectState.preRenderedStyles[activeStyleIndex]?.styles ["flex-shrink"])
+    const styleFlexGrow = useSelector((state) => state.project.preRenderedStyles[activeStyleIndex]?.styles ["flex-grow"])
+    const styleFlexShrink = useSelector((state) => state.project.preRenderedStyles[activeStyleIndex]?.styles ["flex-shrink"])
 
     const [activeSizing, setActiveSizing] = useState("");
 
@@ -48,9 +48,9 @@ export default function DisplayFlexChildSizingButton (props) {
             flexBasis = "auto";
         }
 
-        dispatch(editStyleInPreRenderedStyles(["flex-grow", flexGrow]))
-        dispatch(editStyleInPreRenderedStyles(["flex-shrink", flexShrink]))
-        dispatch(editStyleInPreRenderedStyles(["flex-basis", flexBasis]))
+        dispatch(editStyleProperty(["flex-grow", flexGrow]))
+        dispatch(editStyleProperty(["flex-shrink", flexShrink]))
+        dispatch(editStyleProperty(["flex-basis", flexBasis]))
     }
 
     return (

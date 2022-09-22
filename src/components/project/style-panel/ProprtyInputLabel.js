@@ -1,20 +1,12 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteInlineNodeStyleProperty, deletePropertyInPreRenderedStyle } from "../../../features/pre-rendered-html-nodes";
+import { deleteActiveHtmlNodeInlineStyleProperty, deleteStyleProperty } from "../../../features/project";
 import {doesStylePropertyBelongToActiveStyle, doesStylePropertyIsInlineFx} from "../../../utils/nodes-editing"
 
 export default function ProprtyInputLabel ({text,property}) {
 
     
-    const activeStyleObject = useSelector((state) => state.designerProjectState.activeStyleObject);
-    const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject);
-
-
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode);
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles);
-    const activeResolutionName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName);
-
-    
+    const activeStyleObject = useSelector((state) => state.project.activeStyleObject);
+    const activeNodeObject = useSelector((state) => state.project.activeNodeObject);
 
     const doesStylePropertyBelongToActiveClass = useSelector((state) => 
         doesStylePropertyBelongToActiveStyle(activeStyleObject,property)
@@ -52,11 +44,13 @@ export default function ProprtyInputLabel ({text,property}) {
 
     function handleClick() {
         if(doesStylePropertyIsInline) {
-            dispatch(deleteInlineNodeStyleProperty(property))
+            dispatch(deleteActiveHtmlNodeInlineStyleProperty(property))
         } else if(doesStylePropertyBelongToActiveClass) {
-            dispatch(deletePropertyInPreRenderedStyle(property));
+            dispatch(deleteStyleProperty(property));
         }  
     }
+
+    // console.log("render");
 
     return (
         <div 

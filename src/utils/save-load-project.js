@@ -8,7 +8,7 @@ import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "fi
 import { getStorage, ref } from "firebase/storage";
 import { firebaseConfig } from "./firebase-config.js";
 import { v4 as uuidv4 } from "uuid";
-import { setCollections, setBlocks, setSymbols, setPreRenderedStyles, setPages, setProjectFirebaseId, setSwatches, setLayouts, setPageFolders, setPagesNestedStructure } from '../features/pre-rendered-html-nodes'
+import { setCollections, setBlocks, setSymbols, setStyles, setPages, setProjectFirebaseId, setSwatches, setLayouts, setPageFolders, setPagesNestedStructure } from '../features/project'
 import { setProjectImages } from "../features/project-images"
 
 
@@ -38,8 +38,8 @@ export function loadProjectPreRenderedNodesAndStyles(projectId) {
       )
       .then((res) => {
         // sending data from MongoDB
-        // dispatch(setPreRenderedHTMLNodes([...res.data[0].items]));
-        // dispatch(setPreRenderedStyles([...res.data[0].preRenderedStyles]));  
+        // dispatch(setHtmlNodes([...res.data[0].items]));
+        // dispatch(setStyles([...res.data[0].preRenderedStyles]));  
       });
   }, []);
 }
@@ -47,9 +47,9 @@ export function loadProjectPreRenderedNodesAndStyles(projectId) {
 export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSlug) {
   
   const dispatch = useDispatch()
-  const projectFirebaseId = useSelector((state) => state.designerProjectState.projectFirebaseId)
-  const offlineMode = useSelector((state) => state.designerProjectState.offlineMode)
-  const offlineProjectName = useSelector((state) => state.designerProjectState.offlineProjectName)
+  const projectFirebaseId = useSelector((state) => state.project.projectFirebaseId)
+  const offlineMode = useSelector((state) => state.project.offlineMode)
+  const offlineProjectName = useSelector((state) => state.project.offlineProjectName)
   
   let params = useParams();
 
@@ -68,7 +68,7 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
       const projectData = await getDoc(doc(db, "projects", projectFirebaseId));
       dispatch(setPages([...projectData.data().pages]));
       dispatch(setCollections([...projectData.data().collections]));
-      dispatch(setPreRenderedStyles([...projectData.data().preRenderedStyles]));
+      dispatch(setStyles([...projectData.data().preRenderedStyles]));
       dispatch(setSymbols([...projectData.data()?.symbols]));
       dispatch(setSwatches([...projectData.data()?.swatches]));
       dispatch(setPageFolders([...projectData.data()?.projectPageFolders]));
@@ -89,7 +89,7 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
     }
     if(JSON.stringify(localStorage.getItem(offlineProjectName+"collections")) !== "null") {
       dispatch(setCollections(JSON.parse(localStorage.getItem(offlineProjectName+"collections"))));
-      dispatch(setPreRenderedStyles(JSON.parse(localStorage.getItem(offlineProjectName+"preRenderedStyles"))));
+      dispatch(setStyles(JSON.parse(localStorage.getItem(offlineProjectName+"preRenderedStyles"))));
       dispatch(setSymbols(JSON.parse(localStorage.getItem(offlineProjectName+"symbols"))));
       dispatch(setSwatches(JSON.parse(localStorage.getItem(offlineProjectName+"swatches"))));
       dispatch(setPageFolders(JSON.parse(localStorage.getItem(offlineProjectName+"projectPageFolders"))));

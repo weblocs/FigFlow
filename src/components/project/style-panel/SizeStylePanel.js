@@ -1,17 +1,17 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editStyleInPreRenderedStyles } from "../../../features/pre-rendered-html-nodes";
+import { editStyleProperty } from "../../../features/project";
 import ProprtyInputLabel from "./ProprtyInputLabel";
 import SizeStyleInput from "./SizeStyleInput";
 
 export default function SizeStylePanel () {
 
-    const nodeStyleValue = useSelector((state) => state.designerProjectState.activeNodeComputedStyles?.object_fit);
+    const nodeStyleValue = useSelector((state) => state.project.activeNodeComputedStyles?.object_fit);
 
     const dispatch = useDispatch();
 
     function handleInputChange(e) {
-        dispatch(editStyleInPreRenderedStyles(["object-fit",e.target.value]));
+        dispatch(editStyleProperty(["object-fit",e.target.value]));
     }
 
 

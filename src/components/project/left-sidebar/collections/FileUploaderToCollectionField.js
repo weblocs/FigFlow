@@ -17,7 +17,7 @@ const fileToDataUri = (file) => new Promise((resolve, reject) => {
 
 export default function FileUploaderToCollectionField({handleInputChange}){
     const dispatch = useDispatch()
-    const projectFirebaseId = useSelector((state) => state.designerProjectState.projectFirebaseId)
+    const projectFirebaseId = useSelector((state) => state.project.projectFirebaseId)
     const projectImages = useSelector((state) => state.projectImages.Images)
 
     const storage = getStorage();

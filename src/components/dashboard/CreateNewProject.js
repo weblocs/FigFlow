@@ -35,7 +35,7 @@ export default function CreateNewProject (props) {
             projectPageFolderStructure: [{name: "Home", id: firstPageInProjectId}],
             projectPageFolders: [],
             collections: [],
-            setPreRenderedStyles: [],
+            setStyles: [],
             symbols: [],
             swatches: [],
             sections: [],

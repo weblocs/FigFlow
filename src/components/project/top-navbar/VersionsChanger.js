@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { addVersion, clearVersions, setActiveVersion } from "../../../features/pre-rendered-html-nodes"
+import { addVersion, clearVersions, setActiveVersion } from "../../../features/project"
 
 function getLetterByIndex(index) {
     let letter = "A";
@@ -12,12 +12,12 @@ function getLetterByIndex(index) {
 }
 
 export default function VersionsChanger() {
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-    const projectVersions = useSelector((state) => state.designerProjectState.projectVersions)
-    const activeProjectVersionId = useSelector((state) => state.designerProjectState.activeProjectVersionId)    
+    const activeTab = useSelector((state) => state.project.activeTab)
+    const projectVersions = useSelector((state) => state.project.projectVersions)
+    const activeProjectVersionId = useSelector((state) => state.project.activeProjectVersionId)    
     const dispatch = useDispatch()
 
-    if(activeProjectTab === "Versions") {
+    if(activeTab === "Versions") {
         return (
             <>
             <div className="page-changer page-changer_description">

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useDispatch } from "react-redux";
-import {addCollectionItem} from "../../../../features/pre-rendered-html-nodes"
+import {addCollectionItem} from "../../../../features/project"
 
 export default function addCollectionItem () {
     const dispatch = useDispatch();

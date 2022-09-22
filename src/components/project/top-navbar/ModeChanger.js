@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux"
-import { saveProjectToFirebase, setProjectMode } from "../../../features/pre-rendered-html-nodes";
+import { saveProjectToFirebase, setProjectMode } from "../../../features/project";
 
 export default function ModeChanger() {
-    const projectMode = useSelector((state) => state.designerProjectState.projectMode);
+    const projectMode = useSelector((state) => state.project.projectMode);
     const projectModeButtonText = useSelector((state) => {
-        if(state.designerProjectState.projectMode === "developer") {
+        if(state.project.projectMode === "developer") {
             return "Creator Mode"
         } else {
             return "Developer Mode"

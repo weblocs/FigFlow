@@ -1,18 +1,19 @@
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {editSwatch, addSwatch, setKeyboardNavigationOn, editStyleInPreRenderedStyles, handleArrowNodesNavigation} from "../../../features/pre-rendered-html-nodes"
+import {editSwatch, addSwatch, setKeyboardNavigationOn, editStyleProperty, handleArrowNodesNavigation} from "../../../features/project"
+import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 import ProprtyInputLabel from "./ProprtyInputLabel";
 
 export default function ColorPicker (props) {
-    const projectSwatches = useSelector((state) => state.designerProjectState.projectSwatches);
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex);
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
-    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName);
-    
-    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
+
+    const projectSwatches = useSelector((state) => state.project.projectSwatches);
+    const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex);
+    const activeNodeId = useSelector((state) => state.project.activeNodeId);
+    const activeStyleId = useSelector((state) => state.project.activeStyleId)
+    const stylesInActiveNode = useSelector((state) => state.project.stylesInActiveNode)
+    const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
+
+    const activeStyleOptionIndex = useSelector((state) => state.project.activeStyleOptionIndex);
     const nodeStyles = useSelector((state) => {
         if(activeStyleId === stylesInActiveNode?.[0]?.id) {
             return preRenderedStyles[activeStyleIndex];
@@ -102,7 +103,7 @@ export default function ColorPicker (props) {
     function handleSwatchClick(swatch) {
         setSwatchEditorMode("edit");
         setActiveSwatch(swatch);
-        dispatch(editStyleInPreRenderedStyles([props.style,swatch.color]));
+        dispatch(editStyleProperty([props.style,swatch.color]));
     }
 
     function inputOnChange() {
@@ -119,7 +120,7 @@ export default function ColorPicker (props) {
             }, 1000);
         } else if(swatchEditorMode === "add") {
             dispatch(addSwatch({name: swatchNameRef.current.value, color: swatchColorRef.current.value}));
-            dispatch(editStyleInPreRenderedStyles([props.style, swatchColorRef.current.value]));
+            dispatch(editStyleProperty([props.style, swatchColorRef.current.value]));
             setSwatchEditorMode("edit");
         }
     }
@@ -141,7 +142,7 @@ export default function ColorPicker (props) {
 
     function handleStyleColorKeyDown (e) {
         if(e.key === 'Enter') {
-            dispatch(editStyleInPreRenderedStyles([props.style,e.target.value]));
+            dispatch(editStyleProperty([props.style,e.target.value]));
             setStyleColorInputOpen(false);
         }
     }
@@ -149,9 +150,10 @@ export default function ColorPicker (props) {
     return (
         <div className="size-style-box">
 
-            <div className={"unit-chooser_closer" + ((swatchesEditorOpened) ? " active" : "")}
-                onClick={() => setSwatchesEditorOpened(false)}></div>
-
+            <ModalBackgroundCloser 
+            handleClick={() => setSwatchesEditorOpened(false)} 
+            isActiveIf={swatchesEditorOpened} />
+            
             <ProprtyInputLabel text="Color" property={props.style} />
 
             <div className="input color-picker">

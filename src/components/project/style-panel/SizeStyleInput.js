@@ -1,13 +1,14 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import {findStyleUnit, deleteUnits} from '../../../utils/style-panel'
-import {editStyleInPreRenderedStyles, setKeyboardNavigationOn} from "../../../features/pre-rendered-html-nodes"
+import {editStyleProperty, setKeyboardNavigationOn} from "../../../features/project"
 import ProprtyInputLabel from "./ProprtyInputLabel";
+import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 export default function SpaceStyleInput (props) {
 
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const activeStyleObject = useSelector((state) => state.designerProjectState.activeStyleObject);
+    const activeNodeId = useSelector((state) => state.project.activeNodeId)
+    const activeStyleObject = useSelector((state) => state.project.activeStyleObject);
     
     const dispatch = useDispatch();
     const inputRef = useRef();
@@ -53,29 +54,29 @@ export default function SpaceStyleInput (props) {
     function handleKeyPress(e) {
         if(e.key === 'Enter') {
             if(editedStyleUnit === "" || editedStyleUnit === "-") {
-                dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+"px"]));
+                dispatch(editStyleProperty([props.style,e.target.value+"px"]));
             } else {
-                dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+editedStyleUnit]));
+                dispatch(editStyleProperty([props.style,e.target.value+editedStyleUnit]));
             }
             setIsInputActive(false);
 
             if(props.style === "border-width") {
-                dispatch(editStyleInPreRenderedStyles(["border-style","solid"]));
+                dispatch(editStyleProperty(["border-style","solid"]));
             }
         }
         if(e.key === 'ArrowUp') {
             inputRef.current.value = parseInt(editedStyleValue) + 1;
-            dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)+editedStyleUnit]));
+            dispatch(editStyleProperty([props.style,parseInt(e.target.value)+editedStyleUnit]));
             
         }
         if(e.key === 'ArrowDown') {
             inputRef.current.value = parseInt(editedStyleValue) - 1;
-            dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)+editedStyleUnit]));
+            dispatch(editStyleProperty([props.style,parseInt(e.target.value)+editedStyleUnit]));
         }
     }
 
     function handleUnitItemClick(unit) {
-        dispatch(editStyleInPreRenderedStyles([props.style,editedStyleValue+unit]));
+        dispatch(editStyleProperty([props.style,editedStyleValue+unit]));
         setUnitEditorOpened(false);
     }
 
@@ -118,8 +119,9 @@ export default function SpaceStyleInput (props) {
                     {editedStyleUnit}
                 </div>
 
-                <div className={"unit-chooser_closer" + ((unitEditorOpened) ? " active" : "")}
-                onClick={() => setUnitEditorOpened(false)}></div>
+                <ModalBackgroundCloser 
+                handleClick={() => setUnitEditorOpened(false)} 
+                isActiveIf={unitEditorOpened} />
 
                 <div className={"style-edit-unit-list" + ((unitEditorOpened) ? " active" : "")}>
                     <div className={"style-edit-unit-item" + ((editedStyleUnit === "px") ? " active" : "")}

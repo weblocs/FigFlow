@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveNodeId, setProjectPopUp} from "../../../../features/pre-rendered-html-nodes"
+import {setActiveHtmlNode, setProjectPopUp} from "../../../../features/project"
 
 export default function AddSectionButton({sectionId}) {
 
-    const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode)
-    const hoveredSectionId = useSelector((state) => state.designerProjectState.hoveredSectionId)
+    const nodesEditMode = useSelector((state) => state.project.nodesEditMode)
+    const hoveredSectionId = useSelector((state) => state.project.hoveredSectionId)
     const dispatch = useDispatch()
 
     function handleAddSectionButtonClick () {
-        dispatch(setActiveNodeId({id:sectionId}));
+        dispatch(setActiveHtmlNode({id:sectionId}));
         dispatch(setProjectPopUp("addSection"));
     }
 

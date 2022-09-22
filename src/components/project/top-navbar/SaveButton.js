@@ -1,12 +1,11 @@
 import React, { useState } from "react"
 import { useSelector, useDispatch } from 'react-redux'
-import {saveProjectToFirebase, setSaveButtonStateText} from "../../../features/pre-rendered-html-nodes"
+import {saveProjectToFirebase, setSaveButtonStateText} from "../../../features/project"
 
 
 export default function SaveButton() {
-    const saveButtonStateText = useSelector((state) => state.designerProjectState.saveButtonStateText)
-    const dispatch = useDispatch()
-    
+    const saveButtonStateText = useSelector((state) => state.project.saveButtonStateText)
+    const dispatch = useDispatch()    
     
     function handleOnClick() {
       dispatch(setSaveButtonStateText("Publishing"));

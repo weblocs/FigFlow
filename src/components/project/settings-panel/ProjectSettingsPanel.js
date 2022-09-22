@@ -1,6 +1,6 @@
 import React, { useState } from "react"; 
 import { useSelector, useDispatch } from "react-redux";
-import {editSelectedFieldInPreRenderedHTMLNode} from "../../../features/pre-rendered-html-nodes";
+import {editHtmlNode} from "../../../features/project";
 import CMSFieldNodeConnector from "./CMSFieldNodeConnector";
 import NodeRepeatableSettings from "./NodeRepeatableSettings";
 import StylePanelTitle from "../style-panel/StylePanelTitle"
@@ -10,19 +10,19 @@ export default function ProjectSettingsPanel() {
     
     const dispatch = useDispatch()
 
-    const activeRightSidebarTab = useSelector((state) => state.designerProjectState.activeRightSidebarTab)
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const collections = useSelector((state) => state.designerProjectState.collections)
-    const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
-    const isNodeCmsEditable = useSelector((state) => (state.designerProjectState.activeNodeObject?.cmsFieldId !== undefined && state.designerProjectState.activeNodeObject?.cmsFieldId !== ""));
+    const activeRightSidebarTab = useSelector((state) => state.project.activeRightSidebarTab)
+    const activeNodeId = useSelector((state) => state.project.activeNodeId)
+    const collections = useSelector((state) => state.project.collections)
+    const activeNodeObject = useSelector((state) => state.project.activeNodeObject)
+    const isNodeCmsEditable = useSelector((state) => (state.project.activeNodeObject?.cmsFieldId !== undefined && state.project.activeNodeObject?.cmsFieldId !== ""));
 
     const isNodeCollection = useSelector((state) => {
-        const parentPath = state.designerProjectState.activeNodeParentsPath;
+        const parentPath = state.project.activeNodeParentsPath;
         return (parentPath[parentPath.length - 1]?.type === "col");
     })
 
     const isNodeInCollection = useSelector((state) => {
-        const parentPath = state.designerProjectState.activeNodeParentsPath;
+        const parentPath = state.project.activeNodeParentsPath;
         for(let i = 0; i < parentPath.length; i++) {
             if(parentPath[i]?.type === "col") {
                 return true
@@ -32,7 +32,7 @@ export default function ProjectSettingsPanel() {
     })
 
     const activeCollectionId = useSelector((state) => {
-        const parentPath = state.designerProjectState.activeNodeParentsPath;
+        const parentPath = state.project.activeNodeParentsPath;
         for(let i = parentPath.length - 1; i >= 0; i--) {
             if(parentPath[i]?.type === "col") {
                 return parentPath[i]?.cmscollectionid
@@ -41,7 +41,7 @@ export default function ProjectSettingsPanel() {
     })
 
     const activeCollectionNodeId = useSelector((state) => {
-        const parentPath = state.designerProjectState.activeNodeParentsPath;
+        const parentPath = state.project.activeNodeParentsPath;
         for(let i = parentPath.length - 1; i >= 0; i--) {
             if(parentPath[i]?.type === "col") {
                 return parentPath[i]?.id
@@ -49,21 +49,21 @@ export default function ProjectSettingsPanel() {
         }
     })
 
-    const activeCollectionItems = useSelector((state) => state.designerProjectState.collections?.find(({id}) => id === activeCollectionId)?.items);
+    const activeCollectionItems = useSelector((state) => state.project.collections?.find(({id}) => id === activeCollectionId)?.items);
 
     function handleClickInCollectionItem (collectionId) {
-        dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeCollectionNodeId, field:'cmsCollectionId', value:collectionId}));
+        dispatch(editHtmlNode({id:activeCollectionNodeId, field:'cmsCollectionId', value:collectionId}));
     }
 
     function handleClickInFieldItem(fieldId) {
-        dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsFieldId', value:fieldId}));
+        dispatch(editHtmlNode({id:activeNodeId, field:'cmsFieldId', value:fieldId}));
     }
 
     function handleCheckboxClick() {
         if(isNodeCmsEditable) {
-            dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsFieldId', value:""}));
+            dispatch(editHtmlNode({id:activeNodeId, field:'cmsFieldId', value:""}));
         } else {
-            dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsFieldId', value:activeCollectionItems[0].data[0].fieldId}));
+            dispatch(editHtmlNode({id:activeNodeId, field:'cmsFieldId', value:activeCollectionItems[0].data[0].fieldId}));
         }
     }
 

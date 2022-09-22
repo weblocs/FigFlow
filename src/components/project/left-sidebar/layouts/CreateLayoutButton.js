@@ -1,4 +1,4 @@
-import { addLayout, setActiveLayoutFolder } from "../../../../features/pre-rendered-html-nodes"
+import { addLayout, setActiveLayoutFolder } from "../../../../features/project"
 
 import Plus from '../../../../img/plus.svg';
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import CreateNewItemInput from "../navigator/CreateNewItemInput";
 
 export default function CreateLayoutButton({id, visibility}) {
 
-    const activeLayoutFolder = useSelector((state) => state.designerProjectState.activeLayoutFolder)
+    const activeLayoutFolder = useSelector((state) => state.project.activeLayoutFolder)
     const dispatch = useDispatch();
 
     const [isInputOpen, setIsInputOpen] = useState(false);

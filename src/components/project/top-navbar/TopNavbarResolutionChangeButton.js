@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import { setActiveProjectResolution } from "../../../features/pre-rendered-html-nodes"
+import { setActiveProjectResolution } from "../../../features/project"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 
 export default function TopNavbarResolutionChangeButton({resolutionNumber, image}) {
 
-    const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
-    const keyboardNavigationOn = useSelector((state) => state.designerProjectState.keyboardNavigationOn)
+    const activeProjectResolution = useSelector((state) => state.project.activeProjectResolution)
+    const keyboardNavigationOn = useSelector((state) => state.project.keyboardNavigationOn)
 
     const { copyShortcut } = useKeyboardShortcut(
         [resolutionNumber],

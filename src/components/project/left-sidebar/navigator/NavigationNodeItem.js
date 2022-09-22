@@ -1,23 +1,23 @@
 import { useSelector, useDispatch } from "react-redux";
 
 import Arrow from '../../../../img/arrow-down.svg';
-import {setHoveredNodeId, setActiveNodeId, setDraggedNavigatorNodes, setDraggedOverNavigatorItemId, dropDraggedNavigatorNodes, setNavigatorItemDragBehindState, toggleNodeExpandedState, makeSymbolEditable} from "../../../../features/pre-rendered-html-nodes"
+import {setHoveredHtmlNode, setActiveHtmlNode, setDraggedNavigatorNodes, setDraggedOverNavigatorItemId, dropDraggedNavigatorNodes, setNavigatorItemDragBehindState, toggleHtmlNodeExpandedState, makeSymbolEditable} from "../../../../features/project"
 
  function NavigationNodeItem ({parents, node, depth}) {
     const dispatch = useDispatch()
 
-    const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
-    const draggedNavigatorNodes = useSelector((state) => state.designerProjectState.draggedNavigatorNodes)
-    const draggedOverNodeId = useSelector((state) => state.designerProjectState.draggedOverNodeId)
-    const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId)
-    const navigatorItemDragBehindState = useSelector((state) => (state.designerProjectState.navigatorItemDragBehindState) ? true : false)
+    const projectSymbols = useSelector((state) => state.project.projectSymbols)
+    const draggedNavigatorNodes = useSelector((state) => state.project.draggedNavigatorNodes)
+    const draggedOverNodeId = useSelector((state) => state.project.draggedOverNodeId)
+    const editedSymbolId = useSelector((state) => state.project.editedSymbolId)
+    const navigatorItemDragBehindState = useSelector((state) => (state.project.navigatorItemDragBehindState) ? true : false)
 
     const nodeName = (node?.symbolId === undefined) ? 
     ((node?.class[0]?.name !== undefined) ? node?.class[0]?.name : node?.type) : 
     (projectSymbols.find( ({id}) => id === node.symbolId)?.name );
 
     function handleClick () {
-        dispatch(setActiveNodeId({id: node.id}));
+        dispatch(setActiveHtmlNode({id: node.id}));
         scrollProjectTo(node.id);
     }
 
@@ -62,7 +62,7 @@ import {setHoveredNodeId, setActiveNodeId, setDraggedNavigatorNodes, setDraggedO
 
     function handleArrowClick() {
         if(node.children.length > 0) {
-            dispatch(toggleNodeExpandedState(node.id));
+            dispatch(toggleHtmlNodeExpandedState(node.id));
         }
     }
 
@@ -80,14 +80,16 @@ import {setHoveredNodeId, setActiveNodeId, setDraggedNavigatorNodes, setDraggedO
 
     const paddingLeft = {paddingLeft: depth*8 + "px"};
 
+    // console.log("item rend");
+
     return ( 
         <div className={"navigation-node " + ((navigatorItemDragBehindState) ? "dragged-before " : "") 
         + ((node.id === draggedOverNodeId) ? "dragged-over " : " ") 
         // + ((node.id == activeNodeId) ? "active " : " ") 
         }
             style={paddingLeft}
-            onMouseOver={() => dispatch(setHoveredNodeId(node.id))}
-            onMouseOut={() => dispatch(setHoveredNodeId(""))}
+            onMouseOver={() => dispatch(setHoveredHtmlNode(node.id))}
+            onMouseOut={() => dispatch(setHoveredHtmlNode(""))}
             onClick={handleClick}
             // onDoubleClick={() => handleDoubleClick(node.id)} // openSymbol here
             draggable="true"

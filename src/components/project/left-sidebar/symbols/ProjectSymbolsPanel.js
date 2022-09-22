@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {editSymbolName, deleteSymbol, addSymbolToProject, addSymbol, setSymbols} from "../../../../features/pre-rendered-html-nodes"
+import {editSymbolName, deleteSymbol, addSymbolToProject, addSymbol, setSymbols} from "../../../../features/project"
 import CreateNewItemInput from "../navigator/CreateNewItemInput";;
 import ListItemEditIcon from "../_atoms/ListItemEditIcon";
 import {arrayMoveImmutable} from 'array-move'
 
 export default function ProjectSymbolsPanel(){
     const dispatch = useDispatch()
-    const projectSymbols = useSelector((state) => state.designerProjectState.projectSymbols)
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
+    const projectSymbols = useSelector((state) => state.project.projectSymbols)
+    const activeTab = useSelector((state) => state.project.activeTab)
 
     const [createInputVisible, setCreateInputVisible] = useState(false);
 
@@ -43,7 +43,7 @@ export default function ProjectSymbolsPanel(){
     }
     
     return(
-        <div className={"projectPagesPanel "+ ((activeProjectTab === "Symbols") ? "active" : "" )}>
+        <div className={"projectPagesPanel "+ ((activeTab === "Symbols") ? "active" : "" )}>
             
             <div className="projectTabTitleBox">
                 Symbols

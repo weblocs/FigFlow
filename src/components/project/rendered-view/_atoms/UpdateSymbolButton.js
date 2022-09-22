@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux"
-import {editSymbolNodes} from "../../../../features/pre-rendered-html-nodes"
+import {editSymbolNodes} from "../../../../features/project"
 
 
 export default function UpdateSymbolButton() {
-    const editedSymbolId = useSelector((state) => state.designerProjectState.editedSymbolId)
-    const editedSymbolName = useSelector((state) => state.designerProjectState.projectSymbols.find(({id}) => id === editedSymbolId.symbolId)?.name)
+    const editedSymbolId = useSelector((state) => state.project.editedSymbolId)
+    const editedSymbolName = useSelector((state) => state.project.projectSymbols.find(({id}) => id === editedSymbolId.symbolId)?.name)
     const dispatch = useDispatch()
 
     if(editedSymbolId.symbolId !== "") {

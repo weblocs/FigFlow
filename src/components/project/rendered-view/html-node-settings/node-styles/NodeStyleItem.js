@@ -1,12 +1,13 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { removeStyleOption, setActiveStyleId, setStyleOptionInActiveNode } from "../../../../features/pre-rendered-html-nodes";
+import { removeStyleOption, setActiveStyleId, setActiveHtmlNodeStyleOption } from "../../../../../features/project";
+import ModalBackgroundCloser from "../../../_atoms/ModalBackgroundCloser";
 
 
-export default function RichElementSettingsStyle({child, index}) {
+export default function NodeStyleItem({child, index}) {
 
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    const activeProjectResolution = useSelector((state) => state.designerProjectState.activeProjectResolution)
+    const stylesInActiveNode = useSelector((state) => state.project.stylesInActiveNode)
+    const activeProjectResolution = useSelector((state) => state.project.activeProjectResolution)
 
     const dispatch = useDispatch()
 
@@ -25,7 +26,7 @@ export default function RichElementSettingsStyle({child, index}) {
     }
 
     function handleStyleOptionClick(id,name) {
-        dispatch(setStyleOptionInActiveNode({index: index, id: id, name: name}));
+        dispatch(setActiveHtmlNodeStyleOption({index: index, id: id, name: name}));
         dispatch(setActiveStyleId(id));
         setIsListOpened(false);
     }
@@ -42,8 +43,9 @@ export default function RichElementSettingsStyle({child, index}) {
     } else {
     return (
         <div className={"rich-element-settings_button active" + (isStyleSet ? "" : " styleIsNotSet")} >
-            <div className={"unit-chooser_closer" + ((isListOpened) ? " active" : "")}
-                onClick={() => setIsListOpened(false)}></div>
+            <ModalBackgroundCloser 
+            handleClick={() => setIsListOpened(false)} 
+            isActiveIf={isListOpened} />
 
             <div className="rich-element-settings_button-text" onClick={() => setIsListOpened(!isListOpened)}>
                 {isStyleSet ? childName : (child.defaultName || childName)}

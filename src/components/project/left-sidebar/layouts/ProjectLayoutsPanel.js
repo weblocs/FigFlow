@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {addLayoutFolder} from "../../../../features/pre-rendered-html-nodes"
+import {addLayoutFolder} from "../../../../features/project"
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import ListItemEditIcon from "../_atoms/ListItemEditIcon";
 import CreateLayoutButton from "./CreateLayoutButton";
@@ -8,14 +8,14 @@ import ProjectLayoutListFolder from "./ProjectLayoutListFolder";
 
 export default function ProjectLayoutsPanel () {
     const dispatch = useDispatch()
-    const projectLayouts = useSelector((state) => state.designerProjectState.projectLayouts)
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
+    const projectLayouts = useSelector((state) => state.project.projectLayouts)
+    const activeTab = useSelector((state) => state.project.activeTab)
 
     const [createPageInputVisible, setCreatePageInputVisible] = useState(false);
     const [createFolderInputVisible, setCreateFolderInputVisible] = useState(false);
     
     return(
-        <div className={"projectPagesPanel "+ ((activeProjectTab === "Layouts") ? "active" : "" )}>
+        <div className={"projectPagesPanel "+ ((activeTab === "Layouts") ? "active" : "" )}>
 
             <div className="projectTabTitleBox">
                 Layouts

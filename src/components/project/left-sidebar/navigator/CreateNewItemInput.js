@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from "react";
 import { useDispatch } from "react-redux";
-import { setKeyboardNavigationOn } from "../../../../features/pre-rendered-html-nodes"
+import { setKeyboardNavigationOn } from "../../../../features/project"
 
 export default function CreateNewItemInput ({visibility, create, placeholder}) {
     const dispatch = useDispatch();

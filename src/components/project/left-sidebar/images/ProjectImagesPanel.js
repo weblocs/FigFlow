@@ -6,7 +6,7 @@ import {v4 as uuidv4} from "uuid"
 import { initializeApp } from "firebase/app";
 import { getFirestore, setDoc, doc, updateDoc } from "firebase/firestore";
 import { firebaseConfig } from "../../../../utils/firebase-config.js";
-import { editSelectedFieldInPreRenderedHTMLNode } from "../../../../features/pre-rendered-html-nodes"
+import { editHtmlNode } from "../../../../features/project"
 
 const fileToDataUri = (file) => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -18,15 +18,15 @@ const fileToDataUri = (file) => new Promise((resolve, reject) => {
 
 export default function ProjectImagesPanel(){
     const dispatch = useDispatch()
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-    const projectFirebaseId = useSelector((state) => state.designerProjectState.projectFirebaseId)
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const activeTab = useSelector((state) => state.project.activeTab)
+    const projectFirebaseId = useSelector((state) => state.project.projectFirebaseId)
+    const activeNodeId = useSelector((state) => state.project.activeNodeId)
     const projectImages = useSelector((state) => state.projectImages.Images)
 
     const storage = getStorage();
 
     function setImageToActiveNode(imageName) {
-        dispatch(editSelectedFieldInPreRenderedHTMLNode({id: activeNodeId, field: 'src', value: imageName}))
+        dispatch(editHtmlNode({id: activeNodeId, field: 'src', value: imageName}))
     }
 
     const imageUploading = (file) => {
@@ -59,7 +59,7 @@ export default function ProjectImagesPanel(){
 
     return(
 
-        <div className={"collectionsPanel "+ ((activeProjectTab === "Images") ? "active" : "" )}>
+        <div className={"collectionsPanel "+ ((activeTab === "Images") ? "active" : "" )}>
             <div className="projectTabTitleBox">Images</div>
             <div style={{overflow:"hidden"}}>
                 <input type="file" onChange={(event) => imageUploading(event.target.files[0] || null)} />

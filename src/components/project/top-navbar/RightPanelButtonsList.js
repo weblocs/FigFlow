@@ -5,7 +5,7 @@ import StyleIcon from '../../../img/styling.svg'
 import SettingsIcon from '../../../img/settings.svg'
 
 export default function RightPanelButtonsList() {
-    const projectMode = useSelector((state) => state.designerProjectState.projectMode)
+    const projectMode = useSelector((state) => state.project.projectMode)
 
     if (projectMode === "developer") {
         return (

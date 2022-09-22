@@ -1,10 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editStyleInPreRenderedStyles } from "../../../features/pre-rendered-html-nodes";
+import { editStyleProperty } from "../../../features/project";
 
 export default function AlignStyleInputButton ({letter, value}) {
 
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
+    const activeNodeId = useSelector((state) => state.project.activeNodeId);
     const activeStyleValue = useSelector((state) => {
         if(activeNodeId !== "") {
             try {
@@ -17,7 +17,7 @@ export default function AlignStyleInputButton ({letter, value}) {
     const dispatch = useDispatch()
 
     function handleClick() {
-        dispatch(editStyleInPreRenderedStyles(["text-align", value]));
+        dispatch(editStyleProperty(["text-align", value]));
       }
 
     return (

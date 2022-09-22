@@ -1,16 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
-import { editStyleInPreRenderedStyles } from "../../../features/pre-rendered-html-nodes";
+import { editStyleProperty } from "../../../features/project";
 import ProprtyInputLabel from "./ProprtyInputLabel";
 import SpaceStyleInput from "./SpaceStyleInput";
 
 export default function PositionStylePanel () {
 
-    const nodeStyleValue = useSelector((state) => state.designerProjectState.activeNodeComputedStyles?.position);
+    const nodeStyleValue = useSelector((state) => state.project.activeNodeComputedStyles?.position);
 
     const dispatch = useDispatch();
 
     function handleInputChange(e) {
-        dispatch(editStyleInPreRenderedStyles(["position",e.target.value]));
+        dispatch(editStyleProperty(["position",e.target.value]));
     }
 
     return (

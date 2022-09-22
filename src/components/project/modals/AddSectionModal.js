@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {setCopiedSectionNodes, addSectionToPreRenderedHTMLNodes, setProjectPopUp} from "../../../features/pre-rendered-html-nodes"
+import {copyLayoutHtmlNodes, pasteLayoutHtmlNodes, setProjectPopUp} from "../../../features/project"
 import RenderedNode from "../rendered-view/RenderedNode"
 
 export default function AddSectionModal() {
 
-    const projectLayouts = useSelector((state) => state.designerProjectState.projectLayouts)
-    const projectPopUp = useSelector((state) => state.designerProjectState.projectPopUp)
-
+    const projectLayouts = useSelector((state) => state.project.projectLayouts)
+    const projectPopUp = useSelector((state) => state.project.projectPopUp)
 
     const addSectionPopUpOpened = useSelector((state) => {
         if(projectPopUp === "addSection") {
@@ -23,12 +22,10 @@ export default function AddSectionModal() {
     function handleAddSectionClick() {
         if(presentedSectionNodes?.type === "sec") {
             dispatch(setProjectPopUp(""));
-            dispatch(setCopiedSectionNodes(presentedSectionNodes));
+            dispatch(copyLayoutHtmlNodes(presentedSectionNodes));
             setTimeout(() => {
-                dispatch(addSectionToPreRenderedHTMLNodes());
-            },
-            300);
-            
+                dispatch(pasteLayoutHtmlNodes());
+            }, 300);
         }
     }
 

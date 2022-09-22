@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { editLayout, editLayoutFolder, deleteLayoutFolder, deleteLayout, setActiveLayout }  from "../../../../features/pre-rendered-html-nodes"
+import { editLayout, editLayoutFolder, deleteLayoutFolder, deleteLayout, setActiveLayout }  from "../../../../features/project"
 import CreateLayoutButton from "./CreateLayoutButton"
 import ListItemEditIcon from "../_atoms/ListItemEditIcon"
 
 export default function ProjectLayoutListFolder({folder}) {
-    const activeLayoutId = useSelector((state) => state.designerProjectState.activeLayoutId)
+    const activeLayoutId = useSelector((state) => state.project.activeLayoutId)
     const dispatch = useDispatch()
 
     const [isHovered, setIsHovered] = useState(false);

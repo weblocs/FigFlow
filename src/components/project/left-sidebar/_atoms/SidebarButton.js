@@ -1,12 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {setActiveProjectTab} from "../../../../features/pre-rendered-html-nodes"
+import {setActiveProjectTab} from "../../../../features/project"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 
 export default function SidebarButton(props){
     const dispatch = useDispatch();
-    const keyboardNavigationOn = useSelector((state) => state.designerProjectState.keyboardNavigationOn)
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
+    const keyboardNavigationOn = useSelector((state) => state.project.keyboardNavigationOn)
+    const activeTab = useSelector((state) => state.project.activeTab)
 
 
     const { openNavigatorShortcut } = useKeyboardShortcut(
@@ -24,7 +24,7 @@ export default function SidebarButton(props){
     );
     
     return(
-        <div className={"projectSidebarButton" + ((activeProjectTab === props.tab) ? " active" : "")} onClick={() => dispatch(setActiveProjectTab(props.tab))}>
+        <div className={"projectSidebarButton" + ((activeTab === props.tab) ? " active" : "")} onClick={() => dispatch(setActiveProjectTab(props.tab))}>
             {props?.img ? 
             <img className="sidebar-button_image" src={props.img} /> :
             <div>{props.letter}</div>

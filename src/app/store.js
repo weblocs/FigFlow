@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import preRenderedNodesSlice from '../features/pre-rendered-html-nodes'
+import projectSlice from '../features/project'
 import projectImagesSlice from '../features/project-images'
 
 export const store = configureStore({
   reducer: {
-    designerProjectState: preRenderedNodesSlice,
+    project: projectSlice,
     projectImages: projectImagesSlice,
   },
 });

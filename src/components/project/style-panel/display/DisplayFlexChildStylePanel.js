@@ -3,7 +3,7 @@ import DisplayFlexChildSizingButton from "./DisplayFlexChildSizingButton";
 
 export default function DisplayFlexChildStylePanel () {
 
-    const isActiveNodeParentDisplayStyleFlex = useSelector((state) => state.designerProjectState.isActiveNodeParentDisplayStyleFlex)
+    const isActiveNodeParentDisplayStyleFlex = useSelector((state) => state.project.isActiveNodeParentDisplayStyleFlex)
 
     if(isActiveNodeParentDisplayStyleFlex) {
         return (

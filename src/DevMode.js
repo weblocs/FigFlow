@@ -20,13 +20,13 @@ import { useDispatch, useSelector } from "react-redux";
 import ProjectRichTextPanel from "./components/project/left-sidebar/blocks/ProjectRichTextPanel";
 import StoreUseEffectUpdates from "./components/StoreUseEffectUpdates";
 import ProjectAddPanel from "./components/project/left-sidebar/navigator/ProjectAddPanel";
-import AddSectionModal from "./components/project/modals/AddSection";
+import AddSectionModal from "./components/project/modals/AddSectionModal";
 import PageSettingsPanel from "./components/project/left-sidebar/pages/PageSettingsPanel";
 import UpdateSymbolButton from "./components/project/rendered-view/_atoms/UpdateSymbolButton";
 
 export default function DevMode() {
   
-  const offlineMode = useSelector((state) => state.designerProjectState.offlineMode)
+  const offlineMode = useSelector((state) => state.project.offlineMode)
   const dispatch = useDispatch();
 
   

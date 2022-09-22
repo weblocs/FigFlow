@@ -1,20 +1,20 @@
 import { useDispatch, useSelector } from "react-redux"
-import { editSelectedFieldInPreRenderedHTMLNode } from "../../../features/pre-rendered-html-nodes";
+import { editHtmlNode } from "../../../features/project";
 import Arrow from '../../../img/arrow-down.svg';
 import StylePanelTitle from "../style-panel/StylePanelTitle";
 
 export default function CMSFieldNodeConnector() {
-    const activeNodeObject = useSelector((state) => state.designerProjectState.activeNodeObject)
-    const collections =  useSelector((state) => state.designerProjectState.collections)
-    const activeNodeId =  useSelector((state) => state.designerProjectState.activeNodeId)
-    const activeCollectionTemplateId =  useSelector((state) => state.designerProjectState.activeCollectionTemplateId)
-    const isInTemplateEditingPage = useSelector((state) => (state.designerProjectState.nodesEditMode === "cmsTemplate"))
-    const activeCmsFieldId = useSelector((state) => state.designerProjectState.activeNodeObject?.cmsFieldId)
-    const isNodeCmsEditable = useSelector((state) => (state.designerProjectState.activeNodeObject?.cmsFieldId !== undefined && state.designerProjectState.activeNodeObject?.cmsFieldId !== ""));
-    const activeCollectionItems = useSelector((state) => state.designerProjectState.collections?.find(({id}) => id === state.designerProjectState.activeCollectionTemplateId)?.items);
+    const activeNodeObject = useSelector((state) => state.project.activeNodeObject)
+    const collections =  useSelector((state) => state.project.collections)
+    const activeNodeId =  useSelector((state) => state.project.activeNodeId)
+    const activeCollectionTemplateId =  useSelector((state) => state.project.activeCollectionTemplateId)
+    const isInTemplateEditingPage = useSelector((state) => (state.project.nodesEditMode === "cmsTemplate"))
+    const activeCmsFieldId = useSelector((state) => state.project.activeNodeObject?.cmsFieldId)
+    const isNodeCmsEditable = useSelector((state) => (state.project.activeNodeObject?.cmsFieldId !== undefined && state.project.activeNodeObject?.cmsFieldId !== ""));
+    const activeCollectionItems = useSelector((state) => state.project.collections?.find(({id}) => id === state.project.activeCollectionTemplateId)?.items);
     
     const isNodeInCollection = useSelector((state) => {
-        const parentPath = state.designerProjectState.activeNodeParentsPath;
+        const parentPath = state.project.activeNodeParentsPath;
         for(let i = 0; i < parentPath.length; i++) {
             if(parentPath[i]?.type === "col") {
                 return true
@@ -26,14 +26,14 @@ export default function CMSFieldNodeConnector() {
     const dispatch = useDispatch()
 
     function handleClickInFieldItem(id) {
-        dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsFieldId', value:id}));
+        dispatch(editHtmlNode({id:activeNodeId, field:'cmsFieldId', value:id}));
     }
 
     function handleCheckboxClick() {
         if(isNodeCmsEditable) {
-            dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsFieldId', value:""}));
+            dispatch(editHtmlNode({id:activeNodeId, field:'cmsFieldId', value:""}));
         } else {
-            dispatch(editSelectedFieldInPreRenderedHTMLNode({id:activeNodeId, field:'cmsFieldId', value:activeCollectionItems[0].data[0].fieldId}));
+            dispatch(editHtmlNode({id:activeNodeId, field:'cmsFieldId', value:activeCollectionItems[0].data[0].fieldId}));
         }
     }
 

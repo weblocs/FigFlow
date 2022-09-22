@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function ProjectLogo() {
-    const projectMode = useSelector((state) => state.designerProjectState.projectMode)
+    const projectMode = useSelector((state) => state.project.projectMode)
     const dispatch = useDispatch()
 
     const [listIsOpened, setListIsOpened] = useState(false);

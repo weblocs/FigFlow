@@ -1,15 +1,15 @@
 import React from "react";
 
 import { useDispatch, useSelector } from 'react-redux'
-import { editStyleInPreRenderedStyles } from "../../../../features/pre-rendered-html-nodes";
+import { editStyleProperty } from "../../../../features/project";
 
 export default function DisplayDirectionStyleButton (props) {
 
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
+    const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex)
+    const activeStyleId = useSelector((state) => state.project.activeStyleId)
+    const stylesInActiveNode = useSelector((state) => state.project.stylesInActiveNode)
+    const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
+    const activeStyleOptionIndex = useSelector((state) => state.project.activeStyleOptionIndex);
     
     const nodeStyles = useSelector((state) => {
       if(activeStyleId === stylesInActiveNode?.[0]?.id) {
@@ -29,8 +29,8 @@ export default function DisplayDirectionStyleButton (props) {
 
     function handleClick() {
       (!isDirectionReversed) ?
-      dispatch(editStyleInPreRenderedStyles(["flex-direction", props.value])) :
-      dispatch(editStyleInPreRenderedStyles(["flex-direction", props.value + "-reverse"]))
+      dispatch(editStyleProperty(["flex-direction", props.value])) :
+      dispatch(editStyleProperty(["flex-direction", props.value + "-reverse"]))
     }
 
     return (

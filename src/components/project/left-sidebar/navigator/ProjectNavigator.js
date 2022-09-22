@@ -2,14 +2,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import NavigationNodeFolder from "./NavigationNodeFolder";
 
-import { deleteNodeByIdInPreRenderedHTMLNodes, setActiveNodeId, setHoveredNodeId, setPreRenderedHTMLNodes } from "../../../../features/pre-rendered-html-nodes";
+import { deleteHtmlNode, setActiveHtmlNode, setHoveredHtmlNode, setHtmlNodes } from "../../../../features/project";
 import AddNodeButton from "./AddNodeButton";
 import NavigationNodeSection from "./NavigationNodeSection";
 
 export default function ProjectNavigator() {
     
-    const preRenderedHTMLNodes = useSelector((state) => state.designerProjectState.preRenderedHTMLNodes)
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
+    const preRenderedHTMLNodes = useSelector((state) => state.project.preRenderedHTMLNodes)
+    const activeTab = useSelector((state) => state.project.activeTab)
 
     
     
@@ -20,7 +20,7 @@ export default function ProjectNavigator() {
     },[preRenderedHTMLNodes]);
 
 
-    if (activeProjectTab === "Navigator") {
+    if (activeTab === "Navigator") {
       return (
         <div className={"navigatorWrapper active"}>
           

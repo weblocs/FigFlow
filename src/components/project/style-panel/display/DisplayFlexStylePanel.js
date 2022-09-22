@@ -9,7 +9,7 @@ import ProprtyInputLabel from "../ProprtyInputLabel";
 
 export default function DispayFlexStylePanel () {
 
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId);
+    const activeNodeId = useSelector((state) => state.project.activeNodeId);
 
     const displayStyle = useSelector((state) => {
         if(activeNodeId !== "") {

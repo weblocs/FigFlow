@@ -1,17 +1,17 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import {editStyleInPreRenderedStyles, setKeyboardNavigationOn} from "../../../features/pre-rendered-html-nodes"
+import {editStyleProperty, setKeyboardNavigationOn} from "../../../features/project"
 
 export default function SpacingStyleButton (props) {
 
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
-    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    const activeStyleIndex = useSelector((state) => state.designerProjectState.activeStyleIndex)
-    const activeProjectResolutionStylesListName = useSelector((state) => state.designerProjectState.activeProjectResolutionStylesListName)
+    const activeNodeId = useSelector((state) => state.project.activeNodeId)
+    const activeStyleId = useSelector((state) => state.project.activeStyleId)
+    const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
+    const stylesInActiveNode = useSelector((state) => state.project.stylesInActiveNode)
+    const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex)
+    const activeProjectResolutionStylesListName = useSelector((state) => state.project.activeProjectResolutionStylesListName)
 
-    const activeStyleOptionIndex = useSelector((state) => state.designerProjectState.activeStyleOptionIndex);
+    const activeStyleOptionIndex = useSelector((state) => state.project.activeStyleOptionIndex);
     const nodeStyles = useSelector((state) => {
         if(activeStyleId === stylesInActiveNode?.[0]?.id) {
             return preRenderedStyles[activeStyleIndex];
@@ -99,35 +99,35 @@ export default function SpacingStyleButton (props) {
     function handleKeyPress(e) {
         if(e.key === 'Enter') {
             if(styleValueUnit === "") {
-                dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+"px"]));
+                dispatch(editStyleProperty([props.style,e.target.value+"px"]));
             } else {
-                dispatch(editStyleInPreRenderedStyles([props.style,e.target.value+styleValueUnit]));
+                dispatch(editStyleProperty([props.style,e.target.value+styleValueUnit]));
             }
             setOpenEditor(false);
         }
         if(e.key === 'ArrowUp') {
-            dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)+1+styleValueUnit]));
+            dispatch(editStyleProperty([props.style,parseInt(e.target.value)+1+styleValueUnit]));
             inputRef.current.value = editedStyleValue;
         }
         if(e.key === 'ArrowDown') {
-            dispatch(editStyleInPreRenderedStyles([props.style,parseInt(e.target.value)-1+styleValueUnit]));
+            dispatch(editStyleProperty([props.style,parseInt(e.target.value)-1+styleValueUnit]));
         }
     }
 
     function handleChangeUnit() {
         if(activeNodeUnit == "px") {
             if(editedStyleValue !== "empty") {
-                dispatch(editStyleInPreRenderedStyles([props.style,editedStyleValue+"%"]));
+                dispatch(editStyleProperty([props.style,editedStyleValue+"%"]));
             } else {
-                dispatch(editStyleInPreRenderedStyles([props.style,0+"%"]));
+                dispatch(editStyleProperty([props.style,0+"%"]));
             }
             
         }
         if(activeNodeUnit == "%") {
             if(editedStyleValue !== "empty") {
-                dispatch(editStyleInPreRenderedStyles([props.style,editedStyleValue+"px"]));
+                dispatch(editStyleProperty([props.style,editedStyleValue+"px"]));
             } else {
-                dispatch(editStyleInPreRenderedStyles([props.style,0+"px"]));
+                dispatch(editStyleProperty([props.style,0+"px"]));
             }
         }
     }

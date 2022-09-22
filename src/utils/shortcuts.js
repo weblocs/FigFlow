@@ -2,7 +2,7 @@ import useEventListener from '@use-it/event-listener'
 import { useDispatch } from 'react-redux';
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 
-import {handleArrowNodesNavigation, setCopiedNodes, pasteCopiedNodes, deleteActiveNode, movePreRenderedNode, undoProject, reUndoProject, deleteActiveNodeShortcut} from "../features/pre-rendered-html-nodes"
+import {handleArrowNodesNavigation, copyHtmlNodes, pasteHtmlNodes, deleteActiveHtmlNode, moveHtmlNode, undoProject, reUndoProject, deleteActiveHtmlNodeShortcut} from "../features/project"
 
 let keys = [];
 
@@ -58,7 +58,7 @@ export default function loadShortcuts() {
     const { moveNode } = useKeyboardShortcut(
       ["]"],
       shortcutKeys => {
-        dispatch(movePreRenderedNode({moveReverse:false}))
+        dispatch(moveHtmlNode({moveReverse:false}))
       },
       { 
         overrideSystem: false,
@@ -70,7 +70,7 @@ export default function loadShortcuts() {
     const { moveNodeReverse } = useKeyboardShortcut(
       ["["],
       shortcutKeys => {
-        dispatch(movePreRenderedNode({moveReverse:true}))
+        dispatch(moveHtmlNode({moveReverse:true}))
       },
       { 
         overrideSystem: false,
@@ -83,7 +83,7 @@ export default function loadShortcuts() {
     const { copyShortcut } = useKeyboardShortcut(
       ["Meta", "C"],
       shortcutKeys => {
-        dispatch(setCopiedNodes())
+        dispatch(copyHtmlNodes())
       },
       { 
         overrideSystem: false,
@@ -95,8 +95,8 @@ export default function loadShortcuts() {
     const { copyandDeleteShortcut } = useKeyboardShortcut(
       ["Meta", "X"],
       shortcutKeys => {
-        dispatch(setCopiedNodes())
-        dispatch(deleteActiveNode())
+        dispatch(copyHtmlNodes())
+        dispatch(deleteActiveHtmlNode())
       },
       { 
         overrideSystem: false,
@@ -108,7 +108,7 @@ export default function loadShortcuts() {
     const { pasteShortcut } = useKeyboardShortcut(
       ["Meta", "V"],
       shortcutKeys => {
-        dispatch(pasteCopiedNodes())
+        dispatch(pasteHtmlNodes())
       },
       { 
         overrideSystem: false,
@@ -120,7 +120,7 @@ export default function loadShortcuts() {
     const { deleteShortcut } = useKeyboardShortcut(
       ["Backspace"],
       shortcutKeys => {
-        dispatch(deleteActiveNodeShortcut())
+        dispatch(deleteActiveHtmlNodeShortcut())
       },
       { 
         overrideSystem: false,

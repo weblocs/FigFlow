@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
-import {setActiveCollectionTemplate, setActivePage, setPages, addPage, addPageFolder} from "../../../../features/pre-rendered-html-nodes"
+import {setActiveCollectionTemplate, setActivePage, setPages, addPage, addPageFolder} from "../../../../features/project"
 import {arrayMoveImmutable} from 'array-move'
 import SettingIcon from '../../../../img/setting.svg';
 import PanelTabTitle from "../_atoms/PanelTabTitle";
@@ -9,12 +9,12 @@ import PageListFolder from "./PageListFolder";
 
 export default function ProjectPagesPanel(){
     const dispatch = useDispatch()
-    const projectPages = useSelector((state) => state.designerProjectState.projectPages)
-    const collections = useSelector((state) => state.designerProjectState.collections)
-    const activePageId = useSelector((state) => state.designerProjectState.activePageId)
-    const activeProjectTab = useSelector((state) => state.designerProjectState.activeProjectTab)
-    const activeCollectionTemplateId = useSelector((state) => state.designerProjectState.activeCollectionTemplateId)
-    const projectPageFolderStructure = useSelector((state) => state.designerProjectState.projectPageFolderStructure) 
+    const projectPages = useSelector((state) => state.project.projectPages)
+    const collections = useSelector((state) => state.project.collections)
+    const activePageId = useSelector((state) => state.project.activePageId)
+    const activeTab = useSelector((state) => state.project.activeTab)
+    const activeCollectionTemplateId = useSelector((state) => state.project.activeCollectionTemplateId)
+    const projectPageFolderStructure = useSelector((state) => state.project.projectPageFolderStructure) 
 
     const onSortEnd = (oldIndex, newIndex) => {
         if(newIndex > oldIndex) {
@@ -49,7 +49,7 @@ export default function ProjectPagesPanel(){
     }
     
     return(
-        <div className={"projectPagesPanel "+ ((activeProjectTab === "Pages") ? "active" : "" )}>
+        <div className={"projectPagesPanel "+ ((activeTab === "Pages") ? "active" : "" )}>
 
             <div className="projectTabTitleBox">
                 Pages
@@ -74,13 +74,13 @@ export default function ProjectPagesPanel(){
             <PanelTabTitle text="Static pages" />
 
             {projectPageFolderStructure.map((node,index) => (
-                <PageListFolder node={node} parents={[]} key={index} />
+                <PageListFolder node={node} parents={[]} key={node.id} />
             ))}
 
             </div>
             <PanelTabTitle text="Collection pages" />
             {collections.map((collection,index) => (
-                <div key={index} style={{position: "relative"}}>
+                <div key={collection.id} style={{position: "relative"}}>
                     <div 
                     onClick={() => handleCollectionItemClick(collection.id)} 
                     className={"projectPageItem " + ((activeCollectionTemplateId === collection.id) ? "active " : "")}>

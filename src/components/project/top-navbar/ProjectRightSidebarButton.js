@@ -1,11 +1,11 @@
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveRightSidebarTab} from "../../../features/pre-rendered-html-nodes" 
+import {setActiveRightSidebarTab} from "../../../features/project" 
 
 export default function ProjectRightSidebarButton(props) {
     const dispatch = useDispatch();
 
-    const activeRightSidebarTab = useSelector((state) => state.designerProjectState.activeRightSidebarTab)
+    const activeRightSidebarTab = useSelector((state) => state.project.activeRightSidebarTab)
     
     return (
         <div 

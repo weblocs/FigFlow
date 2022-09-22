@@ -1,6 +1,6 @@
 import React, {useRef} from "react";
 import { useDispatch } from "react-redux";
-import {addCollection, setKeyboardNavigationOn} from "../../../../features/pre-rendered-html-nodes"
+import {addCollection, setKeyboardNavigationOn} from "../../../../features/project"
 
 export default function AddCollection () {
     const dispatch = useDispatch();

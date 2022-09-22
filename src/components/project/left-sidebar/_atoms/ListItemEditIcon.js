@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { setKeyboardNavigationOn } from "../../../../features/pre-rendered-html-nodes";
+import { setKeyboardNavigationOn } from "../../../../features/project";
 import EditImg from '../../../../img/edit.svg';
 import ConfirmDeleteModalButton from "../../modals/ConfirmDeleteModalButton"
 

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import {setActiveCollectionItemTemplate, setActiveProjectTab} from "../../../../features/pre-rendered-html-nodes"
+import {setActiveCollectionItemTemplate, setActiveProjectTab} from "../../../../features/project"
 
 
 export default function PageChanger() {
-    const nodesEditMode = useSelector((state) => state.designerProjectState.nodesEditMode);
-    const activeCollectionItems = useSelector((state) => state.designerProjectState.collections?.find(({id}) => id === state.designerProjectState.activeCollectionTemplateId)?.items);
+    const nodesEditMode = useSelector((state) => state.project.nodesEditMode);
+    const activeCollectionItems = useSelector((state) => state.project.collections?.find(({id}) => id === state.project.activeCollectionTemplateId)?.items);
     const pageChangerText = useSelector((state) => {
-        const projectState = state.designerProjectState;
+        const projectState = state.project;
         if (nodesEditMode === "page") {
             return "Page: " + projectState.projectPages?.[projectState.activePageIndex]?.name;
         } 
@@ -20,7 +20,7 @@ export default function PageChanger() {
         } 
     })
     const activeTemplateCollectionItem = useSelector((state) => {
-        const projectState = state.designerProjectState;
+        const projectState = state.project;
         const activeTemplateItem = activeCollectionItems?.find(({id}) => id === projectState.activeCollectionItemTemplateId);
         if(activeTemplateItem !== undefined) {
             return activeTemplateItem;

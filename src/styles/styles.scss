@@ -59,12 +59,12 @@ img {
   display: none;
   z-index: 9998;
   position: fixed;
-  width: 100vw;
-  height: 100vh;
   background: #eee;
   opacity: 0;
-  top: 0;
-  left: 0;
+  left: -100vw;
+  top: -100vw;
+  width: 300vw;
+  height: 300vh;
   background: #ddd;
 }
 
@@ -138,6 +138,17 @@ img {
 
 .parents-path-item:hover {
   background: #f0f0f0;
+}
+
+.link-settings-modal {
+  position: absolute;
+    top: 28px;
+    left: -1px;
+    width: 200px;
+    height: 151px;
+    background: #fff;
+    border: 1px solid #bababa;
+    z-index: 9999;
 }
 
 .Project {
@@ -566,7 +577,7 @@ img {
 
 
 .symbol-wrapper, .rich-element-settings_box {
-  z-index: 1;
+  z-index: 2;
 }
 
 .user-panel {
@@ -875,7 +886,7 @@ font-size: 12px;
   position: sticky;
   background: #fff;
   border-bottom: 1px solid #d3d3d3;
-  z-index: 6;
+  z-index: 5;
 }
 
 a {
@@ -2716,4 +2727,5 @@ font-weight: 700;
 
 
 }
+
 

@@ -1,12 +1,13 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveStyleId, setKeyboardNavigationOn, addStyleOption, setStyleOptionInActiveNode, setActiveNodeId, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, removeStyleOption, editStyleOption } from "../../../features/pre-rendered-html-nodes";
+import { setActiveStyleId, setKeyboardNavigationOn, addStyleOption, setActiveHtmlNodeStyleOption, setActiveHtmlNode, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, removeStyleOption, editStyleOption } from "../../../features/project";
+import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyForMobile, isOnlyForTablet, child}) {
-    const activeStyleId = useSelector((state) => state.designerProjectState.activeStyleId)
-    const preRenderedStyles = useSelector((state) => state.designerProjectState.preRenderedStyles)
-    const stylesInActiveNode = useSelector((state) => state.designerProjectState.stylesInActiveNode)
-    const activeNodeId = useSelector((state) => state.designerProjectState.activeNodeId)
+    const activeStyleId = useSelector((state) => state.project.activeStyleId)
+    const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
+    const stylesInActiveNode = useSelector((state) => state.project.stylesInActiveNode)
+    const activeNodeId = useSelector((state) => state.project.activeNodeId)
     
     
 
@@ -41,7 +42,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
 
     function handleDeleteStyleOption() {
         dispatch(deleteStyleOption({index: index}));
-        dispatch(setActiveNodeId({id:activeNodeId}));
+        dispatch(setActiveHtmlNode({id:activeNodeId}));
         setOpenStyleOptionsDropdown(false);
     }
 
@@ -54,7 +55,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
     }
 
     function handleStyleOptionClick(id,name) {
-        dispatch(setStyleOptionInActiveNode({index: index, id: id, name: name}));
+        dispatch(setActiveHtmlNodeStyleOption({index: index, id: id, name: name}));
         dispatch(setActiveStyleId(id));
         dispatch(setActiveStyleOptionIndex(index));
         setOpenStyleOptionsDropdown(false);
@@ -89,9 +90,9 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
     return (
         <div key={id} className={"selected-class" + ((activeStyleId === id) ? " active" : "") + ((styleIsSet) ? "" : " styleIsNotSet")} style={{zIndex: stylesInActiveNode.length + 10 - index }}>
             
-            <div className={"unit-chooser_closer" + ((openStyleOptionsDropdown) ? " active" : "")}
-                onClick={() => setOpenStyleOptionsDropdown(false)}>
-            </div>
+            <ModalBackgroundCloser 
+            handleClick={() => setOpenStyleOptionsDropdown(false)} 
+            isActiveIf={openStyleOptionsDropdown} />
             
             <div onClick={() => handleClickInSticker(id,index)} className="text">
                 {styleIsSet ? name : (child.defaultName || name)}

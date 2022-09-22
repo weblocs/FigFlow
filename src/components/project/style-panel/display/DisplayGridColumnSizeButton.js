@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import { setKeyboardNavigationOn } from "../../../../features/pre-rendered-html-nodes";
+import { setKeyboardNavigationOn } from "../../../../features/project";
 
 
 export default function DisplayGridColumnSizeButton (props) {
