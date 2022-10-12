@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { pasteLayoutHtmlNodes, copyLayoutHtmlNodes, setProjectPopUp } from "../../../../../features/project";
 import ModalBackgroundCloser from "../../../_atoms/ModalBackgroundCloser";
+import addImage from "../../../../../img/add-button.svg";
 
 export default function AddBlockButton({addRichSetting}) {
     const projectRichTextElements = useSelector((state) => state.project.projectRichTextElements)
@@ -23,7 +24,7 @@ export default function AddBlockButton({addRichSetting}) {
 
             <div className={"rich-element-settings_button button-centered" + ((addRichSetting) ? " active" : "")}
             onClick={() => setListIsOpened(true)}>
-                +
+                <img style={{width: "12px"}} src={addImage} />
             </div>
             <div className={"heading-element-settings_list" + ((listIsOpened) ? " active" : "")}>
                 {projectRichTextElements.map((item) => (

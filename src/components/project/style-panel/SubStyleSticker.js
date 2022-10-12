@@ -1,7 +1,10 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveStyleId, setKeyboardNavigationOn, addStyleOption, setActiveHtmlNodeStyleOption, setActiveHtmlNode, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, removeStyleOption, editStyleOption } from "../../../features/project";
+import { setActiveStyleId, setKeyboardNavigationOn, addStyleOption, setActiveHtmlNodeStyleOption, editStyleSubOption, setActiveHtmlNode, setActiveStyleOptionIndex, deleteStyleOption, deleteStyleSubOption, removeStyleOption, editStyleOption } from "../../../features/project";
 import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
+import EditIcon from "../../../img/edit-white.svg"
+import ListItemEditIcon from "../left-sidebar/_atoms/ListItemEditIcon";
+import SubStyleEdit from "./SubStyleEdit";
 
 export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyForMobile, isOnlyForTablet, child}) {
     const activeStyleId = useSelector((state) => state.project.activeStyleId)
@@ -42,8 +45,8 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
 
     function handleDeleteStyleOption() {
         dispatch(deleteStyleOption({index: index}));
-        dispatch(setActiveHtmlNode({id:activeNodeId}));
-        setOpenStyleOptionsDropdown(false);
+        // dispatch(setActiveHtmlNode({id:activeNodeId}));
+        // setOpenStyleOptionsDropdown(false);
     }
 
     function handleOnFocus() {
@@ -109,7 +112,21 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
                     <div className="style-option-item" key={option.id}>
                         <div className="style-option-item-text" onClick={() => handleStyleOptionClick(option.id, option.name)}>{option.name}</div>
                         <div className={"style-option-item_icons" + ((editingOptionsTurnOn) ? " active" : "")}>
-                            <div className="style-option-item_delete-icon" onClick={() => handleDeleteStyleSubOption(option.id)}>x</div>
+                            <div className="style-option-item_delete-icon" 
+                            // onClick={() => handleDeleteStyleSubOption(option.id)}
+                            >
+                                {/* <img src={EditIcon} className="edit-subclass-icon" /> */}
+                                
+                                <SubStyleEdit
+                                    index={index}
+                                    text="Edit Option"
+                                    itemType="option"
+                                    element={option}
+                                    editFx={editStyleSubOption} 
+                                    deleteFx={deleteStyleSubOption} 
+                                    active={true}
+                                    isDeleteButtonVisible={true} />
+                            </div>
                         </div>
                     </div>
                 ))}

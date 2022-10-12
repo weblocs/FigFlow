@@ -5,7 +5,7 @@ import {editStyleProperty, setKeyboardNavigationOn} from "../../../features/proj
 import ProprtyInputLabel from "./ProprtyInputLabel";
 import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
-export default function SpaceStyleInput (props) {
+export default function SizeStyleInput (props) {
 
     const activeNodeId = useSelector((state) => state.project.activeNodeId)
     const activeStyleObject = useSelector((state) => state.project.activeStyleObject);
@@ -119,9 +119,13 @@ export default function SpaceStyleInput (props) {
                     {editedStyleUnit}
                 </div>
 
+
+                
                 <ModalBackgroundCloser 
                 handleClick={() => setUnitEditorOpened(false)} 
                 isActiveIf={unitEditorOpened} />
+
+
 
                 <div className={"style-edit-unit-list" + ((unitEditorOpened) ? " active" : "")}>
                     <div className={"style-edit-unit-item" + ((editedStyleUnit === "px") ? " active" : "")}

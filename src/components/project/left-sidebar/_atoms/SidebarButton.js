@@ -29,7 +29,6 @@ export default function SidebarButton(props){
             <img className="sidebar-button_image" src={props.img} /> :
             <div>{props.letter}</div>
             }
-           
         </div>
     )
 }

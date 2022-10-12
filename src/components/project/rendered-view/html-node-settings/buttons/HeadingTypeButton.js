@@ -18,7 +18,7 @@ export default function HeadingTypeButton() {
     if (nodeType === "h") {
     return (
         <div>
-            <div className="rich-element-settings_button button-centered text-button active" 
+            <div className="rich-element-settings_button settings-label button-centered text-button active" 
             onClick={() => setIsListOpen(isListOpen => !isListOpen)}>SEO {nodeSubType}</div>
             
             <div className={"heading-element-settings_list" + ((isListOpen) ? " active" : "")}>

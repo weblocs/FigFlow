@@ -39,6 +39,8 @@ export function JSONtoCSS (_classes, activeResolution) {
     
     _classes.forEach(createTempClasses);
 
+    
+
     (activeResolution === "2" || activeResolution === "3" || activeResolution === "4") && (
       _classes.forEach(createTempClassesTablet)
     );

@@ -19,28 +19,28 @@ export default function ProjectStylePanel() {
   const projectMode = useSelector((state) => state.project.projectMode)
   
   const activeRightSidebarTab = useSelector((state) => state.project.activeRightSidebarTab)
-    return (
-      (projectMode === "developer") &&
-      <div className={"style-panel "+ ((activeRightSidebarTab === "Style") ? "active" : "" )}>
+    
+  if (projectMode === "developer" && activeRightSidebarTab === "Style") {
+  return (
+      <div className={"style-panel active"}>
+        {/* <StylePanelHeader /> */}
+        {/* <DisplayFlexChildStylePanel />  */}
 
-        <StylePanelHeader />
-        <DisplayFlexChildStylePanel />
-
-        <StylePanelTitle title="Layout" />
+       {/* <StylePanelTitle title="Layout" />
         <DispayStylePanel />
         <DispayFlexStylePanel />
-        <DisplayGridStylePanel />
+        <DisplayGridStylePanel /> */}
 
-        <StylePanelTitle title="Spacing" />
+        {/* <StylePanelTitle title="Spacing" />
         <SpacingStylePanel />
 
         <StylePanelTitle title="Size" />
-        <SizeStylePanel />
+        <SizeStylePanel /> */}
 
         {/* <StylePanelTitle title="Overflow" />
         <OverflowStylePanel /> */}
 
-        <StylePanelTitle title="Typography" />
+        {/* <StylePanelTitle title="Typography" />
         <TypographyStylePanel />
       
         <StylePanelTitle title="Size" />
@@ -50,11 +50,12 @@ export default function ProjectStylePanel() {
         <BackgroundStylePanel />
         
         <StylePanelTitle title="Border" />
-        <BorderStylePanel />
+        <BorderStylePanel />*/}
 
         <StylePanelTitle title="Effects" />
-        <EffectsStylePanel />
+        <EffectsStylePanel /> 
 
       </div> 
     )
+  }
 }

@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css?family=Inter:regular,bold,italic&subset=latin,latin-ext");
+@import url("https://fonts.googleapis.com/css?family=Inter:regular,medium,bold,italic&subset=latin,latin-ext");
+
+* {-webkit-font-smoothing: antialiased;}
 
 body {
   padding: 0;
@@ -250,7 +252,7 @@ img {
   top: 0px;
   display: inline;
   background: #fff;
-  transform: translateY(-2px);
+  transform: translateY(-6px);
   border: 1px solid #c3c3c3;
   border-right: 0;
 }
@@ -262,8 +264,8 @@ img {
 
 
 .rich-element-settings_button {
-  min-height: 28px;
-  min-width: 28px;
+  min-height: 32px;
+  min-width: 32px;
   font-size: 14px;
   line-height: 20px;
   display: none;
@@ -273,10 +275,19 @@ img {
   color: #111;
 }
 
+.html-node_nove-list {
+  display: none;
+}
+
+.html-node_nove-list.active {
+  display: flex;
+}
+
 .rich-element-settings_button.text-button {
   padding: 0 6px;
-  font-size: 9px;
+  font-size: 8px;
   text-transform: uppercase;
+  color: #636363;
 }
 
 .rich-element-settings_button.button-centered {
@@ -289,7 +300,22 @@ img {
 }
 
 .rich-element-settings_button-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 4px 8px;
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.rich-element-settings_button-text span {
+  font-size: 7px;
+  line-height: 8px;
+  font-weight: 700;
+  color: #A0A0A0;
+  text-transform: uppercase;
 }
 
 .rich-element-settings_button.active {
@@ -303,14 +329,20 @@ img {
 
 
 .rich-element-settings_button.styleIsNotSet {
-  background: #dfdfdf;
+  background: #f2f2f2;
 }
 
 .selected-class {
   position: relative;
 }
 
-
+.settings-label {
+  font-size: 7px;
+  line-height: 8px;
+  font-weight: 700;
+  color: #A0A0A0;
+  text-transform: uppercase;
+}
 
 .style-options-dropdown {
   position: absolute;
@@ -352,11 +384,13 @@ img {
 
 .style-option-item_delete-icon {
   font-size: 8px;
-  padding: 0 2px 0 4px;
+  padding: 0 12px 0 4px;
+  display: flex;
+  position: relative;
 }
 
-.style-option-item_delete-icon:hover {
-  opacity: .4;
+.style-option-item_delete-icon .edit-subclass-icon {
+  width: 8px;
 }
 
 .style-option-item_icons {
@@ -373,7 +407,7 @@ img {
   position: absolute;
   min-width: 40px;
   min-height: 40px;
-  top: 28px;
+  top: 32px;
   margin-left: -1px;
   background: #fff;
   border: 1px solid #aaa;
@@ -383,6 +417,9 @@ img {
 }
 
 .rich-element-settings_options-item {
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: capitalize;
   padding: 4px 8px;
   border-bottom: 1px solid #c3c3c3;
 }
@@ -1049,6 +1086,7 @@ a {
   flex-shrink: 0;
   border-right: 1px solid #d3d3d3;
   display: none;
+  position: sticky;
 }
 
 .projectPagesPanel.wider {
@@ -2598,6 +2636,10 @@ transform: translateX(-50%);
 
 .block-item_edit:hover {
   background-color: #e2e2e2;
+}
+
+.style-option-item .block-item_edit:hover {
+  background-color: #8884ca;
 }
 
 .block-item_edit.active {

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editStyleProperty } from "../../../features/project";
 import ProprtyInputLabel from "./ProprtyInputLabel";
 import SizeStyleInput from "./SizeStyleInput";
+import SizeStyleInputNew from "./SizeStyleInputNew";
 
 export default function SizeStylePanel () {
 

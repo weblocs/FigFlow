@@ -10,6 +10,8 @@ import NodeStylesList from "./node-styles/NodeStylesList";
 import LinkSettings from "./link-settings/LinkSettings";
 import DuplicateButton from "./buttons/DuplicateButton";
 import DeleteButton from "./buttons/DeleteButton";
+import MoreImg from "../../../../img/more.svg"
+import { useEffect, useState } from "react";
 
 export default function HtmlNodeSettings() {
     const activeNodeId = useSelector((state) => state.project.activeNodeId)
@@ -42,29 +44,45 @@ export default function HtmlNodeSettings() {
 
     const activeNodePositionY = useSelector((state) => {
         if(activeNode?.getBoundingClientRect().top <= 33 && activeNode?.getBoundingClientRect().top > 0) {
-            return 0;
+            return 5;
         }
         return activeNode?.getBoundingClientRect().top - 61;
     });    
 
+    const [openButtonList, setOpenButtonList] = useState(false);
+
+    useEffect(() => {
+        setOpenButtonList(false);
+    },[activeNodeId]);
+
     return (
             <div className={"rich-element-settings_box" + ((activeNodeId !== "") ? " active" : "")} 
             style={{ transform: `translate(${activeNodePositionX}px,${activeNodePositionY}px)`}}>
-                <div className="rich-element-settings" onClick={handleClick} onMouseOver={handleMouseOver}>
+                <div className="rich-element-settings" onClick={handleClick}>
                     <div className="rich-element-settings_flex">
+
+                        
 
                         {(!isNodeSymbol) && 
                         <>
-                        <LinkSettings />
-                        <NodeMoveArrows isHtmlNodeMoveable={true} />
-                        <AddBlockButton addRichSetting={true} />
-                        <HeadingTypeButton />
                         <NodeStylesList />
+                        <LinkSettings />
+                        <AddBlockButton addRichSetting={true} />
+                        <div className="rich-element-settings_button button-centered active"
+                        onClick={() => setOpenButtonList(!openButtonList)}>
+                            <img src={MoreImg} style={{width: "11px"}} />
+                        </div>
+
+                        <div className={"html-node_nove-list" + (openButtonList ? " active" : "")}>
+                        <NodeMoveArrows isHtmlNodeMoveable={true} />
+                        <HeadingTypeButton />
                         <DuplicateButton />
                         <DeleteButton />
-                        
                         <div className="rich-element-settings_button button-centered active" 
                         onClick={handleClickClearId}>✕</div>
+                        </div>
+                        
+                        
 
                         </>}
                         <SymbolSettings />

@@ -13,6 +13,9 @@ export default function StoreUseEffectUpdates () {
     const preRenderedHTMLNodes = useSelector((state) => state.project.preRenderedHTMLNodes)
     const undoActionActive = useSelector((state) => state.project.undoActionActive)
     const projectMode = useSelector((state) => state.project.projectMode)
+    const activeTab = useSelector((state) => state.project.activeTab)
+
+    
 
     const dispatch = useDispatch();
 
@@ -53,13 +56,7 @@ export default function StoreUseEffectUpdates () {
     useEffect(() => {
         dispatch(editSymbolsClickableArea());
     },[preRenderedHTMLNodes, preRenderedStyles]);  
-
-    useEffect(() => {
-        console.log('hej');
-        
-    },[preRenderedHTMLNodes, preRenderedStyles]); 
-
-
+ 
     useEffect(() => {
         document.querySelector(`.navigation-node.hovered`)?.classList.remove("hovered");
         document.querySelector(`[nodeid='${hoveredNodeId}']`)?.classList.add("hovered");
@@ -73,6 +70,15 @@ export default function StoreUseEffectUpdates () {
         document.querySelector(`.renderedNode.active`)?.classList.remove("active");
         document.querySelector(`[el_id='${activeNodeId}']`)?.classList.add("active");
     },[activeNodeId, preRenderedHTMLNodes])
+
+    useEffect(() => {
+        if(activeTab === "Navigator") {
+            document.querySelector(`.navigation-node.active`)?.classList.remove("active");
+            document.querySelector(`[nodeid='${activeNodeId}']`)?.classList.add("active");
+        }
+    },[activeTab])
+
+    
 
     useEffect(() => {
         

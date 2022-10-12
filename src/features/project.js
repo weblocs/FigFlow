@@ -78,6 +78,42 @@ const initialState = {
   isNodeSelectedFromNavigator: false,
   projectVersions: [{id: "1"}],
   activeProjectVersionId: "1",
+
+    activeStyleProperties: {
+        font_family: "",
+        font_weight: "",
+        font_size: "",
+        line_height: "",
+        letter_spacing: "",
+        color: "",
+        text_align: "",
+        display: "",
+        margin_top: "",
+        margin_bottom: "",
+        margin_left: "",
+        margin_right: "",
+        padding_top: "",
+        padding_bottom: "",
+        padding_left: "",
+        padding_right: "",
+        width: "",
+        min_width: "",
+        max_width: "",
+        height: "",
+        min_height: "",
+        max_height: "",
+        object_fit: "",
+        position: "",
+        top: "",
+        bottom: "",
+        left: "",
+        right: "",
+        background_color: "",
+        border_color: "",
+        border_radius: "",
+        border_width: "",
+        opacity: "",
+    }
 }
 
 function findActiveNode(nodes, id) {
@@ -794,6 +830,47 @@ export const projectSlice = createSlice({
         }
     },
 
+    editStyleSubOption: (state, action) => {
+        let optionIndex = action.payload.optionIndex;
+        let subOptionId = action.payload.subOptionId;
+        let subOptionName = action.payload.name;
+
+        let mainStyleId = state.stylesInActiveNode[0].id;
+        let options = state.preRenderedStyles.find(({id}) => id ===  mainStyleId).childrens[optionIndex].options;
+
+        if(options.length > 0) {
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].id === subOptionId) {
+                    options[i].name = subOptionName;
+                }
+            }
+
+            function updateNodes(nodes, id) {
+                for (let i = 0; i < nodes.length; i++) {
+                    if (nodes[i].class[0]?.id === mainStyleId) {
+                        nodes[i]?.class.map((option) => {
+                            if(option.id === subOptionId) {
+                                option.name = subOptionName;
+                            }
+                        });
+                    }
+                    if (nodes[i].children) {
+                        updateNodes(nodes[i].children, id);
+                    }
+                }
+            }
+
+            updateNodesGlobally(state, updateNodes);
+            state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+    
+            for (let i = 0; i < state.stylesInActiveNode.length; i++) {
+                if(state.stylesInActiveNode[i].id === subOptionId) {
+                    state.stylesInActiveNode[i].name = subOptionName;
+                }
+            }
+        }
+    },
+
     setActiveNodeComputedStyles: (state) => {
         if(state.activeNodeId !== "") {
             try {
@@ -811,6 +888,14 @@ export const projectSlice = createSlice({
                     padding_left: computedStyle?.["padding-left"],
                     padding_right: computedStyle?.["padding-right"],
 
+                    width: computedStyle?.["width"],
+                    min_width: computedStyle?.["min-width"],
+                    max_width: computedStyle?.["max-width"],
+
+                    height: computedStyle?.["height"],
+                    min_height: computedStyle?.["min-height"],
+                    max_height: computedStyle?.["max-height"],
+
                     top: computedStyle?.["top"],
                     bottom: computedStyle?.["bottom"],
                     left: computedStyle?.["left"],
@@ -823,7 +908,7 @@ export const projectSlice = createSlice({
             } catch {
             }
         }
-        console.log(state.activeNodeComputedStyles);
+        // console.log(state.activeNodeComputedStyles);
         
     },
 
@@ -1506,6 +1591,8 @@ export const projectSlice = createSlice({
             }
         }
         findNode(testPreRenderedHTMLNodes);
+
+        // console.log(testPreRenderedHTMLNodes);
         
         function findNode2(nodes) {
             for(let i = 0; i < nodes?.length; i++) {
@@ -1519,7 +1606,7 @@ export const projectSlice = createSlice({
                         id: nodes[i]?.id,
                         type: nodes[i]?.type,
                         class: nodes[i]?.class,
-                        // cmscollectionid: nodes[i-1].cmscollectionid,
+                        cmscollectionid: nodes[i]?.cmscollectionid,
                     });
                     if(nodes[i].children) {
                         findNode2(nodes[i]?.children);
@@ -1547,14 +1634,103 @@ export const projectSlice = createSlice({
         }
         findNode3(state.preRenderedHTMLNodes);
 
-        state.activeNodeParentsPath.forEach((node) => {
-            let mainStyleId = node?.class?.[0]?.id;
-            let activeStyles = state.preRenderedStyles?.find(({id}) => id ===  mainStyleId);
-            let activeStyle = activeStyles?.[state.activeProjectResolutionStylesListName];
-            // console.log(current(activeStyle));
-        })
+        let parentNodes = [];
+        let objectHierarchyStyles = [];
+        let classHierarchyStyles = [];
+        let lastClassStyles = [];
         
 
+        function isPropertyHierarchical(property) {
+            const hierarchicalProperties = [
+                "font-family",
+                "font-weight",
+                "font-size",
+                "line-height",
+                "letter-spacing",
+                "color",
+                "text-align",
+            ]
+            let response = false;
+            hierarchicalProperties.forEach(item => {
+                if(item === property) {
+                    response = true
+                }
+            })
+            return response;
+        }
+
+        state.activeNodeParentsPath.forEach((node,i) => {
+            
+                let mainStyleId = node?.class?.[0]?.id;
+                let activeStyles = state.preRenderedStyles?.find(({id}) => id ===  mainStyleId);
+                let activeStyle = [];
+
+                const activeResolution = state.activeProjectResolution;
+    
+                node?.class?.forEach((item,index) => {
+                    
+                    function getStylesOf(resolution) {
+                        if(index === 0) {
+                            return activeStyles?.[resolution];  
+                        } else if(item.id !== '') {
+                            return activeStyles
+                            ?.childrens[index-1]?.options.find(({id}) => id === item.id)
+                            ?.[resolution];
+                        }
+                    }
+                
+                    function pushStyles(resolution, resolutionName) {
+                        for (const [key, value] of Object.entries(getStylesOf(resolution) || {})) {
+                            const styleNode = {
+                                style: key,
+                                value: value,
+                                origin: node.name,
+                                option: (node.name !== item.name) ? item.name : "",
+                                resolution: resolutionName,
+                            }
+                            if(i + 1 !== state.activeNodeParentsPath.length) {
+                                if (isPropertyHierarchical(key)) {
+                                    objectHierarchyStyles.push(styleNode);
+                                }
+                            } else {
+                                if(item.id !== state.activeStyleId) {
+                                    objectHierarchyStyles.push(styleNode);
+                                } else {
+                                    objectHierarchyStyles.push(styleNode);
+                                }
+                            }
+                        }
+                    }
+
+                    activeStyle.push({
+                        ...getStylesOf("styles"), 
+                        ...getStylesOf("tabletStyles"),
+                        ...getStylesOf("portraitStyles"),
+                        ...getStylesOf("mobileStyles"),
+                    });
+                    
+
+                    pushStyles("styles", "desktop");
+                    pushStyles("tabletStyles", "tablet");
+                    pushStyles("portraitStyles", "portrait");
+                    pushStyles("mobileStyles", "mobile");
+
+                })
+
+                parentNodes.push({name: node?.class?.[0]?.name, styles: activeStyle });
+            
+        });
+
+        // console.log(JSON.parse(JSON.stringify((parentNodes))));
+        // console.log(JSON.parse(JSON.stringify((objectHierarchyStyles))));
+        
+        
+
+        // add Object Hierarchy for hierarchical
+        // add Styles Hierarchy for hierarchical and nonHierarchical
+        // add Resolution Hierarchy for hierarchical and nonHierarchical
+
+        
     },
 
     addUndoState: (state) => {
@@ -1850,6 +2026,7 @@ export const {
     editStyleOption,
     removeStyleOption,
     deleteStyleOption,
+    editStyleSubOption,
     deleteStyleSubOption,
     setActiveNodeComputedStyles,
     editActiveStyleProperties, 

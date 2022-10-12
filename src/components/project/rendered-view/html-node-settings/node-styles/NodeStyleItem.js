@@ -42,24 +42,29 @@ export default function NodeStyleItem({child, index}) {
         
     } else {
     return (
-        <div className={"rich-element-settings_button active" + (isStyleSet ? "" : " styleIsNotSet")} >
-            <ModalBackgroundCloser 
+        <div className={"rich-element-settings_button active" + (isStyleSet ? "" : " styleIsNotSet")} 
+        onMouseLeave={() => setIsListOpened(false)}>
+            {/* <ModalBackgroundCloser 
             handleClick={() => setIsListOpened(false)} 
-            isActiveIf={isListOpened} />
+            isActiveIf={isListOpened} /> */}
 
-            <div className="rich-element-settings_button-text" onClick={() => setIsListOpened(!isListOpened)}>
-                {isStyleSet ? childName : (child.defaultName || childName)}
+            <div className="rich-element-settings_button-text" 
+            onMouseEnter={() => setIsListOpened(true)}
+            >
+                <span>{child.defaultName}</span>
+                {isStyleSet ? childName.replaceAll("-", " ") : ("Default" || childName)}
             </div>
+
             <div className={"rich-element-settings_options_list" + ((isListOpened) ? " active" : "")}>
                 {child.options.map((option) => 
                         <div key={option.id} onClick={() => handleStyleOptionClick(option.id, option.name)} 
                         className={"rich-element-settings_options-item" + ((childName === option.name) ? " active" : "")}>
-                            {option.name}
+                            {option.name.replaceAll("-", " ")}
                         </div>
                 )}
                 <div onClick={() => handleClearClick(index)} 
                     className="rich-element-settings_options-item">
-                        clear/remove
+                        Default
                 </div>
             </div>
         </div>
