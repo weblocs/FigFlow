@@ -5,7 +5,8 @@ import { activeStyleProperties } from '../../../../selectors/active-style-proper
 
 export default function DisplayStyleButton (props) {
     
-    const displayStyle = useSelector(state => activeStyleProperties(state))?.[props.style];
+
+    const displayStyle = useSelector((state) => state.project.activeNodeComputedStyles?.[props.style]);
     const dispatch = useDispatch();
 
     return (

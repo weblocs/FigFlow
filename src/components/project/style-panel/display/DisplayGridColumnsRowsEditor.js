@@ -7,10 +7,7 @@ import DisplayGridColumnSizeButton from "./DisplayGridColumnSizeButton";
 
 export default function DisplayGridColumnsRowsEditor (props) {
 
-    const activeStyleObject = useSelector((state) => state.project.activeStyleObject);
-    const activeNodeComputedStyle = useSelector((state) => state.project.activeNodeComputedStyles?.grid_template_columns)
-    const displayStyle = useSelector((state) => activeStyleObject?.["grid-template-columns"])
-
+    const displayStyle = useSelector((state) => state.project.activeStyleObject?.["grid-template-columns"])
 
     const dispatch = useDispatch()
 

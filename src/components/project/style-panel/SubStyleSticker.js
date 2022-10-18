@@ -105,7 +105,10 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
             > ⌄
             </span>
 
-            <div className={"style-options-dropdown" + ((openStyleOptionsDropdown) ? " active" : "")}>
+
+
+            {openStyleOptionsDropdown && (
+            <div className={"style-options-dropdown active"}>
                 
                 <div className="style-option-list">
                 {preRenderedStyles.find(({id}) => id === stylesInActiveNode?.[0].id)?.childrens[index].options.map((option) => (
@@ -156,6 +159,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
                 </form>
 
             </div>
+            )}
         </div>
     )
 }

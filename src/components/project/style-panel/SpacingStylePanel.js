@@ -1,7 +1,4 @@
-import React from "react";
 import SpaceStyleInput from "./SpaceStyleInput";
-import SpaceStyleInputNew from "./SpaceStyleInputNew";
-import SpacingStyleButton from "./SpacingStyleButton"
 
 export default function SpacingStylePanel () {
     return (

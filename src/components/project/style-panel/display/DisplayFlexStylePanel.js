@@ -6,32 +6,22 @@ import DisplayStyleButton from "./DisplayStyleButton";
 import SpacingStyleButton from "../SpacingStyleButton";
 import DisplayFlexWrapStyleButton from "./DisplayFlexWrapStyleButton";
 import ProprtyInputLabel from "../ProprtyInputLabel";
+import SizeStyleInput from "../SizeStyleInput";
 
 export default function DispayFlexStylePanel () {
 
-    const activeNodeId = useSelector((state) => state.project.activeNodeId);
+    const displayStyle = useSelector((state) => state.project.activeNodeComputedStyles?.["display"])    
 
-    const displayStyle = useSelector((state) => {
-        if(activeNodeId !== "") {
-            try {
-                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
-                return getComputedStyle(activeNode)?.display;
-            } catch {
-            }
-        }
-    });
-
-    if(displayStyle === "flex") {
         return (
-            <div className="style-panel-box">
+            <div className={"style-panel-box" + ((displayStyle !== "flex") ? " hidden" : "")} >
 
                 <div className="display-horizontal-grid with-margin">
                     <ProprtyInputLabel text="Direction" property="flex-direction" />
                     <div className="display-buttons-box">
-                        <DisplayDirectionStyleButton value="row" letter="Horizontal"/>
-                        <DisplayDirectionStyleButton value="column" letter="Vertical"/>
+                        <DisplayDirectionStyleButton style="flex-direction" value="row" letter="Horizontal"/>
+                        <DisplayDirectionStyleButton style="flex-direction" value="column" letter="Vertical"/>
                     </div>
-                    <DisplayDirectionReverseStyleButton />
+                    <DisplayDirectionReverseStyleButton style="flex-direction" />
                 </div>
 
                 <div className="display-horizontal-grid with-margin">
@@ -60,22 +50,8 @@ export default function DispayFlexStylePanel () {
                 <div className="display-horizontal-grid with-margin">
                     <div style={{width:"100%"}}>
                         <div className="_2-col-style-grid">
-                            <div className="size-style-box">
-                                <div className="style-title-box">
-                                <div className="text">Column Gap</div>
-                                </div>
-                                <div className="input">
-                                    <SpacingStyleButton style="grid-column-gap" />
-                                </div>
-                            </div>
-                            <div className="size-style-box">
-                                <div className="style-title-box">
-                                <div className="text">Row Gap</div>
-                                </div>
-                                <div className="input">
-                                <SpacingStyleButton style="grid-row-gap" />
-                                </div>
-                            </div>
+                            <SizeStyleInput style="grid-column-gap" text="Column Gap" />
+                            <SizeStyleInput style="grid-row-gap" text="Row Gap" />
                         </div>
                     </div>
                 </div>
@@ -85,19 +61,16 @@ export default function DispayFlexStylePanel () {
                         <div className="text">Children</div>
                     </div>
                     <div className="display-buttons-box">
-                        <DisplayFlexWrapStyleButton value="nowrap" letter="Don't Wrap"/>
-                        <DisplayFlexWrapStyleButton value="wrap" letter="Wrap"/>
+                        {/* <DisplayFlexWrapStyleButton value="nowrap" letter="Don't Wrap"/>
+                        <DisplayFlexWrapStyleButton value="wrap" letter="Wrap"/> */}
+
+                        <DisplayDirectionStyleButton style="flex-wrap" value="nowrap" letter="Don't Wrap"/>
+                        <DisplayDirectionStyleButton style="flex-wrap" value="wrap" letter="Wrap"/>
                     </div>
-                    <DisplayDirectionReverseStyleButton />
+                    {/* <DisplayDirectionReverseStyleButton style="flex-wrap" /> */}
                 </div>
 
 
             </div>
         )
-    } else {
-        return (
-            <div></div>
-        )
-    }
-    
 }

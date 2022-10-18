@@ -877,7 +877,9 @@ export const projectSlice = createSlice({
                 let activeNode = document.querySelector(`[el_id="${state.activeNodeId}"]`);
                 let computedStyle = getComputedStyle(activeNode);
                 state.activeNodeComputedStyles = {
-                    display: computedStyle?.display,
+                    
+                    display: computedStyle?.["display"],
+
                     margin_top: computedStyle?.["margin-top"],
                     margin_bottom: computedStyle?.["margin-bottom"],
                     margin_left: computedStyle?.["margin-left"],
@@ -901,9 +903,30 @@ export const projectSlice = createSlice({
                     left: computedStyle?.["left"],
                     right: computedStyle?.["right"],
                     
-                    opacity: computedStyle?.opacity,
-                    position: computedStyle?.position,
+                    opacity: computedStyle?.["opacity"],
+                    position: computedStyle?.["position"],
                     grid_template_columns: computedStyle?.["grid-template-columns"],
+
+                    grid_column_gap: computedStyle?.["grid-column-gap"],
+                    grid_row_gap: computedStyle?.["grid-row-gap"],
+
+                    flex_direction: computedStyle?.["flex-direction"],
+                    flex_wrap: computedStyle?.["flex-wrap"],
+
+                    flex_grow: computedStyle?.["flex-grow"],
+                    flex_basis: computedStyle?.["flex-basis"],
+                    flex_shrink: computedStyle?.["flex-shrink"],
+
+                    font_family: computedStyle?.["font-family"],
+                    font_weight: computedStyle?.["font-weight"],
+                    
+
+                    background_color: computedStyle?.["background-color"],
+                    border_color: computedStyle?.["border-color"],
+
+                    overflow: computedStyle?.["overflow"],
+
+
                 };
             } catch {
             }

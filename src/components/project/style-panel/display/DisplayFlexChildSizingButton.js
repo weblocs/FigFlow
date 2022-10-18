@@ -6,10 +6,8 @@ import { editStyleProperty } from "../../../../features/project";
 
 export default function DisplayFlexChildSizingButton (props) {
 
-    const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex)
-
-    const styleFlexGrow = useSelector((state) => state.project.preRenderedStyles[activeStyleIndex]?.styles ["flex-grow"])
-    const styleFlexShrink = useSelector((state) => state.project.preRenderedStyles[activeStyleIndex]?.styles ["flex-shrink"])
+    const styleFlexGrow = useSelector((state) => state.project.activeNodeComputedStyles?.["flex_grow"])
+    const styleFlexShrink = useSelector((state) => state.project.activeNodeComputedStyles?.["flex_shrink"])
 
     const [activeSizing, setActiveSizing] = useState("");
 
@@ -25,7 +23,6 @@ export default function DisplayFlexChildSizingButton (props) {
         }
     },[styleFlexGrow, styleFlexShrink]);
     
-
     const dispatch = useDispatch()
 
     

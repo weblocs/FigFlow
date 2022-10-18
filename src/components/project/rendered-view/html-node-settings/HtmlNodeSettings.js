@@ -60,9 +60,6 @@ export default function HtmlNodeSettings() {
             style={{ transform: `translate(${activeNodePositionX}px,${activeNodePositionY}px)`}}>
                 <div className="rich-element-settings" onClick={handleClick}>
                     <div className="rich-element-settings_flex">
-
-                        
-
                         {(!isNodeSymbol) && 
                         <>
                         <NodeStylesList />

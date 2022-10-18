@@ -7,49 +7,14 @@ import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 export default function SizeStyleInput (props) {
 
-    const activeNodeId = useSelector((state) => state.project.activeNodeId)
-    const activeStyleObject = useSelector((state) => state.project.activeStyleObject);
-    
+    const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style.replaceAll("-","_")]) || props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]));
+    const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style.replaceAll("-","_")]) || props?.placeholder && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]) );
+
     const dispatch = useDispatch();
     const inputRef = useRef();
 
     const [isInputActive, setIsInputActive] = useState(false);
     const [unitEditorOpened, setUnitEditorOpened] = useState(false);
-
-
-    const editedStyleUnit = useSelector((state) => {
-        if (activeStyleObject?.[props.style] !== undefined) {
-            const nodeStyleValue = activeStyleObject[props.style];
-            return findStyleUnit(nodeStyleValue);
-        }
-        if(props.placeholder !== undefined) {
-            return "-";
-        }
-        if(activeNodeId !== "") {
-            try {
-                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
-                const nodeStyleValue = getComputedStyle(activeNode)?.[props.style.replace("_","-")];
-                return findStyleUnit(nodeStyleValue);
-            } catch {
-            }
-        }
-    });
-
-    const editedStyleValue = useSelector((state) => {
-        if (activeStyleObject?.[props.style] !== undefined) {
-            return deleteUnits(activeStyleObject?.[props.style]);
-        } 
-        if(props.placeholder !== undefined) {
-            return props.placeholder;
-        }
-        if(activeNodeId !== "") {
-            try {
-                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
-                return deleteUnits(getComputedStyle(activeNode)?.[props.style.replace("_","-")]);
-            } catch {
-            }
-        }
-    });
 
     function handleKeyPress(e) {
         if(e.key === 'Enter') {

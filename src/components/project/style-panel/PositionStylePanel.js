@@ -1,17 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { editStyleProperty } from "../../../features/project";
+import PositionInput from "./PositionInput";
 import ProprtyInputLabel from "./ProprtyInputLabel";
 import SpaceStyleInput from "./SpaceStyleInput";
 
 export default function PositionStylePanel () {
-
-    const nodeStyleValue = useSelector((state) => state.project.activeNodeComputedStyles?.position);
-
-    const dispatch = useDispatch();
-
-    function handleInputChange(e) {
-        dispatch(editStyleProperty(["position",e.target.value]));
-    }
 
     return (
         <div className="style-panel-box">
@@ -22,14 +14,7 @@ export default function PositionStylePanel () {
                 <div className="position-box">
 
                 <div className="input position-select-input">
-
-                    <select className="style-panel-select text" value={nodeStyleValue} onChange={handleInputChange}>
-                        <option value="static">Static</option>
-                        <option value="relative">Relative</option>
-                        <option value="absolute">Absolute</option>
-                        <option value="fixed">Fixed</option>
-                        <option value="sticky">Sticky</option>
-                    </select>
+                    <PositionInput />
                 </div>
 
                 <div className="padding-wrapper">

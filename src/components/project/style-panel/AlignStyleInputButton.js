@@ -4,16 +4,7 @@ import { editStyleProperty } from "../../../features/project";
 
 export default function AlignStyleInputButton ({letter, value}) {
 
-    const activeNodeId = useSelector((state) => state.project.activeNodeId);
-    const activeStyleValue = useSelector((state) => {
-        if(activeNodeId !== "") {
-            try {
-                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
-                return getComputedStyle(activeNode)?.["text-align"];
-            } catch {
-            }
-        }
-    });
+    const activeStyleValue = useSelector((state) => state.project.activeStyleObject?.text_align || state.project.activeNodeComputedStyles?.text_align);
     const dispatch = useDispatch()
 
     function handleClick() {

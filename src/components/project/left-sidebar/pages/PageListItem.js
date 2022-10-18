@@ -38,6 +38,14 @@ export default function PageList({node,parents}) {
         }
     }
 
+    function handleSettingsClick(node) {
+        if (openedSettingsPage?.id !== node.id ) {
+            dispatch(openPageSettings(node));
+        } else {
+            dispatch(openPageSettings({}));
+        }
+    }
+
     return (
         <div className="item-wrapper"
         onMouseEnter={() => setItemHovered(true)}
@@ -63,7 +71,7 @@ export default function PageList({node,parents}) {
 
             <img src={SettingIcon} 
             className={"page-item_settings-icon" + ((itemHovered) ? " active" : "")} 
-            onClick={() => dispatch(openPageSettings(node))}/>
+            onClick={() => handleSettingsClick(node)}/>
 
         </div>
     )

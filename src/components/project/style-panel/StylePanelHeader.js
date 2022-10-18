@@ -7,7 +7,7 @@ import SubStyleSticker from "./SubStyleSticker";
 import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 export default function StylePanelHeader () {
-    
+
     const activeNodeId = useSelector((state) => state.project.activeNodeId)
     const activeStyleId = useSelector((state) => state.project.activeStyleId)
     const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
@@ -142,12 +142,15 @@ export default function StylePanelHeader () {
             <ModalBackgroundCloser 
             handleClick={() => setIsStyleEditorOpen(false)} 
             isActiveIf={isStyleEditorOpen} />
+
             <ModalBackgroundCloser 
             handleClick={() => setIsAddStyleInputOpen(false)} 
             isActiveIf={isAddStyleInputOpen} />
+
             <ModalBackgroundCloser 
             handleClick={() => setIsAddStyleOptionInputOpen(false)} 
             isActiveIf={isAddStyleOptionInputOpen} />
+
 
             <div className="style-panel-title-box">
                 <div className="text">{stylesInActiveNode?.[0]?.name} styles</div>
@@ -163,6 +166,8 @@ export default function StylePanelHeader () {
                     <div className="text inheriting-text">1 selector</div>
                 </div>
             </div>
+
+
             <div className="select-class-input">
 
                 <div className="new-class-toggle" onClick={handleOpenNewStyleInput}></div>
@@ -187,13 +192,6 @@ export default function StylePanelHeader () {
                         New option
                         <input onKeyDown={handleOptionInputKeyPress} ref={styleOptionInputRef} className="add-class_input" />
                     </div>
-
-                    {/* <input 
-                    ref={inputRef}
-                    type="text"
-                    onKeyDown={handleKeyPress}
-                    onBlur={handleCloseNewStyleInput}
-                    className={"space-editor-popup new-class" + (isAddStyleInputOpen ? " active" : "")} /> */}
 
                     {stylesInActiveNode?.map((el, index) => {
                     if(index === 0) {
@@ -251,9 +249,11 @@ export default function StylePanelHeader () {
                         })}
 
             </div>
+
             <div className="style-panel-on-page-box">
                 <div className="text on-page">1 on this page</div>
             </div>
+
             </div>
     )
 }

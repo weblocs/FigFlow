@@ -58,7 +58,6 @@ export default function ProjectImagesPanel(){
     }
 
     return(
-
         <div className={"collectionsPanel "+ ((activeTab === "Images") ? "active" : "" )}>
             <div className="projectTabTitleBox">Images</div>
             <div style={{overflow:"hidden"}}>

@@ -14,43 +14,43 @@ import DisplayFlexChildStylePanel from "./display/DisplayFlexChildStylePanel";
 import BorderStylePanel from "./BorderStylePanel";
 import EffectsStylePanel from "./EffectsStylePanel";
 import PositionStylePanel from "./PositionStylePanel";
+import OverflowStylePanel from "./OverflowStylePanel";
 
 export default function ProjectStylePanel() {
   const projectMode = useSelector((state) => state.project.projectMode)
-  
   const activeRightSidebarTab = useSelector((state) => state.project.activeRightSidebarTab)
     
   if (projectMode === "developer" && activeRightSidebarTab === "Style") {
   return (
       <div className={"style-panel active"}>
-        {/* <StylePanelHeader /> */}
-        {/* <DisplayFlexChildStylePanel />  */}
+        <StylePanelHeader /> 
+        <DisplayFlexChildStylePanel /> 
 
-       {/* <StylePanelTitle title="Layout" />
+       <StylePanelTitle title="Layout" />
         <DispayStylePanel />
         <DispayFlexStylePanel />
-        <DisplayGridStylePanel /> */}
+        <DisplayGridStylePanel /> 
 
-        {/* <StylePanelTitle title="Spacing" />
+        <StylePanelTitle title="Spacing" />
         <SpacingStylePanel />
 
         <StylePanelTitle title="Size" />
-        <SizeStylePanel /> */}
+        <SizeStylePanel /> 
 
-        {/* <StylePanelTitle title="Overflow" />
-        <OverflowStylePanel /> */}
+        <StylePanelTitle title="Overflow" />
+        <OverflowStylePanel />
 
-        {/* <StylePanelTitle title="Typography" />
+        <StylePanelTitle title="Typography" />
         <TypographyStylePanel />
       
         <StylePanelTitle title="Size" />
-        <PositionStylePanel />
+        <PositionStylePanel /> 
 
         <StylePanelTitle title="Background" />
-        <BackgroundStylePanel />
+        <BackgroundStylePanel /> 
         
         <StylePanelTitle title="Border" />
-        <BorderStylePanel />*/}
+        <BorderStylePanel />
 
         <StylePanelTitle title="Effects" />
         <EffectsStylePanel /> 

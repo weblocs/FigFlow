@@ -1,9 +1,9 @@
 import AddNodeButton from "./AddNodeButton";
-import { useAppSelector } from "../../../../app/hooks";
+import { useSelector } from "react-redux";
 
 export default function ProjectAddPanel() {
 
-    const activeTab = useAppSelector((state) => state.project.activeTab)
+    const activeTab = useSelector((state) => state.project.activeTab)
 
     return (
       <div className={"navigatorWrapper "+ ((activeTab === "Add") ? "active" : "" )}>

@@ -7,34 +7,8 @@ import ProprtyInputLabel from "./ProprtyInputLabel";
 export default function ColorPicker (props) {
 
     const projectSwatches = useSelector((state) => state.project.projectSwatches);
-    const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex);
-    const activeNodeId = useSelector((state) => state.project.activeNodeId);
-    const activeStyleId = useSelector((state) => state.project.activeStyleId)
-    const stylesInActiveNode = useSelector((state) => state.project.stylesInActiveNode)
-    const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
+    const editedStyleValue = useSelector((state) => state.project.activeStyleObject?.[props.style.replace("-","_")] || state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]);
 
-    const activeStyleOptionIndex = useSelector((state) => state.project.activeStyleOptionIndex);
-    const nodeStyles = useSelector((state) => {
-        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
-            return preRenderedStyles[activeStyleIndex];
-        } else {
-            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
-        }   
-    });
-
-    const editedStyleValue = useSelector((state) => {
-        // if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
-        //     return nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style];
-        // }
-        if(activeNodeId !== "") {
-            try {
-                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
-                return rgbToHex(getComputedStyle(activeNode)?.[props.style.replace("_","-")]);
-            } catch {
-            }
-        }
-    });
-    
     const dispatch = useDispatch();
 
     const [activeSwatch, setActiveSwatch] = useState({});
@@ -101,7 +75,9 @@ export default function ColorPicker (props) {
     }
 
     function handleSwatchClick(swatch) {
+        console.log(projectSwatches);
         setSwatchEditorMode("edit");
+        console.log(swatch);
         setActiveSwatch(swatch);
         dispatch(editStyleProperty([props.style,swatch.color]));
     }
@@ -120,9 +96,9 @@ export default function ColorPicker (props) {
             }, 1000);
         } else if(swatchEditorMode === "add") {
             dispatch(addSwatch({name: swatchNameRef.current.value, color: swatchColorRef.current.value}));
-            dispatch(editStyleProperty([props.style, swatchColorRef.current.value]));
             setSwatchEditorMode("edit");
         }
+        dispatch(editStyleProperty([props.style, swatchColorRef.current.value]));
     }
 
     function handleClickNewSwatchButton () {
@@ -157,7 +133,12 @@ export default function ColorPicker (props) {
             <ProprtyInputLabel text="Color" property={props.style} />
 
             <div className="input color-picker">
-                    <div className="color-picker_color-box" style={{backgroundColor: editedStyleValue}} onClick={handleOpeningSwatchesEditor}></div>
+                    
+                    <div 
+                    className="color-picker_color-box" 
+                    style={{backgroundColor: editedStyleValue}} 
+                    onClick={handleOpeningSwatchesEditor}></div>
+
                     <div className={"style-edit-text" + ((styleColorInputOpen) ? " active" : "")} onClick={handleColorTextClick}>{activeSwatchNameOrColorValue}</div>
                     <input 
                     onBlur={handleStyleColorInputBlur}
@@ -166,7 +147,9 @@ export default function ColorPicker (props) {
                     ref={styleColorRef} 
                     type="text" />
 
-                    <form className={"swatches-box" + ((swatchesEditorOpened) ? " active" : "")} onSubmit={handleFormSubmit}>  
+                    <form 
+                    className={"swatches-box" + ((swatchesEditorOpened) ? " active" : "")} 
+                    onSubmit={handleFormSubmit}>  
                         <div className="swatches-list">  
                             {projectSwatches.map((swatch) => (
                                 <div 
@@ -184,6 +167,7 @@ export default function ColorPicker (props) {
                         className="swatch-save-button"
                         >{formButtonText}</button>
                     </form>
+
             </div>
         </div>
     )

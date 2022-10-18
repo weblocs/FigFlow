@@ -80,11 +80,11 @@ export default function StoreUseEffectUpdates () {
 
     
 
-    useEffect(() => {
-        
+    useEffect(() => {   
         dispatch(setActiveHtmlNodeParentsPath());
-        
     },[activeNodeId]);
+
+    
 
     useEffect(() => {
         if(projectMode === "developer") {

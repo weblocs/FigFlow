@@ -8,6 +8,7 @@ export default function DisplayFlexWrapStyleButton (props) {
 
     const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex)
     const displayStyle = useSelector((state) => state.project.preRenderedStyles[activeStyleIndex]?.styles ["flex-wrap"])
+    
     const displayDirectionWithoutReverse = displayStyle?.replace("-reverse","");
     const isDirectionReversed = displayStyle?.includes("-reverse");
 

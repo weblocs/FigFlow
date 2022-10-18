@@ -6,69 +6,15 @@ import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 function SpaceStyleInput (props) {
 
-    const activeNodeId = useSelector((state) => state.project.activeNodeId)
-    const activeStyleId = useSelector((state) => state.project.activeStyleId)
-    const stylesInActiveNode = useSelector((state) => state.project.stylesInActiveNode)
-    const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
-    const activeStyleIndex = useSelector((state) => state.project.activeStyleIndex)
-    const activeProjectResolutionStylesListName = useSelector((state) => state.project.activeProjectResolutionStylesListName)
-    
-    const activeStyleOptionIndex = useSelector((state) => state.project.activeStyleOptionIndex);
-    
-    const nodeStyles = useSelector((state) => {
-        if(activeStyleId === stylesInActiveNode?.[0]?.id) {
-            return preRenderedStyles[activeStyleIndex];
-        } else {
-            return preRenderedStyles?.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens[activeStyleOptionIndex]?.options.find(({id}) => id === activeStyleId);
-        }
-    })
-    
+    const doesStylePropertyBelongToActiveClass = useSelector((state) => (state.project.activeStyleObject?.[props.style] !== undefined));
+    const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style.replace("-","_")]) || props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
+    const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style.replace("-","_")]) || props?.placeholder && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]) );
+
     const dispatch = useDispatch();
     const inputRef = useRef();
 
     const [isInputActive, setIsInputActive] = useState(false);
     const [unitEditorOpened, setUnitEditorOpened] = useState(false);
-
-    const doesStylePropertyBelongToActiveClass = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
-            return true;
-        }
-        return false;
-    });
-
-    const editedStyleUnit = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
-            const nodeStyleValue = nodeStyles[activeProjectResolutionStylesListName][props.style];
-            return findStyleUnit(nodeStyleValue);
-        }
-        if(props.placeholder !== undefined) {
-            return "-";
-        }
-        if(activeNodeId !== "") {
-            try {
-                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
-                const nodeStyleValue = getComputedStyle(activeNode)?.[props.style.replace("_","-")];
-                return findStyleUnit(nodeStyleValue);
-            } catch {
-            }
-        }
-    });
-
-    const editedStyleValue = useSelector((state) => {
-        if (nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style] !== undefined) {
-            return deleteUnits(nodeStyles?.[activeProjectResolutionStylesListName]?.[props.style]);
-        } 
-        if(props.placeholder !== undefined) {
-            return props.placeholder;
-        }
-        if(activeNodeId !== "") {
-            try {
-                const activeNode = document.querySelector(`[el_id="${activeNodeId}"]`);
-                return deleteUnits(getComputedStyle(activeNode)?.[props.style.replace("_","-")]);
-            } catch {
-            }
-        }
-    });
 
     function handleKeyPress(e) {
         if(e.key === 'Enter') {

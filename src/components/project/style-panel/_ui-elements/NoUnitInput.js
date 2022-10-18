@@ -14,32 +14,29 @@ export default function NoUnitInput (props) {
 
     function handleKeyPress(e) {
         if(e.key === 'Enter') {
-            dispatch(editStyleProperty([props.style,e.target.value]));
             setIsInputActive(false);
+            dispatch(editStyleProperty([props.style,e.target.value]));
         }
         if(e.key === 'ArrowUp') {
-            inputRef.current.value = editedStyleValue + 0.1;
+            inputRef.current.value = inputRef.current.value + 0.1;
             dispatch(editStyleProperty([props.style,e.target.value]));
-            
         }
         if(e.key === 'ArrowDown') {
-            inputRef.current.value = editedStyleValue - 0.1;
+            inputRef.current.value = inputRef.current.value - 0.1;
             dispatch(editStyleProperty([props.style,e.target.value]));
-        }
+        } 
     }
 
     useEffect(() => {
         if(isInputActive === true) {
             inputRef.current.focus();
-            if(editedStyleValue === undefined) {
+            if(activeNodeComputedStyle === undefined) {
                 inputRef.current.value = "";
             } else {
-                inputRef.current.value = editedStyleValue;
+                inputRef.current.value = activeNodeComputedStyle;  
             }
-            dispatch(setKeyboardNavigationOn(false));
-        } else {
-            dispatch(setKeyboardNavigationOn(true));
-        }
+        } 
+        dispatch(setKeyboardNavigationOn(!isInputActive));
     },[isInputActive]);
 
     return (
