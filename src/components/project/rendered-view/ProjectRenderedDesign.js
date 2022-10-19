@@ -19,21 +19,24 @@ export default function ProjectRenderedDesign() {
 
                 <HtmlNodeSettings />
 
-                {preRenderedHTMLNodes.map((el) => (
-                <RenderedNode
-                    onChange={(text, id) => dispatch(editHtmlNode({id: id, field: 'title', value: text}))}
-                    data={el}
-                    cmsCollectionId={el.cmsCollectionId}
-                    cmsFieldId={el.cmsFieldId}
-                    type={el.type}
-                    id={el.id}
-                    key={el.id}
-                    title={el.title}
-                    children={el.children}
-                    class={el.class}
-                    onClick={([_id]) => dispatch(setActiveHtmlNode({id: _id}))}
-                />
-                ))}  
+                {preRenderedHTMLNodes.map((el) => {
+                    return(
+                    <RenderedNode
+                        id={el.id}
+                        title={el.title}
+                        styles={el.styles}
+                        type={el.type}
+                        subtype={el.subtype}
+                        cmsCollectionId={el.cmsCollectionId}
+                        cmsFieldId={el.cmsFieldId}
+                        symbolId={el.symbolId}
+                        key={el.id}
+                        children={el.children}
+                        class={el.class}
+                        onChange={(text, id) => dispatch(editHtmlNode({id: id, field: 'title', value: text}))}
+                        onClick={([_id]) => dispatch(setActiveHtmlNode({id: _id}))}
+                    />)
+                })}  
 
             </div>
 

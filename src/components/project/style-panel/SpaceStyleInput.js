@@ -7,8 +7,8 @@ import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 function SpaceStyleInput (props) {
 
     const doesStylePropertyBelongToActiveClass = useSelector((state) => (state.project.activeStyleObject?.[props.style] !== undefined));
-    const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style.replace("-","_")]) || props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
-    const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style.replace("-","_")]) || props?.placeholder && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]) );
+    const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style]) || props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
+    const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style]) || props?.placeholder && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]) );
 
     const dispatch = useDispatch();
     const inputRef = useRef();
@@ -117,4 +117,5 @@ function SpaceStyleInput (props) {
     )
 }
 
-export default React.memo(SpaceStyleInput)
+export default SpaceStyleInput
+// export default React.memo(SpaceStyleInput)

@@ -6,5 +6,6 @@ import NavigationNodeFolder from "./NavigationNodeFolder";
     return <NavigationNodeFolder parents={[]} node={node} depth={0} />
 }
 
-export default React.memo(NavigationNodeSection);
+export default NavigationNodeSection;
+// export default React.memo(NavigationNodeSection);
  

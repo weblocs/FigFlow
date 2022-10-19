@@ -7,7 +7,7 @@ import { deleteUnits } from "../../../../utils/style-panel";
 
 export default function DisplayDirectionStyleButton (props) {
 
-    const displayStyle = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style.replace("-","_")]) || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
+    const displayStyle = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style]) || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
     const isStyleDirectionReversed = displayStyle?.includes("-reverse");
     
     const dispatch = useDispatch()

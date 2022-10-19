@@ -21,4 +21,5 @@ function SpaceStyleInputNew({style}) {
     )
 }
 
-export default React.memo(SpaceStyleInputNew)
+export default SpaceStyleInputNew
+// export default React.memo(SpaceStyleInputNew)

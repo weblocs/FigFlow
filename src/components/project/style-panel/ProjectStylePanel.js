@@ -20,9 +20,9 @@ export default function ProjectStylePanel() {
   const projectMode = useSelector((state) => state.project.projectMode)
   const activeRightSidebarTab = useSelector((state) => state.project.activeRightSidebarTab)
     
-  if (projectMode === "developer" && activeRightSidebarTab === "Style") {
+  if (projectMode === "developer") {
   return (
-      <div className={"style-panel active"}>
+      <div className={"style-panel" + ((activeRightSidebarTab === "Style") ? " active" : "")}>
         <StylePanelHeader /> 
         <DisplayFlexChildStylePanel /> 
 

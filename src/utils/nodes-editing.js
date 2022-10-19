@@ -60,7 +60,9 @@ export function JSONtoCSS (_classes, activeResolution) {
       tempClasses.push({name:tempName, styles: _classes[i].styles});
       _classes[i].childrens.forEach((childStyle) => {
         childStyle.options.forEach((option) => {
-          tempClasses.push({name: tempName + "." + option.name, styles: option.styles});
+          tempClasses.push({name: tempName + "." 
+          + ((childStyle?.defaultName !== undefined) ? (childStyle.defaultName?.replaceAll(" ","-").toLowerCase() + "-") : "") 
+          + option.name, styles: option.styles});
         })
       });
     }

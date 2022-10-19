@@ -46,6 +46,7 @@ const initialState = {
   editedSymbolId: {symbolId: "", elementId: ""},
 
   preRenderedHTMLNodes: [],
+  preRenderedHTMLNodesWithoutExpandedStates: [],
   preRenderedStyles: [],
   postRenderedStyles: "",
   activeNodeId: "",
@@ -654,24 +655,23 @@ export const projectSlice = createSlice({
             }
         }
         
-        
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
-            if (nodes[i].id === id) {
-                nodes[i].class.push(newStyleToConnectWithNodes);
-                state.stylesInActiveNode = [...nodes[i].class];
-                break;
-            }
-            if (nodes[i].children) {
-                findNode(nodes[i].children, id);
-            }
+                if (nodes[i].id === id) {
+                    nodes[i].class.push(newStyleToConnectWithNodes);
+                    state.stylesInActiveNode = [...nodes[i].class];
+                    break;
+                }
+                if (nodes[i].children) {
+                    findNode(nodes[i].children, id);
+                }
             }
         }
         findNode(state.preRenderedHTMLNodes, nodeId);
 
         state.activeStyleId = newStyleToConnectWithNodes.id;
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
-        
+        state.activeStyleOptionIndex = state.preRenderedStyles.find(({id}) => id ===  state.stylesInActiveNode[0].id).childrens.length - 1;        
     },
 
     renameStyle: (state, action) => {
@@ -919,10 +919,19 @@ export const projectSlice = createSlice({
 
                     font_family: computedStyle?.["font-family"],
                     font_weight: computedStyle?.["font-weight"],
-                    
 
+                    font_size: computedStyle?.["font-size"],
+                    line_height: computedStyle?.["line-height"],
+                    letter_spacing: computedStyle?.["letter-spacing"],
+                    
+                    color: computedStyle?.["color"],
                     background_color: computedStyle?.["background-color"],
                     border_color: computedStyle?.["border-color"],
+
+                    border_radius: computedStyle?.["border-radius"],
+                    border_width: computedStyle?.["border-width"],
+
+                    text_align: computedStyle?.["text-align"],
 
                     overflow: computedStyle?.["overflow"],
 
@@ -1081,6 +1090,26 @@ export const projectSlice = createSlice({
         if(state.keyboardNavigationOn) {
             findNode(state.preRenderedHTMLNodes, state.activeNodeId);
         }
+    },
+
+    setHtmlNodesWithoutExpandedState: (state) => {
+        state.preRenderedHTMLNodesWithoutExpandedStates = [];
+        function findNode(nodes) {
+            for (let i = 0; i < nodes.length; i++) {
+
+                state.preRenderedHTMLNodesWithoutExpandedStates[i] = {...nodes[i]};
+                delete state.preRenderedHTMLNodesWithoutExpandedStates[i].expanded;
+
+                if (nodes[i].children) {
+                    findNode(nodes[i].children);
+                }
+            }
+        }
+
+        findNode(state.preRenderedHTMLNodes);
+
+        // console.log(state.preRenderedHTMLNodesWithoutExpandedStates);
+        
     },
 
     copyHtmlNodes: (state) => {
@@ -1629,7 +1658,7 @@ export const projectSlice = createSlice({
                         id: nodes[i]?.id,
                         type: nodes[i]?.type,
                         class: nodes[i]?.class,
-                        cmscollectionid: nodes[i]?.cmscollectionid,
+                        cmscollectionid: nodes[i]?.cmsCollectionId,
                     });
                     if(nodes[i].children) {
                         findNode2(nodes[i]?.children);
@@ -1638,7 +1667,6 @@ export const projectSlice = createSlice({
             }
         }
         findNode2(testPreRenderedHTMLNodes);
-
 
         let index = 0;
         function findNode3(nodes) {
@@ -1655,7 +1683,9 @@ export const projectSlice = createSlice({
                 }
             }
         }
-        findNode3(state.preRenderedHTMLNodes);
+        if(state.activeTab === "Navigator") {
+            findNode3(state.preRenderedHTMLNodes);
+        }
 
         let parentNodes = [];
         let objectHierarchyStyles = [];
@@ -1767,6 +1797,11 @@ export const projectSlice = createSlice({
                 preRenderedHTMLNodes: state.preRenderedHTMLNodes,
                 preRenderedStyles: state.preRenderedStyles
             }];
+
+            if(state.undoStates.length > 10) {
+                state.undoStates.splice(0, 1);
+            }
+
         }
     },
 
@@ -2049,8 +2084,10 @@ export const {
     editStyleOption,
     removeStyleOption,
     deleteStyleOption,
+
     editStyleSubOption,
     deleteStyleSubOption,
+
     setActiveNodeComputedStyles,
     editActiveStyleProperties, 
     setActiveStyleOptionIndex, 
@@ -2062,6 +2099,7 @@ export const {
     addHtmlNode, 
     editHtmlNode,
     moveHtmlNode, 
+    setHtmlNodesWithoutExpandedState,
     copyHtmlNodes, 
     pasteHtmlNodes, 
     deleteHtmlNode, 

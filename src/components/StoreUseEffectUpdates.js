@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addUndoState, setIsActiveHtmlNodeParentDisplayFlex, editSymbolsClickableArea, setActionActiveFalse, setActiveNodeComputedStyles, setGlobalActiveHtmlNode, setActiveHtmlNodeParentsPath, editActiveStyleProperties, updateActiveStyleListAndId } from "../features/project"
+import { addUndoState, setIsActiveHtmlNodeParentDisplayFlex, editSymbolsClickableArea, setActionActiveFalse, setActiveNodeComputedStyles, setGlobalActiveHtmlNode, setActiveHtmlNodeParentsPath, editActiveStyleProperties, updateActiveStyleListAndId, setHtmlNodesWithoutExpandedState } from "../features/project"
 
 export default function StoreUseEffectUpdates () {
 
@@ -43,7 +43,7 @@ export default function StoreUseEffectUpdates () {
         if(projectMode === "developer") {
             dispatch(setActiveNodeComputedStyles());
         }
-    },[activeNodeId, preRenderedStyles]);
+    },[activeNodeId, preRenderedStyles, preRenderedHTMLNodes]);
 
     useEffect(() => {
         dispatch(addUndoState());
@@ -71,23 +71,22 @@ export default function StoreUseEffectUpdates () {
         document.querySelector(`[el_id='${activeNodeId}']`)?.classList.add("active");
     },[activeNodeId, preRenderedHTMLNodes])
 
+    
+    useEffect(() => {   
+        dispatch(setActiveHtmlNodeParentsPath());
+    },[activeNodeId, preRenderedHTMLNodes]);
+
     useEffect(() => {
         if(activeTab === "Navigator") {
+            dispatch(setActiveHtmlNodeParentsPath());
             document.querySelector(`.navigation-node.active`)?.classList.remove("active");
             document.querySelector(`[nodeid='${activeNodeId}']`)?.classList.add("active");
         }
     },[activeTab])
-
-    
-
-    useEffect(() => {   
-        dispatch(setActiveHtmlNodeParentsPath());
-    },[activeNodeId]);
-
     
 
     useEffect(() => {
-        if(projectMode === "developer") {
+        if(projectMode === "developer" && activeTab === "Navigator" ) {
             setTimeout(() => {
                 const actualNodePosition = document.querySelector(`[nodeid="${activeNodeId}"]`)?.getBoundingClientRect().top;
                 if(actualNodePosition < 172 || actualNodePosition > window.screen.height - 200) {
@@ -95,11 +94,11 @@ export default function StoreUseEffectUpdates () {
                 const scrollMargin = 245;
                 document.getElementById("nodes-navigator").scrollTo({
                     top: actualViewPosition + actualNodePosition - scrollMargin,
-                    behavior: "smooth"
+                    
                 });
                 }
             },1);
         }
-    },[activeNodeId]);
+    },[activeNodeId, activeTab]);
  
 }

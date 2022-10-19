@@ -6,14 +6,13 @@ import {setHoveredHtmlNode, setKeyboardNavigationOn, makeSymbolEditable, setIsNo
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./_atoms/AddSectionButton";
 import Placeholder from '../../../img/placeholder.svg';
-
 import { camelCase } from "lodash";
 
 function RenderedNode(props) {
 
   const [editable, setEditable] = useState(false);
 
-  const activeNodeId = useSelector((state) => state.project.activeNodeId);
+  // const activeNodeId = useSelector((state) => state.project.activeNodeId);
   // const hoveredNodeId = useSelector((state) => state.project.hoveredNodeId);
   const activeProjectResolution = useSelector((state) => state.project.activeProjectResolution);
   const collections = useSelector((state) => state.project.collections);
@@ -22,11 +21,21 @@ function RenderedNode(props) {
   const editedSymbolId = useSelector((state) => state.project.editedSymbolId);
   const activeCollectionTemplateId = useSelector((state) => state.project.activeCollectionTemplateId);
   const activeCollectionItemTemplateId = useSelector((state) => state.project.activeCollectionItemTemplateId);
-  const listOfNodeStyles = useSelector((state) => props.class.map((cl) => 
-  (cl.name)).toString().replaceAll(","," ") + 
-  " renderedNode " 
-  // + ((state.project.activeNodeId === props.data.id) ? "active " : " ") 
-  // + ((state.project.hoveredNodeId === props.data.id) ? "hovered" : " ")
+  
+  const listOfSubStyles = useSelector((state) => state.project.preRenderedStyles.find(({id}) => id === props?.class?.[0]?.id))?.childrens;
+  const listOfNodeStyles = useSelector((state) => props.class.map((cl,index) => 
+  {
+    if(index !== 0 && cl.id !== '') {
+      const styleDefaultName = listOfSubStyles[index-1]?.defaultName;
+      if(styleDefaultName !== undefined) {
+        return styleDefaultName.replaceAll(" ","-").toLowerCase() + "-" + cl.name;
+      }
+    }
+    return cl.name
+  }).toString().replaceAll(","," ") + 
+  " renderedNode "
+  // + ((state.project.activeNodeId === props.id) ? "active " : " ") 
+  // + ((state.project.hoveredNodeId === props.id) ? "hovered" : " ")
   );
 
   // console.log("rend node");
@@ -48,11 +57,11 @@ function RenderedNode(props) {
     }
   );
 
-  useEffect(() => {
-    if(activeNodeId !== props.data.id) {
-      setEditable(false);
-    }
-  },[activeNodeId])
+  // useEffect(() => {
+  //   if(activeNodeId !== props.id) {
+  //     setEditable(false);
+  //   }
+  // },[activeNodeId])
 
   function handleDoubleClick(e) {
     e.stopPropagation();
@@ -63,7 +72,7 @@ function RenderedNode(props) {
   function handleOnClick(e) {
     e.stopPropagation();
     dispatch(setIsNodeSelectedFromNavigator(false));
-    props.onClick([props.data.id, props?.class[0]?.name]);
+    props.onClick([props.id, props?.class[0]?.name]);
     if (projectMode === "creator") {
       setEditable(true);
       dispatch(setKeyboardNavigationOn(false))
@@ -75,7 +84,7 @@ function RenderedNode(props) {
 
   function handleMouseOver(e) {
     e.stopPropagation();
-    dispatch(setHoveredHtmlNode(props.data.id));
+    dispatch(setHoveredHtmlNode(props.id));
   }
 
   function handleMouseOut(e) {
@@ -89,30 +98,28 @@ function RenderedNode(props) {
   
   let customStyle = {};
   if (activeProjectResolution === "1") {
-    if(props?.data?.styles?.styles !== undefined) {
-
-      customStyle = props?.data?.styles?.styles;
+    if(props?.styles?.styles !== undefined) {
+      customStyle = props?.styles?.styles;
       customStyle = Object.fromEntries(
         Object.entries(customStyle).map(([key, value]) =>
           [_.camelCase(key), value]
         )
-      )
-      
+      )    
     }
   }
   if (activeProjectResolution === "2") {
-    if(props?.data?.styles?.tabletStyles !== undefined) {
-      customStyle = props?.data?.styles?.tabletStyles;
+    if(props?.styles?.tabletStyles !== undefined) {
+      customStyle = props?.styles?.tabletStyles;
     }
   }
   if (activeProjectResolution === "4") {
-    if(props?.data?.styles?.mobileStyles !== undefined) {
-      customStyle = props?.data?.styles?.mobileStyles;
+    if(props?.styles?.mobileStyles !== undefined) {
+      customStyle = props?.styles?.mobileStyles;
     }
   }
   if (activeProjectResolution === "3") {
-    if(props?.data?.styles?.portraitStyles !== undefined) {
-      customStyle = props?.data?.styles?.portraitStyles;
+    if(props?.styles?.portraitStyles !== undefined) {
+      customStyle = props?.styles?.portraitStyles;
     }
   }
   
@@ -123,7 +130,7 @@ function RenderedNode(props) {
   let elementHTML = (
     <div 
     style={customStyle}
-    el_id={props.data.id}
+    el_id={props.id}
     onClick={handleOnClick}
     onMouseOver={handleMouseOver}
     onMouseOut={handleMouseOut}
@@ -131,7 +138,17 @@ function RenderedNode(props) {
     >
       {props.children.map((el) => (
         <RenderedNode
-          data={el}
+          
+
+          id={el.id}
+          title={el.title}
+          subtype={el.subtype}
+          cmsCollectionId={el.cmsCollectionId}
+          cmsFieldId={el.cmsFieldId}
+          symbolId={el.symbolId}
+          type={el.type}
+          styles={el.styles}
+
           key={el.id}
           itemIndex = {props.itemIndex}
           renderedCollectionIndex={props.renderedCollectionIndex}
@@ -146,13 +163,13 @@ function RenderedNode(props) {
     </div>
   );
 
-  if (props.data.type === "sec") {
+  if (props.type === "sec") {
     elementHTML = (
       <div onMouseEnter={handleSectionMouseOver}>
 
       <div 
       style={customStyle}
-      el_id={props.data.id}
+      el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
@@ -160,11 +177,21 @@ function RenderedNode(props) {
       >
         {props.children.map((el) => (
           <RenderedNode
-            data={el}
+            
+
+            id={el.id}
+            title={el.title}
+            subtype={el.subtype}
+            cmsCollectionId={el.cmsCollectionId}
+            cmsFieldId={el.cmsFieldId}
+            symbolId={el.symbolId}
+            type={el.type}
+            styles={el.styles}
             key={el.id}
             itemIndex = {props.itemIndex}
             renderedCollectionIndex={props.renderedCollectionIndex}
-            children={useMemo(()=> el.children)}
+            // children={useMemo(()=> el.children)}
+            children={el.children}
             onChange={(text, id) => props.onChange(text, id)}
             class={el.class}
             onClick={([nodeId,className]) => props.onClick([nodeId,className])}
@@ -172,16 +199,16 @@ function RenderedNode(props) {
         ))}
         
       </div>
-      <AddSectionButton sectionId={props.data.id} />
+      <AddSectionButton sectionId={props.id} />
       </div>
     );
   }
 
-  if (props.data.type === "rich") {
+  if (props.type === "rich") {
     elementHTML = (
       <div 
       style={customStyle}
-      el_id={props.data.id}
+      el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
@@ -190,7 +217,16 @@ function RenderedNode(props) {
         {props.children.map((el) => (
           <div key={el.id}>
             <RenderedNode
-              data={el}
+              
+
+              id={el.id}
+              title={el.title}
+              subtype={el.subtype}
+              cmsCollectionId={el.cmsCollectionId}
+              cmsFieldId={el.cmsFieldId}
+              symbolId={el.symbolId}
+              type={el.type}
+              styles={el.styles}
               key={el.id}
               itemIndex = {props.itemIndex}
               renderedCollectionIndex={props.renderedCollectionIndex}
@@ -205,29 +241,38 @@ function RenderedNode(props) {
     );
   }
 
-  if (props.data.type === "sym") {
+  if (props.type === "sym") {
     elementHTML = (
       <div 
       style={customStyle}
-      id={props.data.id}
-      el_id={props.data.id}
+      id={props.id}
+      el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       className={listOfNodeStyles}
       >
         <div 
-        onDoubleClick={() => (editedSymbolId.symbolId === "") && dispatch(makeSymbolEditable({symbolId:props.data.symbolId, elementId: props.data.id}))} 
+        onDoubleClick={() => (editedSymbolId.symbolId === "") && dispatch(makeSymbolEditable({symbolId:props.symbolId, elementId: props.id}))} 
         className={"symbol-box-wrapper" + 
-        ((editedSymbolId.symbolId === props.data.symbolId &&
-          editedSymbolId.elementId === props.data.id) ? " active" : "")}
+        ((editedSymbolId.symbolId === props.symbolId &&
+          editedSymbolId.elementId === props.id) ? " active" : "")}
         style={{position: "relative", height: "0"}}>
-          <div symbol_id={props.data.id} className="symbol-wrapper" style={{width: "100%", height: "40px"}}></div>
+          <div symbol_id={props.id} className="symbol-wrapper" style={{width: "100%", height: "40px"}}></div>
         </div>
 
         {props.children.map((el) => (
           <RenderedNode
-            data={el}
+            
+
+            id={el.id}
+            title={el.title}
+            subtype={el.subtype}
+            cmsCollectionId={el.cmsCollectionId}
+            cmsFieldId={el.cmsFieldId}
+            symbolId={el.symbolId}
+            type={el.type}
+            styles={el.styles}
             key={el.id}
             children={el.children}
             class={el.class}
@@ -243,16 +288,16 @@ function RenderedNode(props) {
   }
 
   // Collection List
-  if (props.data.type === "col") {
+  if (props.type === "col") {
 
     let renderedCollectionIndex = collections.map(x => {
       return x.id;
-    }).indexOf(props.data.cmsCollectionId);
+    }).indexOf(props.cmsCollectionId);
 
     elementHTML = (
       <div 
       style={customStyle}
-      el_id={props.data.id}
+      el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
@@ -262,9 +307,14 @@ function RenderedNode(props) {
               <div key={item.id}> 
               {props.children.map((el) => (
                 <RenderedNode
-                  data={el}
+                  id={el.id}
+                  title={el.title}
+                  subtype={el.subtype}
                   cmsCollectionId={el.cmsCollectionId}
                   cmsFieldId={el.cmsFieldId}
+                  symbolId={el.symbolId}
+                  type={el.type}
+                  styles={el.styles}
                   key={el.id}
                   itemIndex = {itemIndex}
                   renderedCollectionIndex={renderedCollectionIndex}
@@ -279,13 +329,56 @@ function RenderedNode(props) {
             ))}
       </div>
     );
+
+    if(props?.cmsCollectionId === undefined) {
+      elementHTML = (
+        <div 
+        el_id={props.id} 
+        className="empty-collection-wrapper renderedNode"
+        onClick={handleOnClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}>
+          Open element settings to connect to a colleciton
+        </div>
+      )
+    }
+    else if(collections[renderedCollectionIndex]?.items.length === 0) {
+      elementHTML = (
+        <div 
+        el_id={props.id} 
+        className="empty-collection-wrapper renderedNode"
+        onClick={handleOnClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}>
+          This collection does not contain any elements
+        </div>
+      )
+    } else {
+      if(props.children.length === 0) {
+        elementHTML = (
+          <div 
+          el_id={props.id} 
+          className="renderedNode"
+          onClick={handleOnClick}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}>
+            {collections[renderedCollectionIndex]?.items.map((item,index) => (
+              <div className="empty-collection-wrapper ">
+                Item {index}
+              </div>
+            ))}
+          </div>
+        )
+      }
+    } 
+
   }
 
-  if (props.data.type === "img") {
+  if (props.type === "img") {
     let imageSrc = props.data?.src;
     
-    if(props.data.cmsFieldId) {
-      imageSrc = collections[props.renderedCollectionIndex]?.items[props.itemIndex].data.find(({ fieldId }) => fieldId === props.data.cmsFieldId)?.fieldValue
+    if(props.cmsFieldId) {
+      imageSrc = collections[props.renderedCollectionIndex]?.items[props.itemIndex].data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue
     }
     elementHTML = (
       <img 
@@ -294,23 +387,23 @@ function RenderedNode(props) {
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
-      el_id={props.data.id}
+      el_id={props.id}
       className={listOfNodeStyles}
       />
     );
   }
 
-  let nodeText = props.data.title;
-  if (props.data.type === "h" || props.data.type === "p") {
-    if(nodesEditMode === "cmsTemplate" && props.data.cmsFieldId !== "" && props.data.cmsFieldId !== undefined) {
-      nodeText = collections.find(({ id }) => id === activeCollectionTemplateId)?.items?.find(({id}) => id === activeCollectionItemTemplateId).data.find(({ fieldId }) => fieldId === props.data.cmsFieldId)?.fieldValue;
+  let nodeText = props.title;
+  if (props.type === "h" || props.type === "p") {
+    if(nodesEditMode === "cmsTemplate" && props.cmsFieldId !== "" && props.cmsFieldId !== undefined) {
+      nodeText = collections.find(({ id }) => id === activeCollectionTemplateId)?.items?.find(({id}) => id === activeCollectionItemTemplateId).data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
     }
 
     if(props.collectionItems) {
-      if (props.data.cmsFieldId === "") {
-        nodeText = props.data.title;
+      if (props.cmsFieldId === "") {
+        nodeText = props.title;
       } else {
-        nodeText = props.collectionItems.find(({ fieldId }) => fieldId === props.data.cmsFieldId)?.fieldValue;
+        nodeText = props.collectionItems.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
       }
     }
 
@@ -321,7 +414,7 @@ function RenderedNode(props) {
   }
 
 
-  if (props.data.type === "h") {
+  if (props.type === "h") {
     elementHTML = (
       <ContentEditable
         style={customStyle}
@@ -330,20 +423,20 @@ function RenderedNode(props) {
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
         className={listOfNodeStyles}
-        el_id={props.data.id}
-        tagName={(props.data?.subtype !== undefined) ? props.data.subtype : "h1"}
+        el_id={props.id}
+        tagName={(props.data?.subtype !== undefined) ? props.subtype : "h1"}
         html={nodeText}
         disabled={!editable}
       />
     );
   }
 
-  if (props.data.type === "p") {
+  if (props.type === "p") {
     elementHTML = (
       <ContentEditable
         style={customStyle}
         className={listOfNodeStyles}
-        el_id={props.data.id}
+        el_id={props.id}
         tagName="p"
         onClick={handleOnClick}
         onDoubleClick={handleDoubleClick}
@@ -355,20 +448,27 @@ function RenderedNode(props) {
     );
   }
 
-  if (props.data.type === "l") {
+  if (props.type === "l") {
     elementHTML = (
       <div 
       style={customStyle}
-      el_id={props.data.id}
+      el_id={props.id}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       className={listOfNodeStyles}
       >
         {props.children.map((el) => (
-          <RenderedNode
-            data={el}
+          <RenderedNode 
             key={el.id}
+            id={el.id}
+            title={el.title}
+            subtype={el.subtype}
+            cmsCollectionId={el.cmsCollectionId}
+            cmsFieldId={el.cmsFieldId}
+            symbolId={el.symbolId}
+            type={el.type}
+            styles={el.styles}
             itemIndex = {props.itemIndex}
             renderedCollectionIndex={props.renderedCollectionIndex}
             children={el.children}
@@ -381,7 +481,14 @@ function RenderedNode(props) {
     );
   }
 
+  
+
+  if(props.styles) {
+    
+  }
+
   return elementHTML;
 }
 
-export default React.memo(RenderedNode);
+export default RenderedNode;
+// export default React.memo(RenderedNode);

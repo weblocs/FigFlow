@@ -22,6 +22,7 @@ import NavigationNodeItem from "./NavigationNodeItem";
     }
 }
 
-// export default NavigationNodeFolder;
-export default React.memo(NavigationNodeFolder);
+export default NavigationNodeFolder;
+// export default React.memo(NavigationNodeFolder);
+
  

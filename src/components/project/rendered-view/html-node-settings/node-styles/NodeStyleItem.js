@@ -11,6 +11,8 @@ export default function NodeStyleItem({child, index}) {
 
     const dispatch = useDispatch()
 
+    
+
     const [isListOpened, setIsListOpened] = useState(false);
 
     let childId = child.options[0].id;
@@ -41,6 +43,7 @@ export default function NodeStyleItem({child, index}) {
     } else if (child.isOnlyForTablet  === true && activeProjectResolution !== "2") {
         
     } else {
+
     return (
         <div className={"rich-element-settings_button active" + (isStyleSet ? "" : " styleIsNotSet")} 
         onMouseLeave={() => setIsListOpened(false)}>

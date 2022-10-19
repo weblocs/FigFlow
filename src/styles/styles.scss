@@ -12,6 +12,12 @@ img {
   width: 100px;
 }
 
+.empty-collection-wrapper {
+  padding: 30px;
+  background-color: #453bd617;
+  outline: 1px solid #00f;
+}
+
 .user-panel, .parents-path, .projectPageItem {
   font-family: Inter, sans-serif;
   color: #333;
@@ -2782,6 +2788,8 @@ font-weight: 700;
     margin-bottom: 6px;
     color: #5b5b5b;
 }
+
+
 
 
 

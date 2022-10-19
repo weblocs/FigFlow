@@ -7,7 +7,12 @@ import ProprtyInputLabel from "./ProprtyInputLabel";
 export default function ColorPicker (props) {
 
     const projectSwatches = useSelector((state) => state.project.projectSwatches);
-    const editedStyleValue = useSelector((state) => state.project.activeStyleObject?.[props.style.replace("-","_")] || state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]);
+    const editedStyleValue = useSelector((state) => state.project.activeStyleObject?.[props.style] || state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]);
+ 
+    const activeSwatchName = useSelector((state) => {
+
+        return 
+    });
 
     const dispatch = useDispatch();
 
@@ -31,6 +36,7 @@ export default function ColorPicker (props) {
     useEffect(() => {
         setActiveSwatchNameOrColorValue(editedStyleValue);
         projectSwatches.forEach((swatch) => {
+
             if(swatch.color === editedStyleValue) {
                 setActiveSwatchNameOrColorValue(swatch.name);
                 setActiveSwatch(swatch);
@@ -75,9 +81,7 @@ export default function ColorPicker (props) {
     }
 
     function handleSwatchClick(swatch) {
-        console.log(projectSwatches);
         setSwatchEditorMode("edit");
-        console.log(swatch);
         setActiveSwatch(swatch);
         dispatch(editStyleProperty([props.style,swatch.color]));
     }
@@ -139,7 +143,9 @@ export default function ColorPicker (props) {
                     style={{backgroundColor: editedStyleValue}} 
                     onClick={handleOpeningSwatchesEditor}></div>
 
-                    <div className={"style-edit-text" + ((styleColorInputOpen) ? " active" : "")} onClick={handleColorTextClick}>{activeSwatchNameOrColorValue}</div>
+                    <div className={"style-edit-text" + ((styleColorInputOpen) ? " active" : "")} onClick={handleColorTextClick}>
+                        {activeSwatchNameOrColorValue}
+                    </div>
                     <input 
                     onBlur={handleStyleColorInputBlur}
                     onKeyDown={handleStyleColorKeyDown}
