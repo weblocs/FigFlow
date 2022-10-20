@@ -68,7 +68,7 @@ export default function StoreUseEffectUpdates () {
             activeHtmlNode = `[el_id='${hoveredNodeId}'][cms_item_index='${activeHoveredCmsItemIndex}']`
         }
         document.querySelector(activeHtmlNode)?.classList.add("hovered");
-    },[hoveredNodeId])
+    },[hoveredNodeId, activeHoveredCmsItemIndex])
 
     useEffect(() => {
         document.querySelector(`.navigation-node.active`)?.classList.remove("active");
@@ -80,7 +80,7 @@ export default function StoreUseEffectUpdates () {
             activeHtmlNode = `[el_id='${activeNodeId}'][cms_item_index='${activeClickedCmsItemIndex}']`
         }
         document.querySelector(activeHtmlNode)?.classList.add("active");
-    },[activeNodeId, preRenderedHTMLNodes])
+    },[activeNodeId, activeClickedCmsItemIndex, preRenderedHTMLNodes])
 
     
     useEffect(() => {   

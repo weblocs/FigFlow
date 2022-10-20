@@ -26,7 +26,7 @@ function RenderedNode(props) {
   const listOfNodeStyles = useSelector((state) => props.class.map((cl,index) => 
   {
     if(index !== 0 && cl.id !== '') {
-      const styleDefaultName = listOfSubStyles[index-1]?.defaultName;
+      const styleDefaultName = listOfSubStyles?.[index-1]?.defaultName;
       if(styleDefaultName !== undefined) {
         return styleDefaultName.replaceAll(" ","-").toLowerCase() + "-" + cl.name;
       }

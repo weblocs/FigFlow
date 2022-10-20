@@ -8,7 +8,7 @@ import { getFirestore, updateDoc, doc } from "firebase/firestore";
 import { firebaseConfig } from "../utils/firebase-config.js";
 
 const initialState = {
-  offlineMode: true,
+  offlineMode: false,
   offlineProjectName: "projekt1", 
 
   projectMode: "developer", // developer or creator
@@ -1926,6 +1926,7 @@ export const projectSlice = createSlice({
 
     setProjectFirebaseId: (state, action) => {
         state.projectFirebaseId = action.payload;
+        console.log(state.projectFirebaseId);
     },
 
     saveProjectToFirebase: (state) => {

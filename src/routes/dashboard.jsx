@@ -46,32 +46,34 @@ export default function Dashboard() {
 
     return (
         <div className="user-panel">
-<div className="dashboard-section">
-<div className="container">
-  <div className="new-project-header">
-    <div className="dashboard-email-box">
-        
-        <div className="dashboard-log-out">Account:</div>
-        <Link to="/login" className="user-link">
-        <div className="dashboard-email">{userEmail}</div>
-        </Link>
-    </div>
-    <CreateNewProject userid={uid} />
-    
-  </div>
-  <div className="project-grid">
-        {projects.map((project) => 
-            <Link
-                className="project-item"
-                to={`/design/${project.projectId}`}
-                key={project.projectId}>
-                <div className="project-title">{project.projectId}</div>
-            </Link>
-        )} 
-        <Outlet />
-  </div>
-</div>
-</div>
-</div>
+            <div className="dashboard-section">
+                <div className="container">
+                    <div className="new-project-header">
+                        <div className="dashboard-email-box">
+                            <div className="dashboard-log-out">Account:</div>
+                            <Link to="/login" className="user-link">
+                            <div className="dashboard-email">{userEmail}</div>
+                            </Link>
+                        </div>
+                        <CreateNewProject userid={uid} />
+                        
+                    </div>
+                    <div className="project-grid">
+                            {projects.map((project) => 
+                                <Link
+                                    className="project-item"
+                                    to={`/design/${project.projectId}`}
+                                    key={project.projectId}>
+                                    <div className="project-title">{project.projectId}</div>
+                                    {(project?.isTemplate) && (
+                                        <div className="dashboard_is-template">Template</div>
+                                    )}
+                                </Link>
+                            )} 
+                            <Outlet />
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }

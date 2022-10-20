@@ -98,7 +98,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
             isActiveIf={openStyleOptionsDropdown} />
             
             <div onClick={() => handleClickInSticker(id,index)} className="text">
-                {styleIsSet ? name : (child.defaultName || name)}
+                {(child?.defaultName !== undefined) ? ( styleIsSet ? (child.defaultName + "-" + name) : (child.defaultName || name)) : (name)}
             </div>
             <span className="seleted-class-delete-button"
             onClick={handleOpenDropdown}
