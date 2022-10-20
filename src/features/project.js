@@ -42,6 +42,9 @@ const initialState = {
   activeCollectionItemTemplateId: "",
   collectionPanelState: "collections",
 
+  activeClickedCmsItemIndex: undefined,
+  activeHoveredCmsItemIndex: undefined,
+
   projectSymbols: [],
   editedSymbolId: {symbolId: "", elementId: ""},
 
@@ -342,6 +345,14 @@ export const projectSlice = createSlice({
 
     setCollectionPanelState: (state, action) => {
         state.collectionPanelState = action.payload;
+    },
+
+    setActiveClickedCmsItemIndex: (state, action) => {
+        state.activeClickedCmsItemIndex = action.payload;
+    },
+
+    setActiveHoveredCmsItemIndex: (state, action) => {
+        state.activeHoveredCmsItemIndex = action.payload;
     },
 
     /* Symbols */
@@ -2044,6 +2055,8 @@ export const {
     setActiveCollectionTemplate, 
     setActiveCollectionItemTemplate, 
     setCollectionPanelState, 
+    setActiveClickedCmsItemIndex,
+    setActiveHoveredCmsItemIndex,
 
 
     // [add] deleteCollection, editCollection, deleteCollectionItem, deleteCollectionField, editCollectionField

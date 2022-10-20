@@ -2,7 +2,7 @@ import React, {useState, useEffect, useMemo} from "react";
 import ContentEditable from "react-contenteditable";
 
 import {useSelector, useDispatch} from "react-redux";
-import {setHoveredHtmlNode, setKeyboardNavigationOn, makeSymbolEditable, setIsNodeSelectedFromNavigator} from "../../../features/project"
+import {setHoveredHtmlNode, setKeyboardNavigationOn, makeSymbolEditable, setIsNodeSelectedFromNavigator, setActiveClickedCmsItemIndex, setActiveHoveredCmsItemIndex} from "../../../features/project"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./_atoms/AddSectionButton";
 import Placeholder from '../../../img/placeholder.svg';
@@ -34,8 +34,8 @@ function RenderedNode(props) {
     return cl.name
   }).toString().replaceAll(","," ") + 
   " renderedNode "
-  // + ((state.project.activeNodeId === props.id) ? "active " : " ") 
-  // + ((state.project.hoveredNodeId === props.id) ? "hovered" : " ")
+  // + ((state.project.activeNodeId === elementId) ? "active " : " ") 
+  // + ((state.project.hoveredNodeId === elementId) ? "hovered" : " ")
   );
 
   // console.log("rend node");
@@ -58,7 +58,7 @@ function RenderedNode(props) {
   );
 
   // useEffect(() => {
-  //   if(activeNodeId !== props.id) {
+  //   if(activeNodeId !== elementId) {
   //     setEditable(false);
   //   }
   // },[activeNodeId])
@@ -72,7 +72,8 @@ function RenderedNode(props) {
   function handleOnClick(e) {
     e.stopPropagation();
     dispatch(setIsNodeSelectedFromNavigator(false));
-    props.onClick([props.id, props?.class[0]?.name]);
+    dispatch(setActiveClickedCmsItemIndex(props.itemIndex));
+    props.onClick([elementId, props?.class[0]?.name]);
     if (projectMode === "creator") {
       setEditable(true);
       dispatch(setKeyboardNavigationOn(false))
@@ -84,7 +85,8 @@ function RenderedNode(props) {
 
   function handleMouseOver(e) {
     e.stopPropagation();
-    dispatch(setHoveredHtmlNode(props.id));
+    dispatch(setHoveredHtmlNode(elementId));
+    dispatch(setActiveHoveredCmsItemIndex(props.itemIndex));
   }
 
   function handleMouseOut(e) {
@@ -126,11 +128,14 @@ function RenderedNode(props) {
   
 
   // "div"
+
+  let elementId = props.id;
   
   let elementHTML = (
     <div 
     style={customStyle}
-    el_id={props.id}
+    el_id={elementId}
+    cms_item_index={props.itemIndex}
     onClick={handleOnClick}
     onMouseOver={handleMouseOver}
     onMouseOut={handleMouseOut}
@@ -138,8 +143,6 @@ function RenderedNode(props) {
     >
       {props.children.map((el) => (
         <RenderedNode
-          
-
           id={el.id}
           title={el.title}
           subtype={el.subtype}
@@ -148,7 +151,6 @@ function RenderedNode(props) {
           symbolId={el.symbolId}
           type={el.type}
           styles={el.styles}
-
           key={el.id}
           itemIndex = {props.itemIndex}
           renderedCollectionIndex={props.renderedCollectionIndex}
@@ -166,10 +168,10 @@ function RenderedNode(props) {
   if (props.type === "sec") {
     elementHTML = (
       <div onMouseEnter={handleSectionMouseOver}>
-
       <div 
       style={customStyle}
-      el_id={props.id}
+      el_id={elementId}
+      cms_item_index={props.itemIndex}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
@@ -177,8 +179,6 @@ function RenderedNode(props) {
       >
         {props.children.map((el) => (
           <RenderedNode
-            
-
             id={el.id}
             title={el.title}
             subtype={el.subtype}
@@ -197,9 +197,8 @@ function RenderedNode(props) {
             onClick={([nodeId,className]) => props.onClick([nodeId,className])}
           />
         ))}
-        
       </div>
-      <AddSectionButton sectionId={props.id} />
+      <AddSectionButton sectionId={elementId} />
       </div>
     );
   }
@@ -208,7 +207,8 @@ function RenderedNode(props) {
     elementHTML = (
       <div 
       style={customStyle}
-      el_id={props.id}
+      el_id={elementId}
+      cms_item_index={props.itemIndex}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
@@ -245,20 +245,21 @@ function RenderedNode(props) {
     elementHTML = (
       <div 
       style={customStyle}
-      id={props.id}
-      el_id={props.id}
+      id={elementId}
+      el_id={elementId}
+      cms_item_index={props.itemIndex}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       className={listOfNodeStyles}
       >
         <div 
-        onDoubleClick={() => (editedSymbolId.symbolId === "") && dispatch(makeSymbolEditable({symbolId:props.symbolId, elementId: props.id}))} 
+        onDoubleClick={() => (editedSymbolId.symbolId === "") && dispatch(makeSymbolEditable({symbolId:props.symbolId, elementId: elementId}))} 
         className={"symbol-box-wrapper" + 
         ((editedSymbolId.symbolId === props.symbolId &&
-          editedSymbolId.elementId === props.id) ? " active" : "")}
+          editedSymbolId.elementId === elementId) ? " active" : "")}
         style={{position: "relative", height: "0"}}>
-          <div symbol_id={props.id} className="symbol-wrapper" style={{width: "100%", height: "40px"}}></div>
+          <div symbol_id={elementId} className="symbol-wrapper" style={{width: "100%", height: "40px"}}></div>
         </div>
 
         {props.children.map((el) => (
@@ -297,14 +298,15 @@ function RenderedNode(props) {
     elementHTML = (
       <div 
       style={customStyle}
-      el_id={props.id}
+      el_id={elementId}
+      cms_item_index={props.itemIndex}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       className={listOfNodeStyles}
           >
             {collections[renderedCollectionIndex]?.items.map((item,itemIndex) => (
-              <div key={item.id}> 
+              <div key={item.id + itemIndex}> 
               {props.children.map((el) => (
                 <RenderedNode
                   id={el.id}
@@ -332,8 +334,8 @@ function RenderedNode(props) {
 
     if(props?.cmsCollectionId === undefined) {
       elementHTML = (
-        <div 
-        el_id={props.id} 
+        <div  key={el.id}
+        el_id={elementId} 
         className="empty-collection-wrapper renderedNode"
         onClick={handleOnClick}
         onMouseOver={handleMouseOver}
@@ -344,8 +346,8 @@ function RenderedNode(props) {
     }
     else if(collections[renderedCollectionIndex]?.items.length === 0) {
       elementHTML = (
-        <div 
-        el_id={props.id} 
+        <div  key={el.id}
+        el_id={elementId} 
         className="empty-collection-wrapper renderedNode"
         onClick={handleOnClick}
         onMouseOver={handleMouseOver}
@@ -357,7 +359,7 @@ function RenderedNode(props) {
       if(props.children.length === 0) {
         elementHTML = (
           <div 
-          el_id={props.id} 
+          el_id={elementId} 
           className="renderedNode"
           onClick={handleOnClick}
           onMouseOver={handleMouseOver}
@@ -387,7 +389,8 @@ function RenderedNode(props) {
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
-      el_id={props.id}
+      el_id={elementId}
+      cms_item_index={props.itemIndex}
       className={listOfNodeStyles}
       />
     );
@@ -395,6 +398,7 @@ function RenderedNode(props) {
 
   let nodeText = props.title;
   if (props.type === "h" || props.type === "p") {
+
     if(nodesEditMode === "cmsTemplate" && props.cmsFieldId !== "" && props.cmsFieldId !== undefined) {
       nodeText = collections.find(({ id }) => id === activeCollectionTemplateId)?.items?.find(({id}) => id === activeCollectionItemTemplateId).data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue;
     }
@@ -423,7 +427,8 @@ function RenderedNode(props) {
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
         className={listOfNodeStyles}
-        el_id={props.id}
+        el_id={elementId}
+        cms_item_index={props.itemIndex}
         tagName={(props.data?.subtype !== undefined) ? props.subtype : "h1"}
         html={nodeText}
         disabled={!editable}
@@ -436,7 +441,8 @@ function RenderedNode(props) {
       <ContentEditable
         style={customStyle}
         className={listOfNodeStyles}
-        el_id={props.id}
+        el_id={elementId}
+        cms_item_index={props.itemIndex}
         tagName="p"
         onClick={handleOnClick}
         onDoubleClick={handleDoubleClick}
@@ -452,7 +458,8 @@ function RenderedNode(props) {
     elementHTML = (
       <div 
       style={customStyle}
-      el_id={props.id}
+      el_id={elementId}
+      cms_item_index={props.itemIndex}
       onClick={handleOnClick}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}

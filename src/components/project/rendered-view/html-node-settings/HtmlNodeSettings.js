@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 export default function HtmlNodeSettings() {
     const activeNodeId = useSelector((state) => state.project.activeNodeId)
     const isNodeSymbol = useSelector((state) => (state.project.activeNodeObject?.type === "sym"))
+    const activeClickedCmsItemIndex = useSelector((state) => state.project.activeClickedCmsItemIndex)
 
     const dispatch = useDispatch();
 
@@ -34,6 +35,9 @@ export default function HtmlNodeSettings() {
     }
 
     const activeNode = useSelector((state) => {
+        if(activeClickedCmsItemIndex !== undefined) {
+            return document.querySelector(`[el_id="${activeNodeId}"][cms_item_index="${activeClickedCmsItemIndex}"]`)
+        }
         return document.querySelector(`[el_id="${activeNodeId}"]`)
     });
     

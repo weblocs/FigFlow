@@ -14,9 +14,10 @@ export default function StoreUseEffectUpdates () {
     const undoActionActive = useSelector((state) => state.project.undoActionActive)
     const projectMode = useSelector((state) => state.project.projectMode)
     const activeTab = useSelector((state) => state.project.activeTab)
+    const activeClickedCmsItemIndex = useSelector((state) => state.project.activeClickedCmsItemIndex)
+    const activeHoveredCmsItemIndex = useSelector((state) => state.project.activeHoveredCmsItemIndex)
 
     
-
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -61,14 +62,24 @@ export default function StoreUseEffectUpdates () {
         document.querySelector(`.navigation-node.hovered`)?.classList.remove("hovered");
         document.querySelector(`[nodeid='${hoveredNodeId}']`)?.classList.add("hovered");
         document.querySelector(`.renderedNode.hovered`)?.classList.remove("hovered");
-        document.querySelector(`[el_id='${hoveredNodeId}']`)?.classList.add("hovered");
+
+        let activeHtmlNode = `[el_id='${hoveredNodeId}']`
+        if(activeHoveredCmsItemIndex !== undefined) {
+            activeHtmlNode = `[el_id='${hoveredNodeId}'][cms_item_index='${activeHoveredCmsItemIndex}']`
+        }
+        document.querySelector(activeHtmlNode)?.classList.add("hovered");
     },[hoveredNodeId])
 
     useEffect(() => {
         document.querySelector(`.navigation-node.active`)?.classList.remove("active");
         document.querySelector(`[nodeid='${activeNodeId}']`)?.classList.add("active");
         document.querySelector(`.renderedNode.active`)?.classList.remove("active");
-        document.querySelector(`[el_id='${activeNodeId}']`)?.classList.add("active");
+
+        let activeHtmlNode = `[el_id='${activeNodeId}']`
+        if(activeClickedCmsItemIndex !== undefined) {
+            activeHtmlNode = `[el_id='${activeNodeId}'][cms_item_index='${activeClickedCmsItemIndex}']`
+        }
+        document.querySelector(activeHtmlNode)?.classList.add("active");
     },[activeNodeId, preRenderedHTMLNodes])
 
     
