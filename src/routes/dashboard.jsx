@@ -32,7 +32,10 @@ export default function Dashboard() {
     });
 
     async function readProjects(){
-        const querySnapshot = await getDocs(query(collection(db, "projects"), where("userid", "==", uid)) );
+        const querySnapshot = await getDocs(query(collection(db, "projects")
+        , where("userid", "==", uid)
+        , where("isDeleted", "==", false)
+        ));
         let tempProjects = [];
         querySnapshot.forEach((doc) => {
             tempProjects = [...tempProjects, doc.data()];
@@ -64,7 +67,7 @@ export default function Dashboard() {
                                     className="project-item"
                                     to={`/design/${project.projectId}`}
                                     key={project.projectId}>
-                                    <div className="project-title">{project.projectId}</div>
+                                    <div className="project-title">{project.projectName}</div>
                                     {(project?.isTemplate) && (
                                         <div className="dashboard_is-template">Template</div>
                                     )}

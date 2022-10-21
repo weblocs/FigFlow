@@ -83,6 +83,9 @@ const initialState = {
   projectVersions: [{id: "1"}],
   activeProjectVersionId: "1",
 
+  isSettingsModalOpen: false,
+  projectSettingsData: {},
+
     activeStyleProperties: {
         font_family: "",
         font_weight: "",
@@ -1444,23 +1447,9 @@ export const projectSlice = createSlice({
         }
     },
 
-
-
-
-
-
-
-
-
-
-
     updateStateOnScroll: (state) => {
         state.scrollCount = state.scrollCount+1;
     },
-
-    
-
-    
 
     setNavigatorItemDragBehindState: (state, action) => {
         state.navigatorItemDragBehindState = action.payload;
@@ -1477,8 +1466,6 @@ export const projectSlice = createSlice({
         activeNode.linkType = action.payload.linkType;
         activeNode.link = action.payload.link;
     },
-
-    
 
     setProjectPopUp: (state, action) => {
         state.projectPopUp = action.payload;
@@ -1926,11 +1913,9 @@ export const projectSlice = createSlice({
 
     setProjectFirebaseId: (state, action) => {
         state.projectFirebaseId = action.payload;
-        console.log(state.projectFirebaseId);
     },
 
     saveProjectToFirebase: (state) => {
-
         if(!state.offlineMode) {
             async function saveProjectToFirebasePreRenderedNodesAndStyles() {
                 const app = initializeApp(firebaseConfig);
@@ -2039,6 +2024,15 @@ export const projectSlice = createSlice({
         state.activeProjectVersionId = "1";
     },
     // Add next reducers here
+
+    setIsSettingsModalOpen: (state, action) => {
+        state.isSettingsModalOpen = action.payload;
+    },
+
+    setProjectSettingsData: (state, action) => {
+        state.projectSettingsData = action.payload;
+    },
+    
   }
 })
 
@@ -2186,6 +2180,8 @@ export const {
     setSaveButtonStateText,
     setActiveRightSidebarTab,
     setActiveProjectResolution, 
+    setIsSettingsModalOpen,
+    setProjectSettingsData,
 
 } = projectSlice.actions
 

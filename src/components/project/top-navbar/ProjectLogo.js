@@ -3,6 +3,7 @@ import LogoIcon from '../../../img/logo.svg';
 import ModeChanger from "./ModeChanger";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { setIsSettingsModalOpen } from "../../../features/project";
 
 export default function ProjectLogo() {
     const projectMode = useSelector((state) => state.project.projectMode)
@@ -13,6 +14,11 @@ export default function ProjectLogo() {
     useEffect(() => {
         setListIsOpened(false);
     },[projectMode]);
+
+    function handleSettingsClick() {
+        dispatch(setIsSettingsModalOpen(true));
+        setListIsOpened(false);
+    }
 
     return (
         <div className="addNodeButton">
@@ -27,6 +33,9 @@ export default function ProjectLogo() {
                     <div className="logo-settings-panel-link">Dashboard</div>
                 </Link>
                 <ModeChanger />
+                <div
+                onClick={handleSettingsClick}
+                className="logo-settings-panel-link">Settings</div>
             </div>
         </div>
 )

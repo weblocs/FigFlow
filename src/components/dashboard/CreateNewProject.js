@@ -60,6 +60,7 @@ export default function CreateNewProject (props) {
             } 
             
             await setDoc(doc(collection(db, "projects"), newProjectId), {
+                isDeleted: false,
                 projectId: projectSlug,
                 projectName: input,
                 userid: props.userid,
@@ -132,6 +133,7 @@ export default function CreateNewProject (props) {
                         {templates.map((template) => {
                             return (
                             <div 
+                            key={template.projectId}
                             onClick={() => handleTemplateClick(template.projectId)}
                             className="project-template_item">
                                 {template.name}

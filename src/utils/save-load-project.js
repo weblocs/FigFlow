@@ -8,7 +8,7 @@ import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "fi
 import { getStorage, ref } from "firebase/storage";
 import { firebaseConfig } from "./firebase-config.js";
 import { v4 as uuidv4 } from "uuid";
-import { setCollections, setBlocks, setSymbols, setStyles, setPages, setProjectFirebaseId, setSwatches, setLayouts, setPageFolders, setPagesNestedStructure } from '../features/project'
+import { setCollections, setBlocks, setSymbols, setStyles, setPages, setProjectFirebaseId, setSwatches, setLayouts, setPageFolders, setPagesNestedStructure, setProjectSettingsData } from '../features/project'
 import { setProjectImages } from "../features/project-images"
 
 
@@ -76,6 +76,10 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
       dispatch(setBlocks([...projectData.data()?.richTextElements]));
       dispatch(setProjectImages([...projectData.data()?.images]));
       dispatch(setLayouts([...projectData.data()?.sections]));
+      dispatch(setProjectSettingsData({
+        name: projectData.data()?.projectName,
+        slug: projectData.data()?.projectId,
+      }));
     }
   } else {
     let projectPagesStorage = localStorage.getItem(offlineProjectName+"pages");

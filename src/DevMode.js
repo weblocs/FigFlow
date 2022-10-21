@@ -23,6 +23,7 @@ import ProjectAddPanel from "./components/project/left-sidebar/navigator/Project
 import AddSectionModal from "./components/project/modals/AddSectionModal";
 import PageSettingsPanel from "./components/project/left-sidebar/pages/PageSettingsPanel";
 import UpdateSymbolButton from "./components/project/rendered-view/_atoms/UpdateSymbolButton";
+import ProjectSettings from "./components/settings/ProjectSettings";
 
 export default function DevMode() {
   
@@ -39,8 +40,8 @@ export default function DevMode() {
       <StoreUseEffectUpdates />
       <AddSectionModal />
       
-      
       <div className="user-panel">
+        <ProjectSettings />
         <ProjectTopNavbar />
         <UpdateSymbolButton />
       </div>
