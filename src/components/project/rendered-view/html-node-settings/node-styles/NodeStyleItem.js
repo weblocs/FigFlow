@@ -54,8 +54,8 @@ export default function NodeStyleItem({child, index}) {
             <div className="rich-element-settings_button-text" 
             onMouseEnter={() => setIsListOpened(true)}
             >
-                <span>{child.defaultName.replaceAll("-", " ")}</span>
-                {isStyleSet ? childName.replaceAll("-", " ") : ("Default" || childName)}
+                <span>{child?.defaultName?.replaceAll("-", " ")}</span>
+                {isStyleSet ? childName?.replaceAll("-", " ") : ("Default" || childName)}
             </div>
 
             <div className={"rich-element-settings_options_list" + ((isListOpened) ? " active" : "")}>

@@ -44,7 +44,7 @@ export default function StoreUseEffectUpdates () {
         if(projectMode === "developer") {
             dispatch(setActiveNodeComputedStyles());
         }
-    },[activeNodeId, preRenderedStyles, preRenderedHTMLNodes]);
+    },[activeNodeId, preRenderedStyles, preRenderedHTMLNodes, activeProjectResolution]);
 
     useEffect(() => {
         dispatch(addUndoState());
@@ -85,7 +85,7 @@ export default function StoreUseEffectUpdates () {
     
     useEffect(() => {   
         dispatch(setActiveHtmlNodeParentsPath());
-    },[activeNodeId, preRenderedHTMLNodes]);
+    },[activeNodeId, preRenderedHTMLNodes, preRenderedStyles, activeProjectResolution]);
 
     useEffect(() => {
         if(activeTab === "Navigator") {

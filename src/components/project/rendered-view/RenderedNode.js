@@ -99,31 +99,33 @@ function RenderedNode(props) {
   }
   
   let customStyle = {};
-  if (activeProjectResolution === "1") {
-    if(props?.styles?.styles !== undefined) {
-      customStyle = props?.styles?.styles;
-      customStyle = Object.fromEntries(
-        Object.entries(customStyle).map(([key, value]) =>
-          [_.camelCase(key), value]
-        )
-      )    
-    }
+  
+  if(props?.styles?.styles !== undefined) {
+    customStyle = props?.styles?.styles;
   }
-  if (activeProjectResolution === "2") {
+
+  if (activeProjectResolution === "2" || activeProjectResolution === "3" || activeProjectResolution === "4") {
     if(props?.styles?.tabletStyles !== undefined) {
-      customStyle = props?.styles?.tabletStyles;
+      customStyle = {...customStyle, ...props.styles.tabletStyles};
     }
   }
-  if (activeProjectResolution === "4") {
+  if (activeProjectResolution === "3" || activeProjectResolution === "4" ) {
     if(props?.styles?.mobileStyles !== undefined) {
-      customStyle = props?.styles?.mobileStyles;
+      customStyle = {...customStyle, ...props.styles.mobileStyles};
     }
   }
   if (activeProjectResolution === "3") {
     if(props?.styles?.portraitStyles !== undefined) {
-      customStyle = props?.styles?.portraitStyles;
+      customStyle = {...customStyle, ...props?.styles?.portraitStyles};
     }
   }
+
+  customStyle = Object.fromEntries(
+    Object.entries(customStyle).map(([key, value]) =>
+      [_.camelCase(key), value]
+    )
+  )   
+  // console.log(customStyle); 
   
   
 
@@ -164,6 +166,21 @@ function RenderedNode(props) {
       ))}
     </div>
   );
+
+
+
+  if(props.children.length === 0) {
+    elementHTML = (
+      <div 
+      el_id={elementId} 
+      className="renderedNode"
+      onClick={handleOnClick}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      style={{width: "75px", height: "75px", outline: "1px solid #8d8de5"}}>
+      </div>
+    )
+  }
 
   if (props.type === "sec") {
     elementHTML = (

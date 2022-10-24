@@ -25,6 +25,11 @@ img {
   align-items: center;
 }
 
+.empty-div {
+  width: 75px;
+  height: 75px;
+}
+
 .settings-modal.active {
   display: flex;
 }
@@ -1338,10 +1343,23 @@ transform: translateX(-50%);
   border: none;
   height: 18px;
   width: 36px;
+  padding-right: 6px;
+  background: transparent;
+  border-radius: 4px;
+}
+
+.style-edit-input.simple.active-in-hierarchy {
+  background: #eaeaea;
 }
 
 .style-edit-input.simple.active {
+  background: #ececf4;
   color: #544cca;
+}
+
+.style-edit-input.simple.active-inline {
+  color: #3d7e2f;
+  background: #eff1d8;
 }
 
 .style-edit-value {
@@ -1433,6 +1451,10 @@ transform: translateX(-50%);
   padding-top: 4px;
 }
 
+.style-title-box {
+  position: relative;
+}
+
 .style-title-box .text {
   border-radius: 4px;
 }
@@ -1440,6 +1462,11 @@ transform: translateX(-50%);
 .style-title-box.isSet .text {
   color: #3d7e2f;
   background: #dbdbdb;
+}
+
+.style-title-box.isInHierarchy .text {
+  background: #eaeaea;
+  color: #5a5a5a;
 }
 
 .style-title-box.active .text {
@@ -1456,6 +1483,55 @@ transform: translateX(-50%);
   background: #e9e9f1;
 }
 
+.style-property-info {
+  display: none;
+  width: 140px;
+  padding: 8px;
+  background: #f4f4f4;
+  border: 1px solid #cbcbcbdd;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 20px;
+  left: -4px;
+  font-size: 11px;
+  z-index: 6;
+}
+
+.style-property-info_closer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width:100vw;
+  height:100vh;
+  z-index: 5;
+  display: none;
+}
+
+.reset-button {
+  cursor: pointer;
+  display: none;
+  padding: 0 4px;
+  padding: 0 4px;
+  border-radius: 3px;
+  background-color: #d9d9d9;
+}
+
+.reset-button:hover {
+  background-color: #d1d1d1;
+}
+
+.reset-button.active {
+  display: inline-block;
+}
+
+.style-property-info_closer.active {
+  display: block;
+}
+
+.style-property-info.active {
+  display: block;
+}
+
 .style-edit-unit-list {
   display: none;
   position: absolute;
@@ -1470,6 +1546,14 @@ transform: translateX(-50%);
 }
 
 .style-edit-unit-list.active {
+  display: block;
+}
+
+.style-property-info-text {
+  display: none;
+}
+
+.style-property-info-text.active {
   display: block;
 }
 
@@ -3026,6 +3110,8 @@ h3 {
   width: 100%;
   height: 100%;
 }
+
+
 
 }
 

@@ -13,10 +13,10 @@ export default function TypographyStylePanel () {
 
           <div className="_2-col-style-grid">
               <SizeStyleInput style="font-size" text="Size" />
-              <SizeStyleInput style="line-height" text="Height" />
+              <SizeStyleInput style="line-height" text="Height" placeholder="auto" />
           </div>
 
-          <SizeStyleInput style="letter-spacing" text="Spacing" />
+          <SizeStyleInput style="letter-spacing" text="Spacing" placeholder="auto" />
 
           <ColorPicker style="color" />
           

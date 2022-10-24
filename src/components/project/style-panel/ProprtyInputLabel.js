@@ -1,19 +1,33 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteActiveHtmlNodeInlineStyleProperty, deleteStyleProperty } from "../../../features/project";
 
 export default function ProprtyInputLabel ({text,property}) {
 
-    const doesStylePropertyBelongToActiveClass = useSelector((state) => 
-        state.project.activeStyleObject?.[property] !== undefined
-    );
+    const objectHierarchyStyles = useSelector((state) => state.project.objectHierarchyStyles?.findLast(({style}) => style === property));
 
-    const doesStylePropertyIsInline = useSelector((state) => 
-        state.project.activeNodeObject?.styles?.styles?.[property] !== undefined
-    );
+    const doesStylePropertyBelongToActiveClass = useSelector((state) => (state.project.activeStyleObject?.[property] !== undefined));
+
+    const isPropertyInStyleHierarchy = useSelector((state) => objectHierarchyStyles !== undefined);
+
+    const doesStylePropertyIsInline = useSelector((state) => objectHierarchyStyles?.isInline === true);
+
+    const isStylePropertyFromActiveResolution = useSelector((state) => objectHierarchyStyles?.resolution === state.project.activeProjectResolutionStylesListName);
+
+    const activeProjectResolutionStylesListName = useSelector((state) => state.project.activeProjectResolutionName);
 
     const dispatch = useDispatch();
 
+    const [isInfoOpen, setIsInfoOpen] = useState(false);
+
     function handleClick() {
+        if(isPropertyInStyleHierarchy || doesStylePropertyIsInline || doesStylePropertyBelongToActiveClass) {
+            console.log(objectHierarchyStyles);
+            setIsInfoOpen(true);
+        }
+    }
+
+    function handlePropertyReset() {
         if(doesStylePropertyIsInline) {
             dispatch(deleteActiveHtmlNodeInlineStyleProperty(property))
             if (property === "flex-grow") { 
@@ -33,9 +47,40 @@ export default function ProprtyInputLabel ({text,property}) {
         <div 
         className={"style-title-box" + 
         ((doesStylePropertyBelongToActiveClass) ? " active" : "") +
-        ((doesStylePropertyIsInline) ? " isInline" : "")}
+        ((doesStylePropertyIsInline) ? " isInline" : "") +
+        ((isPropertyInStyleHierarchy) ? " isInHierarchy" : "")}
         >
             <div className="text" onClick={handleClick}>{text}</div>
+                <div 
+                onClick={() => setIsInfoOpen(false)}
+                className={"style-property-info_closer" + 
+                    ((isInfoOpen) ? " active" : "")}></div>
+                <div className={"style-property-info" + 
+                    ((isInfoOpen) ? " active" : "")}>
+                    <div 
+                    className={"reset-button" + ((doesStylePropertyIsInline || doesStylePropertyBelongToActiveClass) ? " active" : "")}
+                    onClick={handlePropertyReset}>Reset</div>
+
+
+
+                    <div className={"style-property-info-text" + 
+                        ((doesStylePropertyIsInline) ? " active" : "")}>
+                        Inline property
+                    </div>
+
+                    <div className={"style-property-info-text" + 
+                        ((objectHierarchyStyles?.origin !== '') ? " active" : "")}>
+                        Class: {objectHierarchyStyles?.origin}
+                    </div>
+                    <div className={"style-property-info-text" + 
+                        ((objectHierarchyStyles?.option !== '') ? " active" : "")}>
+                        Option: {objectHierarchyStyles?.option}
+                    </div>
+                    <div className={"style-property-info-text" + 
+                        ((objectHierarchyStyles?.resolution !== '') ? " active" : "")}>
+                        Resolution: {objectHierarchyStyles?.resolution}
+                    </div>
+                </div>
         </div>
     )
 }

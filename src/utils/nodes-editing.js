@@ -73,7 +73,9 @@ export function JSONtoCSS (_classes, activeResolution) {
       (_classes[i].tabletStyles) && ( tempClasses.push({name:tempName, styles: _classes[i].tabletStyles}));
       _classes[i].childrens.forEach((childStyle) => {
         childStyle.options.forEach((option) => {
-          (option.tabletStyles) && ( tempClasses.push({name:tempName + "." + option.name, styles: option.tabletStyles}));
+          (option.tabletStyles) && ( tempClasses.push({name:tempName + "."
+          + ((childStyle?.defaultName !== undefined) ? (childStyle.defaultName?.replaceAll(" ","-").toLowerCase() + "-") : "") 
+          + option.name, styles: option.tabletStyles}));
         })
       });
     }
@@ -84,7 +86,9 @@ export function JSONtoCSS (_classes, activeResolution) {
       (_classes[i].portraitStyles) && ( tempClasses.push({name:tempName, styles: _classes[i].portraitStyles}));
       _classes[i].childrens.forEach((childStyle) => {
         childStyle.options.forEach((option) => {
-          (option.portraitStyles) && ( tempClasses.push({name:tempName + "." + option.name, styles: option.portraitStyles}));
+          (option.portraitStyles) && ( tempClasses.push({name:tempName + "."
+          + ((childStyle?.defaultName !== undefined) ? (childStyle.defaultName?.replaceAll(" ","-").toLowerCase() + "-") : "") 
+          + option.name, styles: option.portraitStyles}));
         })
       });
     }
@@ -95,7 +99,9 @@ export function JSONtoCSS (_classes, activeResolution) {
       (_classes[i].mobileStyles) && ( tempClasses.push({name:tempName, styles: _classes[i].mobileStyles}));
       _classes[i].childrens.forEach((childStyle) => {
         childStyle.options.forEach((option) => {
-          (option.mobileStyles) && ( tempClasses.push({name:tempName + "." + option.name, styles: option.mobileStyles}));
+          (option.mobileStyles) && ( tempClasses.push({name:tempName + "."
+          + ((childStyle?.defaultName !== undefined) ? (childStyle.defaultName?.replaceAll(" ","-").toLowerCase() + "-") : "") 
+          + option.name, styles: option.mobileStyles}));
         })
       });
     }

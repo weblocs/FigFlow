@@ -1,4 +1,7 @@
 export function findStyleUnit(styleValue) {
+    if(styleValue?.includes("auto")) {
+        return "-";
+    }
     if(styleValue?.includes("px")) {
         return "px";
     }

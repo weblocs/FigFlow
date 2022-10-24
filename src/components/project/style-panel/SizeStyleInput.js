@@ -7,8 +7,12 @@ import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 export default function SizeStyleInput (props) {
 
-    const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style]) || props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]));
-    const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style]) || props?.placeholder && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]) );
+    const hierarchyStyleProperty = useSelector((state) => 
+        state.project.objectHierarchyStyles?.findLast(({style}) => style === props.style)?.value
+    );
+
+    const editedStyleValue = useSelector((state) => deleteUnits(hierarchyStyleProperty) || props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]));
+    const editedStyleUnit = useSelector((state) => findStyleUnit(hierarchyStyleProperty) || (props?.placeholder && "-") || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]) );
 
     const dispatch = useDispatch();
     const inputRef = useRef();

@@ -1,14 +1,30 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import {findStyleUnit, deleteUnits} from '../../../utils/style-panel'
-import {deleteStyleProperty, editStyleProperty, setKeyboardNavigationOn} from "../../../features/project"
+import {deleteActiveHtmlNodeInlineStyleProperty, deleteStyleProperty, editStyleProperty, setKeyboardNavigationOn} from "../../../features/project"
 import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 function SpaceStyleInput (props) {
 
+    const isPropertyInStyleHierarchy = useSelector((state) => 
+        state.project.objectHierarchyStyles?.find(({style}) => style === props.style) !== undefined
+    );
+
     const doesStylePropertyBelongToActiveClass = useSelector((state) => (state.project.activeStyleObject?.[props.style] !== undefined));
-    const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style]) || props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
-    const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style]) || props?.placeholder && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]) );
+    // const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style]) || !isPropertyInStyleHierarchy && props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
+    // const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style]) || (!isPropertyInStyleHierarchy && props?.placeholder) && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]) );
+
+    const hierarchyStyleProperty = useSelector((state) => 
+        state.project.objectHierarchyStyles?.findLast(({style}) => style === props.style)?.value
+    );
+
+    const editedStyleValue = useSelector((state) => deleteUnits(hierarchyStyleProperty) || props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]));
+    const editedStyleUnit = useSelector((state) => findStyleUnit(hierarchyStyleProperty) || (props?.placeholder && "-") || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]) );
+
+
+    const doesStylePropertyIsInline = useSelector((state) => 
+        state.project.activeNodeObject?.styles?.[state.project.activeProjectResolutionStylesListName]?.[props.style] !== undefined
+    );
 
     const dispatch = useDispatch();
     const inputRef = useRef();
@@ -47,7 +63,12 @@ function SpaceStyleInput (props) {
     }
 
     function handleReset() {
-        dispatch(deleteStyleProperty(props.style));
+        if(doesStylePropertyIsInline) {
+            dispatch(deleteActiveHtmlNodeInlineStyleProperty(props.style))
+        } else {
+            dispatch(deleteStyleProperty(props.style));
+        }
+        
         setUnitEditorOpened(false);
     }
 
@@ -66,7 +87,10 @@ function SpaceStyleInput (props) {
     },[isInputActive]);
 
     return (
-            <div className={"style-edit-input simple" + ((doesStylePropertyBelongToActiveClass) ? " active" : "")}>
+            <div className={"style-edit-input simple"
+            + ((doesStylePropertyIsInline) ? " active-inline" : "")
+            + ((isPropertyInStyleHierarchy) ? " active-in-hierarchy" : "")
+            + ((doesStylePropertyBelongToActiveClass) ? " active" : "")}>
 
                 
                 <div className="style-edit-value">
