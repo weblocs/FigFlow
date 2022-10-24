@@ -155,12 +155,13 @@ img {
 }
 
 .project-rendered-design.state-3 {
-  width:500px;
+  width:370px;
 }
 
 .project-rendered-design.state-4 {
-  width:370px;
+  width:500px;
 }
+
 
 .parents-path {
   display: flex;
@@ -1301,6 +1302,22 @@ position: absolute;
 left: 50%;
 transform: translateX(-50%);
 }
+
+.custom-resolutions-name {
+  display: none;
+  white-space: nowrap;
+  position: absolute;
+  right: 22px;
+  font-size: 11px;
+  top: 1.5px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.custom-resolutions-name.active {
+  display: block;
+}
+
 .custom-resolutions-button {
   position: absolute;
   left: -24px;
@@ -1485,7 +1502,7 @@ transform: translateX(-50%);
 
 .style-property-info {
   display: none;
-  width: 140px;
+  width: 156px;
   padding: 8px;
   background: #f4f4f4;
   border: 1px solid #cbcbcbdd;

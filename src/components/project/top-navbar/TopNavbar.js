@@ -42,9 +42,8 @@ export default function TopNavbar() {
           <TopNavbarResolutionChangeButton resolutionNumber="1" image={DesktopIcon} />
           {(projectMode === "developer") && (<>
           <TopNavbarResolutionChangeButton resolutionNumber="2" image={TabletIcon}  />
-          {/* <TopNavbarResolutionChangeButton resolutionNumber="3" image={PortraitIcon}  /> */}
           </>)}
-          <TopNavbarResolutionChangeButton resolutionNumber="4" image={MobileIcon}  />
+          <TopNavbarResolutionChangeButton resolutionNumber="3" image={MobileIcon}  />
           
           
         </div>

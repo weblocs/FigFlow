@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteActiveHtmlNodeInlineStyleProperty, deleteStyleProperty } from "../../../features/project";
+import { getResolutionName } from "../../../utils/nodes-editing";
 
 export default function ProprtyInputLabel ({text,property}) {
 
@@ -12,9 +13,7 @@ export default function ProprtyInputLabel ({text,property}) {
 
     const doesStylePropertyIsInline = useSelector((state) => objectHierarchyStyles?.isInline === true);
 
-    const isStylePropertyFromActiveResolution = useSelector((state) => objectHierarchyStyles?.resolution === state.project.activeProjectResolutionStylesListName);
-
-    const activeProjectResolutionStylesListName = useSelector((state) => state.project.activeProjectResolutionName);
+    const isStylePropertyFromActiveResolution = useSelector((state) => objectHierarchyStyles?.resolution === state.project.activeProjectResolution);
 
     const dispatch = useDispatch();
 
@@ -78,7 +77,7 @@ export default function ProprtyInputLabel ({text,property}) {
                     </div>
                     <div className={"style-property-info-text" + 
                         ((objectHierarchyStyles?.resolution !== '') ? " active" : "")}>
-                        Resolution: {objectHierarchyStyles?.resolution}
+                        Resolution: {getResolutionName(objectHierarchyStyles?.resolution)}
                     </div>
                 </div>
         </div>

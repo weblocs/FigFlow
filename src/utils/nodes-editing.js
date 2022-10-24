@@ -8,6 +8,77 @@ export function getIndexOfElementInArrayById(styleNodes, id) {
   return res;
 }
 
+export function getResolutionPathName(resolutionNumber) {
+  if (resolutionNumber === "1") {
+    return "styles"
+  }
+  if (resolutionNumber === "2") {
+    return "tabletStyles"
+  }
+  if (resolutionNumber === "3") {
+    return "mobileStyles"
+  }
+  if (resolutionNumber === "4") {
+    return "portraitStyles"
+  }
+  if (resolutionNumber === "5") {
+    return "mediumDesktopStyles"
+  }
+  if (resolutionNumber === "6") {
+    return "largeDesktopStyles"
+  }
+  if (resolutionNumber === "7") {
+    return "xLargeDesktopStyles"
+  }
+}
+
+export function getResolutionName(resolutionNumber) {
+  if (resolutionNumber === "1") {
+    return "Base (Desktop)"
+  }
+  if (resolutionNumber === "2") {
+    return "Tablet"
+  }
+  if (resolutionNumber === "3") {
+    return "Mobile"
+  }
+  if (resolutionNumber === "4") {
+    return "Portrait"
+  }
+  if (resolutionNumber === "5") {
+    return "Medium Desktop"
+  }
+  if (resolutionNumber === "6") {
+    return "Large Desktop"
+  }
+  if (resolutionNumber === "7") {
+    return "X Large Desktop"
+  }
+}
+
+export function isStyleContained(resolutionNumber, sizeResolution) {
+  if(sizeResolution === "2") {
+    return (resolutionNumber === "2" || resolutionNumber === "3" || resolutionNumber === "4" )
+  }
+  if(sizeResolution === "3") {
+    return (resolutionNumber === "3" || resolutionNumber === "4")
+  }
+  if(sizeResolution === "4") {
+    return (resolutionNumber === "4")
+  }
+  if(sizeResolution === "5") {
+    return (resolutionNumber === "5" || resolutionNumber === "6" || resolutionNumber === "7")
+  }
+  if(sizeResolution === "6") {
+    return (resolutionNumber === "6" || resolutionNumber === "7")
+  }
+  if(sizeResolution === "7") {
+    return (resolutionNumber === "7")
+  }
+}
+
+
+
 export function doesStylePropertyBelongToActiveStyle(activeStyleObject, property) {
   if (activeStyleObject?.[property] !== undefined) {
     return true;
@@ -37,71 +108,48 @@ export function JSONtoCSS (_classes, activeResolution) {
     let tempClasses = [];
     let tempName = "";
     
-    _classes.forEach(createTempClasses);
+    let resolution = "1";
+    _classes.forEach(createTempClassesResolution)
 
-    
-
-    (activeResolution === "2" || activeResolution === "3" || activeResolution === "4") && (
-      _classes.forEach(createTempClassesTablet)
+    resolution = "2";
+    (isStyleContained(activeResolution,resolution)) && (
+      _classes.forEach(createTempClassesResolution)
     );
 
-    (activeResolution === "3" || activeResolution === "4") && (
-      _classes.forEach(createTempClassesMobile)
+    resolution = "4";
+    (isStyleContained(activeResolution,resolution)) && (
+      _classes.forEach(createTempClassesResolution)
     );
 
-    (activeResolution === "3") && (
-      _classes.forEach(createTempClassesPortrait)
+    resolution = "3";
+    (isStyleContained(activeResolution,resolution)) && (
+      _classes.forEach(createTempClassesResolution)
     );
-    
 
-    function createTempClasses(_class, i) {
+    resolution = "5";
+    (isStyleContained(activeResolution,resolution)) && (
+      _classes.forEach(createTempClassesResolution)
+    );
+
+    resolution = "6";
+    (isStyleContained(activeResolution,resolution)) && (
+      _classes.forEach(createTempClassesResolution)
+    );
+
+    resolution = "7";
+    (isStyleContained(activeResolution,resolution)) && (
+      _classes.forEach(createTempClassesResolution)
+    );
+
+    function createTempClassesResolution(_class, i) {
       tempName = _classes[i].name;
       // (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
-      tempClasses.push({name:tempName, styles: _classes[i].styles});
+      (_classes[i][getResolutionPathName(resolution)]) && ( tempClasses.push({name:tempName, styles: _classes[i][getResolutionPathName(resolution)]}));
       _classes[i].childrens.forEach((childStyle) => {
         childStyle.options.forEach((option) => {
-          tempClasses.push({name: tempName + "." 
+          (option[getResolutionPathName(resolution)]) && ( tempClasses.push({name:tempName + "."
           + ((childStyle?.defaultName !== undefined) ? (childStyle.defaultName?.replaceAll(" ","-").toLowerCase() + "-") : "") 
-          + option.name, styles: option.styles});
-        })
-      });
-    }
-
-    function createTempClassesTablet(_class, i) {
-      tempName = _classes[i].name;
-      // (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
-      (_classes[i].tabletStyles) && ( tempClasses.push({name:tempName, styles: _classes[i].tabletStyles}));
-      _classes[i].childrens.forEach((childStyle) => {
-        childStyle.options.forEach((option) => {
-          (option.tabletStyles) && ( tempClasses.push({name:tempName + "."
-          + ((childStyle?.defaultName !== undefined) ? (childStyle.defaultName?.replaceAll(" ","-").toLowerCase() + "-") : "") 
-          + option.name, styles: option.tabletStyles}));
-        })
-      });
-    }
-
-    function createTempClassesPortrait(_class, i) {
-      tempName = _classes[i].name;
-      // (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
-      (_classes[i].portraitStyles) && ( tempClasses.push({name:tempName, styles: _classes[i].portraitStyles}));
-      _classes[i].childrens.forEach((childStyle) => {
-        childStyle.options.forEach((option) => {
-          (option.portraitStyles) && ( tempClasses.push({name:tempName + "."
-          + ((childStyle?.defaultName !== undefined) ? (childStyle.defaultName?.replaceAll(" ","-").toLowerCase() + "-") : "") 
-          + option.name, styles: option.portraitStyles}));
-        })
-      });
-    }
-
-    function createTempClassesMobile(_class, i) {
-      tempName = _classes[i].name;
-      // (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
-      (_classes[i].mobileStyles) && ( tempClasses.push({name:tempName, styles: _classes[i].mobileStyles}));
-      _classes[i].childrens.forEach((childStyle) => {
-        childStyle.options.forEach((option) => {
-          (option.mobileStyles) && ( tempClasses.push({name:tempName + "."
-          + ((childStyle?.defaultName !== undefined) ? (childStyle.defaultName?.replaceAll(" ","-").toLowerCase() + "-") : "") 
-          + option.name, styles: option.mobileStyles}));
+          + option.name, styles: option[getResolutionPathName(resolution)]}));
         })
       });
     }

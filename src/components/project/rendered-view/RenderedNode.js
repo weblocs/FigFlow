@@ -7,6 +7,7 @@ import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from "./_atoms/AddSectionButton";
 import Placeholder from '../../../img/placeholder.svg';
 import { camelCase } from "lodash";
+import { getResolutionPathName, isStyleContained } from "../../../utils/nodes-editing";
 
 function RenderedNode(props) {
 
@@ -104,21 +105,18 @@ function RenderedNode(props) {
     customStyle = props?.styles?.styles;
   }
 
-  if (activeProjectResolution === "2" || activeProjectResolution === "3" || activeProjectResolution === "4") {
-    if(props?.styles?.tabletStyles !== undefined) {
-      customStyle = {...customStyle, ...props.styles.tabletStyles};
+  function addResponsiveInlineStyle(resolution) {
+    if (isStyleContained(activeProjectResolution, resolution)) {
+      customStyle = {...customStyle, ...props.styles?.[getResolutionPathName(resolution)] };
     }
   }
-  if (activeProjectResolution === "3" || activeProjectResolution === "4" ) {
-    if(props?.styles?.mobileStyles !== undefined) {
-      customStyle = {...customStyle, ...props.styles.mobileStyles};
-    }
-  }
-  if (activeProjectResolution === "3") {
-    if(props?.styles?.portraitStyles !== undefined) {
-      customStyle = {...customStyle, ...props?.styles?.portraitStyles};
-    }
-  }
+
+  addResponsiveInlineStyle("2");
+  addResponsiveInlineStyle("3");
+  addResponsiveInlineStyle("4");
+  addResponsiveInlineStyle("5");
+  addResponsiveInlineStyle("6");
+  addResponsiveInlineStyle("7");
 
   customStyle = Object.fromEntries(
     Object.entries(customStyle).map(([key, value]) =>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { setActiveProjectResolution } from "../../../features/project";
 import ResolutionSettingsIcon from '../../../img/dots-vertical.svg';
+import { getResolutionName } from "../../../utils/nodes-editing";
 import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
 
 export default function CustomResolutionsButton() {
@@ -25,17 +26,21 @@ export default function CustomResolutionsButton() {
             isActiveIf={listIsOpened} />
 
             <div style={{position: "relative"}}>
-                
-                <div className={"custom-resolutions-button" + ((activeProjectResolution === "3" || activeProjectResolution === "5" || activeProjectResolution === "6" || activeProjectResolution === "7") ? " active" : "")} 
+                <div 
+                onClick={() => setListIsOpened(true)}
+                className={"custom-resolutions-name" + ((activeProjectResolution === "4" || activeProjectResolution === "5" || activeProjectResolution === "6" || activeProjectResolution === "7") ? " active" : "")}>{getResolutionName(activeProjectResolution)}</div>
+                <div className={"custom-resolutions-button" + ((activeProjectResolution === "4" || activeProjectResolution === "5" || activeProjectResolution === "6" || activeProjectResolution === "7") ? " active" : "")} 
                 onClick={() => setListIsOpened(true)}>
+                    
                     <img src={ResolutionSettingsIcon} />
+                    
                 </div>
 
                 <div className={"custom-resolutions-list" + ((listIsOpened) ? " active" : "")}>
                     <div className="custom-resolutions-list_item label-item">
                         Use custom resolution
                     </div>
-                    <div className="custom-resolutions-list_item" onClick={() => handleItemClick("3")}>
+                    <div className="custom-resolutions-list_item" onClick={() => handleItemClick("4")}>
                         <div>Portrait view</div>
                         <div className="text-description">Beetween 767px and 478px</div>
                     </div>

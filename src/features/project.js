@@ -1,5 +1,5 @@
 import { createSlice, current } from '@reduxjs/toolkit'
-import {JSONtoCSS, getIndexOfElementInArrayById} from "../utils/nodes-editing"
+import {JSONtoCSS, getIndexOfElementInArrayById, getResolutionPathName, isStyleContained} from "../utils/nodes-editing"
 import { v4 as uuidv4 } from "uuid";
 import sanitizeHtml from 'sanitize-html';
 
@@ -645,16 +645,18 @@ export const projectSlice = createSlice({
         let newStyleId = uuidv4();
 
         let newStyleToConnectWithNodes = { name: styleName, id: newStyleId };
-        let newStyleToConnectWithStyles = { name: styleName, id: newStyleId, styles: {}, childrens: [], tabletStyles: {}, portraitStyles: {}, mobileStyles: {}};
+        let newStyleToConnectWithStyles = { 
+            name: styleName, 
+            id: newStyleId, 
+            styles: {},
+        };
 
         // add checking if it's a new class
 
         if(state.stylesInActiveNode.length > 0) {
             state.preRenderedStyles.forEach((style) => {
                 if(style.id === state.stylesInActiveNode[0].id) {
-
                     state.preRenderedStyles.find(({id}) => id === style.id).childrens.push({id: uuidv4(), options: [newStyleToConnectWithStyles] } );
-
                 }
             });
 
@@ -738,9 +740,11 @@ export const projectSlice = createSlice({
             }
             node.styles[styleResolution][styleProperty] = styleValue;
         } else {
+            if(state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id).childrens[state.activeStyleOptionIndex].options.find(({id}) => id === state.activeStyleId)[styleResolution] === undefined) {
+                state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id).childrens[state.activeStyleOptionIndex].options.find(({id}) => id === state.activeStyleId)[styleResolution] = {};
+            }
             state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id).childrens[state.activeStyleOptionIndex].options.find(({id}) => id === state.activeStyleId)[styleResolution][styleProperty] = styleValue;
         }
-        
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
     },
 
@@ -761,9 +765,12 @@ export const projectSlice = createSlice({
         let childrenIndex = action.payload.childrenIndex;
         let mainStyleId = state.stylesInActiveNode[0].id;
         let newStyleId = uuidv4();
-        let newStyleToConnectWithStyles = { name: styleOptionName, id: newStyleId, styles: {}, tabletStyles: {}, portraitStyles: {}, mobileStyles: {}};
 
-        state.preRenderedStyles.find(({id}) => id ===  mainStyleId).childrens[childrenIndex].options.push(newStyleToConnectWithStyles);
+        state.preRenderedStyles.find(({id}) => id ===  mainStyleId).childrens[childrenIndex].options.push({ 
+            name: styleOptionName, 
+            id: newStyleId, 
+            styles: {},
+        });
     },
 
     editStyleOption: (state,action) => {
@@ -1687,10 +1694,7 @@ export const projectSlice = createSlice({
             findNode3(state.preRenderedHTMLNodes);
         }
 
-        let parentNodes = [];
         let objectHierarchyStyles = [];
-        let classHierarchyStyles = [];
-        let lastClassStyles = [];
         
 
         function isPropertyHierarchical(property) {
@@ -1716,7 +1720,6 @@ export const projectSlice = createSlice({
             
                 let mainStyleId = node?.class?.[0]?.id;
                 let activeStyles = state.preRenderedStyles?.find(({id}) => id ===  mainStyleId);
-                let activeStyle = [];
 
                 const activeResolution = state.activeProjectResolution;
 
@@ -1742,16 +1745,15 @@ export const projectSlice = createSlice({
                         }
                     }
                 
-                    function pushStyles(resolution, resolutionName) {
-
-                        for (const [key, value] of Object.entries(getStylesOf(resolution) || {})) {
+                    function pushStyles(resolution) {
+                        for (const [key, value] of Object.entries(getStylesOf(getResolutionPathName(resolution)) || {})) {
                             const styleNode = {
                                 style: key,
                                 value: value,
                                 isInline:false,
                                 origin: node.name,
                                 option: (node.name !== item.name) ? styleDefaultName : "",
-                                resolution: resolutionName,
+                                resolution: resolution,
                             }
                             if(i + 1 !== state.activeNodeParentsPath.length) {
                                 if (isPropertyHierarchical(key)) {
@@ -1767,56 +1769,53 @@ export const projectSlice = createSlice({
                         }
                     }
 
-                    function pushInlineStyles(resolution, resolutionName) {
-                        if(state.activeNodeObject?.styles?.[resolution] !== undefined) {
-                            for (const [key, value] of Object.entries(state.activeNodeObject.styles[resolution])) {
+                    function pushInlineStyles(resolution) {
+                        if(state.activeNodeObject?.styles?.[getResolutionPathName(resolution)] !== undefined) {
+                            for (const [key, value] of Object.entries(state.activeNodeObject.styles[getResolutionPathName(resolution)])) {
                                 objectHierarchyStyles.push({
                                     style: key,
                                     value: value,
                                     isInline:true,
                                     origin: "",
                                     option: "",
-                                    resolution: resolutionName,
+                                    resolution: resolution,
                                 });
                             }
                         }
                     }
-
-                    activeStyle.push({
-                        ...getStylesOf("styles"), 
-                        ...getStylesOf("tabletStyles"),
-                        ...getStylesOf("portraitStyles"),
-                        ...getStylesOf("mobileStyles"),
-                    });
                     
-                    pushStyles("styles", "desktop");
-                    (state.activeProjectResolution === "2" || state.activeProjectResolution === "3" || state.activeProjectResolution === "4") &&
-                    pushStyles("tabletStyles", "tablet");
-                    (state.activeProjectResolution === "4" || state.activeProjectResolution === "3") &&
-                    pushStyles("mobileStyles", "mobile");
-                    (state.activeProjectResolution === "3") &&
-                    pushStyles("portraitStyles", "portrait");
+                    pushStyles("1");
+                    (isStyleContained(state.activeProjectResolution, "2")) &&
+                    pushStyles("2");
+                    (isStyleContained(state.activeProjectResolution, "3")) &&
+                    pushStyles("3");
+                    (isStyleContained(state.activeProjectResolution, "4")) &&
+                    pushStyles("4");
+                    (isStyleContained(state.activeProjectResolution, "5")) &&
+                    pushStyles("5");
+                    (isStyleContained(state.activeProjectResolution, "6")) &&
+                    pushStyles("6");
+                    (isStyleContained(state.activeProjectResolution, "7")) &&
+                    pushStyles("7");
 
-                    pushInlineStyles("styles", "desktop");
-                    (state.activeProjectResolution === "2" || state.activeProjectResolution === "3" || state.activeProjectResolution === "4") &&
-                    pushInlineStyles("tabletStyles", "tablet");
-                    (state.activeProjectResolution === "4" || state.activeProjectResolution === "3") &&
-                    pushInlineStyles("mobileStyles", "mobile");
-                    (state.activeProjectResolution === "4") &&
-                    pushInlineStyles("portraitStyles", "portrait");
+                    pushInlineStyles("1");
+                    (isStyleContained(state.activeProjectResolution, "2")) &&
+                    pushInlineStyles("2");
+                    (isStyleContained(state.activeProjectResolution, "3")) &&
+                    pushInlineStyles("3");
+                    (isStyleContained(state.activeProjectResolution, "4")) &&
+                    pushInlineStyles("4");
+                    (isStyleContained(state.activeProjectResolution, "5")) &&
+                    pushInlineStyles("5");
+                    (isStyleContained(state.activeProjectResolution, "6")) &&
+                    pushInlineStyles("6");
+                    (isStyleContained(state.activeProjectResolution, "7")) &&
+                    pushInlineStyles("7");
 
                 })
-
-                parentNodes.push({name: node?.class?.[0]?.name, styles: activeStyle });
-            
         });
 
         state.objectHierarchyStyles = objectHierarchyStyles;
-        
-        // add Object Hierarchy for hierarchical
-        // add Styles Hierarchy for hierarchical and nonHierarchical
-        // add Resolution Hierarchy for hierarchical and nonHierarchical
-
         
     },
 
@@ -1869,20 +1868,7 @@ export const projectSlice = createSlice({
 
     setActiveProjectResolution: (state, action) => {
         state.activeProjectResolution = action.payload;
-
-        (state.activeProjectResolution === "1") && (
-            state.activeProjectResolutionStylesListName = "styles"
-        );
-        (state.activeProjectResolution === "2") && (
-            state.activeProjectResolutionStylesListName = "tabletStyles"
-        );
-        (state.activeProjectResolution === "3") && (
-            state.activeProjectResolutionStylesListName = "portraitStyles"
-        );
-        (state.activeProjectResolution === "4") && (
-            state.activeProjectResolutionStylesListName = "mobileStyles"
-        );
-        
+        state.activeProjectResolutionStylesListName = getResolutionPathName(action.payload);        
         state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
     },
 
