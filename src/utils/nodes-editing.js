@@ -123,7 +123,7 @@ export function JSONtoCSS (_classes, activeResolution, activeState) {
     let tempClasses = [];
     let tempName = "";
     let tempResolution = "";
-    let styleState = "";
+    let styleState = "default";
 
 
     styleState = "default";
