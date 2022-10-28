@@ -4,6 +4,7 @@ import {setActiveCollectionItem, addCollectionItem, setCollectionPanelState} fro
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import Arrow from '../../../../img/arrow-left.svg';
 import { activeCollectionSelector } from "../../../../selectors/active-collection";
+import AddButton from "../_atoms/AddButton";
 
 export default function ProjectCollectionsItemsPanel(){
     
@@ -35,7 +36,7 @@ export default function ProjectCollectionsItemsPanel(){
                 {activeCollection?.name} Items
                 </div>
                 <div className="projectTabTitleButtonsBox">
-                    <button onClick={() => setCreateInputVisible(!createInputVisible)}>N</button>
+                    <AddButton fx={() => setCreateInputVisible(!createInputVisible)} />
                 </div>
             </div>
 

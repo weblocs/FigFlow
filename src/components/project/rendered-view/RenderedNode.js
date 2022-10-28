@@ -13,6 +13,8 @@ function RenderedNode(props) {
 
   const [editable, setEditable] = useState(false);
 
+  const [hovered, setHovered] = useState(false);
+
   // const activeNodeId = useSelector((state) => state.project.activeNodeId);
   // const hoveredNodeId = useSelector((state) => state.project.hoveredNodeId);
   const activeProjectResolution = useSelector((state) => state.project.activeProjectResolution);
@@ -22,6 +24,7 @@ function RenderedNode(props) {
   const editedSymbolId = useSelector((state) => state.project.editedSymbolId);
   const activeCollectionTemplateId = useSelector((state) => state.project.activeCollectionTemplateId);
   const activeCollectionItemTemplateId = useSelector((state) => state.project.activeCollectionItemTemplateId);
+  const styleState = useSelector((state) => state.project.styleState);
   
   const listOfSubStyles = useSelector((state) => state.project.preRenderedStyles.find(({id}) => id === props?.class?.[0]?.id))?.childrens;
   const listOfNodeStyles = useSelector((state) => props.class.map((cl,index) => 
@@ -86,12 +89,14 @@ function RenderedNode(props) {
 
   function handleMouseOver(e) {
     e.stopPropagation();
+    setHovered(true);
     dispatch(setHoveredHtmlNode(elementId));
     dispatch(setActiveHoveredCmsItemIndex(props.itemIndex));
   }
 
   function handleMouseOut(e) {
     e.stopPropagation();
+    setHovered(false);
     dispatch(setHoveredHtmlNode(""));
   }
 
@@ -100,32 +105,50 @@ function RenderedNode(props) {
   }
   
   let customStyle = {};
-  
-  if(props?.styles?.styles !== undefined) {
-    customStyle = props?.styles?.styles;
-  }
 
   function addResponsiveInlineStyle(resolution) {
     if (isStyleContained(activeProjectResolution, resolution)) {
-      customStyle = {...customStyle, ...props.styles?.[getResolutionPathName(resolution)] };
+      customStyle = {...customStyle, ...props.styles?.[getResolutionPathName(resolution, "default")] };
     }
   }
 
-  addResponsiveInlineStyle("2");
-  addResponsiveInlineStyle("3");
-  addResponsiveInlineStyle("4");
-  addResponsiveInlineStyle("5");
-  addResponsiveInlineStyle("6");
-  addResponsiveInlineStyle("7");
+  for(let j = 1; j <= 7; j++) {
+    addResponsiveInlineStyle(j.toString());
+  }
 
   customStyle = Object.fromEntries(
     Object.entries(customStyle).map(([key, value]) =>
       [_.camelCase(key), value]
     )
+  ) 
+
+
+  let customStyleHover = {};
+
+  function addResponsiveInlineStyleHover(resolution) {
+    if (isStyleContained(activeProjectResolution, resolution)) {
+      customStyleHover = {...customStyleHover, ...props.styles?.[getResolutionPathName(resolution, "hover")] };
+    }
+  }
+
+  for(let j = 1; j <= 7; j++) {
+    addResponsiveInlineStyleHover(j.toString());
+  }
+
+  customStyleHover = Object.fromEntries(
+    Object.entries(customStyleHover).map(([key, value]) =>
+      [_.camelCase(key), value]
+    )
   )   
-  // console.log(customStyle); 
   
-  
+  if(hovered === true) {
+    customStyle = {...customStyleHover};
+  }
+  if(document.querySelector(`[el_id='${props.id}']`)?.classList.contains("active") && styleState === "hover") {
+    customStyle = {...customStyleHover};
+  }
+
+  // console.log(customStyle);
 
   // "div"
 
@@ -146,6 +169,7 @@ function RenderedNode(props) {
           id={el.id}
           title={el.title}
           subtype={el.subtype}
+src={el.src}
           cmsCollectionId={el.cmsCollectionId}
           cmsFieldId={el.cmsFieldId}
           symbolId={el.symbolId}
@@ -197,6 +221,7 @@ function RenderedNode(props) {
             id={el.id}
             title={el.title}
             subtype={el.subtype}
+src={el.src}
             cmsCollectionId={el.cmsCollectionId}
             cmsFieldId={el.cmsFieldId}
             symbolId={el.symbolId}
@@ -237,6 +262,7 @@ function RenderedNode(props) {
               id={el.id}
               title={el.title}
               subtype={el.subtype}
+src={el.src}
               cmsCollectionId={el.cmsCollectionId}
               cmsFieldId={el.cmsFieldId}
               symbolId={el.symbolId}
@@ -284,6 +310,7 @@ function RenderedNode(props) {
             id={el.id}
             title={el.title}
             subtype={el.subtype}
+src={el.src}
             cmsCollectionId={el.cmsCollectionId}
             cmsFieldId={el.cmsFieldId}
             symbolId={el.symbolId}
@@ -327,6 +354,7 @@ function RenderedNode(props) {
                   id={el.id}
                   title={el.title}
                   subtype={el.subtype}
+src={el.src}
                   cmsCollectionId={el.cmsCollectionId}
                   cmsFieldId={el.cmsFieldId}
                   symbolId={el.symbolId}
@@ -392,7 +420,7 @@ function RenderedNode(props) {
   }
 
   if (props.type === "img") {
-    let imageSrc = props.data?.src;
+    let imageSrc = props?.src;
     
     if(props.cmsFieldId) {
       imageSrc = collections[props.renderedCollectionIndex]?.items[props.itemIndex].data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue
@@ -444,7 +472,7 @@ function RenderedNode(props) {
         className={listOfNodeStyles}
         el_id={elementId}
         cms_item_index={props.itemIndex}
-        tagName={(props.data?.subtype !== undefined) ? props.subtype : "h1"}
+        tagName={(props?.subtype !== undefined) ? props.subtype : "h1"}
         html={nodeText}
         disabled={!editable}
       />
@@ -459,6 +487,24 @@ function RenderedNode(props) {
         el_id={elementId}
         cms_item_index={props.itemIndex}
         tagName="p"
+        onClick={handleOnClick}
+        onDoubleClick={handleDoubleClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        html={nodeText}
+        disabled={!editable}
+      />
+    );
+  }
+
+  if (props.type === "a") {
+    elementHTML = (
+      <ContentEditable
+        style={customStyle}
+        className={listOfNodeStyles}
+        el_id={elementId}
+        cms_item_index={props.itemIndex}
+        tagName="div"
         onClick={handleOnClick}
         onDoubleClick={handleDoubleClick}
         onMouseOver={handleMouseOver}
@@ -486,6 +532,7 @@ function RenderedNode(props) {
             id={el.id}
             title={el.title}
             subtype={el.subtype}
+src={el.src}
             cmsCollectionId={el.cmsCollectionId}
             cmsFieldId={el.cmsFieldId}
             symbolId={el.symbolId}

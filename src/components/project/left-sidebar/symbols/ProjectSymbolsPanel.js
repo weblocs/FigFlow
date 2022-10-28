@@ -4,6 +4,7 @@ import {editSymbolName, deleteSymbol, addSymbolToProject, addSymbol, setSymbols}
 import CreateNewItemInput from "../navigator/CreateNewItemInput";;
 import ListItemEditIcon from "../_atoms/ListItemEditIcon";
 import {arrayMoveImmutable} from 'array-move'
+import addIcon from "../../../../img/plus.svg"
 
 export default function ProjectSymbolsPanel(){
     const dispatch = useDispatch()
@@ -48,7 +49,11 @@ export default function ProjectSymbolsPanel(){
             <div className="projectTabTitleBox">
                 Symbols
                 <div className="projectTabTitleButtonsBox">
-                    <button onClick={() => setCreateInputVisible(!createInputVisible)}>N</button>
+                    <button 
+                    className="settings-list-add-button"
+                    onClick={() => setCreateInputVisible(!createInputVisible)}>
+                        <img className="settings-list-add-icon" src={addIcon} />
+                    </button>
                 </div>
             </div>
 

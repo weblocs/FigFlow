@@ -19,7 +19,7 @@ function LinkSettings() {
         setIsOpen(false);
     }
 
-    if (activeNodeType === "l") {
+    if (activeNodeType === "l" || activeNodeType === "a") {
     return (
         <>
             {projectPages?.find(({id}) => id === activeNodeLink) &&

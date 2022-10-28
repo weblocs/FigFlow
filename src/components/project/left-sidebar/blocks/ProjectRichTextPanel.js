@@ -4,6 +4,7 @@ import { setBlocks, addBlock } from "../../../../features/project";
 import {arrayMoveImmutable} from 'array-move';
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import RichElementListItem from "./RichElementListItem";
+import AddButton from "../_atoms/AddButton";
 
 export default function ProjectRichTextPanel(){
     const dispatch = useDispatch()
@@ -41,7 +42,7 @@ export default function ProjectRichTextPanel(){
             <div className="projectTabTitleBox">
                 Blocks
                 <div className="projectTabTitleButtonsBox">
-                    <button onClick={() => setCreateInputVisible(!createInputVisible)}>N</button>
+                    <AddButton fx={() => setCreateInputVisible(!createInputVisible)} />
                 </div>
             </div>
 

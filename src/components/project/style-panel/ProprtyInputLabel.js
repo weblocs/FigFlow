@@ -5,9 +5,10 @@ import { getResolutionName } from "../../../utils/nodes-editing";
 
 export default function ProprtyInputLabel ({text,property}) {
 
+
     const objectHierarchyStyles = useSelector((state) => state.project.objectHierarchyStyles?.findLast(({style}) => style === property));
 
-    const doesStylePropertyBelongToActiveClass = useSelector((state) => (state.project.activeStyleObject?.[property] !== undefined));
+    const doesStylePropertyBelongToActiveClass = useSelector((state) => (objectHierarchyStyles?.isActive === true));
 
     const isPropertyInStyleHierarchy = useSelector((state) => objectHierarchyStyles !== undefined);
 
@@ -21,7 +22,6 @@ export default function ProprtyInputLabel ({text,property}) {
 
     function handleClick() {
         if(isPropertyInStyleHierarchy || doesStylePropertyIsInline || doesStylePropertyBelongToActiveClass) {
-            console.log(objectHierarchyStyles);
             setIsInfoOpen(true);
         }
     }
@@ -40,13 +40,14 @@ export default function ProprtyInputLabel ({text,property}) {
                 dispatch(deleteStyleProperty("flex-basis"));
             }
         }  
+        setIsInfoOpen(false);
     }
 
     return (
         <div 
         className={"style-title-box" + 
         ((doesStylePropertyBelongToActiveClass) ? " active" : "") +
-        ((doesStylePropertyIsInline) ? " isInline" : "") +
+        ((doesStylePropertyIsInline && isStylePropertyFromActiveResolution) ? " isInline" : "") +
         ((isPropertyInStyleHierarchy) ? " isInHierarchy" : "")}
         >
             <div className="text" onClick={handleClick}>{text}</div>
@@ -78,6 +79,9 @@ export default function ProprtyInputLabel ({text,property}) {
                     <div className={"style-property-info-text" + 
                         ((objectHierarchyStyles?.resolution !== '') ? " active" : "")}>
                         Resolution: {getResolutionName(objectHierarchyStyles?.resolution)}
+                    </div>
+                    <div className={"style-property-info-text active"}>
+                        State: <span>{objectHierarchyStyles?.state}</span>
                     </div>
                 </div>
         </div>

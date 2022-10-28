@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AddCollection from "./AddCollection";
 import {setCollectionPanelState, addCollection, setActiveCollection} from "../../../../features/project"
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
+import AddButton from "../_atoms/AddButton";
 
 
 export default function ProjectCollectionsPanel(){
@@ -25,7 +26,7 @@ export default function ProjectCollectionsPanel(){
             <div className="projectTabTitleBox">
                 Collections
                 <div className="projectTabTitleButtonsBox">
-                    <button onClick={() => setCreateInputVisible(!createInputVisible)}>N</button>
+                    <AddButton fx={() => setCreateInputVisible(!createInputVisible)} />
                 </div>
             </div>
 

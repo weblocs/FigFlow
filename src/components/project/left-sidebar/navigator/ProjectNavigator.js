@@ -31,11 +31,10 @@ export default function ProjectNavigator() {
                 <AddNodeButton type="h" text="Heading" />
                 <AddNodeButton type="p" text="Paragraph" />
                 <AddNodeButton type="img" text="Image" />
+                <AddNodeButton type="a" text="Text Link" />
                 <AddNodeButton type="l" text="Link" />
                 <AddNodeButton type="col" text="Collection" />
-                <AddNodeButton type="sec" text="Layout Wrap" />
-                <AddNodeButton type="sym" text="Symbol Wrap" />
-                <AddNodeButton type="rich" text="Rich Wrap" />
+                <AddNodeButton type="sec" text="Section" />
             </div>
             <div className="projectTabTitleBox">Navigator</div>
           </div>

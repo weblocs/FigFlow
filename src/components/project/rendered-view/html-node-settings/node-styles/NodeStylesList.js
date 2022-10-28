@@ -7,7 +7,7 @@ export default function NodeStylesList() {
 
     return (
         <>
-            {preRenderedStyles.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens.map((child,index) => {
+            {preRenderedStyles.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens?.map((child,index) => {
                     return (
                         <NodeStyleItem child={child} index={index} key={child.id} />
                     )

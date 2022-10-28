@@ -53,6 +53,7 @@ const initialState = {
   preRenderedStyles: [],
   postRenderedStyles: "",
   objectHierarchyStyles: [],
+  styleState: "default", // default, hover, focus
 
   activeNodeId: "",
   activeNodeObject: {},
@@ -636,7 +637,7 @@ export const projectSlice = createSlice({
 
     setStyles: (state,action) => {
         state.preRenderedStyles = [...action.payload];
-        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
     },
 
     addStyle: (state, action) => {
@@ -648,18 +649,19 @@ export const projectSlice = createSlice({
         let newStyleToConnectWithStyles = { 
             name: styleName, 
             id: newStyleId, 
+            childrens:[],
             styles: {},
         };
 
         // add checking if it's a new class
 
-        if(state.stylesInActiveNode.length > 0) {
+        if(state.stylesInActiveNode?.length > 0) {
             state.preRenderedStyles.forEach((style) => {
                 if(style.id === state.stylesInActiveNode[0].id) {
                     state.preRenderedStyles.find(({id}) => id === style.id).childrens.push({id: uuidv4(), options: [newStyleToConnectWithStyles] } );
+                    state.activeStyleOptionIndex = state.preRenderedStyles.find(({id}) => id ===  state.stylesInActiveNode[0].id).childrens.length - 1;     
                 }
             });
-
         } else {
             let isItNewStyle = true;
             state.preRenderedStyles.map((style) => {
@@ -689,7 +691,7 @@ export const projectSlice = createSlice({
 
         state.activeStyleId = newStyleToConnectWithNodes.id;
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
-        state.activeStyleOptionIndex = state.preRenderedStyles.find(({id}) => id ===  state.stylesInActiveNode[0].id).childrens.length - 1;        
+           
     },
 
     renameStyle: (state, action) => {
@@ -717,7 +719,7 @@ export const projectSlice = createSlice({
 
         updateNodesGlobally(state, updateNodes);
 
-        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
         state.stylesInActiveNode[0].name = newNodeName;
     },
 
@@ -728,7 +730,10 @@ export const projectSlice = createSlice({
 
         const isPropertyInline = state.objectHierarchyStyles.findLast(({style}) => style === styleProperty)?.isInline;
 
-        if(state.activeStyleId === state.stylesInActiveNode[0].id && (isPropertyInline !== true)) {
+        if(state.activeStyleId === state.stylesInActiveNode?.[0]?.id && (isPropertyInline !== true)) {
+            if(state.preRenderedStyles[state.activeStyleIndex][styleResolution] === undefined) {
+                state.preRenderedStyles[state.activeStyleIndex][styleResolution] = {};
+            }
             state.preRenderedStyles[state.activeStyleIndex][styleResolution][styleProperty] = styleValue;
         } else if(state.activeStyleId === "" || isPropertyInline) {
             const node = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId);
@@ -745,7 +750,8 @@ export const projectSlice = createSlice({
             }
             state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id).childrens[state.activeStyleOptionIndex].options.find(({id}) => id === state.activeStyleId)[styleResolution][styleProperty] = styleValue;
         }
-        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+
+        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
     },
 
     deleteStyleProperty: (state, action) => {
@@ -757,7 +763,7 @@ export const projectSlice = createSlice({
         } else {
             delete state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id).childrens[state.activeStyleOptionIndex].options.find(({id}) => id === state.activeStyleId)[styleResolution][styleProperty];
         }
-        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
     },
 
     addStyleOption: (state, action) => {
@@ -843,7 +849,7 @@ export const projectSlice = createSlice({
             }
 
             updateNodesGlobally(state, updateNodes);
-            state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+            state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
     
             for (let i = 0; i < state.stylesInActiveNode.length; i++) {
                 if(state.stylesInActiveNode[i].id === subOptionId) {
@@ -884,7 +890,7 @@ export const projectSlice = createSlice({
             }
 
             updateNodesGlobally(state, updateNodes);
-            state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+            state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
     
             for (let i = 0; i < state.stylesInActiveNode.length; i++) {
                 if(state.stylesInActiveNode[i].id === subOptionId) {
@@ -958,6 +964,8 @@ export const projectSlice = createSlice({
 
                     overflow: computedStyle?.["overflow"],
 
+                    align_items: computedStyle?.["align-items"],
+                    justify_content: computedStyle?.["justify-content"],
 
                 };
             } catch {
@@ -995,6 +1003,10 @@ export const projectSlice = createSlice({
                 state.activeStyleOptionIndex = i-1;
             }
         });
+    },
+
+    setStyleState: (state, action) => {
+        state.styleState = action.payload;
     },
 
     /* Html */
@@ -1084,6 +1096,8 @@ export const projectSlice = createSlice({
         
         findNode(state.preRenderedHTMLNodes, editedNodeId);
         state.preRenderedHTMLNodes = response;
+
+
 
     },
 
@@ -1651,8 +1665,6 @@ export const projectSlice = createSlice({
         }
         findNode(testPreRenderedHTMLNodes);
 
-        // console.log(testPreRenderedHTMLNodes);
-        
         function findNode2(nodes) {
             for(let i = 0; i < nodes?.length; i++) {
                 const node = nodes[i];
@@ -1675,6 +1687,8 @@ export const projectSlice = createSlice({
         }
         findNode2(testPreRenderedHTMLNodes);
 
+
+
         let index = 0;
         function findNode3(nodes) {
             for(let i = 0; i < nodes?.length; i++) {
@@ -1682,10 +1696,11 @@ export const projectSlice = createSlice({
                 if(node?.id === state.activeNodeParentsPath[index]?.id) {
                     index++;
                     if(!state.isNodeSelectedFromNavigator && nodes[i].type !== "sym") {
+                        console.log();
                         nodes[i].expanded = true;
                     }
                     if(nodes[i].children) {
-                        findNode2(nodes[i]?.children);
+                        findNode3(nodes[i]?.children);
                     }
                 }
             }
@@ -1693,9 +1708,6 @@ export const projectSlice = createSlice({
         if(state.activeTab === "Navigator") {
             findNode3(state.preRenderedHTMLNodes);
         }
-
-        let objectHierarchyStyles = [];
-        
 
         function isPropertyHierarchical(property) {
             const hierarchicalProperties = [
@@ -1716,6 +1728,9 @@ export const projectSlice = createSlice({
             return response;
         }
 
+        state.objectHierarchyStyles = [];
+        // console.log('start');
+
         state.activeNodeParentsPath.forEach((node,i) => {
             
                 let mainStyleId = node?.class?.[0]?.id;
@@ -1724,9 +1739,21 @@ export const projectSlice = createSlice({
                 const activeResolution = state.activeProjectResolution;
 
                 const listOfSubStyles = state.preRenderedStyles.find(({id}) => id === node?.class?.[0]?.id)?.childrens;
-    
-                node?.class?.forEach((item,index) => {
+                
+                
 
+                node?.class?.forEach((item,index) => {
+                    doForEachClass(item, index, "default");
+                });
+
+                if(state.styleState === "hover") {
+                    node?.class?.forEach((item,index) => {
+                        doForEachClass(item, index, "hover");
+                    });
+                }
+                
+                
+                function doForEachClass(item, index , tempState) {
                     let styleDefaultName = item.name;
                     if(index !== 0 && item.id !== '') {
                         styleDefaultName = listOfSubStyles?.[index-1]?.defaultName;
@@ -1734,7 +1761,7 @@ export const projectSlice = createSlice({
                             styleDefaultName = styleDefaultName.replaceAll(" ","-").toLowerCase() + "-" + item.name;
                         }
                       }
-                    
+            
                     function getStylesOf(resolution) {
                         if(index === 0) {
                             return activeStyles?.[resolution];  
@@ -1744,78 +1771,75 @@ export const projectSlice = createSlice({
                             ?.[resolution];
                         }
                     }
+
+                    // console.log(state.activeProjectResolutionStylesListName);
+
+                    function isNodeLastInParentPath(i) {
+                        return (i + 1 === state.activeNodeParentsPath.length);
+                    }
                 
-                    function pushStyles(resolution) {
-                        for (const [key, value] of Object.entries(getStylesOf(getResolutionPathName(resolution)) || {})) {
+                    function pushStyles(resolution, styleState) {
+                        for (const [key, value] of Object.entries(getStylesOf(getResolutionPathName(resolution,styleState)) || {})) {
                             const styleNode = {
                                 style: key,
                                 value: value,
                                 isInline:false,
+                                isActive: false,
                                 origin: node.name,
                                 option: (node.name !== item.name) ? styleDefaultName : "",
                                 resolution: resolution,
+                                state: styleState,
                             }
-                            if(i + 1 !== state.activeNodeParentsPath.length) {
+                            if(!isNodeLastInParentPath(i)) {
                                 if (isPropertyHierarchical(key)) {
-                                    objectHierarchyStyles.push(styleNode);
+                                    state.objectHierarchyStyles.push(styleNode);
                                 }
                             } else {
                                 if(item.id !== state.activeStyleId) {
-                                    objectHierarchyStyles.push(styleNode);
+                                    state.objectHierarchyStyles.push(styleNode);
                                 } else {
-                                    objectHierarchyStyles.push(styleNode);
+                                    if(resolution === state.activeProjectResolution && styleState === state.styleState) {
+                                        styleNode.isActive = true;
+                                    }
+                                    state.objectHierarchyStyles.push(styleNode);
                                 }
                             }
                         }
                     }
 
-                    function pushInlineStyles(resolution) {
-                        if(state.activeNodeObject?.styles?.[getResolutionPathName(resolution)] !== undefined) {
-                            for (const [key, value] of Object.entries(state.activeNodeObject.styles[getResolutionPathName(resolution)])) {
-                                objectHierarchyStyles.push({
-                                    style: key,
-                                    value: value,
-                                    isInline:true,
-                                    origin: "",
-                                    option: "",
-                                    resolution: resolution,
-                                });
-                            }
+                    function pushInlineStyles(resolution, styleState) {
+                        if(state.activeNodeObject?.styles?.[getResolutionPathName(resolution, styleState)] !== undefined) {
+                        for (const [key, value] of Object.entries(state.activeNodeObject.styles[getResolutionPathName(resolution, styleState)])) {
+                            state.objectHierarchyStyles.push({
+                                style: key,
+                                value: value,
+                                isInline:true,
+                                isActive: false,
+                                origin: "",
+                                option: "",
+                                resolution: resolution,
+                                state: "deafult",
+                            });
+                        }
                         }
                     }
                     
-                    pushStyles("1");
-                    (isStyleContained(state.activeProjectResolution, "2")) &&
-                    pushStyles("2");
-                    (isStyleContained(state.activeProjectResolution, "3")) &&
-                    pushStyles("3");
-                    (isStyleContained(state.activeProjectResolution, "4")) &&
-                    pushStyles("4");
-                    (isStyleContained(state.activeProjectResolution, "5")) &&
-                    pushStyles("5");
-                    (isStyleContained(state.activeProjectResolution, "6")) &&
-                    pushStyles("6");
-                    (isStyleContained(state.activeProjectResolution, "7")) &&
-                    pushStyles("7");
+                    let tempResolution = "";
+                    
+                    for(let j = 1; j <= 7; j++) {
+                        tempResolution = j.toString();
+                        (isStyleContained(state.activeProjectResolution, tempResolution)) &&
+                        pushStyles(tempResolution, tempState);
+                    }
 
-                    pushInlineStyles("1");
-                    (isStyleContained(state.activeProjectResolution, "2")) &&
-                    pushInlineStyles("2");
-                    (isStyleContained(state.activeProjectResolution, "3")) &&
-                    pushInlineStyles("3");
-                    (isStyleContained(state.activeProjectResolution, "4")) &&
-                    pushInlineStyles("4");
-                    (isStyleContained(state.activeProjectResolution, "5")) &&
-                    pushInlineStyles("5");
-                    (isStyleContained(state.activeProjectResolution, "6")) &&
-                    pushInlineStyles("6");
-                    (isStyleContained(state.activeProjectResolution, "7")) &&
-                    pushInlineStyles("7");
-
-                })
+                    for(let j = 1; j <= 7; j++) {
+                        tempResolution = j.toString();
+                        (isStyleContained(state.activeProjectResolution, tempResolution)) &&
+                        pushInlineStyles(tempResolution, tempState);
+                    }
+                    
+                }
         });
-
-        state.objectHierarchyStyles = objectHierarchyStyles;
         
     },
 
@@ -1846,7 +1870,7 @@ export const projectSlice = createSlice({
             state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes;
             state.preRenderedStyles = activeUndoNode.preRenderedStyles;
             
-            state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+            state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
         }
     },
 
@@ -1858,7 +1882,7 @@ export const projectSlice = createSlice({
                 state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes;
                 state.preRenderedStyles = activeUndoNode.preRenderedStyles;
 
-                state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+                state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
             }
     },
 
@@ -1868,9 +1892,14 @@ export const projectSlice = createSlice({
 
     setActiveProjectResolution: (state, action) => {
         state.activeProjectResolution = action.payload;
-        state.activeProjectResolutionStylesListName = getResolutionPathName(action.payload);        
-        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
     },
+
+    updateResolutionPathName: (state) => {
+        state.activeProjectResolutionStylesListName = getResolutionPathName(state.activeProjectResolution, state.styleState);        
+        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
+    },
+
+
 
     
 
@@ -2023,7 +2052,7 @@ export const projectSlice = createSlice({
         state.preRenderedHTMLNodes = activeProjectVersion.preRenderedHTMLNodes;
         state.preRenderedStyles = activeProjectVersion.preRenderedStyles;
 
-        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution);
+        state.postRenderedStyles = JSONtoCSS([...state.preRenderedStyles], state.activeProjectResolution, state.styleState);
         
     },
 
@@ -2123,6 +2152,7 @@ export const {
     setActiveStyleOptionIndex, 
     setActiveStyleId, 
     updateActiveStyleListAndId,
+    setStyleState,
     
     /* Html */
     setHtmlNodes, 
@@ -2202,6 +2232,7 @@ export const {
     setSaveButtonStateText,
     setActiveRightSidebarTab,
     setActiveProjectResolution, 
+    updateResolutionPathName,
     setIsSettingsModalOpen,
     setProjectSettingsData,
 

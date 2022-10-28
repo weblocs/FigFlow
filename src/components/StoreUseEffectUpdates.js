@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addUndoState, setIsActiveHtmlNodeParentDisplayFlex, editSymbolsClickableArea, setActionActiveFalse, setActiveNodeComputedStyles, setGlobalActiveHtmlNode, setActiveHtmlNodeParentsPath, editActiveStyleProperties, updateActiveStyleListAndId, setHtmlNodesWithoutExpandedState } from "../features/project"
+import { addUndoState, setIsActiveHtmlNodeParentDisplayFlex, editSymbolsClickableArea, setActionActiveFalse, setActiveNodeComputedStyles, setGlobalActiveHtmlNode, setActiveHtmlNodeParentsPath, editActiveStyleProperties, updateActiveStyleListAndId, setHtmlNodesWithoutExpandedState, updateResolutionPathName } from "../features/project"
 
 export default function StoreUseEffectUpdates () {
 
@@ -16,7 +16,7 @@ export default function StoreUseEffectUpdates () {
     const activeTab = useSelector((state) => state.project.activeTab)
     const activeClickedCmsItemIndex = useSelector((state) => state.project.activeClickedCmsItemIndex)
     const activeHoveredCmsItemIndex = useSelector((state) => state.project.activeHoveredCmsItemIndex)
-
+    const styleState = useSelector((state) => state.project.styleState)
     
     const dispatch = useDispatch();
 
@@ -38,7 +38,11 @@ export default function StoreUseEffectUpdates () {
         if(projectMode === "developer") {
             dispatch(editActiveStyleProperties());
         }
-    },[activeNodeId, activeProjectResolution, preRenderedHTMLNodes, preRenderedStyles, activeStyleId]);
+    },[activeNodeId, activeProjectResolution, preRenderedHTMLNodes, preRenderedStyles, activeStyleId, styleState]);
+
+    useEffect(() => {
+        dispatch(updateResolutionPathName());
+    },[activeProjectResolution, styleState]);  
 
     useEffect(() => {
         if(projectMode === "developer") {
@@ -85,7 +89,7 @@ export default function StoreUseEffectUpdates () {
     
     useEffect(() => {   
         dispatch(setActiveHtmlNodeParentsPath());
-    },[activeNodeId, preRenderedHTMLNodes, preRenderedStyles, activeProjectResolution]);
+    },[activeNodeId, preRenderedHTMLNodes, preRenderedStyles, activeProjectResolution, styleState, activeStyleId]);
 
     useEffect(() => {
         if(activeTab === "Navigator") {
@@ -101,12 +105,12 @@ export default function StoreUseEffectUpdates () {
             setTimeout(() => {
                 const actualNodePosition = document.querySelector(`[nodeid="${activeNodeId}"]`)?.getBoundingClientRect().top;
                 if(actualNodePosition < 172 || actualNodePosition > window.screen.height - 200) {
-                const actualViewPosition = document.getElementById("nodes-navigator").scrollTop;
-                const scrollMargin = 245;
-                document.getElementById("nodes-navigator").scrollTo({
-                    top: actualViewPosition + actualNodePosition - scrollMargin,
-                    
-                });
+                    const actualViewPosition = document.getElementById("nodes-navigator").scrollTop;
+                    const scrollMargin = 245;
+                    document.getElementById("nodes-navigator").scrollTo({
+                        top: actualViewPosition + actualNodePosition - scrollMargin,
+                        
+                    });
                 }
             },1);
         }

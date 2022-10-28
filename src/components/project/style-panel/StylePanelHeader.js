@@ -5,6 +5,7 @@ import {setKeyboardNavigationOn, setActiveStyleId, removeActiveHtmlNodeStyle, ad
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from "./SubStyleSticker";
 import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";
+import StyleState from "./StyleState";
 
 export default function StylePanelHeader () {
 
@@ -223,7 +224,7 @@ export default function StylePanelHeader () {
                     }
                     })}
 
-                    {preRenderedStyles.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens.map((child,index) => {
+                    {preRenderedStyles.find(({id}) => id === stylesInActiveNode?.[0]?.id)?.childrens?.map((child,index) => {
                         let childId = child.options[0].id;
                         let childName = child.options[0].name;
                         let styleIsSet = false; 
@@ -253,6 +254,8 @@ export default function StylePanelHeader () {
             <div className="style-panel-on-page-box">
                 <div className="text on-page">1 on this page</div>
             </div>
+
+            <StyleState />
 
             </div>
     )

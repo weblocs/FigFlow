@@ -5,6 +5,7 @@ import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import ListItemEditIcon from "../_atoms/ListItemEditIcon";
 import CreateLayoutButton from "./CreateLayoutButton";
 import ProjectLayoutListFolder from "./ProjectLayoutListFolder";
+import AddButton from "../_atoms/AddButton";
 
 export default function ProjectLayoutsPanel () {
     const dispatch = useDispatch()
@@ -21,7 +22,7 @@ export default function ProjectLayoutsPanel () {
                 Layouts
                 <div className="projectTabTitleButtonsBox">
                     {/* <button onClick={() => setCreatePageInputVisible(!createPageInputVisible)}>L</button> */}
-                    <button onClick={() => setCreateFolderInputVisible(!createFolderInputVisible)}>F</button>
+                    <AddButton fx={() => setCreateFolderInputVisible(!createFolderInputVisible)} />
                 </div>
             </div>
 

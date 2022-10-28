@@ -29,7 +29,7 @@ export default function SubStyleSticker ({id, name, index, styleIsSet, isOnlyFor
     async function handleAddNewStyleOption(e) {
         e.preventDefault();
         if(input !== "") {
-            dispatch(addStyleOption({name: input, childrenIndex: index }));
+            dispatch(addStyleOption({name: input.replaceAll(" ","-").toLowerCase(), childrenIndex: index }));
             dispatch(setActiveStyleOptionIndex(stylesInActiveNode.length));
             setInput("");
         }

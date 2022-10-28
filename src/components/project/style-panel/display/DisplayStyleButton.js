@@ -6,7 +6,7 @@ import { activeStyleProperties } from '../../../../selectors/active-style-proper
 export default function DisplayStyleButton (props) {
     
 
-    const displayStyle = useSelector((state) => state.project.activeNodeComputedStyles?.[props.style]);
+    const displayStyle = useSelector((state) => state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]);
     const dispatch = useDispatch();
 
     return (

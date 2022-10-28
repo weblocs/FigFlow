@@ -9,11 +9,13 @@ export default function ProjectRenderedDesign() {
     const preRenderedHTMLNodes = useSelector((state) => state.project.preRenderedHTMLNodes)
     const postRenderedStyles = useSelector((state) => state.project.postRenderedStyles)
     const activeProjectResolution = useSelector((state) => state.project.activeProjectResolution)
+    const styleState = useSelector((state) => state.project.styleState)
+
 
     const dispatch = useDispatch()
 
     return (
-        <div className="Project" onWheel={() => dispatch(updateStateOnScroll())}>
+        <div className={"Project " + "d2g3-is-" + styleState} onWheel={() => dispatch(updateStateOnScroll())}>
             <style>{postRenderedStyles}</style>
             <div id="project-view" className={"project-rendered-design state-" + activeProjectResolution}>
 
@@ -27,6 +29,7 @@ export default function ProjectRenderedDesign() {
                         styles={el.styles}
                         type={el.type}
                         subtype={el.subtype}
+                        src={el.src}
                         cmsCollectionId={el.cmsCollectionId}
                         cmsFieldId={el.cmsFieldId}
                         symbolId={el.symbolId}

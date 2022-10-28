@@ -38,7 +38,7 @@ export default function NodeStyleItem({child, index}) {
         setIsListOpened(false);
     }
 
-    if (child.isOnlyForMobile === true && activeProjectResolution !== "4") {
+    if (child.isOnlyForMobile === true && activeProjectResolution !== "3") {
 
     } else if (child.isOnlyForTablet  === true && activeProjectResolution !== "2") {
         

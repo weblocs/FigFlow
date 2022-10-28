@@ -1,3 +1,5 @@
+
+
 export function getIndexOfElementInArrayById(styleNodes, id) {
   let res;
   for (let i = 0; i < styleNodes.length; i++) {
@@ -8,27 +10,37 @@ export function getIndexOfElementInArrayById(styleNodes, id) {
   return res;
 }
 
-export function getResolutionPathName(resolutionNumber) {
+
+
+export function getResolutionPathName(resolutionNumber, state) {
+
+  function getState(resolution) {
+    if(state !== "default") {
+      return resolution + "-" + state;
+    }
+    return resolution
+  }
+
   if (resolutionNumber === "1") {
-    return "styles"
+    return getState("styles");
   }
   if (resolutionNumber === "2") {
-    return "tabletStyles"
+    return getState("tabletStyles")
   }
   if (resolutionNumber === "3") {
-    return "mobileStyles"
+    return getState("mobileStyles")
   }
   if (resolutionNumber === "4") {
-    return "portraitStyles"
+    return getState("portraitStyles")
   }
   if (resolutionNumber === "5") {
-    return "mediumDesktopStyles"
+    return getState("mediumDesktopStyles")
   }
   if (resolutionNumber === "6") {
-    return "largeDesktopStyles"
+    return getState("largeDesktopStyles")
   }
   if (resolutionNumber === "7") {
-    return "xLargeDesktopStyles"
+    return getState("xLargeDesktopStyles")
   }
 }
 
@@ -57,6 +69,9 @@ export function getResolutionName(resolutionNumber) {
 }
 
 export function isStyleContained(resolutionNumber, sizeResolution) {
+  if(sizeResolution === "1") {
+    return true
+  }
   if(sizeResolution === "2") {
     return (resolutionNumber === "2" || resolutionNumber === "3" || resolutionNumber === "4" )
   }
@@ -103,67 +118,75 @@ export function getIdOfPreRenderedStyleByName(styleNodes, styleName, styleParent
   return res;
 }
 
-export function JSONtoCSS (_classes, activeResolution) {
+export function JSONtoCSS (_classes, activeResolution, activeState) {
   
     let tempClasses = [];
     let tempName = "";
-    
-    let resolution = "1";
-    _classes.forEach(createTempClassesResolution)
+    let tempResolution = "";
+    let styleState = "";
 
-    resolution = "2";
-    (isStyleContained(activeResolution,resolution)) && (
-      _classes.forEach(createTempClassesResolution)
-    );
 
-    resolution = "4";
-    (isStyleContained(activeResolution,resolution)) && (
-      _classes.forEach(createTempClassesResolution)
-    );
+    styleState = "default";
+    for(let j = 1; j <= 7; j++) {
+      tempResolution = j.toString();
+      (isStyleContained(activeResolution,tempResolution)) && (
+        _classes.forEach(createTempClassesResolution)
+      );
+    }
 
-    resolution = "3";
-    (isStyleContained(activeResolution,resolution)) && (
-      _classes.forEach(createTempClassesResolution)
-    );
-
-    resolution = "5";
-    (isStyleContained(activeResolution,resolution)) && (
-      _classes.forEach(createTempClassesResolution)
-    );
-
-    resolution = "6";
-    (isStyleContained(activeResolution,resolution)) && (
-      _classes.forEach(createTempClassesResolution)
-    );
-
-    resolution = "7";
-    (isStyleContained(activeResolution,resolution)) && (
-      _classes.forEach(createTempClassesResolution)
-    );
+    styleState = "hover";
+    for(let j = 1; j <= 7; j++) {
+      tempResolution = j.toString();
+      (isStyleContained(activeResolution,tempResolution)) && (
+        _classes.forEach(createTempClassesResolution)
+      );
+    }
 
     function createTempClassesResolution(_class, i) {
       tempName = _classes[i].name;
-      // (_classes[i].parents.length == 1) && (tempName = _classes[i].parents[0].name + "." + _classes[i].name);
-      (_classes[i][getResolutionPathName(resolution)]) && ( tempClasses.push({name:tempName, styles: _classes[i][getResolutionPathName(resolution)]}));
-      _classes[i].childrens.forEach((childStyle) => {
+      if(styleState === "hover") {
+        tempName = tempName + ":hover, .d2g3-is-hover ." + tempName + ".renderedNode.active";
+      } 
+      let resolutionPathName = getResolutionPathName(tempResolution, styleState);
+      (_classes[i][resolutionPathName]) && ( tempClasses.push({name:tempName, styles: _classes[i][resolutionPathName]}));
+      _classes[i].childrens?.forEach((childStyle) => {
         childStyle.options.forEach((option) => {
-          (option[getResolutionPathName(resolution)]) && ( tempClasses.push({name:tempName + "."
+          let optionName = _classes[i].name + "."
           + ((childStyle?.defaultName !== undefined) ? (childStyle.defaultName?.replaceAll(" ","-").toLowerCase() + "-") : "") 
-          + option.name, styles: option[getResolutionPathName(resolution)]}));
+          + option.name;
+          if(styleState === "hover") {
+            optionName = optionName + ":hover, .d2g3-is-hover ." + optionName  + ".renderedNode.active"
+          } 
+          (option[resolutionPathName]) && ( tempClasses.push({
+            name: optionName, 
+          styles: option[resolutionPathName]}));
         })
       });
     }
+
+
+    let tempStyle = "* {-webkit-font-smoothing: antialiased;}\n";
+    tempClasses.forEach((item) => {
+      tempStyle += "." + item.name + "{";
+      
+      for (const [key, value] of Object.entries(item.styles)) {
+        tempStyle += key + ": " + value + ";";
+      }
+      tempStyle += "}\n"
+    })
+
+    return tempStyle;
     
     // Converting preRenderedStyles (JSON) into renderedStyles (CSS)
-    return "* {-webkit-font-smoothing: antialiased;} " + JSON.stringify(tempClasses)
-    .replaceAll("[","")
-    .replaceAll("]","")
-    .replaceAll('"',"")
-    .replaceAll('{name:',"\n.")
-    .replaceAll(',styles:',"")
-    .replaceAll("}},","}")
-    .replaceAll("}}","}")
-    .replaceAll(",",";");
+    // return "* {-webkit-font-smoothing: antialiased;} " + JSON.stringify(tempClasses)
+    // .replaceAll("[","")
+    // .replaceAll("]","")
+    // .replaceAll('"',"")
+    // .replaceAll('{name:',"\n.")
+    // .replaceAll(',styles:',"")
+    // .replaceAll("}},","}")
+    // .replaceAll("}}","}");
+    // .replaceAll(",",";");
 }
 
 

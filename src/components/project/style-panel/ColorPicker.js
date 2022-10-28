@@ -7,8 +7,16 @@ import ProprtyInputLabel from "./ProprtyInputLabel";
 export default function ColorPicker (props) {
 
     const projectSwatches = useSelector((state) => state.project.projectSwatches);
-    const editedStyleValue = useSelector((state) => state.project.activeStyleObject?.[props.style] || state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]);
+    // const editedStyleValue = useSelector((state) => state.project.activeStyleObject?.[props.style] || state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]);
  
+
+    const hierarchyStyleProperty = useSelector((state) => 
+        state.project.objectHierarchyStyles?.findLast(({style}) => style === props.style)?.value
+    );
+
+    const editedStyleValue = useSelector((state) => hierarchyStyleProperty || state.project.activeNodeComputedStyles?.[props.style.replaceAll("-","_")]);
+
+
     const activeSwatchName = useSelector((state) => {
 
         return 

@@ -10,7 +10,9 @@ function SpaceStyleInput (props) {
         state.project.objectHierarchyStyles?.find(({style}) => style === props.style) !== undefined
     );
 
-    const doesStylePropertyBelongToActiveClass = useSelector((state) => (state.project.activeStyleObject?.[props.style] !== undefined));
+    const doesStylePropertyBelongToActiveClass = useSelector((state) => (state.project.objectHierarchyStyles?.findLast(({style}) => style === props.style)?.isActive === true));
+    // const doesStylePropertyBelongToActiveClass = useSelector((state) => (state.project.activeStyleObject?.[props.style] !== undefined));
+
     // const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style]) || !isPropertyInStyleHierarchy && props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
     // const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style]) || (!isPropertyInStyleHierarchy && props?.placeholder) && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]) );
 

@@ -24,6 +24,7 @@ import AddSectionModal from "./components/project/modals/AddSectionModal";
 import PageSettingsPanel from "./components/project/left-sidebar/pages/PageSettingsPanel";
 import UpdateSymbolButton from "./components/project/rendered-view/_atoms/UpdateSymbolButton";
 import ProjectSettings from "./components/settings/ProjectSettings";
+import FindAnything from "./components/project/find-anything/FindAnything";
 
 export default function DevMode() {
   
@@ -44,6 +45,7 @@ export default function DevMode() {
         <ProjectSettings />
         <ProjectTopNavbar />
         <UpdateSymbolButton />
+        <FindAnything />
       </div>
       
       <div className="projectWrapper">

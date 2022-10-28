@@ -80,8 +80,6 @@ import {setHoveredHtmlNode, setActiveHtmlNode, setDraggedNavigatorNodes, setDrag
 
     const paddingLeft = {paddingLeft: depth*8 + "px"};
 
-    // console.log("item rend");
-
     return ( 
         <div className={"navigation-node " + ((navigatorItemDragBehindState) ? "dragged-before " : "") 
         + ((node.id === draggedOverNodeId) ? "dragged-over " : " ") 

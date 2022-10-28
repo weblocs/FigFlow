@@ -82,8 +82,6 @@ export default function HtmlNodeSettings() {
                         <div className="rich-element-settings_button button-centered active" 
                         onClick={handleClickClearId}>✕</div>
                         </div>
-                        
-                        
 
                         </>}
                         <SymbolSettings />
