@@ -129,9 +129,11 @@ export function JSONtoCSS (_classes, activeResolution, activeState) {
     styleState = "default";
     for(let j = 1; j <= 7; j++) {
       tempResolution = j.toString();
-      (isStyleContained(activeResolution,tempResolution)) && (
+      console.log("1");
+      if (isStyleContained(activeResolution,tempResolution)) {
+        console.log("2");
         _classes.forEach(createTempClassesResolution)
-      );
+      }
     }
 
     styleState = "hover";
