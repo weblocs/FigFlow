@@ -9,7 +9,6 @@ import { store } from './app/store'
 import { Provider } from 'react-redux'
 
 import "./styles/styles.scss";
-import 'react-sortable-tree/style.css';
 
 
 const rootElement = document.getElementById("root");
