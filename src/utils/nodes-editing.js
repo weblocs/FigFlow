@@ -166,6 +166,7 @@ export function JSONtoCSS (_classes, activeResolution, activeState) {
 
 
     let tempStyle = "* {-webkit-font-smoothing: antialiased;}\n";
+    console.log(tempClasses);
     tempClasses.forEach((item) => {
       tempStyle += "." + item.name + "{";
       
