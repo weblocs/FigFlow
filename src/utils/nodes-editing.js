@@ -129,9 +129,7 @@ export function JSONtoCSS (_classes, activeResolution, activeState) {
     styleState = "default";
     for(let j = 1; j <= 7; j++) {
       tempResolution = j.toString();
-      console.log("1");
       if (isStyleContained(activeResolution,tempResolution)) {
-        console.log("2");
         _classes.forEach(createTempClassesResolution)
       }
     }
@@ -145,6 +143,7 @@ export function JSONtoCSS (_classes, activeResolution, activeState) {
     }
 
     function createTempClassesResolution(_class, i) {
+      console.log(_classes[i].name + " - " + styleState);
       tempName = _classes[i].name;
       if(styleState === "hover") {
         tempName = tempName + ":hover, .d2g3-is-hover ." + tempName + ".renderedNode.active";
