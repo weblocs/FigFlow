@@ -143,6 +143,9 @@ export function JSONtoCSS (_classes, activeResolution, activeState) {
     }
 
     function createTempClassesResolution(_class, i) {
+      if(styleState === undefined) {
+        styleState = "default";
+      }
       console.log(_classes[i].name + " - " + styleState);
       tempName = _classes[i].name;
       if(styleState === "hover") {
