@@ -1,12 +1,15 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
+import { getResolutionCssMedia, getResolutionPathName, isStyleContained } from '../../../utils/nodes-editing';
 
 export default function ExportButton() {
+    const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
     const postRenderedStyles = useSelector((state) => state.project.postRenderedStyles)
     const projectPages = useSelector((state) => state.project.projectPages)
     const collections = useSelector((state) => state.project.collections)
     const projectPageFolderStructure = useSelector((state) => state.project.projectPageFolderStructure)
+
     const dispatch = useDispatch()
     
     function handleOnClick() {
@@ -35,14 +38,25 @@ export default function ExportButton() {
                     if(type === "h") {
                         type = "h2";
                     }
-
+                    
+                    const listOfSubStyles = preRenderedStyles.find(({id}) => id === nodes[i]?.class?.[0]?.id)?.childrens;
+                    const listOfNodeStyles = nodes[i].class.map((cl,index) => 
+                        {
+                            if(index !== 0 && cl.id !== '') {
+                                const styleDefaultName = listOfSubStyles?.[index-1]?.defaultName;
+                                if(styleDefaultName !== undefined) {
+                                    return styleDefaultName.replaceAll(" ","-").toLowerCase() + "-" + cl.name;
+                                }
+                            }
+                            return cl.name
+                        }).toString().replaceAll(","," ");
 
                     function generateHTMLNode() {
-                        genratedHTML += `<${type} class='${nodes[i].class.map((cl) => cl.name).toString().replaceAll(","," ")}' ${((type === "img") ? " src='https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+nodes[i].src+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'" : "" )}>`;
+                        genratedHTML += `<${type} class='${listOfNodeStyles}' el='${nodes[i].id}' ${((type === "img") ? " alt='"+nodes[i].alt+"' src='https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+nodes[i].src+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'" : "" )}>`;
                         if (nodes[i].children.length > 0) {
                             findNode(nodes[i].children);
                         }  
-                        if(type === "h2" || type === "p") {
+                        if(type === "h2" || type === "p" || type === "a") {
                             if(nodes[i]?.cmsFieldId === undefined) {
                                 genratedHTML += nodes[i].title
                             } else {
@@ -53,6 +67,28 @@ export default function ExportButton() {
                     }
 
                     generateHTMLNode();
+
+
+                    let customStyle = {};
+
+                    function addResponsiveInlineStyle(resolution) {
+                        customStyle = nodes[i].styles?.[getResolutionPathName(resolution, "default")];
+                        if(customStyle !== undefined && 
+                            Object.keys(customStyle).length !== 0) {
+                            let tempStyle = "<style> " + getResolutionCssMedia(resolution) + " { [el='" + nodes[i].id + "'] {"
+                            for (const [key, value] of Object.entries(customStyle)) {
+                            tempStyle += key + ": " + value + ";";
+                            }
+                            tempStyle += "}}</style>"
+                            console.log(tempStyle);
+                            genratedHTML += tempStyle;
+                        }
+                    }
+
+                    for(let j = 1; j <= 7; j++) {
+                        addResponsiveInlineStyle(j.toString());
+                    }
+
                     console.log(nodes[i]);
                     
                     if (nodes[i].type === "col") {
@@ -97,10 +133,28 @@ export default function ExportButton() {
                 if(type === "h") {
                     type = "h2";
                 }
-                postRenderedHTML += `<${type} class='${nodes[i].class.map((cl) => cl.name).toString().replaceAll(","," ")}' ${((type === "img") ? " src='https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+nodes[i].src+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'" : "" )}>`;
+
+                
+
+
+                const className = nodes[i].class.map((cl) => cl.name).toString().replaceAll(","," ");
+
+                const listOfSubStyles = preRenderedStyles.find(({id}) => id === nodes[i]?.class?.[0]?.id)?.childrens;
+                const listOfNodeStyles = nodes[i].class.map((cl,index) => 
+                    {
+                        if(index !== 0 && cl.id !== '') {
+                            const styleDefaultName = listOfSubStyles?.[index-1]?.defaultName;
+                            if(styleDefaultName !== undefined) {
+                                return styleDefaultName.replaceAll(" ","-").toLowerCase() + "-" + cl.name;
+                            }
+                        }
+                        return cl.name
+                    }).toString().replaceAll(","," ");
+
+                postRenderedHTML += `<${type} class='${listOfNodeStyles}' el='${nodes[i].id}' ${((type === "img") ? " src='https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/"+nodes[i].src+"?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'" : "" )}>`;
                 if (nodes[i].children.length > 0) {
                     findNode(nodes[i].children, id);
-                } else if(type === "h2" || type === "p") {
+                } else if(type === "h2" || type === "p" || type === "a") {
                     if(nodes[i]?.cmsFieldId === undefined) {
                         postRenderedHTML += nodes[i].title
                     } else {
@@ -108,6 +162,30 @@ export default function ExportButton() {
                     }
                 } 
                 postRenderedHTML += `</${type}>`;
+
+                let customStyle = {};
+
+                function addResponsiveInlineStyle(resolution) {
+                    customStyle = nodes[i].styles?.[getResolutionPathName(resolution, "default")];
+                    if(customStyle !== undefined && 
+                        Object.keys(customStyle).length !== 0) {
+                        let tempStyle = "<style> " + getResolutionCssMedia(resolution) + " { [el='" + nodes[i].id + "'] {"
+                        for (const [key, value] of Object.entries(customStyle)) {
+                          tempStyle += key + ": " + value + ";";
+                        }
+                        tempStyle += "}}</style>"
+                        console.log(tempStyle);
+                        postRenderedHTML += tempStyle;
+                    }
+                }
+
+                for(let j = 1; j <= 7; j++) {
+                    addResponsiveInlineStyle(j.toString());
+                }
+
+                
+
+
             }
         }
         findNode(nodes);

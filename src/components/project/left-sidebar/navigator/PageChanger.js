@@ -18,6 +18,10 @@ export default function PageChanger() {
             return "Layout: " + 
             projectState.projectLayouts?.find(({id}) => id === projectState.activeLayoutFolder)?.items?.find(({id}) => id === projectState.activeLayoutId)?.name;
         } 
+        if (nodesEditMode === "block") {
+            return "Block: " + 
+            projectState.blocks?.find(({id}) => id === projectState.activeBlockFolderId)?.blocks?.find(({id}) => id === projectState.activeBlockId).name;
+        } 
     })
     const activeTemplateCollectionItem = useSelector((state) => {
         const projectState = state.project;

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addUndoState, setIsActiveHtmlNodeParentDisplayFlex, editSymbolsClickableArea, setActionActiveFalse, setActiveNodeComputedStyles, setGlobalActiveHtmlNode, setActiveHtmlNodeParentsPath, editActiveStyleProperties, updateActiveStyleListAndId, setHtmlNodesWithoutExpandedState, updateResolutionPathName } from "../features/project"
+import { addUndoState, setIsActiveHtmlNodeParentDisplayFlex, editSymbolsClickableArea, setActionActiveFalse, setActiveNodeComputedStyles, setGlobalActiveHtmlNode, setActiveHtmlNodeParentsPath, editActiveStyleProperties, updateActiveStyleListAndId, setHtmlNodesWithoutExpandedState, updateResolutionPathName, setStyleState } from "../features/project"
 
 export default function StoreUseEffectUpdates () {
 
@@ -26,6 +26,9 @@ export default function StoreUseEffectUpdates () {
 
     useEffect(() => {
         dispatch(updateActiveStyleListAndId());
+        if(styleState !== "default") {
+            dispatch(dispatch(setStyleState("default")));
+        }
     },[activeNodeId]);
 
     useEffect(() => {

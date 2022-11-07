@@ -17,7 +17,7 @@ import {loadProjectFromFirebasePreRenderedNodesAndStyles} from "./utils/save-loa
 import loadShortcuts from "./utils/shortcuts"
 import ProjectImagesPanel from "./components/project/left-sidebar/images/ProjectImagesPanel";
 import { useDispatch, useSelector } from "react-redux";
-import ProjectRichTextPanel from "./components/project/left-sidebar/blocks/ProjectRichTextPanel";
+import BlocksPanel from "./components/project/left-sidebar/blocks/BlocksPanel";
 import StoreUseEffectUpdates from "./components/StoreUseEffectUpdates";
 import ProjectAddPanel from "./components/project/left-sidebar/navigator/ProjectAddPanel";
 import AddSectionModal from "./components/project/modals/AddSectionModal";
@@ -62,7 +62,7 @@ export default function DevMode() {
         <ProjectCollectionsFieldsPanel />
         <ProjectSymbolsPanel />
         <ProjectLayoutsPanel />
-        <ProjectRichTextPanel />
+        <BlocksPanel />
         </div>
 
         <ProjectRenderedDesign />

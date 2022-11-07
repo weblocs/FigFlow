@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import {setKeyboardNavigationOn, setActiveStyleId, removeActiveHtmlNodeStyle, addStyle, renameStyle, setActiveStyleOptionIndex} from "../../../features/project"
+import {setKeyboardNavigationOn, setActiveStyleId, removeActiveHtmlNodeStyle, addStyle, renameStyle, setActiveStyleOptionIndex, setActiveHtmlNodeParentsPath} from "../../../features/project"
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from "./SubStyleSticker";
 import ModalBackgroundCloser from "../_atoms/ModalBackgroundCloser";

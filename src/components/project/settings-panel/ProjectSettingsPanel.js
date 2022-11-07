@@ -14,6 +14,7 @@ export default function ProjectSettingsPanel() {
     const activeNodeId = useSelector((state) => state.project.activeNodeId)
     const collections = useSelector((state) => state.project.collections)
     const activeNodeObject = useSelector((state) => state.project.activeNodeObject)
+    const isProjectModeDeveloper = useSelector((state) => (state.project.projectMode === "developer"))
     const isNodeCmsEditable = useSelector((state) => (state.project.activeNodeObject?.cmsFieldId !== undefined && state.project.activeNodeObject?.cmsFieldId !== ""));
 
     const isNodeCollection = useSelector((state) => {
@@ -69,7 +70,7 @@ export default function ProjectSettingsPanel() {
 
     if(activeRightSidebarTab === "Settings") {
     return (
-        <div className={"projectSettingsPanel active"}>
+        <div className={"projectSettingsPanel" + (isProjectModeDeveloper ? " active" : "")}>
             <div className="style-panel-box sticky">
                 <div className="style-panel-title-box"><div className="text">{activeNodeObject?.type} settings</div></div>
             </div>
@@ -152,7 +153,8 @@ export default function ProjectSettingsPanel() {
                 </div>
 
                 <CMSFieldNodeConnector />
-                <NodeRepeatableSettings />
+
+                {/* <NodeRepeatableSettings /> */}
 
         </div>
     )

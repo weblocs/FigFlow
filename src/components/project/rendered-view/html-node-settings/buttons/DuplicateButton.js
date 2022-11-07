@@ -12,8 +12,7 @@ export default function DuplicateButton() {
     }
 
     return (
-        <div className={"rich-element-settings_button button-centered" 
-        + ((isNodeRepeatable) ? " active" : "")} onClick={handleDuplicate}>
+        <div className={"rich-element-settings_button button-centered active"} onClick={handleDuplicate}>
             <img src={PasteIcon} style={{width: "12px"}} />
         </div>
     )

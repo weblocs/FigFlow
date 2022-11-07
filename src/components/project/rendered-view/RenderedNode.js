@@ -78,10 +78,12 @@ function RenderedNode(props) {
     dispatch(setIsNodeSelectedFromNavigator(false));
     dispatch(setActiveClickedCmsItemIndex(props.itemIndex));
     props.onClick([elementId, props?.class[0]?.name]);
-    if (projectMode === "creator") {
-      setEditable(true);
-      dispatch(setKeyboardNavigationOn(false))
-    } 
+
+    // if (projectMode === "creator") {
+    //   setEditable(true);
+    //   dispatch(setKeyboardNavigationOn(false))
+    // } 
+
     if(!editable) {
       dispatch(setKeyboardNavigationOn(true))
     }
@@ -142,10 +144,10 @@ function RenderedNode(props) {
   )   
   
   if(hovered === true) {
-    customStyle = {...customStyleHover};
+    customStyle = {...customStyle, ...customStyleHover};
   }
   if(document.querySelector(`[el_id='${props.id}']`)?.classList.contains("active") && styleState === "hover") {
-    customStyle = {...customStyleHover};
+    customStyle = {...customStyle, ...customStyleHover};
   }
 
   // console.log(customStyle);
@@ -189,9 +191,7 @@ src={el.src}
     </div>
   );
 
-
-
-  if(props.children.length === 0) {
+  if(props.children.length === 0 && props.class.length === 0) {
     elementHTML = (
       <div 
       el_id={elementId} 
@@ -202,6 +202,43 @@ src={el.src}
       style={{width: "75px", height: "75px", outline: "1px solid #8d8de5"}}>
       </div>
     )
+  }
+
+  if (props.type === "body") {
+    elementHTML = (
+      <div 
+      style={customStyle}
+      el_id={elementId}
+      cms_item_index={props.itemIndex}
+      onClick={handleOnClick}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      className={listOfNodeStyles}
+      >
+        {props.children.map((el) => (
+          <RenderedNode
+            id={el.id}
+            title={el.title}
+            subtype={el.subtype}
+  src={el.src}
+            cmsCollectionId={el.cmsCollectionId}
+            cmsFieldId={el.cmsFieldId}
+            symbolId={el.symbolId}
+            type={el.type}
+            styles={el.styles}
+            key={el.id}
+            itemIndex = {props.itemIndex}
+            renderedCollectionIndex={props.renderedCollectionIndex}
+            collectionItems={props.collectionItems}
+            fieldId={props.fieldId}
+            children={el.children}
+            onChange={(text, id) => props.onChange(text, id)}
+            class={el.class}
+            onClick={([nodeId,className]) => props.onClick([nodeId,className])}
+          />
+        ))}
+      </div>
+    );
   }
 
   if (props.type === "sec") {
@@ -466,6 +503,7 @@ src={el.src}
       <ContentEditable
         style={customStyle}
         onClick={handleOnClick}
+        onBlur={() => setEditable(false)}
         onDoubleClick={handleDoubleClick}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
@@ -484,6 +522,7 @@ src={el.src}
       <ContentEditable
         style={customStyle}
         className={listOfNodeStyles}
+        onBlur={() => setEditable(false)}
         el_id={elementId}
         cms_item_index={props.itemIndex}
         tagName="p"
@@ -502,6 +541,7 @@ src={el.src}
       <ContentEditable
         style={customStyle}
         className={listOfNodeStyles}
+        onBlur={() => setEditable(false)}
         el_id={elementId}
         cms_item_index={props.itemIndex}
         tagName="div"

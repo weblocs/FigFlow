@@ -44,6 +44,31 @@ export function getResolutionPathName(resolutionNumber, state) {
   }
 }
 
+export function getResolutionCssMedia(resolutionNumber) {
+
+  if (resolutionNumber === "1") {
+    return "@media screen "
+  }
+  if (resolutionNumber === "2") {
+    return "@media screen and (max-width: 900px) "
+  }
+  if (resolutionNumber === "3") {
+    return "@media screen and (max-width: 478px) "
+  }
+  if (resolutionNumber === "4") {
+    return "@media screen and (min-width: 478px) and (max-width: 767px) "
+  }
+  if (resolutionNumber === "5") {
+    return "@media screen and (min-width: 1280px) "
+  }
+  if (resolutionNumber === "6") {
+    return "@media screen and (min-width: 1440px) "
+  }
+  if (resolutionNumber === "7") {
+    return "@media screen and (min-width: 1920px) "
+  }
+}
+
 export function getResolutionName(resolutionNumber) {
   if (resolutionNumber === "1") {
     return "Base (Desktop)"
@@ -119,6 +144,7 @@ export function getIdOfPreRenderedStyleByName(styleNodes, styleName, styleParent
 }
 
 export function JSONtoCSS (_classes, activeResolution, activeState) {
+
   
     let tempClasses = [];
     let tempName = "";
@@ -146,7 +172,6 @@ export function JSONtoCSS (_classes, activeResolution, activeState) {
       if(styleState === undefined) {
         styleState = "default";
       }
-      console.log(_classes[i].name + " - " + styleState);
       tempName = _classes[i].name;
       if(styleState === "hover") {
         tempName = tempName + ":hover, .d2g3-is-hover ." + tempName + ".renderedNode.active";
@@ -170,7 +195,6 @@ export function JSONtoCSS (_classes, activeResolution, activeState) {
 
 
     let tempStyle = "* {-webkit-font-smoothing: antialiased;}\n";
-    console.log(tempClasses);
     tempClasses.forEach((item) => {
       tempStyle += "." + item.name + "{";
       
@@ -181,17 +205,6 @@ export function JSONtoCSS (_classes, activeResolution, activeState) {
     })
 
     return tempStyle;
-    
-    // Converting preRenderedStyles (JSON) into renderedStyles (CSS)
-    // return "* {-webkit-font-smoothing: antialiased;} " + JSON.stringify(tempClasses)
-    // .replaceAll("[","")
-    // .replaceAll("]","")
-    // .replaceAll('"',"")
-    // .replaceAll('{name:',"\n.")
-    // .replaceAll(',styles:',"")
-    // .replaceAll("}},","}")
-    // .replaceAll("}}","}");
-    // .replaceAll(",",";");
 }
 
 

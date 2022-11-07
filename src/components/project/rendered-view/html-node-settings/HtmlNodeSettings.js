@@ -12,9 +12,15 @@ import DuplicateButton from "./buttons/DuplicateButton";
 import DeleteButton from "./buttons/DeleteButton";
 import MoreImg from "../../../../img/more.svg"
 import { useEffect, useState } from "react";
+import GoToParentNode from "./GoToParentNode";
+import AltImageSettings from "./AltImageSettings";
+import ChangeImageButton from "./ChangeImageButton";
 
 export default function HtmlNodeSettings() {
+    
     const activeNodeId = useSelector((state) => state.project.activeNodeId)
+    const activeStyleName = useSelector((state) => state.project.stylesInActiveNode?.[0]?.name.replace("-", " ").replace("_", " - ") || state.project.activeNodeObject?.type)
+    const isNodesEditModeBlock = useSelector((state) => state.project.nodesEditMode === "block")
     const isNodeSymbol = useSelector((state) => (state.project.activeNodeObject?.type === "sym"))
     const activeClickedCmsItemIndex = useSelector((state) => state.project.activeClickedCmsItemIndex)
 
@@ -60,13 +66,26 @@ export default function HtmlNodeSettings() {
     },[activeNodeId]);
 
     return (
-            <div className={"rich-element-settings_box" + ((activeNodeId !== "") ? " active" : "")} 
+            <div className={"rich-element-settings_box" + ((activeNodeId !== "" && !isNodesEditModeBlock) ? " active" : "")} 
             style={{ transform: `translate(${activeNodePositionX}px,${activeNodePositionY}px)`}}>
                 <div className="rich-element-settings" onClick={handleClick}>
                     <div className="rich-element-settings_flex">
                         {(!isNodeSymbol) && 
                         <>
+
+                        <div className="rich-element-settings_button active">
+                            <div className="rich-element-settings_button-text">
+                                <span>Element</span>
+                                {activeStyleName}
+                            </div>
+                        </div>
+                        
                         <NodeStylesList />
+
+                        <GoToParentNode />
+                        <AltImageSettings />
+                        <ChangeImageButton />
+                        <HeadingTypeButton />
                         <LinkSettings />
                         <AddBlockButton addRichSetting={true} />
                         <div className="rich-element-settings_button button-centered active"
@@ -76,7 +95,7 @@ export default function HtmlNodeSettings() {
 
                         <div className={"html-node_nove-list" + (openButtonList ? " active" : "")}>
                         <NodeMoveArrows isHtmlNodeMoveable={true} />
-                        <HeadingTypeButton />
+                        
                         <DuplicateButton />
                         <DeleteButton />
                         <div className="rich-element-settings_button button-centered active" 

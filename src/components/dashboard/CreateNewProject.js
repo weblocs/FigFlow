@@ -11,22 +11,42 @@ export default function CreateNewProject (props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalStep, setModalStep] = useState(0);
     const newProjectId = uuidv4();
+    const BODY_ID = "2f3672cb-1cda-4a65-8fd3-ad00cc47051c";
     const firstPageInProjectId = uuidv4();
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    const startPageNodesTemplate = [
+        {
+            name: "Home", 
+            id: firstPageInProjectId, 
+            preRenderedHTMLNodes: [
+                {
+                    id: BODY_ID,
+                    type: "body",
+                    children: [],
+                    class: [{id: BODY_ID, name: "body"}],
+                }
+            ]
+        }
+    ];
+
     const [templateData, setTemplateData] = useState({
-        pages: [{name: "Home", id: firstPageInProjectId, preRenderedHTMLNodes:[]}],
-        projectPageFolderStructure: [{name: "Home", id: firstPageInProjectId}],
+        pages: startPageNodesTemplate,
+        projectPageFolderStructure: startPageNodesTemplate,
         projectPageFolders: [],
         collections: [],
         setStyles: [],
         symbols: [],
         swatches: [],
         sections: [],
-        richTextElements: [],
+        blocks: [],
         images: [],
-        preRenderedStyles: [],
+        preRenderedStyles: [
+            {name: "body", id: BODY_ID, childrens:[], styles: {}},
+            {name: "heading", id: "91b51156-df11-4ad2-a330-7b5c7fa30a05", childrens:[], styles: {}},
+            {name: "paragraph", id: "bb3ab07f-64ee-46e4-aa9d-0a7464f4d20d", childrens:[], styles: {}},
+        ],
     });
 
 
@@ -72,7 +92,7 @@ export default function CreateNewProject (props) {
                 symbols: templateData.symbols,
                 swatches: templateData.swatches,
                 sections: templateData.sections,
-                richTextElements: templateData.richTextElements,
+                blocks: templateData.blocks,
                 images: templateData.images,
                 preRenderedStyles: templateData.preRenderedStyles,
 
@@ -95,7 +115,7 @@ export default function CreateNewProject (props) {
                 symbols: tempTemplateData.symbols,
                 swatches: tempTemplateData.swatches,
                 sections: tempTemplateData.sections,
-                richTextElements: tempTemplateData.richTextElements,
+                blocks: tempTemplateData.blocks,
                 images: tempTemplateData.images,
                 preRenderedStyles: tempTemplateData.preRenderedStyles,
             })

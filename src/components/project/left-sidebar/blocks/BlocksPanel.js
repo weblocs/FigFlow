@@ -1,21 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setBlocks, addBlock } from "../../../../features/project";
+import { setBlocks, addBlockFolder } from "../../../../features/project";
 import {arrayMoveImmutable} from 'array-move';
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
-import RichElementListItem from "./RichElementListItem";
+import BlockListItem from "./BlockListItem";
 import AddButton from "../_atoms/AddButton";
+import BlockFolder from "./BlockFolder";
 
-export default function ProjectRichTextPanel(){
+export default function BlocksPanel(){
     const dispatch = useDispatch()
-    const projectRichTextElements = useSelector((state) => state.project.projectRichTextElements)
+    const blocks = useSelector((state) => state.project.blocks)
     const activeTab = useSelector((state) => state.project.activeTab)
 
     const onSortEnd = (oldIndex, newIndex) => {
         if(newIndex > oldIndex) {
             newIndex--;
         }
-        dispatch(setBlocks(arrayMoveImmutable(projectRichTextElements, oldIndex, newIndex)));
+        dispatch(setBlocks(arrayMoveImmutable(blocks, oldIndex, newIndex)));
     }
 
     const [draggedStartIndex, setDraggedStartIndex] = useState(-1);
@@ -36,6 +37,7 @@ export default function ProjectRichTextPanel(){
         setDraggedStartIndex(-1);
         setDraggedOverIndex(-1);
     }
+
     
     return(
         <div className={"projectPagesPanel "+ ((activeTab === "Rich Text") ? "active" : "" )}>
@@ -48,20 +50,28 @@ export default function ProjectRichTextPanel(){
 
             <CreateNewItemInput 
             visibility={createInputVisible} 
-            create={addBlock} 
-            placeholder="New element" />
+            create={addBlockFolder} 
+            placeholder="New block folder" />
 
             <div className="pagesList">
-                {projectRichTextElements.map((element,index) => (
-                    <RichElementListItem 
-                    key={element.id}
-                    element={element} 
-                    index={index} 
-                    setDraggedStartIndex={setDraggedStartIndex}
-                    handleDragOver={handleDragOver}
-                    handleDrop={handleDrop}
-                    draggedOverIndex={draggedOverIndex} />
+
+                {blocks?.map((folder) => (
+                    <div key={folder.id}>
+                        <BlockFolder folder={folder} />
+                        {folder.blocks?.map((element,index) => (
+                            <BlockListItem 
+                            key={element.id}
+                            element={element} 
+                            index={index} 
+                            folderId={folder.id}
+                            setDraggedStartIndex={setDraggedStartIndex}
+                            handleDragOver={handleDragOver}
+                            handleDrop={handleDrop}
+                            draggedOverIndex={draggedOverIndex} />
+                        ))}
+                    </div>
                 ))}
+                 
             </div>
         </div>
     )

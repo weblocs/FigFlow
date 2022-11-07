@@ -12,10 +12,11 @@ const initialState = {
   offlineProjectName: "projekt1", 
 
   projectMode: "developer", // developer or creator
-  nodesEditMode: "page", // page, layout, cmsTemplate, richElement
+  nodesEditMode: "page", // page, layout, cmsTemplate, block
   scrollCount: 0,
   projectLayouts: [],
   activeLayoutFolder: "",
+  activeLayoutAddFolder: "",
   activeLayoutId: "", 
   
   undoStates: [],
@@ -77,7 +78,12 @@ const initialState = {
   projectUploadedFonts: [{name:"Plus Jakarta"}, {name:"Inter", weights: ["300", "500", "700"]}, {name:"General Sans"}, {name:"Hauora"}, {name:"Clash Display"}, {name:"Roboto"}],
   projectSwatches: [],
   projectPopUp: "",
-  projectRichTextElements: [],
+
+  blocks: [],
+  activeBlockFolderId: "",
+  activeBlockAddFolderId: "",
+
+
   activeStyleOptionIndex: 0,
   activeNodeComputedStyles: {},
 
@@ -180,7 +186,7 @@ function regenerateIdsInNodeList(nodes) {
 }
 
 function nodeIsFolder(node) {
-    if(node.type === "div" || node.type === "l" || node.type === "sym" || node.type === "sec" || node.type === "rich") {
+    if(node.type === "div" || node.type === "l" || node.type === "sym" || node.type === "sec" || node.type === "body") {
         return true;
     } else if(node.type === "col" && node.cmsCollectionId) {
         return true;
@@ -195,26 +201,29 @@ function updateNodesLists (state) {
     } else if (state.nodesEditMode === "layout") {
         if(state.projectLayouts.find(({id}) => id === state.activeLayoutFolder)?.items?.find(({id}) => id === state.activeLayoutId) !== undefined) {
             state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes = state.preRenderedHTMLNodes[0];
-        } else {
-            console.log("Saving layout not successed, [to-do] layout folder add button should have own state var");
-        }
-       
+        }  
     } else if (state.nodesEditMode === "cmsTemplate") {
         state.collections.find(({id}) => id === state.activeCollectionTemplateId).preRenderedHTMLNodes = state.preRenderedHTMLNodes;
-    }  else if (state.nodesEditMode === "richElement") {
-        
+    }  else if (state.nodesEditMode === "block") {
+        if(state.blocks?.find(({id}) => id === state.activeBlockFolderId)?.blocks !== undefined) {
+            if(state.blocks?.find(({id}) => id === state.activeBlockFolderId)?.blocks?.find(({id}) => id === state.activeBlockId) !== undefined) {
+                if(state.blocks?.find(({id}) => id === state.activeBlockFolderId)?.blocks?.find(({id}) => id === state.activeBlockId)?.preRenderedHTMLNodes !== undefined) {
+                    state.blocks.find(({id}) => id === state.activeBlockFolderId).blocks.find(({id}) => id === state.activeBlockId).preRenderedHTMLNodes = state.preRenderedHTMLNodes[0];
+                }
+            }
+        }
     }
 }
 
 function updateNodesBasedOnList(state) {
     if(state.nodesEditMode === "page") {
-        state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
+        state.preRenderedHTMLNodes = state.projectPages.find(({id}) => id === state.activePageId).preRenderedHTMLNodes;
     } else if (state.nodesEditMode === "layout") {
         state.preRenderedHTMLNodes = [state.projectLayouts.find(({id}) => id === state.activeLayoutFolder).items.find(({id}) => id === state.activeLayoutId).preRenderedHTMLNodes];
     } else if (state.nodesEditMode === "cmsTemplate") {
         state.preRenderedHTMLNodes = state.collections.find(({id}) => id === state.activeCollectionTemplateId).preRenderedHTMLNodes;
-    } else if (state.nodesEditMode === "richElement") {
-        // state.projectRichTextElements
+    } else if (state.nodesEditMode === "block") {
+        state.preRenderedHTMLNodes = [state.blocks.find(({id}) => id === state.activeBlockFolderId).blocks.find(({id}) => id === state.activeBlockId).preRenderedHTMLNodes];
     }
 }
 
@@ -229,6 +238,12 @@ function updateNodesGlobally(state, fx) {
     state.projectLayouts.forEach((folder) => {
         folder.items.forEach((layout) => {
             fx([layout.preRenderedHTMLNodes]);
+        });
+    });
+
+    state.blocks.forEach((blockFolder) => {
+        blockFolder.blocks.forEach((block) => {
+            fx([block.preRenderedHTMLNodes]);
         });
     });
 
@@ -514,6 +529,8 @@ export const projectSlice = createSlice({
 
     addPage: (state, action) => {
         //update previos page before creating a new one
+        const bodyStyleId = "2f3672cb-1cda-4a65-8fd3-ad00cc47051c";
+        const bodyStyleName = state.preRenderedStyles.find(({id}) => id === bodyStyleId).name;
         updateNodesLists(state);
         state.nodesEditMode = "page";
         // create new page
@@ -524,7 +541,12 @@ export const projectSlice = createSlice({
             name: newPageName, 
             slug: newPageSlug,
             id: newPageId, 
-            preRenderedHTMLNodes:[],
+            preRenderedHTMLNodes:[{
+                id: uuidv4(),
+                type: "body",
+                children: [],
+                class: [{id: bodyStyleId, name: bodyStyleName}],
+            }],
         });
         state.projectPageFolderStructure.push({
             name: newPageName, 
@@ -547,19 +569,23 @@ export const projectSlice = createSlice({
         settingsOpenedPage[action.payload.property] = action.payload.value;
     },
 
-    deletePage: (state, action) => {
+    // TO DO deletePageFolder
+    deletePage: (state) => {
         const indexProjectPages = state.projectPages.findIndex(({id}) => id === state.openedSettingsPage.id);
         state.projectPages.splice(indexProjectPages,1);
+
         let [settingsOpenedPage, settingsOpenedPageSiblingArray, settingsOpenedPageIndex] = findActiveNodeSiblingArrayAndIndex(state.projectPageFolderStructure,state.openedSettingsPage.id);
         settingsOpenedPageSiblingArray.splice(settingsOpenedPageIndex,1);
-        state.activeNodeId = "";
-
+        
         if(state.openedSettingsPage.id === state.activePageId) {
+            state.activeNodeId = "";
             state.activePageIndex = 0;
             state.activePageId = state.projectPages[state.activePageIndex].id;
             state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
         }
     },
+
+    
 
     setActivePage: (state, action) => {
         //update previos page before creating a new one
@@ -588,8 +614,27 @@ export const projectSlice = createSlice({
         }
         state.projectPageFolders.push(folder);
         state.projectPageFolderStructure.push(folder);
+    },
 
+    editPageFolder: (state, action) => {
+        state.projectPageFolders.find(({id}) => id === state.openedSettingsPage.id)[action.payload.property] = action.payload.value;
+        let settingsOpenedPage = findActiveNode(state.projectPageFolderStructure,state.openedSettingsPage.id);
+        settingsOpenedPage[action.payload.property] = action.payload.value;
+    },
+
+    deletePageFolder: (state) => {
+        const indexOpenedPageFolder = state.projectPageFolders.findIndex(({id}) => id === state.openedSettingsPage.id);
+        state.projectPageFolders.splice(indexOpenedPageFolder,1);
+
+        let [settingsOpenedPage, settingsOpenedPageSiblingArray, settingsOpenedPageIndex] = findActiveNodeSiblingArrayAndIndex(state.projectPageFolderStructure,state.openedSettingsPage.id);
+        settingsOpenedPageSiblingArray.splice(settingsOpenedPageIndex,1);
         
+        if(state.projectPages?.find(({id}) => id === state.activePageId) === undefined) {
+            state.activeNodeId = "";
+            state.activePageIndex = 0;
+            state.activePageId = state.projectPages[state.activePageIndex].id;
+            state.preRenderedHTMLNodes = state.projectPages[state.activePageIndex].preRenderedHTMLNodes;
+        }
     },
 
     openPageSettings: (state, action) => {
@@ -693,6 +738,8 @@ export const projectSlice = createSlice({
         state.activeStyleIndex = getIndexOfElementInArrayById(state.preRenderedStyles, state.activeStyleId);
            
     },
+
+    
 
     renameStyle: (state, action) => {
         const nodeId = action.payload.id;
@@ -1034,7 +1081,7 @@ export const projectSlice = createSlice({
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
                 if (nodes[i].id === id) {
-                    if(nodeIsFolder(nodes[i]) && (nodes[i].children.length == 0)) {
+                    if( (nodeIsFolder(nodes[i]) && (nodes[i].children.length == 0)) || nodes[i].type === "body" ) {
                         nodes[i].children.splice(i+1,0,newNode);
                     } else {
                         nodes.splice(i+1,0,newNode)
@@ -1047,11 +1094,15 @@ export const projectSlice = createSlice({
             }
         }
         
-        if(state.activeNodeId !== "") {
+        if(state.preRenderedHTMLNodes?.[0] !== undefined) {
+            if(state.activeNodeId === "") {
+                state.activeNodeId = state.preRenderedHTMLNodes?.[0].id;
+            }
             findNode(state.preRenderedHTMLNodes, state.activeNodeId);
         } else {
-            state.preRenderedHTMLNodes = [...state.preRenderedHTMLNodes, newNode];
+            state.preRenderedHTMLNodes.push(newNode);
         }
+        
         
         state.activeNodeId = newNodeId;
         state.stylesInActiveNode = [];
@@ -1062,6 +1113,9 @@ export const projectSlice = createSlice({
         let response;
         let tempHtmlNodes = JSON.stringify(state.preRenderedHTMLNodes);
         let editedNodeId = action.payload.id;
+        if(editedNodeId === undefined) {
+            editedNodeId = state.activeNodeId;
+        }
         let editedNodeNewText = action.payload.value;
         let editedField = action.payload.field;
 
@@ -1158,15 +1212,20 @@ export const projectSlice = createSlice({
     pasteHtmlNodes: (state) => {
 
         regenerateIdsInNodes(state.copiedNodes);
+        if(state.activeNodeId === "") {
+            state.activeNodeId = state.preRenderedHTMLNodes?.[0].id;
+        }
+        console.log(state.activeNodeId);
         let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
 
         if(state.keyboardNavigationOn) {
-            if(nodeIsFolder(activeNode) && (activeNode.children.length == 0)) {
+            if(nodeIsFolder(activeNode) && (activeNode.children.length == 0) || (activeNode.type === "body") ) {
                 activeNode.children.splice(activeNodeIndex+1,0,state.copiedNodes);
             } else {
                 activeNodeSiblingArray.splice(activeNodeIndex+1,0,state.copiedNodes)
             }
         }
+        state.activeNodeId = state.copiedNodes.id;
     },
 
     deleteHtmlNode: (state,action) => {
@@ -1176,7 +1235,7 @@ export const projectSlice = createSlice({
 
         function findNode(nodes, id) {
             for (let i = 0; i < nodes.length; i++) {
-            if (nodes[i].id === id) {
+            if (nodes[i].id === id && nodes[i].type !== "body") {
                 tempHtmlNodes = tempHtmlNodes.replace("," + JSON.stringify(nodes[i]), "");
                 tempHtmlNodes = tempHtmlNodes.replace(JSON.stringify(nodes[i]) + ",", "");
                 tempHtmlNodes = tempHtmlNodes.replace(JSON.stringify(nodes[i]), "");
@@ -1195,27 +1254,32 @@ export const projectSlice = createSlice({
 
     deleteActiveHtmlNode: (state) => {
         let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
-        if(activeNodeSiblingArray[activeNodeIndex+1]) {
-            state.activeNodeId = activeNodeSiblingArray[activeNodeIndex+1].id
-        } else if(activeNodeSiblingArray[activeNodeIndex-1]) {
-            state.activeNodeId = activeNodeSiblingArray[activeNodeIndex-1].id
-        } else {
-            state.activeNodeId = "";
-        }
-        activeNodeSiblingArray = activeNodeSiblingArray.splice(activeNodeIndex,1);
-    },
-
-    deleteActiveHtmlNodeShortcut: (state) => {
-        if(state.keyboardNavigationOn && state.projectMode === "developer") {
-            let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
+        if(activeNode.type !== "body") {
             if(activeNodeSiblingArray[activeNodeIndex+1]) {
                 state.activeNodeId = activeNodeSiblingArray[activeNodeIndex+1].id
             } else if(activeNodeSiblingArray[activeNodeIndex-1]) {
                 state.activeNodeId = activeNodeSiblingArray[activeNodeIndex-1].id
             } else {
                 state.activeNodeId = "";
-            }
+            }   
             activeNodeSiblingArray = activeNodeSiblingArray.splice(activeNodeIndex,1);
+        }
+    },
+
+    deleteActiveHtmlNodeShortcut: (state) => {
+        if(state.keyboardNavigationOn && state.projectMode === "developer") {
+            let [activeNode, activeNodeSiblingArray, activeNodeIndex] = findActiveNodeSiblingArrayAndIndex(state.preRenderedHTMLNodes,state.activeNodeId);
+            
+            if(activeNode.type !== "body") {
+                if(activeNodeSiblingArray[activeNodeIndex+1]) {
+                    state.activeNodeId = activeNodeSiblingArray[activeNodeIndex+1].id
+                } else if(activeNodeSiblingArray[activeNodeIndex-1]) {
+                    state.activeNodeId = activeNodeSiblingArray[activeNodeIndex-1].id
+                } else {
+                    state.activeNodeId = "";
+                }
+                activeNodeSiblingArray = activeNodeSiblingArray.splice(activeNodeIndex,1);
+            }
         }
     },
 
@@ -1484,6 +1548,58 @@ export const projectSlice = createSlice({
         activeNode.repeatable = action.payload;
     },
 
+    setActiveHtmlNodeParentClassJoinState: (state,action) => {
+        let activeNode = findActiveNode(state.preRenderedHTMLNodes,state.activeNodeId);
+        activeNode.joinParentClasses = action.payload;
+    },
+
+    addActiveHtmlNodeBlockFolders: (state,action) => {
+        let activeNode = findActiveNode(state.preRenderedHTMLNodes,state.activeNodeId);
+        if(activeNode?.blockFolders === undefined) {
+            activeNode.blockFolders = [];
+        }
+        let activeFolder = activeNode?.blockFolders?.find(({id}) => id === action.payload.id);
+        if(activeFolder === undefined ) {
+            activeNode.blockFolders.push({id: action.payload.id, state: action.payload.state})
+        } else {
+            activeFolder.state = action.payload.state;
+        }
+    },
+
+    asignBlockFolderToNodes: (state) => {
+        function updateNodes(nodes, id) {
+            for (let i = 0; i < nodes.length; i++) {
+                if(nodes[i].class[0]?.id === state.stylesInActiveNode[0].id) {
+                    nodes[i].blockFolders = state.activeNodeObject.blockFolders;
+                }
+                if (nodes[i].children) {
+                    updateNodes(nodes[i].children, id);
+                }
+            }
+        }
+
+        updateNodesGlobally(state, updateNodes);
+    },
+
+    asignBlockFolderToNodesWithOptions: (state) => {
+        const activeIndex = state.stylesInActiveNode?.findIndex(({id}) => id === state.activeStyleId);
+        function updateNodes(nodes, id) {
+            for (let i = 0; i < nodes.length; i++) {
+                if(nodes[i].class[0]?.id === state.stylesInActiveNode[0].id) {
+                    if(nodes[i].class[activeIndex]?.id === state.stylesInActiveNode[activeIndex].id) {
+                        nodes[i].blockFolders = state.activeNodeObject.blockFolders;
+                    }
+                }
+                if (nodes[i].children) {
+                    updateNodes(nodes[i].children, id);
+                }
+            }
+        }
+
+        updateNodesGlobally(state, updateNodes);
+    },
+
+
     setActiveHtmlNodeLink: (state,action) => {
         let activeNode = findActiveNode(state.preRenderedHTMLNodes,state.activeNodeId);
         activeNode.linkType = action.payload.linkType;
@@ -1507,28 +1623,97 @@ export const projectSlice = createSlice({
         }
     },
 
+
     setBlocks: (state, action) => {
-        state.projectRichTextElements = action.payload
+        state.blocks = action.payload
+    },
+
+    setActiveBlockFolderId: (state, action) => {
+        state.activeBlockFolderId = action.payload
+        
+    },
+
+    setActiveBlockAddFolderId: (state, action) => {
+        state.activeBlockAddFolderId = action.payload
+    },
+
+    addBlockFolder: (state, action) => {
+        state.blocks.push({
+            id: uuidv4(),
+            name: action.payload,
+            blocks: [],
+        });
+    },
+
+    editBlockFolder: (state, action) => {
+        let blockFolderId = action.payload.id;
+        let property = action.payload.property;
+        let value = action.payload.value;
+        
+        for (let i = 0; i < state.blocks.length; i++) {
+            if(state.blocks[i].id === blockFolderId) {
+                state.blocks[i][property] = value;
+            }
+        }
+    },
+
+    deleteBlockFolder: (state, action) => {
+        const elementIndex = state.blocks.findIndex(({id}) => id === action.payload.id);
+        state.blocks.splice(elementIndex,1);
+
+        if(state.activeBlockAddFolderId === action.payload.id) {
+            state.activeBlockId = state.blocks[0].blocks[0].id;
+            state.activeBlockFolderId = state.blocks[0].id;
+            state.preRenderedHTMLNodes = [state.blocks[0].blocks[0].preRenderedHTMLNodes];
+            state.activeNodeId = state.preRenderedHTMLNodes?.[0]?.id;
+        }
     },
 
     addBlock: (state, action) => {
-        state.projectRichTextElements = [...state.projectRichTextElements, {
-            id: uuidv4(),
-            name: action.payload,
-            preRenderedHTMLNodes: state.activeNodeObject,
-            deleted: false,
-        }];
+        for (let i = 0; i < state.blocks.length; i++) {
+            if(state.blocks[i].id === state.activeBlockAddFolderId && state.activeNodeId !== "") {
+                state.blocks[i].blocks.push({
+                    id: uuidv4(),
+                    name: action.payload,
+                    preRenderedHTMLNodes: state.activeNodeObject,
+                    blocks: [],
+                });
+            } else {
+                if (state.activeNodeId === "") {
+                    console.log("You didn't select any node to create a Block");
+                }
+            }
+        }
     },
 
     editBlock: (state, action) => {
-        const elementIndex = state.projectRichTextElements.findIndex(({id}) => id === action.payload.id);
-        state.projectRichTextElements[elementIndex][action.payload.property] = action.payload.value;
+        let id = action.payload.id;
+        let property = action.payload.property;
+        let value = action.payload.value;
+        for (let i = 0; i < state?.blocks.length; i++) {
+            for (let j = 0; j < state?.blocks[i]?.blocks?.length; j++) {
+                if(state.blocks[i].blocks[j].id === id) {
+                    state.blocks[i].blocks[j][property] = value;
+                }
+            }
+        }
     },
 
     deleteBlock: (state, action) => {
-        const elementIndex = state.projectRichTextElements.findIndex(({id}) => id === action.payload.id);
-        state.projectRichTextElements.splice(elementIndex,1);
+        let id = action.payload.id;
+        for (let i = 0; i < state?.blocks.length; i++) {
+            for (let j = 0; j < state?.blocks[i]?.blocks?.length; j++) {
+                if(state?.blocks[i]?.blocks[j].id === id) {
+                    state.blocks[i].blocks.splice(j,1);
+                }
+            }
+        }
+        state.activeBlockId = state.blocks[0].blocks[0].id;
+        state.activeBlockFolderId = state.blocks[0].id;
+        state.preRenderedHTMLNodes = [state.blocks[0].blocks[0].preRenderedHTMLNodes];
+        state.activeNodeId = state.preRenderedHTMLNodes?.[0]?.id;
     },
+
 
     setLayouts: (state, action) => {
         state.projectLayouts = action.payload
@@ -1538,9 +1723,13 @@ export const projectSlice = createSlice({
         state.activeLayoutFolder = action.payload
     },
 
+    setActiveLayoutAddFolder: (state, action) => {
+        state.activeLayoutAddFolder = action.payload
+    },
+
     addLayout: (state, action) => {
         for (let i = 0; i < state.projectLayouts.length; i++) {
-            if(state.projectLayouts[i].id === state.activeLayoutFolder && state.activeNodeId !== "") {
+            if(state.projectLayouts[i].id === state.activeLayoutAddFolder && state.activeNodeId !== "") {
                 state.projectLayouts[i].items = [...state.projectLayouts[i].items, {
                     id: uuidv4(),
                     name: action.payload,
@@ -1562,6 +1751,30 @@ export const projectSlice = createSlice({
             for (let j = 0; j < state.projectLayouts[i].items.length; j++) {
                 if(state.projectLayouts[i].items[j].id === sectionId) {
                     state.projectLayouts[i].items[j][property] = value;
+                }
+            }
+        }
+    },
+
+    duplicateLayout: (state, action) => {
+        let sectionId = action.payload.id;
+        for (let i = 0; i < state.projectLayouts.length; i++) {
+            for (let j = 0; j < state.projectLayouts[i].items.length; j++) {
+                if(state.projectLayouts[i].items[j].id === sectionId) {
+                    let name = state.projectLayouts[i].items[j].name;
+                    if(name.slice(-1).match("^[0-9]+$")) {
+                        const lastDigit = parseInt(name.slice(-1)) + 1;
+                        name = name.slice(0, -1) + lastDigit;
+                    } else {
+                        console.log(name);
+                        name = name.toString() + " Copy";
+                        console.log(name);
+                    }
+                    state.projectLayouts[i].items.push({
+                        id: uuidv4(),
+                        name: name,
+                        preRenderedHTMLNodes: state.projectLayouts[i].items[j].preRenderedHTMLNodes,
+                    })
                 }
             }
         }
@@ -1922,16 +2135,9 @@ export const projectSlice = createSlice({
         editSectionNodesIds(state.copiedSectionNodes);
 
         function findNode(nodes, id) {
-            
-            function nodeIsSection(node) {s
-                if(node.type === "sec") {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+
             function nodeIsRichText(node) {
-                if(node.type === "rich") {
+                if(node.type === "div" && node.children.length === 0) {
                     return true;
                 } else {
                     return false;
@@ -1952,7 +2158,9 @@ export const projectSlice = createSlice({
                     findNode(nodes[i].children, id);
                 }
             }
+
         }
+
         if(state.keyboardNavigationOn) {
             findNode(state.preRenderedHTMLNodes, state.activeNodeId);
         }
@@ -1980,7 +2188,7 @@ export const projectSlice = createSlice({
                 symbols: state.projectSymbols,
                 swatches: state.projectSwatches,
                 sections: state.projectLayouts,
-                richTextElements: state.projectRichTextElements,
+                blocks: state.blocks,
                 });
             }
             updateNodesLists(state);
@@ -1996,7 +2204,7 @@ export const projectSlice = createSlice({
             localStorage.setItem(slug+"symbols", JSON.stringify(state.projectSymbols));
             localStorage.setItem(slug+"swatches", JSON.stringify(state.projectSwatches));
             localStorage.setItem(slug+"sections", JSON.stringify(state.projectLayouts));
-            localStorage.setItem(slug+"richTextElements", JSON.stringify(state.projectRichTextElements))
+            localStorage.setItem(slug+"blocks", JSON.stringify(state.blocks))
         }
     },
 
@@ -2015,6 +2223,19 @@ export const projectSlice = createSlice({
 
         updateNodesBasedOnList(state);
         state.activeNodeId = "";
+    },
+
+    setActiveBlock: (state, action) => {
+        updateNodesLists(state);
+        state.nodesEditMode = "block";
+        state.activeCollectionTemplateId = "";
+        state.activePageId = "";
+
+        state.activeBlockId = action.payload.id;
+        state.activeBlockFolderId = action.payload.folderId;
+
+        updateNodesBasedOnList(state);
+        state.activeNodeId = state.preRenderedHTMLNodes[0].id;
     },
 
     
@@ -2126,6 +2347,8 @@ export const {
     deletePage, //[to-do] deletePageFolder
     setActivePage, 
     addPageFolder, 
+    deletePageFolder,
+    editPageFolder,
     openPageSettings,
     closePageSettings, 
     setDraggedPage, 
@@ -2176,6 +2399,8 @@ export const {
     setNavigatorItemDragBehindState, 
     setIsActiveHtmlNodeParentDisplayFlex, 
     setActiveHtmlNodeRepeatableState,
+    setActiveHtmlNodeParentClassJoinState,
+    addActiveHtmlNodeBlockFolders,
     setActiveHtmlNodeLink,
     setActiveHtmlNodeParentsPath,
     handleArrowNodesNavigation, 
@@ -2188,11 +2413,13 @@ export const {
     addLayout, 
     deleteLayout, 
     editLayout,
+    duplicateLayout,
     addLayoutFolder, 
     editLayoutFolder,
     deleteLayoutFolder,
     setActiveLayout,
     setActiveLayoutFolder,
+    setActiveLayoutAddFolder,
     copyLayoutHtmlNodes,
     pasteLayoutHtmlNodes,
 
@@ -2200,7 +2427,16 @@ export const {
     setBlocks, 
     addBlock, 
     editBlock,
+    setActiveBlock,
     deleteBlock,
+    addBlockFolder,
+    editBlockFolder,
+    deleteBlockFolder,
+    setActiveBlockAddFolderId,
+    setActiveBlockFolderId,
+    asignBlockFolderToNodes,
+    asignBlockFolderToNodesWithOptions,
+    
 
     /* Undo */
     undoProject, 

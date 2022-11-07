@@ -61,7 +61,10 @@ export default function ProjectImagesPanel(){
         <div className={"collectionsPanel "+ ((activeTab === "Images") ? "active" : "" )}>
             <div className="projectTabTitleBox">Images</div>
             <div style={{overflow:"hidden"}}>
+            <label className="custom-file-upload panel-button">
                 <input type="file" onChange={(event) => imageUploading(event.target.files[0] || null)} />
+                Choose Photo 
+                </label>
             </div>
             <div className="libraryImageGrid">
                 {projectImages.map((images) => (

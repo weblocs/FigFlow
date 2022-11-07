@@ -37,8 +37,13 @@ export default function AddSectionModal() {
         dispatch(setProjectPopUp(""));
     }
 
+    function handleNodeClick() {
+
+    }
+
+    if(addSectionPopUpOpened) {
     return (
-        <div className={"add-section_popup-box" + ((addSectionPopUpOpened) ? " active" : "")}>
+        <div className="add-section_popup-box active">
             <div 
             className="add-section_popup_close-area"
             onClick={handleClickInPopUpCloseArea}></div>
@@ -79,9 +84,11 @@ export default function AddSectionModal() {
                         title={presentedSectionNodes.title}
                         children={presentedSectionNodes.children}
                         class={presentedSectionNodes.class}
+                        onClick={handleNodeClick}
                     />
                 </div>
             </div>
         </div>
     )
+    }
 }

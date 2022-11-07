@@ -73,7 +73,7 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
       dispatch(setSwatches([...projectData.data()?.swatches]));
       dispatch(setPageFolders([...projectData.data()?.projectPageFolders]));
       dispatch(setPagesNestedStructure([...projectData.data()?.projectPageFolderStructure]));
-      dispatch(setBlocks([...projectData.data()?.richTextElements]));
+      dispatch(setBlocks([...projectData.data()?.blocks]));
       dispatch(setProjectImages([...projectData.data()?.images]));
       dispatch(setLayouts([...projectData.data()?.sections]));
       dispatch(setProjectSettingsData({
@@ -97,7 +97,7 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
       dispatch(setSymbols(JSON.parse(localStorage.getItem(offlineProjectName+"symbols"))));
       dispatch(setSwatches(JSON.parse(localStorage.getItem(offlineProjectName+"swatches"))));
       dispatch(setPageFolders(JSON.parse(localStorage.getItem(offlineProjectName+"projectPageFolders"))));
-      dispatch(setBlocks(JSON.parse(localStorage.getItem(offlineProjectName+"richTextElements"))));
+      dispatch(setBlocks(JSON.parse(localStorage.getItem(offlineProjectName+"blocks")) || []));
       dispatch(setProjectImages(JSON.parse(localStorage.getItem(offlineProjectName+"images"))));
       dispatch(setLayouts(JSON.parse(localStorage.getItem(offlineProjectName+"sections"))));
     }

@@ -1,8 +1,10 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { editLayout, editLayoutFolder, deleteLayoutFolder, deleteLayout, setActiveLayout }  from "../../../../features/project"
+import { editLayout, editLayoutFolder, deleteLayoutFolder, deleteLayout, setActiveLayout, duplicateLayout }  from "../../../../features/project"
 import CreateLayoutButton from "./CreateLayoutButton"
 import ListItemEditIcon from "../_atoms/ListItemEditIcon"
+
+import PasteIcon from "../../../../img/paste.svg"
 
 export default function ProjectLayoutListFolder({folder}) {
     const activeLayoutId = useSelector((state) => state.project.activeLayoutId)
@@ -47,10 +49,15 @@ export default function ProjectLayoutListFolder({folder}) {
                         className="edit-icon_wrapper"
                         >
                             <div 
-                            className={"projectPageItem block-item" + ((activeLayoutId === section.id) ? " active" : "" )} 
+                            className={"projectPageItem" + ((activeLayoutId === section.id) ? " active" : "" )} 
                             onClick={() => handleClickInSymbolItem(section.id, folder.id)}>
                                 {section.name} 
                             </div>
+
+                        <img 
+                        className={"layout-duplicate-icon"} 
+                        onClick={() => dispatch(duplicateLayout({id: section.id}))}
+                        src={PasteIcon} />
 
                         <ListItemEditIcon 
                             text="Edit Layout"

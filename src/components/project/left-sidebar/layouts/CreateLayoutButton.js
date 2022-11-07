@@ -1,4 +1,4 @@
-import { addLayout, setActiveLayoutFolder } from "../../../../features/project"
+import { addLayout, setActiveLayoutAddFolder } from "../../../../features/project"
 
 import Plus from '../../../../img/plus.svg';
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ export default function CreateLayoutButton({id, visibility}) {
 
     function handleClick() {
         setIsInputOpen(!isInputOpen);
-        dispatch(setActiveLayoutFolder(id));
+        dispatch(setActiveLayoutAddFolder(id));
     }
 
     useEffect(() => {
