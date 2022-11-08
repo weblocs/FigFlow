@@ -5,6 +5,7 @@ import { firebaseConfig } from "../../utils/firebase-config";
 import { initializeApp } from 'firebase/app';
 import { setIsSettingsModalOpen, setKeyboardNavigationOn, setProjectSettingsData } from '../../features/project'
 import ProjectSettingsDelete from './ProjectSettingsDelete'
+import FaviconUploader from './FaviconUploader';
 
 export default function ProjectSettings() {
     const projectSettingsData = useSelector((state) => state.project.projectSettingsData)
@@ -66,6 +67,8 @@ export default function ProjectSettings() {
         dispatch(setKeyboardNavigationOn(true));
     }
 
+    
+
     return (
         <div className={'settings-modal' + (isSettingsModalOpen ? " active" : "") }>
             <div 
@@ -92,6 +95,8 @@ export default function ProjectSettings() {
                     <div>{validationMessage}</div>
 
                     <button>Save</button>
+
+                    <FaviconUploader />
 
                 </div>
             </form>

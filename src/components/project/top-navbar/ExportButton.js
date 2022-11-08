@@ -5,6 +5,7 @@ import { getResolutionCssMedia, getResolutionPathName, isStyleContained } from '
 
 export default function ExportButton() {
     const preRenderedStyles = useSelector((state) => state.project.preRenderedStyles)
+    const faviconImage = useSelector((state) => state.project.faviconImage)
     const postRenderedStyles = useSelector((state) => state.project.postRenderedStyles)
     const projectPages = useSelector((state) => state.project.projectPages)
     const collections = useSelector((state) => state.project.collections)
@@ -14,12 +15,43 @@ export default function ExportButton() {
     
     function handleOnClick() {
 
-        function generateCollectionPage (nodes) {
+        function generateCollectionPage (collection, item) {
+            let nodes = collection.preRenderedHTMLNodes;
+            let metaTitle = replaceCmsFields(collection?.metaTitle || "");
+            let metaDescription = replaceCmsFields(collection.metaDescription || "");
+
+            function replaceCmsFields(str) {
+                const regex = /{{(.*?)}}/gm;
+                let m;
+                let texts = [];
+    
+                while ((m = regex.exec(str)) !== null) {
+                    if (m.index === regex.lastIndex) {
+                        regex.lastIndex++;
+                    }
+                    m.forEach((match, groupIndex) => {
+                        if(groupIndex === 0) {
+                            texts.push(match);
+                        }
+                    });
+                }
+    
+                texts.forEach((text) => {
+                    const textFieldId = collection?.fields?.find(({name}) => name === text.replace("{{","").replace("}}",""))?.id;
+                    const textData = item.data?.find(({fieldId}) => fieldId === textFieldId)?.fieldValue || "";
+                    str = str.replaceAll(text, textData);
+                })
+                return str
+            }
+            
             let genratedHTML = `
             <html>
             <head>
             <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
             <link href="../style.css" rel="stylesheet">
+            <meta charset="utf-8">
+            <title>${metaTitle}</title>
+            <meta name="description" content="${metaDescription}">
             </head>
             <body>`;
             function findNode(nodes) {
@@ -80,7 +112,6 @@ export default function ExportButton() {
                             tempStyle += key + ": " + value + ";";
                             }
                             tempStyle += "}}</style>"
-                            console.log(tempStyle);
                             genratedHTML += tempStyle;
                         }
                     }
@@ -88,8 +119,6 @@ export default function ExportButton() {
                     for(let j = 1; j <= 7; j++) {
                         addResponsiveInlineStyle(j.toString());
                     }
-
-                    console.log(nodes[i]);
                     
                     if (nodes[i].type === "col") {
                         console.log("col");
@@ -101,7 +130,7 @@ export default function ExportButton() {
             return genratedHTML;
         }
 
-        function generatePage(nodes, depth) {
+        function generatePage(nodes, depth, metaTitle, metaDescription) {
         let styleURLDots = "";
         for(let i = 1; i < depth; i++) {
             styleURLDots +=  "../";
@@ -111,7 +140,11 @@ export default function ExportButton() {
         <html>
         <head>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link rel="icon" href="">
         <link href="${styleURLDots}style.css" rel="stylesheet">
+        <meta charset="utf-8">
+        <title>${metaTitle}</title>
+        <meta name="description" content="${metaDescription}">
         </head>
         <body>`;
 
@@ -133,9 +166,6 @@ export default function ExportButton() {
                 if(type === "h") {
                     type = "h2";
                 }
-
-                
-
 
                 const className = nodes[i].class.map((cl) => cl.name).toString().replaceAll(","," ");
 
@@ -174,7 +204,6 @@ export default function ExportButton() {
                           tempStyle += key + ": " + value + ";";
                         }
                         tempStyle += "}}</style>"
-                        console.log(tempStyle);
                         postRenderedHTML += tempStyle;
                     }
                 }
@@ -204,6 +233,8 @@ export default function ExportButton() {
                 let pageSlug = page?.slug;
                 if(!page.children) {
                     const nodes = projectPages.find(({slug}) => slug === page.slug).preRenderedHTMLNodes;
+                    const metaTitle = projectPages.find(({slug}) => slug === page.slug).metaTitle;
+                    const metaDescription = projectPages.find(({slug}) => slug === page.slug).metaDescription;
                     let parentToFolderLink = "";
                     parents.forEach(parent => {
                         parentToFolderLink += parent + "/";
@@ -212,7 +243,7 @@ export default function ExportButton() {
                         pageSlug = "index";
                         firstPage = false;
                     }
-                    zip.file(`${parentToFolderLink}${pageSlug}.html`, generatePage(nodes, parents.length));
+                    zip.file(`${parentToFolderLink}${pageSlug}.html`, generatePage(nodes, parents.length, metaTitle, metaDescription));
                 } else {
                     let updatedParents = [...parents, pageSlug];
                     let parentToFolderLink = "";
@@ -230,7 +261,7 @@ export default function ExportButton() {
 
         collections.forEach(collection => {
             collection.items.forEach(item => {
-                zip.file(`project/${collection.slug}/${item.slug}.html`, generateCollectionPage(collection.preRenderedHTMLNodes));
+                zip.file(`project/${collection.slug}/${item.slug}.html`, generateCollectionPage(collection, item));
             })
         })
 

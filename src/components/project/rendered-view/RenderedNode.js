@@ -384,14 +384,14 @@ src={el.src}
       onMouseOut={handleMouseOut}
       className={listOfNodeStyles}
           >
-            {collections[renderedCollectionIndex]?.items.map((item,itemIndex) => (
+            {collections[renderedCollectionIndex]?.items?.map((item,itemIndex) => (
               <div key={item.id + itemIndex}> 
               {props.children.map((el) => (
                 <RenderedNode
                   id={el.id}
                   title={el.title}
                   subtype={el.subtype}
-src={el.src}
+                  src={el.src}
                   cmsCollectionId={el.cmsCollectionId}
                   cmsFieldId={el.cmsFieldId}
                   symbolId={el.symbolId}
@@ -414,7 +414,7 @@ src={el.src}
 
     if(props?.cmsCollectionId === undefined) {
       elementHTML = (
-        <div  key={el.id}
+        <div
         el_id={elementId} 
         className="empty-collection-wrapper renderedNode"
         onClick={handleOnClick}
@@ -426,7 +426,7 @@ src={el.src}
     }
     else if(collections[renderedCollectionIndex]?.items.length === 0) {
       elementHTML = (
-        <div  key={el.id}
+        <div
         el_id={elementId} 
         className="empty-collection-wrapper renderedNode"
         onClick={handleOnClick}

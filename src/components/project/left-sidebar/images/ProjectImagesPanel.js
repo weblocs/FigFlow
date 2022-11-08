@@ -30,16 +30,13 @@ export default function ProjectImagesPanel(){
     }
 
     const imageUploading = (file) => {
-
         if(!file) {
         return;
         }
-
         fileToDataUri(file)
         .then(dataUri => {
             const tempStorageRef = ref(storage, projectFirebaseId+"-"+file.name);
             uploadBytes(tempStorageRef, file).then((snapshot) => {
-
             });
         })
         .then(async() => {
@@ -54,6 +51,7 @@ export default function ProjectImagesPanel(){
         })
         .then(async() => {
             dispatch(addImageToProjectImages(projectFirebaseId+"-"+file.name));
+            dispatch(editHtmlNode({id: activeNodeId, field: 'src', value: projectFirebaseId+"-"+file.name}))
         })
     }
 

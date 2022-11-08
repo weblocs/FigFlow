@@ -61,9 +61,7 @@ export default function StoreUseEffectUpdates () {
         dispatch(setActionActiveFalse());
     },[undoActionActive]);  
 
-    useEffect(() => {
-        dispatch(editSymbolsClickableArea());
-    },[preRenderedHTMLNodes, preRenderedStyles]);  
+   
  
     useEffect(() => {
         document.querySelector(`.navigation-node.hovered`)?.classList.remove("hovered");
@@ -101,6 +99,13 @@ export default function StoreUseEffectUpdates () {
             document.querySelector(`[nodeid='${activeNodeId}']`)?.classList.add("active");
         }
     },[activeTab])
+
+    useEffect(() => {
+        dispatch(editSymbolsClickableArea());
+        setTimeout(() => {
+            dispatch(editSymbolsClickableArea());
+        }, 500);
+    },[preRenderedHTMLNodes, preRenderedStyles]);  
     
 
     useEffect(() => {

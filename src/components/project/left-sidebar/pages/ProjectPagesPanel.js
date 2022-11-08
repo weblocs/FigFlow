@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import {setActiveCollectionTemplate, setActivePage, setPages, addPage, addPageFolder} from "../../../../features/project"
 import {arrayMoveImmutable} from 'array-move'
-import SettingIcon from '../../../../img/setting.svg';
 import PanelTabTitle from "../_atoms/PanelTabTitle";
 import PageListFolder from "./PageListFolder";
+import CollectionPageListItem from "./CollectionPageListItem";
 
 export default function ProjectPagesPanel(){
     const dispatch = useDispatch()
@@ -13,7 +13,6 @@ export default function ProjectPagesPanel(){
     const collections = useSelector((state) => state.project.collections)
     const activePageId = useSelector((state) => state.project.activePageId)
     const activeTab = useSelector((state) => state.project.activeTab)
-    const activeCollectionTemplateId = useSelector((state) => state.project.activeCollectionTemplateId)
     const projectPageFolderStructure = useSelector((state) => state.project.projectPageFolderStructure) 
 
     const onSortEnd = (oldIndex, newIndex) => {
@@ -44,9 +43,7 @@ export default function ProjectPagesPanel(){
         setDraggedOverIndex(-1);
     }
 
-    function handleCollectionItemClick (id) {
-        dispatch(setActiveCollectionTemplate(id));
-    }
+    
     
     return(
         <div className={"projectPagesPanel "+ ((activeTab === "Pages") ? "active" : "" )}>
@@ -79,15 +76,9 @@ export default function ProjectPagesPanel(){
 
             </div>
             <PanelTabTitle text="Collection pages" />
-            {collections.map((collection,index) => (
-                <div key={collection.id} style={{position: "relative"}}>
-                    <div 
-                    onClick={() => handleCollectionItemClick(collection.id)} 
-                    className={"projectPageItem " + ((activeCollectionTemplateId === collection.id) ? "active " : "")}>
-                        {collection.name} Template
-                    </div>
-                    <img src={SettingIcon} className="page-item_settings-icon" />
-                </div>
+
+            {collections.map((collection) => (
+                <CollectionPageListItem key={collection.id} collection={collection} />
             ))}
         </div>
     )

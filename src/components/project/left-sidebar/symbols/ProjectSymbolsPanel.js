@@ -5,6 +5,7 @@ import CreateNewItemInput from "../navigator/CreateNewItemInput";;
 import ListItemEditIcon from "../_atoms/ListItemEditIcon";
 import {arrayMoveImmutable} from 'array-move'
 import addIcon from "../../../../img/plus.svg"
+import SymbolEditButton from "./SymbolEditButton";
 
 export default function ProjectSymbolsPanel(){
     const dispatch = useDispatch()
@@ -79,13 +80,12 @@ export default function ProjectSymbolsPanel(){
                                 {symbol.name}
                             </div>
 
-                            <ListItemEditIcon 
+                            <SymbolEditButton 
                             text="Edit Symbol"
                             itemType="symbol"
                             element={symbol} 
                             editFx={editSymbolName} 
                             deleteFx={deleteSymbol} 
-                            isDeleteButtonVisible={false}
                             active={false} />
                         </div>
                     </div>

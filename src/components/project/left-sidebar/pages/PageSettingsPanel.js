@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setKeyboardNavigationOn, editPage, openPageSettings, closePageSettings, deletePage, deletePageFolder, editPageFolder } from "../../../../features/project"
+import { setKeyboardNavigationOn, editPage, openPageSettings, closePageSettings, deletePage, deletePageFolder, editPageFolder, editCollection } from "../../../../features/project"
 import ConfirmDeleteModalButton from "../../modals/ConfirmDeleteModalButton"
 
 export default function PageSettingsPanel() {
     const activeTab = useSelector((state) => state.project.activeTab)
     const openedSettingsPage = useSelector((state) => state.project.openedSettingsPage)
+    const isCmsPage = useSelector((state) => state.project.openedSettingsPage?.items !== undefined)
     const isOpenedHomepage = useSelector((state) => state.project.projectPages?.[0]?.id == state.project.openedSettingsPage?.id)
     const isOpenedPageFolder = useSelector((state) => state.project.openedSettingsPage?.children !== undefined)
     
@@ -15,10 +16,16 @@ export default function PageSettingsPanel() {
     const inputMetaTitleRef = useRef();
     const inputMetaDescriptionRef = useRef();
 
+
     function handleSubmit() {
         event.preventDefault();
 
-        if(isOpenedPageFolder) {
+        if(isCmsPage) {
+            dispatch(editCollection({id: openedSettingsPage.id, property: "name", value: inputRef.current.value}));
+            dispatch(editCollection({id: openedSettingsPage.id, property: "slug", value: inputSlugRef.current.value}));
+            dispatch(editCollection({id: openedSettingsPage.id, property: "metaTitle", value: inputMetaTitleRef.current.value}));
+            dispatch(editCollection({id: openedSettingsPage.id, property: "metaDescription", value: inputMetaDescriptionRef.current.value}));
+        } else if(isOpenedPageFolder) {
             dispatch(editPageFolder({property: "name", value: inputRef.current.value}));
             dispatch(editPageFolder({property: "slug", value: inputSlugRef.current.value}));
         } else {
@@ -54,10 +61,11 @@ export default function PageSettingsPanel() {
         + ((activeTab === "Pages" && (openedSettingsPage?.id)) ? "active" : "" )
         }>
             <div className="projectTabTitleBox">
-                Page Settings
+                {isCmsPage && "CMS "}Page Settings
                 <div className="projectTabTitleButtonsBox">
                 
-                {isOpenedPageFolder ? 
+                {!isCmsPage && (
+                isOpenedPageFolder ? 
                 <ConfirmDeleteModalButton 
                 handleOnClick={() => dispatch(deletePageFolder())} 
                 deleteItemName={openedSettingsPage?.name}
@@ -69,7 +77,8 @@ export default function PageSettingsPanel() {
                 deleteItemName={openedSettingsPage?.name}
                 deleteItemType="page" 
                 redButton={false} />
-                }
+                )}
+            
 
                 <div className="settings-button white-button" onClick={() => dispatch(openPageSettings({}))}>Close</div>
                 <button className="settings-button">Save</button>

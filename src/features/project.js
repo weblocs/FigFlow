@@ -22,7 +22,7 @@ const initialState = {
   undoStates: [],
   activeUndoIndex: 1,
   undoActionActive: false,
-  activeTab: "",
+  activeTab: "Collections",
   activeRightSidebarTab: "Style",
 
   projectPages: [],
@@ -36,6 +36,8 @@ const initialState = {
 
   collections:[],  
   activeCollectionId: "",
+  activeSettingsCollectionId: "",
+  activeSettingsCollectionFieldId: "",
   activeCollectionIndex: 0,
   activeCollectionItemId: "",
   activeCollectionItemIndex: 0,
@@ -48,6 +50,7 @@ const initialState = {
 
   projectSymbols: [],
   editedSymbolId: {symbolId: "", elementId: ""},
+  activeSymbolConnections: [],
 
   preRenderedHTMLNodes: [],
   preRenderedHTMLNodesWithoutExpandedStates: [],
@@ -94,6 +97,7 @@ const initialState = {
 
   isSettingsModalOpen: false,
   projectSettingsData: {},
+  faviconImage: "",
 
     activeStyleProperties: {
         font_family: "",
@@ -278,6 +282,13 @@ export const projectSlice = createSlice({
         );
     },
 
+    editCollection: (state, action) => {
+        const property = action.payload.property;
+        const value = action.payload.value;
+
+        state.collections.find(({id}) => id === action.payload.id)[property] = value
+    },
+
     setActiveCollection: (state, action) => {
         state.activeCollectionId = action.payload;
         state.activeCollectionIndex = state.collections.map(x => {
@@ -346,6 +357,15 @@ export const projectSlice = createSlice({
             }
         ];
     },
+
+    editCollectionField: (state, action) => {
+        const name = action.payload.name;
+        const helpText = action.payload.helpText;
+        let collection = state.collections.find(({id}) => id === state.activeSettingsCollectionId);
+        let field = collection.fields.find(({id}) => id === state.activeSettingsCollectionFieldId);
+        field.name = name;
+        field.helpText = helpText;
+    },
     
     setActiveCollectionTemplate: (state, action) => {
         updateNodesLists(state);
@@ -374,6 +394,17 @@ export const projectSlice = createSlice({
 
     setActiveHoveredCmsItemIndex: (state, action) => {
         state.activeHoveredCmsItemIndex = action.payload;
+    },
+
+    setActiveSettingsCollectionId: (state, action) => {
+        state.activeSettingsCollectionId = action.payload;
+        if(state.activeSettingsCollectionId !== "") {
+            state.collectionPanelState = "settings";
+        }
+    },
+
+    setActiveSettingsCollectionFieldId: (state, action) => {
+        state.activeSettingsCollectionFieldId = action.payload;
     },
 
     /* Symbols */
@@ -509,6 +540,43 @@ export const projectSlice = createSlice({
         }  
         findNode(state.preRenderedHTMLNodes);
     },
+
+    setActiveSymbolConnections: (state, action) => {
+        state.activeSymbolConnections = [];
+        const symbolId = action.payload.id;
+
+        state.projectPages.forEach((page) => {
+            checkNodes(page.preRenderedHTMLNodes, page.id, page.name, "page");
+        });
+    
+        state.projectLayouts.forEach((folder) => {
+            folder.items.forEach((layout) => {
+                checkNodes([layout.preRenderedHTMLNodes], layout.id, layout.name, "layout");
+            });
+        });
+    
+        state.blocks.forEach((blockFolder) => {
+            blockFolder.blocks.forEach((block) => {
+                checkNodes([block.preRenderedHTMLNodes], block.id, block.name, "block");
+            });
+        });
+
+        function checkNodes(nodes, id, name, type) {
+            for (let i = 0; i < nodes.length; i++) {
+                if(symbolId === nodes[i].symbolId) {
+                    if(state.activeSymbolConnections.filter(item => item.pageId === id).length === 0) {
+                        state.activeSymbolConnections.push({pageId: id, pageName: name, type: type, nodeId: nodes[i].id, amount: 1});
+                    } else {
+                        state.activeSymbolConnections.find(item => item.pageId === id).amount += 1;
+                    }
+                }
+                if (nodes[i].children) {
+                    checkNodes(nodes[i].children, id, name, type);
+                }
+            }
+        }
+    },
+
 
     /* Pages */
 
@@ -2174,6 +2242,10 @@ export const projectSlice = createSlice({
         state.projectFirebaseId = action.payload;
     },
 
+    setFavicon: (state, action) => {
+        state.faviconImage = action.payload;
+    },
+
     saveProjectToFirebase: (state) => {
         if(!state.offlineMode) {
             async function saveProjectToFirebasePreRenderedNodesAndStyles() {
@@ -2238,20 +2310,16 @@ export const projectSlice = createSlice({
         state.activeNodeId = state.preRenderedHTMLNodes[0].id;
     },
 
-    
-
-    
-
-    
-
-    
-
     setActiveProjectTab: (state, action) => {
         if(state.activeTab === action.payload) {
             state.activeTab = "";
         } else {
             state.activeTab = action.payload;
         }
+    },
+
+    setActiveProjectTabOn: (state, action) => {
+        state.activeTab = action.payload;
     },
 
     setActiveRightSidebarTab: (state, action) => {
@@ -2314,16 +2382,20 @@ export const {
 
     setCollections, 
     addCollection, 
+    editCollection,
     setActiveCollection,
     addCollectionItem,
     setActiveCollectionItem,
     editCollectionItem, 
     addCollectionField, 
+    editCollectionField,
     setActiveCollectionTemplate, 
     setActiveCollectionItemTemplate, 
     setCollectionPanelState, 
     setActiveClickedCmsItemIndex,
     setActiveHoveredCmsItemIndex,
+    setActiveSettingsCollectionId,
+    setActiveSettingsCollectionFieldId,
 
 
     // [add] deleteCollection, editCollection, deleteCollectionItem, deleteCollectionField, editCollectionField
@@ -2337,6 +2409,7 @@ export const {
     makeSymbolEditable,
     editSymbolNodes, 
     editSymbolsClickableArea, 
+    setActiveSymbolConnections,
     
     /* Pages */
     setPages, 
@@ -2462,6 +2535,7 @@ export const {
     setIsNodeSelectedFromNavigator, // [to-do] propably no longer needed
     updateStateOnScroll, 
     setActiveProjectTab, 
+    setActiveProjectTabOn,
     setKeyboardNavigationOn,
     setProjectPopUp, 
     setProjectMode, 
@@ -2471,6 +2545,7 @@ export const {
     updateResolutionPathName,
     setIsSettingsModalOpen,
     setProjectSettingsData,
+    setFavicon,
 
 } = projectSlice.actions
 

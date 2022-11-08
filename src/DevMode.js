@@ -25,6 +25,7 @@ import PageSettingsPanel from "./components/project/left-sidebar/pages/PageSetti
 import UpdateSymbolButton from "./components/project/rendered-view/_atoms/UpdateSymbolButton";
 import ProjectSettings from "./components/settings/ProjectSettings";
 import FindAnything from "./components/project/find-anything/FindAnything";
+import CollectionSettings from "./components/project/left-sidebar/collections/CollectionSettings";
 
 export default function DevMode() {
   
@@ -57,6 +58,7 @@ export default function DevMode() {
         <ProjectPagesPanel />
         <PageSettingsPanel />
         <ProjectCollectionsPanel />
+        <CollectionSettings />
         {(!offlineMode) && <ProjectImagesPanel />}
         <ProjectCollectionsItemsPanel />
         <ProjectCollectionsFieldsPanel />

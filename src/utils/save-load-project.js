@@ -8,7 +8,7 @@ import { getFirestore, getDoc, getDocs, collection, query, where, doc } from "fi
 import { getStorage, ref } from "firebase/storage";
 import { firebaseConfig } from "./firebase-config.js";
 import { v4 as uuidv4 } from "uuid";
-import { setCollections, setBlocks, setSymbols, setStyles, setPages, setProjectFirebaseId, setSwatches, setLayouts, setPageFolders, setPagesNestedStructure, setProjectSettingsData } from '../features/project'
+import { setCollections, setBlocks, setSymbols, setStyles, setPages, setProjectFirebaseId, setSwatches, setLayouts, setPageFolders, setPagesNestedStructure, setProjectSettingsData, setFavicon } from '../features/project'
 import { setProjectImages } from "../features/project-images"
 
 
@@ -80,6 +80,7 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
         name: projectData.data()?.projectName,
         slug: projectData.data()?.projectId,
       }));
+      dispatch(setFavicon(projectData.data()?.favicon));
     }
   } else {
     let projectPagesStorage = localStorage.getItem(offlineProjectName+"pages");
@@ -100,6 +101,7 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(projectSl
       dispatch(setBlocks(JSON.parse(localStorage.getItem(offlineProjectName+"blocks")) || []));
       dispatch(setProjectImages(JSON.parse(localStorage.getItem(offlineProjectName+"images"))));
       dispatch(setLayouts(JSON.parse(localStorage.getItem(offlineProjectName+"sections"))));
+      dispatch(setFavicon(JSON.parse(localStorage.getItem(offlineProjectName+"favicon"))));
     }
   }
 }

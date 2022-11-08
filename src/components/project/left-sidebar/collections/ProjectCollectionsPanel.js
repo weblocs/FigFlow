@@ -4,6 +4,7 @@ import AddCollection from "./AddCollection";
 import {setCollectionPanelState, addCollection, setActiveCollection} from "../../../../features/project"
 import CreateNewItemInput from "../navigator/CreateNewItemInput";
 import AddButton from "../_atoms/AddButton";
+import CollectionListItem from "./CollectionListItem";
 
 
 export default function ProjectCollectionsPanel(){
@@ -14,10 +15,7 @@ export default function ProjectCollectionsPanel(){
     const activeTab = useSelector((state) => state.project.activeTab)
     const [createInputVisible, setCreateInputVisible] = useState(false);
 
-    function handleItemClick(id) {
-        dispatch(setActiveCollection(id));
-        dispatch(setCollectionPanelState("items"));
-    }
+    
     
     // if(collectionPanelState === "collections") {
     return(
@@ -37,12 +35,7 @@ export default function ProjectCollectionsPanel(){
 
             <div className="pagesList">
             {collections.map((collection) => (
-                <div 
-                onClick={() => handleItemClick(collection.id)} 
-                className={"projectPageItem " + ((activeCollectionId === collection.id) ? "active" : "") } 
-                key={collection.id}>
-                    {collection.name}
-                </div>
+                <CollectionListItem key={collection.id} id={collection.id} name={collection.name} />
             ))}
             </div>
         </div>
