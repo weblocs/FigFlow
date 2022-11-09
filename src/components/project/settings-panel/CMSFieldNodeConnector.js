@@ -36,7 +36,9 @@ export default function CMSFieldNodeConnector() {
         if(isNodeCmsEditable) {
             dispatch(editHtmlNode({id:activeNodeId, field:'cmsFieldId', value:""}));
         } else {
-            dispatch(editHtmlNode({id:activeNodeId, field:'cmsFieldId', value:activeCollectionItems[0].data[0]?.fieldId}));
+            if(activeCollectionItems[0]?.data[0]?.fieldId !== undefined) {
+                dispatch(editHtmlNode({id:activeNodeId, field:'cmsFieldId', value:activeCollectionItems[0]?.data[0]?.fieldId}));
+            }
         }
     }
 

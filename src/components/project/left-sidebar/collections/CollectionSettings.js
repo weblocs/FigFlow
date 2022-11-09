@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { editCollection, setActiveSettingsCollectionId, setCollectionPanelState, setKeyboardNavigationOn } from '../../../../features/project'
+import AddNewField from './AddNewField'
 import CollectionFieldSettings from './CollectionFieldSettings'
 
 export default function CollectionSettings() {
@@ -42,13 +43,13 @@ export default function CollectionSettings() {
                 <div className="projectTabTitleBox">
                     {collection?.name} CMS Settings
                     <div className="projectTabTitleButtonsBox">
-                        <div className="settings-button white-button" onClick={() => dispatch(setActiveSettingsCollectionId(""))}>Close</div>
+                    <div className="settings-button white-button" onClick={() => dispatch(setActiveSettingsCollectionId(""))}>Close</div>
                         <button className="settings-button blue-button">Save</button>
                     </div>
                 </div>
 
                 <div        
-                className='page-settings-wrapper no-bottom-padding'>
+                className='page-settings-wrapper bottom-line'>
                     <label className='settings-label'>Collection Name</label>
                     <input 
                     ref={nameRef}
@@ -61,9 +62,12 @@ export default function CollectionSettings() {
                     ref={slugRef}
                     onFocus={handleFocus} 
                     onBlur={handleBlur}  
-                    className='settings-input' />
+                    className='settings-input no-margin-bottom' />
                 </div>
             </form>
+
+        
+            <AddNewField />
 
             <div className='page-settings-wrapper'>
                 <div className='collection-fields-settings_list'>

@@ -40,7 +40,6 @@ export default function DevMode() {
   return (
     <>
       <StoreUseEffectUpdates />
-      <AddSectionModal />
       
       <div className="user-panel">
         <ProjectSettings />
@@ -75,6 +74,9 @@ export default function DevMode() {
         </div>
 
       </div>
+
+
+      <AddSectionModal />
     </>
   );
 }

@@ -48,7 +48,7 @@ export default function CollectionFieldSettings({field}) {
         onSubmit={handleSubmit}
         className={'collection-fields-settings_item-settings' + (isOpen ? " active" : "") }>
 
-            <div className="settings-button white-button" onClick={() => dispatch(setActiveSettingsCollectionFieldId(""))}>Close</div>
+            <div className="settings-button white-button absolute-button" onClick={() => dispatch(setActiveSettingsCollectionFieldId(""))}>Close</div>
 
             <label className='settings-label'>NAME</label>
             <input className='settings-input' 

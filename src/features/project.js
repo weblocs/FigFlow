@@ -295,10 +295,11 @@ export const projectSlice = createSlice({
             return x.id;
         }).indexOf(state.activeCollectionId);
 
-        console.log(state.activeCollectionId);
+        state.activeCollectionItemIndex = -1;
+        state.activeCollectionItemId = ""
 
-        state.activeCollectionItemIndex = 0;
-        state.activeCollectionItemId = state.collections[state.activeCollectionIndex]?.items[0]?.id;
+        // state.activeCollectionItemIndex = 0;
+        // state.activeCollectionItemId = state.collections[state.activeCollectionIndex]?.items[0]?.id;
     },
 
     addCollectionItem: (state, action) => {
@@ -349,13 +350,14 @@ export const projectSlice = createSlice({
     },
 
     addCollectionField: (state, action) => {
-        state.collections[state.activeCollectionIndex].fields = [...state.collections[state.activeCollectionIndex].fields, 
+        state.collections.find(({id}) => id === state.activeSettingsCollectionId).fields.push( 
             {
                 id:uuidv4(),
                 name:action.payload.name,
+                helpText:action.payload.helpText,
                 type:action.payload.type,
             }
-        ];
+        );
     },
 
     editCollectionField: (state, action) => {
@@ -374,7 +376,7 @@ export const projectSlice = createSlice({
         state.activePageId = "";
 
         state.activeCollectionTemplateId = action.payload;
-        state.activeCollectionItemTemplateId = state.collections.find(({id}) => id === state.activeCollectionTemplateId).items[0].id;
+        state.activeCollectionItemTemplateId = state.collections?.find(({id}) => id === state.activeCollectionTemplateId)?.items?.[0]?.id;
         
         updateNodesBasedOnList(state);
         state.activeNodeId = "";

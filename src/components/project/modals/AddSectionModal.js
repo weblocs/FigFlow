@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {copyLayoutHtmlNodes, pasteLayoutHtmlNodes, setProjectPopUp} from "../../../features/project"
 import RenderedNode from "../rendered-view/RenderedNode"
+import SectionModalItem from "./SectionModalItem"
 
 export default function AddSectionModal() {
 
@@ -37,18 +38,22 @@ export default function AddSectionModal() {
         dispatch(setProjectPopUp(""));
     }
 
-    function handleNodeClick() {
-
-    }
+    useEffect(() => {
+        setTimeout(() => {
+            document.querySelectorAll(".present-section-in-popup").forEach((item,index) => {
+                item.style.marginBottom = -item.offsetHeight*2/3 + "px"
+            });
+        },100); 
+    },[addSectionPopUpOpened])
 
     if(addSectionPopUpOpened) {
     return (
-        <div className="add-section_popup-box active">
+        <div className={"add-section_popup-box" + (addSectionPopUpOpened ? " active" : "") }>
             <div 
             className="add-section_popup_close-area"
             onClick={handleClickInPopUpCloseArea}></div>
             <div className="add-section_popup-list-box">
-                <div className="add-section_popup-list">
+                {/* <div className="add-section_popup-list">
                     
                     <div className="text-h2">Layouts</div>
                     <button 
@@ -70,10 +75,39 @@ export default function AddSectionModal() {
                         
                         </div>
                     ))}
-                </div>
-                <div className="present-section-in-popup">
-                
-                    
+                </div> */}
+
+                    <div className="layout-folders-list">
+                    {projectLayouts.map((folder) => (
+                        <div key={folder.id}>
+                        <div className="present-section-in-popup-heading">
+                        {folder.name}
+                        </div>
+                        <div className="layouts-list" key={folder.id}>
+                            
+                            <div className="layouts-list-column">
+                            {folder.items.filter((item, i) => i%3 === 0).map((section) => (
+                                <SectionModalItem section={section}  key={section.preRenderedHTMLNodes.id} />
+                            ))}
+                            </div>
+
+                            <div className="layouts-list-column">
+                            {folder.items.filter((item, i) => i%3 === 1).map((section) => (
+                                <SectionModalItem section={section}  key={section.preRenderedHTMLNodes.id} />
+                            ))}
+                            </div>
+
+                            <div className="layouts-list-column">
+                            {folder.items.filter((item, i) => i%3 === 2).map((section) => (
+                                <SectionModalItem section={section}  key={section.preRenderedHTMLNodes.id} />
+                            ))}
+                            </div>
+
+                        </div>
+                        </div>
+                    ))}
+                    </div>
+                {/* <div className="present-section-in-popup">
                         <RenderedNode
                         data={presentedSectionNodes}
                         cmsCollectionId={presentedSectionNodes.cmsCollectionId}
@@ -86,7 +120,7 @@ export default function AddSectionModal() {
                         class={presentedSectionNodes.class}
                         onClick={handleNodeClick}
                     />
-                </div>
+                </div> */}
             </div>
         </div>
     )

@@ -54,11 +54,10 @@ export default function FileUploaderToCollectionField({handleInputChange}){
 
     return(
 
-        <div style={{overflow:"hidden"}}>
-                
+        <div style={{overflow:"hidden"}}>  
             <label className="custom-file-upload">
                 <input type="file" onChange={(event) => imageUploading(event.target.files[0] || null)} />
-                Custom Upload
+                Upload Image
             </label>
         </div>
     )
