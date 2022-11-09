@@ -43,6 +43,14 @@ export default function AddSectionModal() {
             document.querySelectorAll(".present-section-in-popup").forEach((item,index) => {
                 item.style.marginBottom = -item.offsetHeight*2/3 + "px"
             });
+            document.querySelectorAll("[anchor='true']").forEach((item,index) => {
+                item.addEventListener("click", () => {
+                    const linkTo = item.getAttribute("folder_anchor_id");
+                    document.querySelector(".layout-folders-list").scrollTo({
+                        top: document.querySelector("[folder_id='" + linkTo + "']" ).offsetTop - 96
+                    });
+                });
+            });
         },100); 
     },[addSectionPopUpOpened])
 
@@ -52,35 +60,28 @@ export default function AddSectionModal() {
             <div 
             className="add-section_popup_close-area"
             onClick={handleClickInPopUpCloseArea}></div>
+
             <div className="add-section_popup-list-box">
-                {/* <div className="add-section_popup-list">
-                    
-                    <div className="text-h2">Layouts</div>
-                    <button 
-                    className={"add-section_popup-button" + ((presentedSectionNodes?.type === "sec") ? " active" : "")} 
-                    onClick={handleAddSectionClick}>Add layout</button>
-                    
+
+                <div className="add-section_popup-title-wrap">
+                    <div className="present-section-in-popup-heading">
+                        Add Layout
+                    </div>
+                    <div className="present-section-in-popup-button" onClick={() => dispatch(setProjectPopUp(""))}>Close</div>
+                </div>
+
+                <div className="layout-add_folder-list">
                     {projectLayouts.map((folder) => (
-                        <div key={folder.id}>
-                            <div 
-                            className={"sections-nav-folder-item"}
-                            key={folder.id}>
-                                {folder.name}
-                            </div>
-                            {folder.items.map((section) => (
-                                <div className="projectPageItem" onClick={() => handleShowSection({...section.preRenderedHTMLNodes})} key={section.id}>
-                                    {section.name}
-                                </div>
-                            ))}
-                        
+                        <div key={folder.id} anchor="true" folder_anchor_id={folder.id} className="layout-add_folder-item">
+                            {folder.name}
                         </div>
                     ))}
-                </div> */}
+                </div>
 
                     <div className="layout-folders-list">
                     {projectLayouts.map((folder) => (
                         <div key={folder.id}>
-                        <div className="present-section-in-popup-heading">
+                        <div className="present-section-in-popup-heading" folder_id={folder.id}>
                         {folder.name}
                         </div>
                         <div className="layouts-list" key={folder.id}>
