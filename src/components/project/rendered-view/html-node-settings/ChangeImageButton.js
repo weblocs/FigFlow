@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { setActiveProjectTabOn } from '../../../../features/project';
+import { setActiveProjectTab, setActiveProjectTabOn } from '../../../../features/project';
 import Icon from '../../../../img/photo.svg';
 
 export default function ChangeImageButton() {
@@ -7,7 +7,7 @@ export default function ChangeImageButton() {
     const dispatch = useDispatch()
 
     function handleClick() {
-        dispatch(setActiveProjectTabOn("Images"))
+        dispatch(setActiveProjectTab("Images"))
     }
 
     return (

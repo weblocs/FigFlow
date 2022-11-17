@@ -19,8 +19,13 @@ export const projectImagesSlice = createSlice({
         };
         state.Images = [...state.Images, newImage];
       },
+      deleteImage: (state, action) => {
+        const index = state.Images.findIndex(({id}) => id === action.payload.id)
+        state.Images.splice(index,1);
+      },
+      
     }
 });
 
-export const { setProjectImages, addImageToProjectImages } = projectImagesSlice.actions
+export const { setProjectImages, addImageToProjectImages, deleteImage } = projectImagesSlice.actions
 export default projectImagesSlice.reducer

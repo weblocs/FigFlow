@@ -6,8 +6,6 @@ export default function GoToParentNode() {
     const parentNodeClassName = useSelector((state) => state.project.activeNodeParentsPath?.[state.project.activeNodeParentsPath.length - 2]?.class?.[0]?.name || state.project.activeNodeParentsPath?.[state.project.activeNodeParentsPath.length - 2]?.type)
     const parentNodeId = useSelector((state) => state.project.activeNodeParentsPath?.[state.project.activeNodeParentsPath.length - 2]?.id)
     
-
-    
     const dispatch = useDispatch()
 
     function handleClick(e) {
@@ -20,7 +18,7 @@ export default function GoToParentNode() {
             <div className="rich-element-settings_button-text" 
             onClick={handleClick}>
                 <span>PARENT</span>
-                {parentNodeClassName?.replace("-", " ")?.replace("_", " ")}
+                {/* {parentNodeClassName?.replace("-", " ")?.replace("_", " ")} */}
             </div>
         </div>
     )

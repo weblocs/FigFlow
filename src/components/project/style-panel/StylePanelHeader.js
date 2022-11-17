@@ -137,6 +137,8 @@ export default function StylePanelHeader () {
         setIsStyleEditorOpen(false);
     }
 
+
+
     return (
         <div className="style-panel-box sticky">
 

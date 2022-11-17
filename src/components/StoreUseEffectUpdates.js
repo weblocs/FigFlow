@@ -29,7 +29,7 @@ export default function StoreUseEffectUpdates () {
         if(styleState !== "default") {
             dispatch(dispatch(setStyleState("default")));
         }
-    },[activeNodeId]);
+    },[activeNodeId, preRenderedHTMLNodes]);
 
     useEffect(() => {
         if(projectMode === "developer") {

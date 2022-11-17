@@ -26,6 +26,7 @@ import UpdateSymbolButton from "./components/project/rendered-view/_atoms/Update
 import ProjectSettings from "./components/settings/ProjectSettings";
 import FindAnything from "./components/project/find-anything/FindAnything";
 import CollectionSettings from "./components/project/left-sidebar/collections/CollectionSettings";
+import StyleGuidePanel from "./style-guide/StyleGuidePanel";
 
 export default function DevMode() {
   
@@ -71,6 +72,7 @@ export default function DevMode() {
         <div className="user-panel">
         <ProjectStylePanel />
         <ProjectSettingsPanel />
+        <StyleGuidePanel />
         </div>
 
       </div>

@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import GoToParentNode from "./GoToParentNode";
 import AltImageSettings from "./AltImageSettings";
 import ChangeImageButton from "./ChangeImageButton";
+import StyleButton from "./StyleButton";
+import InlineStyleButton from "./InlineStyleButton";
 
 export default function HtmlNodeSettings() {
     
@@ -53,11 +55,14 @@ export default function HtmlNodeSettings() {
     });
 
     const activeNodePositionY = useSelector((state) => {
-        if(activeNode?.getBoundingClientRect().top <= 33 && activeNode?.getBoundingClientRect().top > 0) {
+        if(activeNode?.getBoundingClientRect().top <= 50 && activeNode?.getBoundingClientRect().top > 0) {
             return 5;
         }
         return activeNode?.getBoundingClientRect().top - 61;
     });    
+
+
+    
 
     const [openButtonList, setOpenButtonList] = useState(false);
 
@@ -86,6 +91,7 @@ export default function HtmlNodeSettings() {
                         <AltImageSettings />
                         <ChangeImageButton />
                         <HeadingTypeButton />
+                        <StyleButton />
                         <LinkSettings />
                         <AddBlockButton addRichSetting={true} />
                         <div className="rich-element-settings_button button-centered active"

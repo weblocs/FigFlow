@@ -35,8 +35,8 @@ export default function SectionModalItem({section}) {
                 class={section.preRenderedHTMLNodes.class}
                 onClick={handleNodeClick}
                 />
-                <div className="present-section-in-popup_add-section">
-                    <div className="present-section-in-popup_add-section-button" onClick={() => handleAddSectionClick(section.preRenderedHTMLNodes)}>
+                <div className="present-section-in-popup_add-section"  onClick={() => handleAddSectionClick(section.preRenderedHTMLNodes)}>
+                    <div className="present-section-in-popup_add-section-button">
                         Add Layout
                     </div>
                 </div>
