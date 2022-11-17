@@ -34,13 +34,12 @@ export default function StyleGuideFolder({ folder }) {
               <AddStyleGuideItem id={folder.id} />
             </>
           )}
-          <div onClick={handleArrowClick}>
-            <img
-              className="style-guide-arrow-down"
-              src={ArrowDown}
-              alt="arrow down"
-            />
-          </div>
+          <img
+            onClick={handleArrowClick}
+            className="style-guide-arrow-down"
+            src={ArrowDown}
+            alt="arrow down"
+          />
         </div>
       </div>
       {isOpen &&
