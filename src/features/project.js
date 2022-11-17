@@ -1425,17 +1425,23 @@ export const projectSlice = createSlice({
     updateActiveStyleListAndId: (state) => {
       state.stylesInActiveNode = state.activeNodeObject?.class
 
-      state.activeStyleIndex = getIndexOfElementInArrayById(
-        state.preRenderedStyles,
-        state.stylesInActiveNode?.[0]?.id
-      )
+      if (state.projectMode === 'developer') {
+        state.activeStyleIndex = getIndexOfElementInArrayById(
+          state.preRenderedStyles,
+          state.stylesInActiveNode?.[0]?.id
+        )
 
-      state.stylesInActiveNode?.forEach((item, i) => {
-        if (item?.id !== undefined && item?.id !== '') {
-          state.activeStyleId = item?.id
-          state.activeStyleOptionIndex = i - 1
-        }
-      })
+        state.stylesInActiveNode?.forEach((item, i) => {
+          if (item?.id !== undefined && item?.id !== '') {
+            state.activeStyleId = item?.id
+            state.activeStyleOptionIndex = i - 1
+          }
+        })
+      } else {
+        state.activeStyleId = ''
+        state.activeStyleIndex = undefined
+        state.activeStyleOptionIndex = undefined
+      }
     },
 
     setStyleState: (state, action) => {

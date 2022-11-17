@@ -918,9 +918,12 @@ img {
   outline: none;
 }
 
-.symbol-wrapper,
-.rich-element-settings_box {
+.symbol-wrapper {
   z-index: 2;
+}
+
+.rich-element-settings_box {
+  z-index: 3;
 }
 
 .user-panel {
@@ -2070,6 +2073,20 @@ img {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  .style-guide-arrow-down {
+    padding: 4px;
+    width: 8px;
+    cursor: pointer;
+  }
+
+  .style-panel-box.title-box.item-box {
+    background-color: #fff;
   }
 
   .style-panel-box.bottom-divider {
@@ -3689,5 +3706,11 @@ img {
 
   .style-guide-edit_move-wrap {
     margin-bottom: 6px;
+  }
+
+  .edit-options-button {
+    font-size: 11px;
+    cursor: pointer;
+    line-height: 15px;
   }
 }
