@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
+import DragInput from '../_atoms/DragInput'
 import AddStyleGuideFolder from './AddStyleGuideFolder'
 import StyleGuideFolder from './StyleGuideFolder'
 

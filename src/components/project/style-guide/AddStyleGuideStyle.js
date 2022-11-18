@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   addStyleGuideItemStyle,
   setKeyboardNavigationOn,
-} from '../features/project'
+} from '../../../features/project'
 
 export default function AddStyleGuideStyle({ folderId, itemId }) {
   const preRenderedHTMLNodes = useSelector(

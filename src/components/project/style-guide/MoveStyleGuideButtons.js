@@ -1,5 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { moveStyleGuideFolder, moveStyleGuideItem } from '../features/project'
+import {
+  moveStyleGuideFolder,
+  moveStyleGuideItem,
+} from '../../../features/project'
 
 export default function MoveStyleGuideButtons({ id, folderId }) {
   const preRenderedHTMLNodes = useSelector(

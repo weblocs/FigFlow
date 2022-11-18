@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addStyleGuideItem, setKeyboardNavigationOn } from '../features/project'
+import {
+  addStyleGuideItem,
+  setKeyboardNavigationOn,
+} from '../../../features/project'
 
 export default function AddStyleGuideItem({ id }) {
   const preRenderedStyles = useSelector(

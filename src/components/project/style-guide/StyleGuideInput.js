@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   editDefinedStyleProperty,
   setKeyboardNavigationOn,
-} from '../features/project'
+} from '../../../features/project'
 
 export default function StyleGuideInput({
   classId,

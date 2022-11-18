@@ -109,31 +109,9 @@ const initialState = {
   projectSettingsData: {},
   faviconImage: '',
 
-  styleGuide: [
-    {
-      id: '1',
-      name: 'headings',
-      items: [
-        {
-          id: '2',
-          name: 'heading 1',
-          classId: '91b51156-df11-4ad2-a330-7b5c7fa30a05',
-          optionId: '4ae4e75d-67c8-4787-a5b1-e8c40a43f450',
-          optionVersionId: '73668887-5d80-4239-b413-26e6e3518d49',
-          state: 'default',
-          resolution: 'desktop',
-          styles: [
-            {
-              name: 'font-size',
-            },
-            {
-              name: 'margin-bottom',
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  styleGuide: [],
+
+  isAltPressed: false,
 
   activeStyleProperties: {
     font_family: '',
@@ -2936,6 +2914,10 @@ export const projectSlice = createSlice({
           name: action.payload.name,
         })
     },
+
+    setIsAltPressed: (state, action) => {
+      state.isAltPressed = action.payload
+    },
   },
 })
 
@@ -3107,6 +3089,7 @@ export const {
   setIsSettingsModalOpen,
   setProjectSettingsData,
   setFavicon,
+  setIsAltPressed,
 
   /* Style Guide */
   setStyleGuide,

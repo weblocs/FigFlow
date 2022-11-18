@@ -6,7 +6,7 @@ import {
   editStyleGuideFolder,
   editStyleGuideItem,
   setKeyboardNavigationOn,
-} from '../features/project'
+} from '../../../features/project'
 import MoveStyleGuideButtons from './MoveStyleGuideButtons'
 import StyleGuideDeleteButton from './StyleGuideDeleteButton'
 

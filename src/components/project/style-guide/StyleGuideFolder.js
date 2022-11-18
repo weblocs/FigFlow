@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import AddStyleGuideItem from './AddStyleGuideItem'
 import EditStyleGuideItem from './EditStyleGuideItem'
 import StyleGuideItem from './StyleGuideItem'
-import ArrowDown from '../img/arrow-down.svg'
+import ArrowDown from '../../../img/arrow-down.svg'
 
 export default function StyleGuideFolder({ folder }) {
   const isDeveloperMode = useSelector(
