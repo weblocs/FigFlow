@@ -18,6 +18,7 @@ import {
 export default function StoreUseEffectUpdates() {
   const activeNodeId = useSelector((state) => state.project.activeNodeId)
   const hoveredNodeId = useSelector((state) => state.project.hoveredNodeId)
+  const isAltPressed = useSelector((state) => state.project.isAltPressed)
 
   const activeProjectResolution = useSelector(
     (state) => state.project.activeProjectResolution
@@ -50,10 +51,13 @@ export default function StoreUseEffectUpdates() {
 
   useEffect(() => {
     dispatch(updateActiveStyleListAndId())
+  }, [activeNodeId, preRenderedHTMLNodes])
+
+  useEffect(() => {
     if (styleState !== 'default') {
       dispatch(setStyleState('default'))
     }
-  }, [activeNodeId, preRenderedHTMLNodes])
+  }, [activeNodeId])
 
   useEffect(() => {
     dispatch(setIsActiveHtmlNodeParentDisplayFlex())
@@ -120,8 +124,15 @@ export default function StoreUseEffectUpdates() {
     if (activeClickedCmsItemIndex !== undefined) {
       activeHtmlNode = `[el_id='${activeNodeId}'][cms_item_index='${activeClickedCmsItemIndex}']`
     }
-    document.querySelector(activeHtmlNode)?.classList.add('active')
-  }, [activeNodeId, activeClickedCmsItemIndex, preRenderedHTMLNodes])
+    if (!isAltPressed) {
+      document.querySelector(activeHtmlNode)?.classList.add('active')
+    }
+  }, [
+    activeNodeId,
+    activeClickedCmsItemIndex,
+    preRenderedHTMLNodes,
+    isAltPressed,
+  ])
 
   useEffect(() => {
     dispatch(setActiveHtmlNodeParentsPath())

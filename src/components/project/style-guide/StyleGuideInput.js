@@ -4,6 +4,7 @@ import {
   editDefinedStyleProperty,
   setKeyboardNavigationOn,
 } from '../../../features/project'
+import DragInput from '../_atoms/DragInput'
 
 export default function StyleGuideInput({
   classId,
@@ -80,6 +81,10 @@ export default function StyleGuideInput({
           {stylePropertyName}: {styleClass}
         </div>
       </div>
+      {/* <DragInput
+        defaultValue={editedStyleValue}
+        handleChange={(event) => dispatchEditStyle(event)}
+      /> */}
       <input
         onKeyDown={handleKeyPress}
         className={'style-box-input' + (isOpen === true ? ' active' : '')}

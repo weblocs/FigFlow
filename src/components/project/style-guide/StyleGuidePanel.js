@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import DragInput from '../_atoms/DragInput'
 import AddStyleGuideFolder from './AddStyleGuideFolder'
+import StyleGuideColors from './StyleGuideColors'
 import StyleGuideFolder from './StyleGuideFolder'
 
 export default function StyleGuidePanel() {
@@ -24,6 +25,8 @@ export default function StyleGuidePanel() {
           {isDeveloperMode && <AddStyleGuideFolder />}
         </div>
       </div>
+
+      <StyleGuideColors />
 
       {styleGuide?.map((folder) => (
         <StyleGuideFolder folder={folder} key={folder.id} />

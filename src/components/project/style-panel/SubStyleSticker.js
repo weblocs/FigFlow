@@ -12,6 +12,7 @@ import {
   deleteStyleSubOption,
   removeStyleOption,
   editStyleOption,
+  assignAllInlineStylesToClass,
 } from '../../../features/project'
 import ModalBackgroundCloser from '../_atoms/ModalBackgroundCloser'
 import EditIcon from '../../../img/edit-white.svg'
@@ -138,6 +139,17 @@ export default function SubStyleSticker({
     )
   }
 
+  function handleAssignClick() {
+    dispatch(
+      assignAllInlineStylesToClass({
+        styleId: stylesInActiveNode?.[0].id,
+        optionId: child.id,
+        optionVersionId: id,
+      })
+    )
+    setOpenStyleOptionsDropdown(false)
+  }
+
   return (
     <div
       key={id}
@@ -221,7 +233,7 @@ export default function SubStyleSticker({
             />
             <button>Add option</button>
           </form>
-
+          <button onClick={handleAssignClick}>Assign inline styles</button>
           <button
             onClick={() => setEditingOptionsTurnOn(!editingOptionsTurnOn)}
           >

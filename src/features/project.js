@@ -11,6 +11,7 @@ import sanitizeHtml from 'sanitize-html'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, updateDoc, doc } from 'firebase/firestore'
 import { firebaseConfig } from '../utils/firebase-config.js'
+import { node } from 'prop-types'
 
 const initialState = {
   offlineMode: false,
@@ -28,7 +29,7 @@ const initialState = {
   activeUndoIndex: 1,
   undoActionActive: false,
   activeTab: 'Collections',
-  activeRightSidebarTab: 'Style Guide',
+  activeRightSidebarTab: 'Style',
 
   projectPages: [],
   projectPageFolders: [],
@@ -1126,20 +1127,124 @@ export const projectSlice = createSlice({
       )
     },
 
+    assignInlineStylePropertyToClass: (state, action) => {
+      const { styleProperty, styleId, optionVersionId } = action.payload
+
+      const activeNode = findActiveNode(
+        state.preRenderedHTMLNodes,
+        state.activeNodeId
+      )
+      const styleResolution = state.activeProjectResolutionStylesListName
+
+      const styleValue = activeNode.styles[styleResolution][styleProperty]
+
+      console.log(styleValue)
+      console.log(
+        current(state.preRenderedStyles.find(({ id }) => id === styleId))
+      )
+
+      if (optionVersionId === '' || optionVersionId === undefined) {
+        state.preRenderedStyles.find(({ id }) => id === styleId)[
+          styleResolution
+        ][styleProperty] = styleValue
+      } else {
+        state.preRenderedStyles
+          .find(({ id }) => id === styleId)
+          .childrens.forEach((children) => {
+            children.options.forEach((option) => {
+              if (option.id === optionVersionId) {
+                option[styleResolution][styleProperty] = styleValue
+              }
+            })
+          })
+      }
+
+      delete activeNode.styles[styleResolution][styleProperty]
+      if (styleProperty === 'flex-grow') {
+        delete activeNode.styles[styleResolution]['flex-shrink']
+        delete activeNode.styles[styleResolution]['flex-basis']
+      }
+      state.postRenderedStyles = JSONtoCSS(
+        [...state.preRenderedStyles],
+        state.activeProjectResolution,
+        state.styleState
+      )
+    },
+
+    assignAllInlineStylesToClass: (state, action) => {
+      const { styleId, optionId, optionVersionId } = action.payload
+
+      const node = findActiveNode(
+        state.preRenderedHTMLNodes,
+        state.activeNodeId
+      )
+      let nodeStyle = node.styles?.[state.activeProjectResolutionStylesListName]
+
+      //   let classStyle = state.preRenderedStyles
+      //     .find(({ id }) => id === styleId)
+      //     .childrens.find(({ id }) => id === optionId)
+      //     .options.find(({ id }) => id === optionVersionId)[
+      //     state.activeProjectResolutionStylesListName
+      //   ]
+
+      state.preRenderedStyles
+        .find(({ id }) => id === styleId)
+        .childrens.find(({ id }) => id === optionId)
+        .options.find(({ id }) => id === optionVersionId)[
+        state.activeProjectResolutionStylesListName
+      ] = {
+        ...state.preRenderedStyles
+          .find(({ id }) => id === styleId)
+          .childrens.find(({ id }) => id === optionId)
+          .options.find(({ id }) => id === optionVersionId)[
+          state.activeProjectResolutionStylesListName
+        ],
+        ...nodeStyle,
+      }
+      //   nodeStyle = {}
+
+      node.styles[state.activeProjectResolutionStylesListName] = {}
+
+      //   console.log(current(nodeStyle))
+      //   console.log(classStyle)
+
+      state.postRenderedStyles = JSONtoCSS(
+        [...state.preRenderedStyles],
+        state.activeProjectResolution,
+        state.styleState
+      )
+    },
+
     deleteStyleProperty: (state, action) => {
       let styleProperty = action.payload
       let styleResolution = state.activeProjectResolutionStylesListName
 
-      if (state.activeStyleId === state.stylesInActiveNode[0].id) {
+      function deletePropertyFromStyle(property) {
         delete state.preRenderedStyles[state.activeStyleIndex][styleResolution][
-          styleProperty
+          property
         ]
-      } else {
+      }
+
+      function deletePropertyFromOption(property) {
         delete state.preRenderedStyles
           .find(({ id }) => id === state.stylesInActiveNode[0].id)
           .childrens[state.activeStyleOptionIndex].options.find(
             ({ id }) => id === state.activeStyleId
-          )[styleResolution][styleProperty]
+          )[styleResolution][property]
+      }
+
+      if (state.activeStyleId === state.stylesInActiveNode[0].id) {
+        deletePropertyFromStyle(styleProperty)
+        if (styleProperty === 'flex-grid') {
+          deletePropertyFromStyle('flex-direction')
+          deletePropertyFromStyle('flex-wrap')
+        }
+      } else {
+        deletePropertyFromOption(styleProperty)
+        if (styleProperty === 'flex-grid') {
+          deletePropertyFromOption('flex-direction')
+          deletePropertyFromOption('flex-wrap')
+        }
       }
       state.postRenderedStyles = JSONtoCSS(
         [...state.preRenderedStyles],
@@ -1844,6 +1949,10 @@ export const projectSlice = createSlice({
         state.activeNodeId
       )
       delete node.styles[styleResolution][styleProperty]
+      if (styleProperty === 'flex-grow') {
+        delete node.styles[styleResolution]['flex-shrink']
+        delete node.styles[styleResolution]['flex-basis']
+      }
     },
 
     setActiveHtmlNodeStyleOption: (state, action) => {
@@ -2499,7 +2608,7 @@ export const projectSlice = createSlice({
                   origin: '',
                   option: '',
                   resolution: resolution,
-                  state: 'deafult',
+                  state: 'default',
                 })
               }
             }
@@ -2978,6 +3087,8 @@ export const {
   renameStyle,
   editStyleProperty,
   editDefinedStyleProperty,
+  assignInlineStylePropertyToClass,
+  assignAllInlineStylesToClass,
   deleteStyleProperty,
   addStyleOption,
   editStyleOption,
