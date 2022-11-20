@@ -3711,8 +3711,10 @@ img {
 
   .asigned-classes-list {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     gap: 4px;
+    margin-top: 2px;
   }
 
   .assign-to-title {
@@ -3720,7 +3722,6 @@ img {
   }
 
   .assign-to-button {
-    margin-top: 2px;
     display: inline;
     font-size: 11px;
     padding: 2px 8px;

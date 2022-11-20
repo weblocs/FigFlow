@@ -9,6 +9,7 @@ import {
   renameStyle,
   setActiveStyleOptionIndex,
   setActiveHtmlNodeParentsPath,
+  assignAllInlineStylesToClass,
 } from '../../../features/project'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from './SubStyleSticker'
@@ -93,6 +94,15 @@ export default function StylePanelHeader() {
         setIsAddStyleOptionInputOpen(true)
       }
     }
+  }
+
+  function handleAssignClick() {
+    dispatch(
+      assignAllInlineStylesToClass({
+        styleId: stylesInActiveNode?.[0].id,
+      })
+    )
+    setIsStyleEditorOpen(false)
   }
 
   function handleCloseNewStyleInput() {
@@ -307,6 +317,9 @@ export default function StylePanelHeader() {
                         Rename
                       </button>
                     </div>
+                    <button onClick={handleAssignClick}>
+                      Assign all inline styles
+                    </button>
                     <button onClick={() => handleRemove(el.id)}>Remove</button>
                   </div>
                 </div>

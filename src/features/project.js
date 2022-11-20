@@ -17,7 +17,7 @@ const initialState = {
   offlineMode: false,
   offlineProjectName: 'projekt1',
 
-  projectMode: 'developer', // developer or creator
+  projectMode: 'creator', // developer or creator
   nodesEditMode: 'page', // page, layout, cmsTemplate, block
   scrollCount: 0,
   projectLayouts: [],
@@ -28,7 +28,7 @@ const initialState = {
   undoStates: [],
   activeUndoIndex: 1,
   undoActionActive: false,
-  activeTab: 'Collections',
+  activeTab: '',
   activeRightSidebarTab: 'Style',
 
   projectPages: [],
@@ -1178,35 +1178,38 @@ export const projectSlice = createSlice({
         state.preRenderedHTMLNodes,
         state.activeNodeId
       )
-      let nodeStyle = node.styles?.[state.activeProjectResolutionStylesListName]
 
-      //   let classStyle = state.preRenderedStyles
-      //     .find(({ id }) => id === styleId)
-      //     .childrens.find(({ id }) => id === optionId)
-      //     .options.find(({ id }) => id === optionVersionId)[
-      //     state.activeProjectResolutionStylesListName
-      //   ]
+      const resolutionName = state.activeProjectResolutionStylesListName
 
-      state.preRenderedStyles
-        .find(({ id }) => id === styleId)
-        .childrens.find(({ id }) => id === optionId)
-        .options.find(({ id }) => id === optionVersionId)[
-        state.activeProjectResolutionStylesListName
-      ] = {
-        ...state.preRenderedStyles
+      let nodeStyle = node.styles?.[resolutionName]
+
+      function isOptionClass() {
+        return optionId !== undefined
+      }
+
+      let classStyle = state.preRenderedStyles.find(({ id }) => id === styleId)[
+        resolutionName
+      ]
+
+      if (isOptionClass()) {
+        classStyle = state.preRenderedStyles
           .find(({ id }) => id === styleId)
           .childrens.find(({ id }) => id === optionId)
-          .options.find(({ id }) => id === optionVersionId)[
-          state.activeProjectResolutionStylesListName
-        ],
+          .options.find(({ id }) => id === optionVersionId)?.[resolutionName]
+      }
+
+      console.log(current(nodeStyle))
+      console.log(current(classStyle))
+
+      classStyle = {
+        ...classStyle,
         ...nodeStyle,
       }
-      //   nodeStyle = {}
 
-      node.styles[state.activeProjectResolutionStylesListName] = {}
+      nodeStyle = {}
 
-      //   console.log(current(nodeStyle))
-      //   console.log(classStyle)
+      console.log(nodeStyle)
+      console.log(classStyle)
 
       state.postRenderedStyles = JSONtoCSS(
         [...state.preRenderedStyles],
