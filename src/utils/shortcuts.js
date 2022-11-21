@@ -12,6 +12,8 @@ import {
   reUndoProject,
   deleteActiveHtmlNodeShortcut,
   setIsAltPressed,
+  setIsShiftPressed,
+  setIsKeyAPressed,
 } from '../features/project'
 
 let keys = []
@@ -33,6 +35,12 @@ export default function loadShortcuts() {
       if (['AltLeft'].includes(e.code)) {
         dispatch(setIsAltPressed(true))
       }
+      if (['ShiftLeft'].includes(e.code)) {
+        dispatch(setIsShiftPressed(true))
+      }
+      if (['KeyA'].includes(e.code)) {
+        dispatch(setIsKeyAPressed(true))
+      }
     },
     false
   )
@@ -42,6 +50,12 @@ export default function loadShortcuts() {
     (e) => {
       if (['AltLeft'].includes(e.code)) {
         dispatch(setIsAltPressed(false))
+      }
+      if (['ShiftLeft'].includes(e.code)) {
+        dispatch(setIsShiftPressed(false))
+      }
+      if (['KeyA'].includes(e.code)) {
+        dispatch(setIsKeyAPressed(false))
       }
     },
     false

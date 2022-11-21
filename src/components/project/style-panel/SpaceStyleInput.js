@@ -29,6 +29,9 @@ function SpaceStyleInput(props) {
   // const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style]) || !isPropertyInStyleHierarchy && props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
   // const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style]) || (!isPropertyInStyleHierarchy && props?.placeholder) && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]) );
 
+  const isShiftPressed = useSelector((state) => state.project.isShiftPressed)
+  const isKeyAPressed = useSelector((state) => state.project.isKeyAPressed)
+
   const hierarchyStyleProperty = useSelector(
     (state) =>
       state.project.objectHierarchyStyles?.findLast(
@@ -146,6 +149,58 @@ function SpaceStyleInput(props) {
       dispatch(setKeyboardNavigationOn(true))
     }
   }, [isInputActive])
+
+  useEffect(() => {
+    function updateProperty(property) {
+      dispatch(
+        editStyleProperty([property, editedStyleValue + editedStyleUnit])
+      )
+    }
+
+    function updateAllMargins() {
+      updateProperty('margin-top')
+      updateProperty('margin-bottom')
+      updateProperty('margin-left')
+      updateProperty('margin-right')
+    }
+
+    function updateAllPaddings() {
+      updateProperty('padding-top')
+      updateProperty('padding-bottom')
+      updateProperty('padding-left')
+      updateProperty('padding-right')
+    }
+
+    const style = props.style
+    if (isShiftPressed) {
+      style === 'padding-top' && updateProperty('padding-bottom')
+      style === 'padding-bottom' && updateProperty('padding-top')
+      style === 'padding-left' && updateProperty('padding-right')
+      style === 'padding-right' && updateProperty('padding-left')
+      style === 'margin-top' && updateProperty('margin-bottom')
+      style === 'margin-bottom' && updateProperty('margin-top')
+      style === 'margin-left' && updateProperty('margin-right')
+      style === 'margin-right' && updateProperty('margin-left')
+    }
+    if (isKeyAPressed) {
+      if (
+        style === 'padding-top' ||
+        style === 'padding-bottom' ||
+        style === 'padding-left' ||
+        style === 'padding-right'
+      ) {
+        updateAllPaddings()
+      }
+      if (
+        style === 'margin-top' ||
+        style === 'margin-bottom' ||
+        style === 'margin-left' ||
+        style === 'margin-right'
+      ) {
+        updateAllMargins()
+      }
+    }
+  }, [editedStyleValue])
 
   return (
     <div

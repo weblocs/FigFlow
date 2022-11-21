@@ -113,6 +113,8 @@ const initialState = {
   styleGuide: [],
 
   isAltPressed: false,
+  isShiftPressed: false,
+  isKeyAPressed: false,
 
   activeStyleProperties: {
     font_family: '',
@@ -1181,35 +1183,33 @@ export const projectSlice = createSlice({
 
       const resolutionName = state.activeProjectResolutionStylesListName
 
-      let nodeStyle = node.styles?.[resolutionName]
-
       function isOptionClass() {
         return optionId !== undefined
       }
 
-      let classStyle = state.preRenderedStyles.find(({ id }) => id === styleId)[
-        resolutionName
-      ]
-
-      if (isOptionClass()) {
-        classStyle = state.preRenderedStyles
+      if (!isOptionClass()) {
+        state.preRenderedStyles.find(({ id }) => id === styleId)[
+          resolutionName
+        ] = {
+          ...state.preRenderedStyles.find(({ id }) => id === styleId)[
+            resolutionName
+          ],
+          ...node.styles?.[resolutionName],
+        }
+      } else {
+        state.preRenderedStyles
           .find(({ id }) => id === styleId)
           .childrens.find(({ id }) => id === optionId)
-          .options.find(({ id }) => id === optionVersionId)?.[resolutionName]
+          .options.find(({ id }) => id === optionVersionId)[resolutionName] = {
+          ...state.preRenderedStyles
+            .find(({ id }) => id === styleId)
+            .childrens.find(({ id }) => id === optionId)
+            .options.find(({ id }) => id === optionVersionId)[resolutionName],
+          ...node.styles?.[resolutionName],
+        }
       }
 
-      console.log(current(nodeStyle))
-      console.log(current(classStyle))
-
-      classStyle = {
-        ...classStyle,
-        ...nodeStyle,
-      }
-
-      nodeStyle = {}
-
-      console.log(nodeStyle)
-      console.log(classStyle)
+      node.styles[resolutionName] = {}
 
       state.postRenderedStyles = JSONtoCSS(
         [...state.preRenderedStyles],
@@ -3030,6 +3030,14 @@ export const projectSlice = createSlice({
     setIsAltPressed: (state, action) => {
       state.isAltPressed = action.payload
     },
+
+    setIsShiftPressed: (state, action) => {
+      state.isShiftPressed = action.payload
+    },
+
+    setIsKeyAPressed: (state, action) => {
+      state.isKeyAPressed = action.payload
+    },
   },
 })
 
@@ -3204,6 +3212,8 @@ export const {
   setProjectSettingsData,
   setFavicon,
   setIsAltPressed,
+  setIsKeyAPressed,
+  setIsShiftPressed,
 
   /* Style Guide */
   setStyleGuide,

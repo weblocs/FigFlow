@@ -30,7 +30,6 @@
     "react-redux": "^8.0.1",
     "react-router-dom": "6.3.0",
     "react-scripts": "^5.0.1",
-    "react-sortable-tree-theme-file-explorer": "2.0.0",
     "realm-web": "^1.7.0",
     "reselect": "^4.1.6",
     "sanitize-html": "^2.7.0",
