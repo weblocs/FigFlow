@@ -1,4 +1,5 @@
 import useEventListener from '@use-it/event-listener'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 
@@ -14,6 +15,7 @@ import {
   setIsAltPressed,
   setIsShiftPressed,
   setIsKeyAPressed,
+  addSpanToText,
 } from '../features/project'
 
 let keys = []
@@ -61,6 +63,18 @@ export default function loadShortcuts() {
     false
   )
 
+  // const { typeP } = useKeyboardShortcut(
+  //   ['P'],
+  //   (shortcutKeys) => {
+  //     dispatch(addSpanToText({ selectedText: 'got' }))
+  //   },
+  //   {
+  //     overrideSystem: false,
+  //     ignoreInputFields: true,
+  //     repeatOnHold: false,
+  //   }
+  // )
+
   const { undoProjectShortcut } = useKeyboardShortcut(
     ['Meta', 'Z'],
     (shortcutKeys) => {
@@ -70,7 +84,7 @@ export default function loadShortcuts() {
     },
     {
       overrideSystem: false,
-      ignoreInputFields: false,
+      ignoreInputFields: true,
       repeatOnHold: false,
     }
   )
@@ -82,7 +96,7 @@ export default function loadShortcuts() {
     },
     {
       overrideSystem: false,
-      ignoreInputFields: false,
+      ignoreInputFields: true,
       repeatOnHold: false,
     }
   )
@@ -94,7 +108,7 @@ export default function loadShortcuts() {
     },
     {
       overrideSystem: false,
-      ignoreInputFields: false,
+      ignoreInputFields: true,
       repeatOnHold: false,
     }
   )
@@ -106,7 +120,7 @@ export default function loadShortcuts() {
     },
     {
       overrideSystem: false,
-      ignoreInputFields: false,
+      ignoreInputFields: true,
       repeatOnHold: false,
     }
   )
@@ -118,7 +132,7 @@ export default function loadShortcuts() {
     },
     {
       overrideSystem: false,
-      ignoreInputFields: false,
+      ignoreInputFields: true,
       repeatOnHold: false,
     }
   )
@@ -131,7 +145,7 @@ export default function loadShortcuts() {
     },
     {
       overrideSystem: false,
-      ignoreInputFields: false,
+      ignoreInputFields: true,
       repeatOnHold: false,
     }
   )
@@ -143,7 +157,7 @@ export default function loadShortcuts() {
     },
     {
       overrideSystem: false,
-      ignoreInputFields: false,
+      ignoreInputFields: true,
       repeatOnHold: false,
     }
   )
@@ -155,7 +169,7 @@ export default function loadShortcuts() {
     },
     {
       overrideSystem: false,
-      ignoreInputFields: false,
+      ignoreInputFields: true,
       repeatOnHold: false,
     }
   )

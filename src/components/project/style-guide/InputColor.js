@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ArrowDown from '../../../img/arrow-down.svg'
-import StyleGuideColorSwatch from './StyleGuideColorSwatch'
+import StyleGuideColorSwatch from './InputColorSwatch'
 
 export default function StyleGuideColors() {
   const preRenderedHTMLNodes = useSelector(
@@ -29,13 +29,18 @@ export default function StyleGuideColors() {
             className="style-guide-arrow-down"
             src={ArrowDown}
             alt="arrow down"
+            style={{ transform: isOpen ? 'rotate(180deg)' : '' }}
           />
         </div>
       </div>
       {isOpen && (
         <div className="style-panel-box style-guide-swatches-list">
-          {projectSwatches?.map((swatch) => (
-            <StyleGuideColorSwatch swatch={swatch} key={swatch.id} />
+          {projectSwatches?.map((swatch, index) => (
+            <StyleGuideColorSwatch
+              swatch={swatch}
+              index={index}
+              key={swatch.id}
+            />
           ))}
         </div>
       )}

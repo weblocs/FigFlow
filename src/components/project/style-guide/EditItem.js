@@ -7,8 +7,9 @@ import {
   editStyleGuideItem,
   setKeyboardNavigationOn,
 } from '../../../features/project'
-import MoveStyleGuideButtons from './MoveStyleGuideButtons'
-import StyleGuideDeleteButton from './StyleGuideDeleteButton'
+import MoveStyleGuideButtons from './MoveItemButtons'
+import StyleGuideDeleteButton from './DeleteButton'
+import editIcon from '../../../img/edit.svg'
 
 export default function EditStyleGuideItem({ folderId, id, name }) {
   const preRenderedHTMLNodes = useSelector(
@@ -69,9 +70,9 @@ export default function EditStyleGuideItem({ folderId, id, name }) {
 
   return (
     <div className="style-guide-edit_wrap">
-      <div onClick={handleClick} className="style-guide-edit-button">
-        Edit
-      </div>
+      <button className="settings-list-add-button" onClick={handleClick}>
+        <img className="settings-list-add-icon" src={editIcon} />
+      </button>
       {isOpen && (
         <form className="style-guide-edit_modal" onSubmit={handleSubmit}>
           <MoveStyleGuideButtons id={id} folderId={folderId} />

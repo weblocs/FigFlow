@@ -48,7 +48,7 @@ export default function StylePanelHeader() {
 
   const shortcutSystemConfig = {
     overrideSystem: false,
-    ignoreInputFields: false,
+    ignoreInputFields: true,
     repeatOnHold: false,
   }
 

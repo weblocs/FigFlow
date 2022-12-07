@@ -101,10 +101,10 @@ export default function SizeStyleInput(props) {
   function handleInputChange(value) {
     if (value !== editedStyleValue) {
       if (editedStyleUnit === '' || editedStyleUnit === '-') {
-        dispatch(editStyleProperty([props.style, parseInt(value) + 'px']))
+        dispatch(editStyleProperty([props.style, parseFloat(value) + 'px']))
       } else {
         dispatch(
-          editStyleProperty([props.style, parseInt(value) + editedStyleUnit])
+          editStyleProperty([props.style, parseFloat(value) + editedStyleUnit])
         )
       }
     }

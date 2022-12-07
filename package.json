@@ -14,6 +14,7 @@
     "alpinejs": "^3.10.2",
     "array-move": "^4.0.0",
     "axios": "0.27.1",
+    "draft-js": "^0.11.7",
     "file-saver": "^2.0.5",
     "firebase": "^9.8.1",
     "jszip": "^3.10.0",

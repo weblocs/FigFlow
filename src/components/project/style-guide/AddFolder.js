@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  addStyleGuideItemStyle,
+  addStyleGuideFolder,
   setKeyboardNavigationOn,
 } from '../../../features/project'
+import addIcon from '../../../img/plus.svg'
 
-export default function AddStyleGuideStyle({ folderId, itemId }) {
+export default function AddFolder() {
   const preRenderedHTMLNodes = useSelector(
     (state) => state.project.preRenderedHTMLNodes
   )
@@ -17,9 +18,7 @@ export default function AddStyleGuideStyle({ folderId, itemId }) {
 
   function handleSubmit() {
     event.preventDefault()
-    dispatch(
-      addStyleGuideItemStyle({ folderId, itemId, name: inputRef.current.value })
-    )
+    dispatch(addStyleGuideFolder({ name: inputRef.current.value }))
     inputRef.current.focus()
     setIsOpen(false)
   }
@@ -44,9 +43,9 @@ export default function AddStyleGuideStyle({ folderId, itemId }) {
 
   return (
     <div className="style-guide-add-folder_wrap">
-      <div className="style-guide-add-folder_button" onClick={handleClick}>
-        <div className="text">Add Style</div>
-      </div>
+      <button className="settings-list-add-button" onClick={handleClick}>
+        <img className="settings-list-add-icon" src={addIcon} />
+      </button>
 
       {isOpen && (
         <form className="style-guide-add-folder_form" onSubmit={handleSubmit}>
@@ -58,7 +57,7 @@ export default function AddStyleGuideStyle({ folderId, itemId }) {
             type="text"
           />
           <button className="settings-button blue-button" type="submit">
-            Add Style
+            Add Folder
           </button>
         </form>
       )}

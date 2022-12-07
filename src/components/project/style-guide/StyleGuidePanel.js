@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux'
 import DragInput from '../_atoms/DragInput'
-import AddStyleGuideFolder from './AddStyleGuideFolder'
-import StyleGuideColors from './StyleGuideColors'
-import StyleGuideFolder from './StyleGuideFolder'
+import AddFolder from './AddFolder'
+import StyleGuideColors from './InputColor'
+import StyleGuideFolder from './Folder'
 
 export default function StyleGuidePanel() {
   const isOpenTabStyleGuide = useSelector(
@@ -22,7 +22,7 @@ export default function StyleGuidePanel() {
       <div className="style-panel-box">
         <div className="style-panel-title-box">
           <div className="text">Style Guide</div>
-          {isDeveloperMode && <AddStyleGuideFolder />}
+          {isDeveloperMode && <AddFolder />}
         </div>
       </div>
 

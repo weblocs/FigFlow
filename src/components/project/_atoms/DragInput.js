@@ -5,24 +5,32 @@ export default function DragInput({ defaultValue, handleChange }) {
   const isAltPressed = useSelector((state) => state.project.isAltPressed)
   const [value, setValue] = useState(0)
 
-  const onInputChange = useCallback(
-    (ev) => setValue(parseInt(ev.target.value, 10)),
-    []
-  )
-
   const [snapshot, setSnapshot] = useState(value)
   const [startVal, setStartVal] = useState(0)
 
+  const [round, setRound] = useState(0)
+  const [isDragged, setIsDragged] = useState(false)
+
   useEffect(() => {
-    if (!isNaN(parseInt(defaultValue))) {
-      setValue(parseInt(defaultValue))
+    if (!isNaN(parseFloat(defaultValue))) {
+      setValue(parseFloat(defaultValue))
     } else {
       setValue(0)
     }
+    // if (defaultValue < 1) {
+    //   setRound(1)
+    // }
+    // if (defaultValue < 0.1) {
+    //   setRound(2)
+    // }
+    // if (defaultValue < 0.01) {
+    //   setRound(3)
+    // }
   }, [defaultValue])
 
   const onStart = useCallback(
     (event) => {
+      setIsDragged(true)
       setStartVal(event.clientX)
       setSnapshot(value)
     },
@@ -32,12 +40,23 @@ export default function DragInput({ defaultValue, handleChange }) {
   useEffect(() => {
     const onUpdate = (event) => {
       if (startVal) {
-        setValue(snapshot + event.clientX - startVal)
-        handleChange(snapshot + event.clientX - startVal)
+        setValue(
+          parseFloat(
+            parseFloat(snapshot) +
+              (event.clientX - startVal) * Math.pow(10, -1 * round) * 0.5
+          ).toFixed(round)
+        )
+        handleChange(
+          parseFloat(
+            parseFloat(snapshot) +
+              (event.clientX - startVal) * Math.pow(10, -1 * round) * 0.5
+          ).toFixed(round)
+        )
       }
     }
 
     const onEnd = () => {
+      setIsDragged(false)
       setStartVal(0)
     }
 
@@ -50,6 +69,11 @@ export default function DragInput({ defaultValue, handleChange }) {
   }, [startVal, setValue, snapshot])
 
   if (isAltPressed) {
-    return <div className="input-drag-resize-wrap" onMouseDown={onStart}></div>
+    return (
+      <div
+        className={'input-drag-resize-wrap' + (isDragged ? ' active' : '')}
+        onMouseDown={onStart}
+      ></div>
+    )
   }
 }

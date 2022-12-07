@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setKeyboardNavigationOn } from '../features/project'
 
 export function getIndexOfElementInArrayById(styleNodes, id) {
@@ -156,7 +156,7 @@ export function getIdOfPreRenderedStyleByName(
   return res
 }
 
-export function JSONtoCSS(_classes, activeResolution, activeState) {
+export function JSONtoCSS(_classes, activeResolution, activeState, swatches) {
   let tempClasses = []
   let tempName = ''
   let tempResolution = ''
@@ -225,6 +225,12 @@ export function JSONtoCSS(_classes, activeResolution, activeState) {
     tempStyle += '.' + item.name + '{'
 
     for (const [key, value] of Object.entries(item.styles)) {
+      const isPropertySwatch =
+        value.charAt(0) === '{' && value.charAt(1) === '{'
+      if (isPropertySwatch) {
+        value = value.replaceAll('{{', '').replaceAll('}}', '')
+        value = swatches?.find((swatch) => swatch.id === value)?.color
+      }
       tempStyle += key + ': ' + value + ';'
     }
     tempStyle += '}\n'

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import AddStyleGuideItem from './AddStyleGuideItem'
-import EditStyleGuideItem from './EditStyleGuideItem'
-import StyleGuideItem from './StyleGuideItem'
+import AddStyleGuideItem from './AddItem'
+import EditStyleGuideItem from './EditItem'
+import StyleGuideItem from './Item'
 import ArrowDown from '../../../img/arrow-down.svg'
 
 export default function StyleGuideFolder({ folder }) {
@@ -12,31 +12,44 @@ export default function StyleGuideFolder({ folder }) {
   const dispatch = useDispatch()
 
   const [isOpen, setIsOpen] = useState(false)
+  const [isHover, setIsHover] = useState(false)
 
   function handleArrowClick() {
     setIsOpen(!isOpen)
   }
 
+  function handleMouseEnter() {
+    setIsHover(true)
+  }
+
+  function handleMouseLeave() {
+    setIsHover(false)
+  }
+
   return (
-    <div key={folder.name}>
-      <div className="style-panel-box title-box space-between folder-box">
-        <div
-          onClick={handleArrowClick}
-          className="text panel-title cursor-pointer"
-        >
-          {folder.name}
-        </div>
+    <div>
+      <div
+        className="style-panel-box title-box space-between folder-box"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="click-area" onClick={handleArrowClick}></div>
+        <div className="text panel-title cursor-pointer">{folder.name}</div>
 
         <div className="style-guide-buttons">
-          {isDeveloperMode && (
+          {isDeveloperMode && isHover && (
             <>
               <EditStyleGuideItem id={folder.id} name={folder.name} />
-              <AddStyleGuideItem id={folder.id} />
+              <AddStyleGuideItem
+                id={folder.id}
+                handleOpen={() => setIsOpen(true)}
+              />
             </>
           )}
           <img
             onClick={handleArrowClick}
             className="style-guide-arrow-down"
+            style={{ transform: isOpen ? 'rotate(180deg)' : '' }}
             src={ArrowDown}
             alt="arrow down"
           />

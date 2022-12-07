@@ -21,8 +21,8 @@ export default function HtmlNodeSettings() {
   const activeStyleName = useSelector(
     (state) =>
       state.project.stylesInActiveNode?.[0]?.name
-        .replace('-', ' ')
-        .replace('_', ' - ') || state.project.activeNodeObject?.type
+        .replaceAll('-', ' ')
+        .replaceAll('_', ' - ') || state.project.activeNodeObject?.type
   )
   const isNodesEditModeBlock = useSelector(
     (state) => state.project.nodesEditMode === 'block'

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import ContentEditable from 'react-contenteditable'
 
 import { useSelector, useDispatch } from 'react-redux'
-import {
+import project, {
   setHoveredHtmlNode,
   setKeyboardNavigationOn,
   makeSymbolEditable,
@@ -13,6 +13,7 @@ import {
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import AddSectionButton from './_atoms/AddSectionButton'
 import Placeholder from '../../../img/placeholder.svg'
+import sanitizeHtml from 'sanitize-html'
 import { camelCase } from 'lodash'
 import {
   getResolutionPathName,
@@ -32,6 +33,7 @@ function RenderedNode(props) {
   const collections = useSelector((state) => state.project.collections)
   const nodesEditMode = useSelector((state) => state.project.nodesEditMode)
   const editedSymbolId = useSelector((state) => state.project.editedSymbolId)
+  const projectSwatches = useSelector((state) => state.project.projectSwatches)
   const activeCollectionTemplateId = useSelector(
     (state) => state.project.activeCollectionTemplateId
   )
@@ -81,16 +83,10 @@ function RenderedNode(props) {
     },
     {
       overrideSystem: false,
-      ignoreInputFields: false,
+      ignoreInputFields: true,
       repeatOnHold: false,
     }
   )
-
-  // useEffect(() => {
-  //   if(activeNodeId !== elementId) {
-  //     setEditable(false);
-  //   }
-  // },[activeNodeId])
 
   function handleDoubleClick(e) {
     e.stopPropagation()
@@ -103,11 +99,6 @@ function RenderedNode(props) {
     dispatch(setIsNodeSelectedFromNavigator(false))
     dispatch(setActiveClickedCmsItemIndex(props.itemIndex))
     props.onClick([elementId, props?.class[0]?.name])
-
-    // if (projectMode === "creator") {
-    //   setEditable(true);
-    //   dispatch(setKeyboardNavigationOn(false))
-    // }
 
     if (!editable) {
       dispatch(setKeyboardNavigationOn(true))
@@ -132,10 +123,28 @@ function RenderedNode(props) {
   let customStyle = {}
 
   function addResponsiveInlineStyle(resolution) {
+    let addStyles = {
+      ...props.styles?.[getResolutionPathName(resolution, 'default')],
+    }
+    function replacePropertySwatch(property) {
+      if (
+        addStyles?.[property]?.charAt(0) === '{' &&
+        addStyles?.[property]?.charAt(1) === '{'
+      ) {
+        addStyles[property] = projectSwatches?.find(
+          (swatch) =>
+            swatch.id ===
+            addStyles[property]?.replace('{{', '').replace('}}', '')
+        )?.color
+      }
+    }
+    replacePropertySwatch('background-color')
+    replacePropertySwatch('color')
+    replacePropertySwatch('border-color')
     if (isStyleContained(activeProjectResolution, resolution)) {
       customStyle = {
         ...customStyle,
-        ...props.styles?.[getResolutionPathName(resolution, 'default')],
+        ...addStyles,
       }
     }
   }
@@ -181,8 +190,6 @@ function RenderedNode(props) {
   ) {
     customStyle = { ...customStyle, ...customStyleHover }
   }
-
-  // console.log(customStyle);
 
   // "div"
 
@@ -585,6 +592,9 @@ function RenderedNode(props) {
         disabled={!editable}
       />
     )
+    if (props.children.length > 0) {
+      // console.log(props.children)
+    }
   }
 
   if (props.type === 'p') {

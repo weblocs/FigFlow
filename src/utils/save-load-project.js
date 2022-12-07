@@ -147,19 +147,23 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(
       ) !== 'null'
     ) {
       function getParsedItem(item) {
-        return JSON.parse(localStorage.getItem(offlineProjectName + item) || [])
+        if (localStorage.getItem(offlineProjectName + item) !== null) {
+          return JSON.parse(
+            localStorage.getItem(offlineProjectName + item) || []
+          )
+        }
       }
 
       dispatch(setCollections(getParsedItem('collections')))
       dispatch(setStyles(getParsedItem('preRenderedStyles')))
-      dispatch(setStyles(getParsedItem('symbols')))
-      dispatch(setStyles(getParsedItem('swatches')))
-      dispatch(setStyles(getParsedItem('projectPageFolders')))
-      dispatch(setStyles(getParsedItem('blocks')))
-      dispatch(setStyles(getParsedItem('images')))
-      dispatch(setStyles(getParsedItem('sections')))
-      dispatch(setStyles(getParsedItem('styleGuide')))
-      dispatch(setStyles(getParsedItem('favicon')))
+      dispatch(setSymbols(getParsedItem('symbols')))
+      dispatch(setSwatches(getParsedItem('swatches')))
+      dispatch(setPageFolders(getParsedItem('projectPageFolders')))
+      dispatch(setBlocks(getParsedItem('blocks')))
+      // dispatch(setProjectImages(getParsedItem('images')))
+      dispatch(setLayouts(getParsedItem('sections')))
+      dispatch(setStyleGuide(getParsedItem('styleGuide')))
+      // dispatch(setFavicon(getParsedItem('favicon')))
     }
   }
 }

@@ -4,8 +4,10 @@ import {
   addStyleGuideItem,
   setKeyboardNavigationOn,
 } from '../../../features/project'
+import addIcon from '../../../img/plus.svg'
+import editIcon from '../../../img/edit.svg'
 
-export default function AddStyleGuideItem({ id }) {
+export default function AddStyleGuideItem({ id, handleOpen }) {
   const preRenderedStyles = useSelector(
     (state) => state.project.preRenderedStyles
   )
@@ -36,6 +38,7 @@ export default function AddStyleGuideItem({ id }) {
     )
     inputRef.current.focus()
     setIsOpen(false)
+    handleOpen()
   }
 
   function handleClick() {
@@ -66,9 +69,9 @@ export default function AddStyleGuideItem({ id }) {
 
   return (
     <div className="style-guide-add-folder_wrap">
-      <div className="style-guide-add-folder_button" onClick={handleClick}>
-        <div className="text">Add Item</div>
-      </div>
+      <button className="settings-list-add-button" onClick={handleClick}>
+        <img className="settings-list-add-icon" src={addIcon} />
+      </button>
 
       {isOpen && (
         <form className="style-guide-add-folder_form" onSubmit={handleSubmit}>
