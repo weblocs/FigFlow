@@ -14,10 +14,10 @@ import { firebaseConfig } from '../utils/firebase-config.js'
 import { node } from 'prop-types'
 
 const initialState = {
-  offlineMode: false,
+  offlineMode: true,
   offlineProjectName: 'projekt1',
 
-  projectMode: 'creator', // developer or creator
+  projectMode: 'developer', // developer or creator
   nodesEditMode: 'page', // page, layout, cmsTemplate, block
   scrollCount: 0,
   projectLayouts: [],
@@ -85,7 +85,7 @@ const initialState = {
   activeProjectResolutionStylesListName: 'styles',
   activeNodeParentsPath: [],
   projectUploadedFonts: [
-    { name: 'Plus Jakarta' },
+    { name: 'PlusJakartaDisplay' },
     { name: 'Inter', weights: ['300', '500', '700'] },
     { name: 'General Sans' },
     { name: 'Hauora' },
@@ -115,6 +115,77 @@ const initialState = {
   isAltPressed: false,
   isShiftPressed: false,
   isKeyAPressed: false,
+
+  store: [
+    {
+      id: '1',
+      name: 'Is Navigation Open',
+      type: 'boolean',
+      value: false,
+    },
+  ],
+
+  dataFlows: [
+    {
+      id: '1',
+      name: 'Dropdown',
+      state: [
+        {
+          id: '1',
+          name: 'open',
+          type: 'boolean',
+          initValue: false,
+        },
+        {
+          id: '2',
+          name: 'question',
+          type: 'string',
+          initValue: 'Question 1',
+        },
+      ],
+      actions: [
+        {
+          id: '1',
+          name: 'toggle',
+          parameters: [],
+          code: 'this.open = !this.open',
+        },
+      ],
+    },
+  ],
+
+  functions: [
+    {
+      name: 'Toggle Hamburger Menu',
+      id: '1',
+      actions: [
+        {
+          id: '1',
+          target: 'node', // node, style, attribute
+          targetId: 'df9d065f-43cb-4729-8ee8-72fa9e20782a',
+          action: 'toggle', // toggle, add, remove
+          classId: '',
+          optionId: '',
+          optionVersionId: '',
+        },
+      ],
+    },
+    {
+      name: 'Toggle FAQ Item',
+      id: '2',
+      actions: [
+        {
+          id: '1',
+          target: 'attribute', // node, style, attribute
+          targetId: 'df9d065f-43cb-4729-8ee8-72fa9e20782a',
+          action: 'toggle', // toggle, add, remove
+          classId: '',
+          optionId: '',
+          optionVersionId: '',
+        },
+      ],
+    },
+  ],
 
   activeStyleProperties: {
     font_family: '',
@@ -167,6 +238,15 @@ function findActiveNode(nodes, id) {
   }
   findNode(nodes)
   return response
+}
+
+function updateGlobalCSS(state) {
+  state.postRenderedStyles = JSONtoCSS(
+    [...state.preRenderedStyles],
+    state.activeProjectResolution,
+    state.styleState,
+    state.projectSwatches
+  )
 }
 
 function findActiveNodeSiblingArrayAndIndex(nodes, id) {
@@ -936,11 +1016,7 @@ export const projectSlice = createSlice({
 
     setStyles: (state, action) => {
       state.preRenderedStyles = [...action.payload]
-      state.postRenderedStyles = JSONtoCSS(
-        [...state.preRenderedStyles],
-        state.activeProjectResolution,
-        state.styleState
-      )
+      updateGlobalCSS(state)
     },
 
     addStyle: (state, action) => {
@@ -1032,11 +1108,7 @@ export const projectSlice = createSlice({
 
       updateNodesGlobally(state, updateNodes)
 
-      state.postRenderedStyles = JSONtoCSS(
-        [...state.preRenderedStyles],
-        state.activeProjectResolution,
-        state.styleState
-      )
+      updateGlobalCSS(state)
       state.stylesInActiveNode[0].name = newNodeName
     },
 
@@ -1095,11 +1167,7 @@ export const projectSlice = createSlice({
           )[styleResolution][styleProperty] = styleValue
       }
 
-      state.postRenderedStyles = JSONtoCSS(
-        [...state.preRenderedStyles],
-        state.activeProjectResolution,
-        state.styleState
-      )
+      updateGlobalCSS(state)
     },
 
     editDefinedStyleProperty: (state, action) => {
@@ -1122,11 +1190,7 @@ export const projectSlice = createSlice({
           styleProperty
         ] = styleValue
       }
-      state.postRenderedStyles = JSONtoCSS(
-        [...state.preRenderedStyles],
-        state.activeProjectResolution,
-        state.styleState
-      )
+      updateGlobalCSS(state)
     },
 
     assignInlineStylePropertyToClass: (state, action) => {
@@ -1166,11 +1230,7 @@ export const projectSlice = createSlice({
         delete activeNode.styles[styleResolution]['flex-shrink']
         delete activeNode.styles[styleResolution]['flex-basis']
       }
-      state.postRenderedStyles = JSONtoCSS(
-        [...state.preRenderedStyles],
-        state.activeProjectResolution,
-        state.styleState
-      )
+      updateGlobalCSS(state)
     },
 
     assignAllInlineStylesToClass: (state, action) => {
@@ -1211,11 +1271,7 @@ export const projectSlice = createSlice({
 
       node.styles[resolutionName] = {}
 
-      state.postRenderedStyles = JSONtoCSS(
-        [...state.preRenderedStyles],
-        state.activeProjectResolution,
-        state.styleState
-      )
+      updateGlobalCSS(state)
     },
 
     deleteStyleProperty: (state, action) => {
@@ -1249,11 +1305,40 @@ export const projectSlice = createSlice({
           deletePropertyFromOption('flex-wrap')
         }
       }
-      state.postRenderedStyles = JSONtoCSS(
-        [...state.preRenderedStyles],
-        state.activeProjectResolution,
-        state.styleState
-      )
+      updateGlobalCSS(state)
+    },
+
+    deleteStylePropertyInDefinedStyle: (state, action) => {
+      let { property, styleId, optionId, optionVersionId } = action.payload
+      let styleResolution = 'styles'
+
+      function deletePropertyFromStyle(property) {
+        delete state.preRenderedStyles.find(({ id }) => id === styleId)[
+          styleResolution
+        ][property]
+      }
+
+      function deletePropertyFromOption(property) {
+        delete state.preRenderedStyles
+          .find(({ id }) => id === styleId)
+          .childrens.find(({ id }) => id === optionId)
+          .options.find(({ id }) => optionVersionId)[styleResolution][property]
+      }
+
+      if (optionId === '' || optionId === undefined) {
+        deletePropertyFromStyle(property)
+        if (property === 'flex-grid') {
+          deletePropertyFromStyle('flex-direction')
+          deletePropertyFromStyle('flex-wrap')
+        }
+      } else {
+        deletePropertyFromOption(property)
+        if (property === 'flex-grid') {
+          deletePropertyFromOption('flex-direction')
+          deletePropertyFromOption('flex-wrap')
+        }
+      }
+      updateGlobalCSS(state)
     },
 
     addStyleOption: (state, action) => {
@@ -1347,11 +1432,7 @@ export const projectSlice = createSlice({
         }
 
         updateNodesGlobally(state, updateNodes)
-        state.postRenderedStyles = JSONtoCSS(
-          [...state.preRenderedStyles],
-          state.activeProjectResolution,
-          state.styleState
-        )
+        updateGlobalCSS(state)
 
         for (let i = 0; i < state.stylesInActiveNode.length; i++) {
           if (state.stylesInActiveNode[i].id === subOptionId) {
@@ -1393,11 +1474,7 @@ export const projectSlice = createSlice({
         }
 
         updateNodesGlobally(state, updateNodes)
-        state.postRenderedStyles = JSONtoCSS(
-          [...state.preRenderedStyles],
-          state.activeProjectResolution,
-          state.styleState
-        )
+        updateGlobalCSS(state)
 
         for (let i = 0; i < state.stylesInActiveNode.length; i++) {
           if (state.stylesInActiveNode[i].id === subOptionId) {
@@ -1632,6 +1709,37 @@ export const projectSlice = createSlice({
       state.preRenderedHTMLNodes = response
     },
 
+    addFunctionToHtmlNode: (state, action) => {
+      const { functionId } = action.payload
+      let node = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId)
+      const hasNodeAnyFunction = node?.functions !== undefined
+      const hasNodeThisFunction =
+        node?.functions?.find((item) => item?.id === functionId) !== undefined
+      if (!hasNodeAnyFunction) {
+        node.functions = []
+      }
+      if (!hasNodeThisFunction) {
+        node.functions.push({
+          id: functionId,
+        })
+      }
+    },
+
+    addDataToHtmlNode: (state, action) => {
+      const { name, initValue, type } = action.payload
+      let node = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId)
+      const hasNodeAnyData = node?.data !== undefined
+      if (!hasNodeAnyData) {
+        node.data = []
+      }
+      node.data.push({
+        id: uuidv4(),
+        name: name,
+        initValue: initValue,
+        type: type,
+      })
+    },
+
     moveHtmlNode: (state, action) => {
       let moveReverse = action.payload.moveReverse
       function findNode(nodes, id) {
@@ -1691,14 +1799,13 @@ export const projectSlice = createSlice({
       if (state.activeNodeId === '') {
         state.activeNodeId = state.preRenderedHTMLNodes?.[0].id
       }
-      console.log(state.activeNodeId)
-      let [activeNode, activeNodeSiblingArray, activeNodeIndex] =
-        findActiveNodeSiblingArrayAndIndex(
-          state.preRenderedHTMLNodes,
-          state.activeNodeId
-        )
 
       if (state.keyboardNavigationOn) {
+        let [activeNode, activeNodeSiblingArray, activeNodeIndex] =
+          findActiveNodeSiblingArrayAndIndex(
+            state.preRenderedHTMLNodes,
+            state.activeNodeId
+          )
         if (
           (nodeIsFolder(activeNode) && activeNode.children.length == 0) ||
           activeNode.type === 'body'
@@ -1711,8 +1818,8 @@ export const projectSlice = createSlice({
             state.copiedNodes
           )
         }
+        state.activeNodeId = state.copiedNodes.id
       }
-      state.activeNodeId = state.copiedNodes.id
     },
 
     deleteHtmlNode: (state, action) => {
@@ -1743,6 +1850,68 @@ export const projectSlice = createSlice({
 
       findNode(state.preRenderedHTMLNodes, deletedNodeId)
       state.preRenderedHTMLNodes = response
+    },
+
+    addSpanToText: (state, action) => {
+      let offset = 0
+      let selection = window.getSelection()
+      let range = selection.getRangeAt(0)
+      let start = range.startOffset
+      let end = range.endOffset
+
+      if (selection.baseNode.parentNode.hasChildNodes()) {
+        for (
+          var i = 0;
+          selection.baseNode.parentNode.childNodes.length > i;
+          i++
+        ) {
+          var cnode = selection.baseNode.parentNode.childNodes[i]
+          if (cnode.nodeType == document.TEXT_NODE) {
+            if (offset + cnode.length > start) {
+              break
+            }
+            offset = offset + cnode.length
+          }
+          if (cnode.nodeType == document.ELEMENT_NODE) {
+            if (offset + cnode.textContent.length > start) {
+              break
+            }
+            offset = offset + cnode.textContent.length
+          }
+        }
+      }
+
+      start = start + offset
+      end = end + offset
+      console.log(start, end)
+
+      let node = findActiveNode(state.preRenderedHTMLNodes, state.activeNodeId)
+      let text = node.title
+      let textBeforeSelection = text.substring(0, start)
+      let textAfterSelection = text.substring(end, text.length)
+      let selectedTextString = text.substring(start, end)
+      let newText = `${textBeforeSelection}<span>${selectedTextString}</span>${textAfterSelection}`
+      node.title = newText
+      node.children = [
+        {
+          id: uuidv4(),
+          type: 'text',
+          title: textBeforeSelection,
+          classes: [],
+        },
+        {
+          id: uuidv4(),
+          type: 'span',
+          title: selectedTextString,
+          classes: [],
+        },
+        {
+          id: uuidv4(),
+          type: 'text',
+          title: textAfterSelection,
+          classes: [],
+        },
+      ]
     },
 
     deleteActiveHtmlNode: (state) => {
@@ -1810,7 +1979,7 @@ export const projectSlice = createSlice({
         activeNode.title = sanitizeHtml(
           document.querySelector(`[el_id="${state.activeNodeId}"]`)?.innerHTML,
           {
-            allowedTags: ['b', 'i', 'em', 'strong', 'a'],
+            allowedTags: ['b', 'i', 'em', 'strong'],
             allowedAttributes: {
               a: ['href'],
             },
@@ -2373,21 +2542,134 @@ export const projectSlice = createSlice({
     },
 
     editSwatch: (state, action) => {
-      let swatchId = action.payload.id
+      const swatchId = action.payload.id
+      const swatchName = action.payload.name
+      const swatchColor = action.payload.color
+
+      const swatchIndex = state.projectSwatches
+        .map((x) => {
+          return x.id
+        })
+        .indexOf(swatchId)
+
+      if (swatchId !== undefined) {
+        state.projectSwatches[swatchIndex].id = swatchId
+      }
+
+      if (swatchName !== undefined) {
+        state.projectSwatches[swatchIndex].name = swatchName
+      }
+
+      if (swatchColor !== undefined) {
+        state.projectSwatches[swatchIndex].color = swatchColor
+      }
+
+      updateGlobalCSS(state)
+    },
+
+    unlinkSwatch: (state, action) => {},
+
+    addSwatch: (state, action) => {
+      let id = uuidv4()
+      if (action.payload.id !== undefined) {
+        id = action.payload.id
+      }
+      state.projectSwatches.push({
+        id: id,
+        name: action.payload.name,
+        color: action.payload.color,
+      })
+    },
+
+    deleteSwatch: (state, action) => {
+      const swatchId = action.payload.id
+      let swatchValue = action.payload.value
+
       let swatchIndex = state.projectSwatches
         .map((x) => {
           return x.id
         })
         .indexOf(swatchId)
-      state.projectSwatches[swatchIndex] = action.payload
-    },
+      state.projectSwatches.splice(swatchIndex, 1)
 
-    addSwatch: (state, action) => {
-      state.projectSwatches.push({
-        id: uuidv4(),
-        name: action.payload.name,
-        color: action.payload.color,
-      })
+      function checkStyle(node, resolution, state, property) {
+        if (
+          node[getResolutionPathName(resolution.toString(), state)]?.[
+            property
+          ] ===
+          '{{' + swatchId + '}}'
+        ) {
+          node[getResolutionPathName(resolution.toString(), state)][property] =
+            swatchValue
+        }
+      }
+
+      function checkStyleForAllStates(node, resolution, property) {
+        checkStyle(node, resolution, 'default', property)
+        checkStyle(node, resolution, 'hover', property)
+      }
+
+      function checkStyleForAllProperty(node, resolution) {
+        checkStyleForAllStates(node, resolution, 'background-color')
+        checkStyleForAllStates(node, resolution, 'color')
+        checkStyleForAllStates(node, resolution, 'border-color')
+      }
+
+      function checkStyleForAllResolution(node) {
+        for (let i = 0; i < 7; i++) {
+          checkStyleForAllProperty(node, i.toString())
+        }
+      }
+
+      function checkAllStyles() {
+        state.preRenderedStyles.forEach((style) => {
+          checkStyleForAllResolution(style)
+          style.childrens.forEach((child) => {
+            child.options.forEach((option) => {
+              checkStyleForAllResolution(option)
+            })
+          })
+        })
+      }
+
+      checkAllStyles()
+
+      function updateNodes(nodes, resolution, state, property) {
+        nodes.map((node) => {
+          if (
+            node?.styles?.[getResolutionPathName(resolution, state)]?.[
+              property
+            ] === `{{${swatchId}}}`
+          ) {
+            node.styles[getResolutionPathName(resolution, state)][property] =
+              swatchValue
+          }
+          if (node.children) {
+            updateNodes(node.children, resolution, state, property)
+          }
+        })
+      }
+
+      function checkInlineStyleForAllStates(nodes, resolution, property) {
+        updateNodes(nodes, resolution, 'default', property)
+        updateNodes(nodes, resolution, 'hover', property)
+      }
+
+      function checkInlineStyleForAllResolutions(nodes, property) {
+        for (let i = 0; i < 7; i++) {
+          checkInlineStyleForAllStates(nodes, i.toString(), property)
+        }
+      }
+
+      function checkInlineStyleForAllProperties(nodes) {
+        checkInlineStyleForAllResolutions(nodes, 'background-color')
+        checkInlineStyleForAllResolutions(nodes, 'color')
+        checkInlineStyleForAllResolutions(nodes, 'border-color')
+      }
+
+      updateNodesGlobally(state, checkInlineStyleForAllProperties)
+
+      updateGlobalCSS(state)
     },
 
     setIsNodeSelectedFromNavigator: (state, action) => {
@@ -2663,11 +2945,7 @@ export const projectSlice = createSlice({
         state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes
         state.preRenderedStyles = activeUndoNode.preRenderedStyles
 
-        state.postRenderedStyles = JSONtoCSS(
-          [...state.preRenderedStyles],
-          state.activeProjectResolution,
-          state.styleState
-        )
+        updateGlobalCSS(state)
       }
     },
 
@@ -2680,11 +2958,7 @@ export const projectSlice = createSlice({
         state.preRenderedHTMLNodes = activeUndoNode.preRenderedHTMLNodes
         state.preRenderedStyles = activeUndoNode.preRenderedStyles
 
-        state.postRenderedStyles = JSONtoCSS(
-          [...state.preRenderedStyles],
-          state.activeProjectResolution,
-          state.styleState
-        )
+        updateGlobalCSS(state)
       }
     },
 
@@ -2701,11 +2975,7 @@ export const projectSlice = createSlice({
         state.activeProjectResolution,
         state.styleState
       )
-      state.postRenderedStyles = JSONtoCSS(
-        [...state.preRenderedStyles],
-        state.activeProjectResolution,
-        state.styleState
-      )
+      updateGlobalCSS(state)
     },
 
     copyLayoutHtmlNodes: (state, action) => {
@@ -2819,6 +3089,10 @@ export const projectSlice = createSlice({
           JSON.stringify(state.projectLayouts)
         )
         localStorage.setItem(slug + 'blocks', JSON.stringify(state.blocks))
+        localStorage.setItem(
+          slug + 'styleGuide',
+          JSON.stringify(state.styleGuide)
+        )
       }
     },
 
@@ -2887,11 +3161,7 @@ export const projectSlice = createSlice({
       state.preRenderedHTMLNodes = activeProjectVersion.preRenderedHTMLNodes
       state.preRenderedStyles = activeProjectVersion.preRenderedStyles
 
-      state.postRenderedStyles = JSONtoCSS(
-        [...state.preRenderedStyles],
-        state.activeProjectResolution,
-        state.styleState
-      )
+      updateGlobalCSS(state)
     },
 
     addVersion: (state) => {
@@ -3027,6 +3297,15 @@ export const projectSlice = createSlice({
         })
     },
 
+    deleteStyleGuideItemStyle: (state, action) => {
+      const { folderId, itemId, propertyId } = action.payload
+      let propertyStyles = state.styleGuide
+        .find(({ id }) => id === folderId)
+        .items.find(({ id }) => id === itemId).styles
+      const index = propertyStyles.findIndex(({ id }) => id === propertyId)
+      propertyStyles.splice(index, 1)
+    },
+
     setIsAltPressed: (state, action) => {
       state.isAltPressed = action.payload
     },
@@ -3101,6 +3380,7 @@ export const {
   assignInlineStylePropertyToClass,
   assignAllInlineStylesToClass,
   deleteStyleProperty,
+  deleteStylePropertyInDefinedStyle,
   addStyleOption,
   editStyleOption,
   removeStyleOption,
@@ -3120,6 +3400,8 @@ export const {
   setHtmlNodes,
   addHtmlNode,
   editHtmlNode,
+  addFunctionToHtmlNode,
+  addDataToHtmlNode,
   moveHtmlNode,
   setHtmlNodesWithoutExpandedState,
   copyHtmlNodes,
@@ -3146,6 +3428,7 @@ export const {
   setActiveHtmlNodeStyleOption,
   removeActiveHtmlNodeStyle,
   deleteActiveHtmlNodeInlineStyleProperty,
+  addSpanToText,
 
   /* Layouts */
   setLayouts,
@@ -3186,6 +3469,7 @@ export const {
   setSwatches,
   addSwatch,
   editSwatch,
+  deleteSwatch,
 
   /* Versions */
   addVersion,
@@ -3226,6 +3510,7 @@ export const {
   deleteStyleGuideItem,
   moveStyleGuideItem,
   addStyleGuideItemStyle,
+  deleteStyleGuideItemStyle,
 } = projectSlice.actions
 
 export default projectSlice.reducer
