@@ -95,13 +95,15 @@ function RenderedNode(props) {
   }
 
   function handleOnClick(e) {
-    e.stopPropagation()
-    dispatch(setIsNodeSelectedFromNavigator(false))
-    dispatch(setActiveClickedCmsItemIndex(props.itemIndex))
-    props.onClick([elementId, props?.class[0]?.name])
-
-    if (!editable) {
-      dispatch(setKeyboardNavigationOn(true))
+    const isNodeBody = props?.class[0]?.name === 'body'
+    if (!isNodeBody) {
+      e.stopPropagation()
+      dispatch(setIsNodeSelectedFromNavigator(false))
+      dispatch(setActiveClickedCmsItemIndex(props.itemIndex))
+      props.onClick([elementId, props?.class[0]?.name])
+      if (!editable) {
+        dispatch(setKeyboardNavigationOn(true))
+      }
     }
   }
 
@@ -212,6 +214,7 @@ function RenderedNode(props) {
           subtype={el.subtype}
           src={el.src}
           cmsCollectionId={el.cmsCollectionId}
+          filterCurrent={el.filterCurrent}
           cmsFieldId={el.cmsFieldId}
           symbolId={el.symbolId}
           type={el.type}
@@ -220,6 +223,7 @@ function RenderedNode(props) {
           itemIndex={props.itemIndex}
           renderedCollectionIndex={props.renderedCollectionIndex}
           collectionItems={props.collectionItems}
+          collectionItemName={props.collectionItemName}
           fieldId={props.fieldId}
           children={el.children}
           onChange={(text, id) => props.onChange(text, id)}
@@ -444,35 +448,44 @@ function RenderedNode(props) {
         onMouseOut={handleMouseOut}
         className={listOfNodeStyles}
       >
-        {collections[renderedCollectionIndex]?.items?.map((item, itemIndex) => (
-          <div key={item.id + itemIndex}>
-            {props.children.map((el) => (
-              <RenderedNode
-                id={el.id}
-                title={el.title}
-                subtype={el.subtype}
-                src={el.src}
-                cmsCollectionId={el.cmsCollectionId}
-                cmsFieldId={el.cmsFieldId}
-                symbolId={el.symbolId}
-                type={el.type}
-                styles={el.styles}
-                key={el.id}
-                itemIndex={itemIndex}
-                renderedCollectionIndex={renderedCollectionIndex}
-                collectionItems={
-                  collections[renderedCollectionIndex]?.items[itemIndex].data
-                }
-                children={el.children}
-                onChange={(text, id) => props.onChange(text, id)}
-                class={el.class}
-                onClick={([nodeId, className]) =>
-                  props.onClick([nodeId, className])
-                }
-              />
-            ))}
-          </div>
-        ))}
+        {collections[renderedCollectionIndex]?.items
+          .filter((item) => item?.archived !== true)
+          .filter(
+            (item) =>
+              !(
+                item?.id === activeCollectionItemTemplateId &&
+                props?.filterCurrent !== true &&
+                nodesEditMode === 'cmsTemplate'
+              )
+          )
+          ?.map((item, itemIndex) => (
+            <div key={item.id + itemIndex}>
+              {props.children.map((el) => (
+                <RenderedNode
+                  id={el.id}
+                  title={el.title}
+                  subtype={el.subtype}
+                  src={el.src}
+                  cmsCollectionId={el.cmsCollectionId}
+                  cmsFieldId={el.cmsFieldId}
+                  symbolId={el.symbolId}
+                  type={el.type}
+                  styles={el.styles}
+                  key={el.id}
+                  itemIndex={itemIndex}
+                  renderedCollectionIndex={renderedCollectionIndex}
+                  collectionItems={item.data}
+                  collectionItemName={item?.name}
+                  children={el.children}
+                  onChange={(text, id) => props.onChange(text, id)}
+                  class={el.class}
+                  onClick={([nodeId, className]) =>
+                    props.onClick([nodeId, className])
+                  }
+                />
+              ))}
+            </div>
+          ))}
       </div>
     )
 
@@ -511,7 +524,9 @@ function RenderedNode(props) {
             onMouseOut={handleMouseOut}
           >
             {collections[renderedCollectionIndex]?.items.map((item, index) => (
-              <div className="empty-collection-wrapper ">Item {index}</div>
+              <div key={item.id} className="empty-collection-wrapper ">
+                Item {index}
+              </div>
             ))}
           </div>
         )
@@ -549,20 +564,27 @@ function RenderedNode(props) {
 
   let nodeText = props.title
   if (props.type === 'h' || props.type === 'p') {
-    if (
-      nodesEditMode === 'cmsTemplate' &&
-      props.cmsFieldId !== '' &&
-      props.cmsFieldId !== undefined
-    ) {
-      nodeText = collections
+    if (nodesEditMode === 'cmsTemplate') {
+      const activeCollectionItem = collections
         .find(({ id }) => id === activeCollectionTemplateId)
         ?.items?.find(({ id }) => id === activeCollectionItemTemplateId)
-        .data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue
+
+      if (props.cmsFieldId !== '' && props.cmsFieldId !== undefined) {
+        nodeText = activeCollectionItem.data.find(
+          ({ fieldId }) => fieldId === props.cmsFieldId
+        )?.fieldValue
+      }
+      if (props.cmsFieldId === '0') {
+        nodeText = activeCollectionItem.name
+      }
     }
 
     if (props.collectionItems) {
       if (props.cmsFieldId === '') {
         nodeText = props.title
+      }
+      if (props.cmsFieldId === '0') {
+        nodeText = props.collectionItemName
       } else {
         nodeText = props.collectionItems.find(
           ({ fieldId }) => fieldId === props.cmsFieldId
@@ -648,18 +670,22 @@ function RenderedNode(props) {
       >
         {props.children.map((el) => (
           <RenderedNode
-            key={el.id}
             id={el.id}
             title={el.title}
             subtype={el.subtype}
             src={el.src}
             cmsCollectionId={el.cmsCollectionId}
+            filterCurrent={el.filterCurrent}
             cmsFieldId={el.cmsFieldId}
             symbolId={el.symbolId}
             type={el.type}
             styles={el.styles}
+            key={el.id}
             itemIndex={props.itemIndex}
             renderedCollectionIndex={props.renderedCollectionIndex}
+            collectionItems={props.collectionItems}
+            collectionItemName={props.collectionItemName}
+            fieldId={props.fieldId}
             children={el.children}
             onChange={(text, id) => props.onChange(text, id)}
             class={el.class}

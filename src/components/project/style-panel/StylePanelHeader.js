@@ -12,7 +12,7 @@ import {
   assignAllInlineStylesToClass,
 } from '../../../features/project'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
-import SubStyleSticker from './SubStyleSticker'
+import SubStyleSticker from './SubStyleSticker/SubStyleSticker'
 import ModalBackgroundCloser from '../_atoms/ModalBackgroundCloser'
 import StyleState from './StyleState'
 
@@ -24,6 +24,10 @@ export default function StylePanelHeader() {
   const activeStyleId = useSelector((state) => state.project.activeStyleId)
   const preRenderedStyles = useSelector(
     (state) => state.project.preRenderedStyles
+  )
+
+  const isBodyStyle = useSelector(
+    (state) => state.project.stylesInActiveNode?.[0]?.name !== 'body'
   )
 
   const stylesInActiveNode = useSelector(
@@ -172,6 +176,10 @@ export default function StylePanelHeader() {
     setIsStyleEditorOpen(false)
   }
 
+  function handleToggleStyleEditor() {
+    setIsStyleEditorOpen(!isStyleEditorOpen)
+  }
+
   useEffect(() => {
     if (isDeveloperMode) {
       setIsOptionsListOpen(true)
@@ -292,13 +300,17 @@ export default function StylePanelHeader() {
                   >
                     {el.name}
                   </div>
-                  <span
-                    className="seleted-class-delete-button"
-                    onClick={() => setIsStyleEditorOpen(!isStyleEditorOpen)}
-                  >
-                    {' '}
-                    ⌄
-                  </span>
+                  {isBodyStyle ? (
+                    <span
+                      className="seleted-class-delete-button"
+                      onClick={handleToggleStyleEditor}
+                    >
+                      {' '}
+                      ⌄
+                    </span>
+                  ) : (
+                    <span style={{ width: '8px' }}></span>
+                  )}
                   <div
                     className={
                       'style-options-dropdown' +

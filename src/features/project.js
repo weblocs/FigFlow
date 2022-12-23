@@ -85,8 +85,9 @@ const initialState = {
   activeProjectResolutionStylesListName: 'styles',
   activeNodeParentsPath: [],
   projectUploadedFonts: [
-    { name: 'PlusJakartaDisplay' },
+    { name: 'Plus Jakarta Display', weights: ['300', '500', '700'] },
     { name: 'Inter', weights: ['300', '500', '700'] },
+    { name: 'system-ui', weights: ['300', '400', '500', '600', '700'] },
     { name: 'General Sans' },
     { name: 'Hauora' },
     { name: 'Clash Display' },
@@ -438,6 +439,18 @@ export const projectSlice = createSlice({
         value
     },
 
+    deleteCollection: (state, action) => {
+      const collectionId = action.payload.id
+
+      const collectionIndex = state.collections
+        .map((x) => {
+          return x.id
+        })
+        .indexOf(collectionId)
+
+      state.collections.splice(collectionIndex, 1)
+    },
+
     setActiveCollection: (state, action) => {
       state.activeCollectionId = action.payload
       state.activeCollectionIndex = state.collections
@@ -512,6 +525,84 @@ export const projectSlice = createSlice({
       })
     },
 
+    deleteCollectionItem: (state, action) => {
+      const collectionItemId = action.payload
+      let activeCollectionItems =
+        state.collections[state.activeCollectionIndex].items
+
+      activeCollectionItems.splice(
+        activeCollectionItems
+          .map((x) => {
+            return x.id
+          })
+          .indexOf(collectionItemId),
+        1
+      )
+
+      state.activeCollectionItemIndex = -1
+      state.activeCollectionItemId = ''
+    },
+
+    archiveCollectionItem: (state, action) => {
+      const collectionItemId = action.payload
+      let activeCollectionItems =
+        state.collections[state.activeCollectionIndex].items
+
+      activeCollectionItems.map((item) => {
+        console.log(item.id)
+        if (item.id === collectionItemId) {
+          item.archived = true
+        }
+      })
+
+      state.activeCollectionItemIndex = -1
+      state.activeCollectionItemId = ''
+    },
+
+    unArchiveCollectionItem: (state, action) => {
+      const collectionItemId = action.payload
+      let activeCollectionItems =
+        state.collections[state.activeCollectionIndex].items
+
+      activeCollectionItems.map((item, index) => {
+        if (item.id === collectionItemId) {
+          activeCollectionItems[index].archived = false
+        }
+      })
+
+      state.activeCollectionItemIndex = -1
+      state.activeCollectionItemId = ''
+    },
+
+    duplicateCollectionItem: (state, action) => {
+      const collectionItemId = action.payload
+      let activeCollectionItems =
+        state.collections[state.activeCollectionIndex].items
+
+      let collectionItemToDuplicate = activeCollectionItems.find(
+        ({ id }) => id === collectionItemId
+      )
+
+      let collectionItemToDuplicateId = uuidv4()
+
+      activeCollectionItems.push({
+        id: collectionItemToDuplicateId,
+        name: collectionItemToDuplicate.name + ' Copy',
+        slug: collectionItemToDuplicate.slug,
+        data: collectionItemToDuplicate.data,
+      })
+
+      state.activeCollectionItemIndex = -1
+      state.activeCollectionItemId = ''
+    },
+
+    editCollectionItemName: (state, action) => {
+      const collectionItemName = action.payload
+      state.collections[state.activeCollectionIndex].items[
+        state.activeCollectionItemIndex
+      ].name = collectionItemName
+    },
+
     addCollectionField: (state, action) => {
       state.collections
         .find(({ id }) => id === state.activeSettingsCollectionId)
@@ -534,6 +625,20 @@ export const projectSlice = createSlice({
       )
       field.name = name
       field.helpText = helpText
+    },
+
+    deleteCollectionField: (state, action) => {
+      let collection = state.collections.find(
+        ({ id }) => id === state.activeSettingsCollectionId
+      )
+      collection.fields.splice(
+        collection.fields
+          .map((x) => {
+            return x.id
+          })
+          .indexOf(state.activeSettingsCollectionFieldId),
+        1
+      )
     },
 
     setActiveCollectionTemplate: (state, action) => {
@@ -812,10 +917,11 @@ export const projectSlice = createSlice({
 
     addPage: (state, action) => {
       //update previos page before creating a new one
-      const bodyStyleId = '2f3672cb-1cda-4a65-8fd3-ad00cc47051c'
-      const bodyStyleName = state.preRenderedStyles.find(
-        ({ id }) => id === bodyStyleId
-      ).name
+      // const bodyStyleId = '2f3672cb-1cda-4a65-8fd3-ad00cc47051c'
+      const bodyStyleId = state.preRenderedStyles.find(
+        ({ name }) => name === 'body'
+      ).id
+      const bodyStyleName = 'body'
       updateNodesLists(state)
       state.nodesEditMode = 'page'
       // create new page
@@ -1032,10 +1138,12 @@ export const projectSlice = createSlice({
         styles: {},
       }
 
+      let styleIndex = 0
+
       // add checking if it's a new class
 
       if (state.stylesInActiveNode?.length > 0) {
-        state.preRenderedStyles.forEach((style) => {
+        state.preRenderedStyles.forEach((style, index) => {
           if (style.id === state.stylesInActiveNode[0].id) {
             state.preRenderedStyles
               .find(({ id }) => id === style.id)
@@ -1047,6 +1155,8 @@ export const projectSlice = createSlice({
               state.preRenderedStyles.find(
                 ({ id }) => id === state.stylesInActiveNode[0].id
               ).childrens.length - 1
+
+            styleIndex = state.activeStyleOptionIndex + 1
           }
         })
       } else {
@@ -1062,19 +1172,34 @@ export const projectSlice = createSlice({
         }
       }
 
-      function findNode(nodes, id) {
-        for (let i = 0; i < nodes.length; i++) {
-          if (nodes[i].id === id) {
-            nodes[i].class.push(newStyleToConnectWithNodes)
-            state.stylesInActiveNode = [...nodes[i].class]
-            break
-          }
-          if (nodes[i].children) {
-            findNode(nodes[i].children, id)
-          }
+      let activeNode = findActiveNode(
+        state.preRenderedHTMLNodes,
+        state.activeNodeId
+      )
+
+      activeNode.class[styleIndex] = newStyleToConnectWithNodes
+
+      for (let j = 0; j < styleIndex; j++) {
+        if (activeNode.class[j]?.id === undefined) {
+          activeNode.class[j] = { id: '', name: '' }
         }
       }
-      findNode(state.preRenderedHTMLNodes, nodeId)
+      state.stylesInActiveNode = [...activeNode.class]
+
+      // state.activeStyleId = optionId
+      // function findNode(nodes, id) {
+      //   for (let i = 0; i < nodes.length; i++) {
+      //     if (nodes[i].id === id) {
+      //       nodes[i].class.push(newStyleToConnectWithNodes)
+      //       state.stylesInActiveNode = [...nodes[i].class]
+      //       break
+      //     }
+      //     if (nodes[i].children) {
+      //       findNode(nodes[i].children, id)
+      //     }
+      //   }
+      // }
+      // findNode(state.preRenderedHTMLNodes, nodeId)
 
       state.activeStyleId = newStyleToConnectWithNodes.id
       state.activeStyleIndex = getIndexOfElementInArrayById(
@@ -1387,14 +1512,15 @@ export const projectSlice = createSlice({
         .childrens.splice(childrenIndex, 1)
 
       function updateNodes(nodes) {
-        nodes.map((node) => {
+        for (let i = 0; i < nodes.length; i++) {
+          let node = nodes[i]
           if (node.class[0]?.id === mainStyleId) {
             node.class.splice(childrenIndex + 1, 1)
           }
           if (node.children) {
             updateNodes(node.children)
           }
-        })
+        }
       }
 
       updateNodesGlobally(state, updateNodes)
@@ -1789,36 +1915,49 @@ export const projectSlice = createSlice({
     },
 
     copyHtmlNodes: (state) => {
+      const isNodeBody = state.activeNodeObject?.type === 'body'
       if (state.keyboardNavigationOn) {
-        state.copiedNodes = state.activeNodeObject
+        if (!isNodeBody) {
+          state.copiedNodes = state.activeNodeObject
+        } else {
+          state.copiedNodes = {}
+        }
       }
+      // console.log(JSON.stringify(state.copiedNodes))
     },
 
     pasteHtmlNodes: (state) => {
-      regenerateIdsInNodes(state.copiedNodes)
-      if (state.activeNodeId === '') {
-        state.activeNodeId = state.preRenderedHTMLNodes?.[0].id
-      }
-
-      if (state.keyboardNavigationOn) {
-        let [activeNode, activeNodeSiblingArray, activeNodeIndex] =
-          findActiveNodeSiblingArrayAndIndex(
-            state.preRenderedHTMLNodes,
-            state.activeNodeId
-          )
-        if (
-          (nodeIsFolder(activeNode) && activeNode.children.length == 0) ||
-          activeNode.type === 'body'
-        ) {
-          activeNode.children.splice(activeNodeIndex + 1, 0, state.copiedNodes)
-        } else {
-          activeNodeSiblingArray.splice(
-            activeNodeIndex + 1,
-            0,
-            state.copiedNodes
-          )
+      const isCopyMemoryEmpty = JSON.stringify(state.copiedNodes) === '{}'
+      if (!isCopyMemoryEmpty) {
+        regenerateIdsInNodes(state.copiedNodes)
+        if (state.activeNodeId === '') {
+          state.activeNodeId = state.preRenderedHTMLNodes?.[0].id
         }
-        state.activeNodeId = state.copiedNodes.id
+
+        if (state.keyboardNavigationOn) {
+          let [activeNode, activeNodeSiblingArray, activeNodeIndex] =
+            findActiveNodeSiblingArrayAndIndex(
+              state.preRenderedHTMLNodes,
+              state.activeNodeId
+            )
+          if (
+            (nodeIsFolder(activeNode) && activeNode.children.length == 0) ||
+            activeNode.type === 'body'
+          ) {
+            activeNode.children.splice(
+              activeNodeIndex + 1,
+              0,
+              state.copiedNodes
+            )
+          } else {
+            activeNodeSiblingArray.splice(
+              activeNodeIndex + 1,
+              0,
+              state.copiedNodes
+            )
+          }
+          state.activeNodeId = state.copiedNodes.id
+        }
       }
     },
 
@@ -2132,26 +2271,41 @@ export const projectSlice = createSlice({
       let optionId = action.payload.id
       let optionName = action.payload.name
 
-      function findNode(nodes, id) {
-        for (let i = 0; i < nodes.length; i++) {
-          if (nodes[i].id === id) {
-            nodes[i].class[index] = { id: optionId, name: optionName }
+      let activeNode = findActiveNode(
+        state.preRenderedHTMLNodes,
+        state.activeNodeId
+      )
 
-            for (let j = 0; j < index; j++) {
-              if (nodes[i].class[j]?.id === undefined) {
-                nodes[i].class[j] = { id: '', name: '' }
-              }
-            }
-            state.stylesInActiveNode = [...nodes[i].class]
-            state.activeStyleId = optionId
-            break
-          }
-          if (nodes[i].children) {
-            findNode(nodes[i].children, id)
-          }
+      activeNode.class[index] = { id: optionId, name: optionName }
+
+      for (let j = 0; j < index; j++) {
+        if (activeNode.class[j]?.id === undefined) {
+          activeNode.class[j] = { id: '', name: '' }
         }
       }
-      findNode(state.preRenderedHTMLNodes, state.activeNodeId)
+      state.stylesInActiveNode = [...activeNode.class]
+      state.activeStyleId = optionId
+
+      // function findNode(nodes, id) {
+      //   for (let i = 0; i < nodes.length; i++) {
+      //     if (nodes[i].id === id) {
+      //       nodes[i].class[index] = { id: optionId, name: optionName }
+
+      //       for (let j = 0; j < index; j++) {
+      //         if (nodes[i].class[j]?.id === undefined) {
+      //           nodes[i].class[j] = { id: '', name: '' }
+      //         }
+      //       }
+      //       state.stylesInActiveNode = [...nodes[i].class]
+      //       state.activeStyleId = optionId
+      //       break
+      //     }
+      //     if (nodes[i].children) {
+      //       findNode(nodes[i].children, id)
+      //     }
+      //   }
+      // }
+      // findNode(state.preRenderedHTMLNodes, state.activeNodeId)
     },
 
     handleArrowNodesNavigation: (state, action) => {
@@ -2210,12 +2364,27 @@ export const projectSlice = createSlice({
       state.navigatorItemDragBehindState = action.payload
     },
 
+    setNodeProperty: (state, action) => {
+      const id = action.payload.id || state.activeNodeId
+      const { property, value } = action.payload
+      let node = findActiveNode(state.preRenderedHTMLNodes, id)
+      node[property] = value
+    },
+
     setActiveHtmlNodeRepeatableState: (state, action) => {
       let activeNode = findActiveNode(
         state.preRenderedHTMLNodes,
         state.activeNodeId
       )
       activeNode.repeatable = action.payload
+    },
+
+    setActiveHtmlFilterCurrentState: (state, action) => {
+      let activeNode = findActiveNode(
+        state.preRenderedHTMLNodes,
+        action.payload.id
+      )
+      activeNode.filterCurrent = action.payload.value
     },
 
     setActiveHtmlNodeParentClassJoinState: (state, action) => {
@@ -2718,6 +2887,7 @@ export const projectSlice = createSlice({
               type: nodes[i]?.type,
               class: nodes[i]?.class,
               cmscollectionid: nodes[i]?.cmsCollectionId,
+              filterCurrent: nodes[i]?.filterCurrent,
             })
             if (nodes[i].children) {
               findNode2(nodes[i]?.children)
@@ -2995,18 +3165,20 @@ export const projectSlice = createSlice({
       }
       editSectionNodesIds(state.copiedSectionNodes)
 
-      function findNode(nodes, id) {
-        function nodeIsRichText(node) {
-          if (node.type === 'div' && node.children.length === 0) {
-            return true
-          } else {
-            return false
-          }
+      function notContainsChildrens(node) {
+        if (node.type === 'div' && node.children.length === 0) {
+          return true
+        } else {
+          return false
         }
+      }
 
+      function findNode(nodes, id) {
         for (let i = 0; i < nodes.length; i++) {
           if (nodes[i].id === id) {
-            if (nodeIsRichText(nodes[i])) {
+            // console.log(id)
+            // console.log(state.activeNodeId)
+            if (notContainsChildrens(nodes[i])) {
               nodes[i].children.push(state.copiedSectionNodes)
             } else {
               nodes.splice(i + 1, 0, state.copiedSectionNodes)
@@ -3034,6 +3206,31 @@ export const projectSlice = createSlice({
 
     setFavicon: (state, action) => {
       state.faviconImage = action.payload
+    },
+
+    saveProjectToFirebaseOffline: (state) => {
+      async function saveProjectToFirebasePreRenderedNodesAndStyles() {
+        const app = initializeApp(firebaseConfig)
+        const db = getFirestore(app)
+        await updateDoc(
+          doc(db, 'projects', '75629c26-4f1b-4852-ae41-91ef3f7e905d'),
+          {
+            pages: state.projectPages,
+            projectPageFolders: state.projectPageFolders,
+            projectPageFolderStructure: state.projectPageFolderStructure,
+            collections: state.collections,
+            preRenderedStyles: state.preRenderedStyles,
+            symbols: state.projectSymbols,
+            swatches: state.projectSwatches,
+            sections: state.projectLayouts,
+            blocks: state.blocks,
+            styleGuide: state.styleGuide,
+          }
+        )
+      }
+      updateNodesLists(state)
+      console.log('Saved')
+      saveProjectToFirebasePreRenderedNodesAndStyles()
     },
 
     saveProjectToFirebase: (state) => {
@@ -3322,16 +3519,22 @@ export const projectSlice = createSlice({
 
 export const {
   /* Collections */
-
   setCollections,
   addCollection,
   editCollection,
+  deleteCollection,
   setActiveCollection,
   addCollectionItem,
   setActiveCollectionItem,
   editCollectionItem,
+  deleteCollectionItem,
+  archiveCollectionItem,
+  unArchiveCollectionItem,
+  duplicateCollectionItem,
+  editCollectionItemName,
   addCollectionField,
   editCollectionField,
+  deleteCollectionField,
   setActiveCollectionTemplate,
   setActiveCollectionItemTemplate,
   setCollectionPanelState,
@@ -3340,7 +3543,7 @@ export const {
   setActiveSettingsCollectionId,
   setActiveSettingsCollectionFieldId,
 
-  // [add] deleteCollection, editCollection, deleteCollectionItem, deleteCollectionField, editCollectionField
+  // [add] deleteCollection
 
   /* Symbols */
   setSymbols,
@@ -3358,8 +3561,8 @@ export const {
   setPageFolders,
   setPagesNestedStructure,
   addPage,
-  editPage, //[to-do] editPageFolder
-  deletePage, //[to-do] deletePageFolder
+  editPage,
+  deletePage,
   setActivePage,
   addPageFolder,
   deletePageFolder,
@@ -3419,7 +3622,9 @@ export const {
   dropDraggedNavigatorNodes,
   setNavigatorItemDragBehindState,
   setIsActiveHtmlNodeParentDisplayFlex,
+  setNodeProperty,
   setActiveHtmlNodeRepeatableState,
+  setActiveHtmlFilterCurrentState,
   setActiveHtmlNodeParentClassJoinState,
   addActiveHtmlNodeBlockFolders,
   setActiveHtmlNodeLink,
@@ -3478,6 +3683,7 @@ export const {
 
   /* Firebase */
   saveProjectToFirebase,
+  saveProjectToFirebaseOffline,
   setProjectFirebaseId,
 
   /* Others */

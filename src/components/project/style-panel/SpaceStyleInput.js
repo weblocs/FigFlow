@@ -24,10 +24,6 @@ function SpaceStyleInput(props) {
         ({ style }) => style === props.style
       )?.isActive === true
   )
-  // const doesStylePropertyBelongToActiveClass = useSelector((state) => (state.project.activeStyleObject?.[props.style] !== undefined));
-
-  // const editedStyleValue = useSelector((state) => deleteUnits(state.project.activeStyleObject?.[props.style]) || !isPropertyInStyleHierarchy && props?.placeholder || deleteUnits(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]));
-  // const editedStyleUnit = useSelector((state) => findStyleUnit(state.project.activeStyleObject?.[props.style]) || (!isPropertyInStyleHierarchy && props?.placeholder) && "-" || findStyleUnit(state.project.activeNodeComputedStyles?.[props.style.replace("-","_")]) );
 
   const isShiftPressed = useSelector((state) => state.project.isShiftPressed)
   const isKeyAPressed = useSelector((state) => state.project.isKeyAPressed)
@@ -76,41 +72,29 @@ function SpaceStyleInput(props) {
   function handleKeyPress(e) {
     if (e.key === 'Enter') {
       if (editedStyleUnit === '' || editedStyleUnit === '-') {
-        dispatch(editStyleProperty([props.style, e.target.value + 'px']))
+        updateStyle(props.style, e.target.value, 'px')
       } else {
-        dispatch(
-          editStyleProperty([props.style, e.target.value + editedStyleUnit])
-        )
+        updateStyle(props.style, e.target.value, editedStyleUnit)
       }
       setIsInputActive(false)
     }
     if (e.key === 'ArrowUp') {
       inputRef.current.value = parseInt(editedStyleValue) + 1
-      dispatch(
-        editStyleProperty([
-          props.style,
-          parseInt(e.target.value) + editedStyleUnit,
-        ])
-      )
+      updateStyle(props.style, parseInt(e.target.value), editedStyleUnit)
     }
     if (e.key === 'ArrowDown') {
       inputRef.current.value = parseInt(editedStyleValue) - 1
-      dispatch(
-        editStyleProperty([
-          props.style,
-          parseInt(e.target.value) + editedStyleUnit,
-        ])
-      )
+      updateStyle(props.style, parseInt(e.target.value), editedStyleUnit)
     }
   }
 
   function handleUnitItemClick(unit) {
-    dispatch(editStyleProperty([props.style, editedStyleValue + unit]))
+    updateStyle(props.style, editedStyleValue, unit)
     setUnitEditorOpened(false)
   }
 
   function handleSetAuto() {
-    dispatch(editStyleProperty([props.style, 'auto']))
+    updateStyle(props.style, 'auto', '')
     setUnitEditorOpened(false)
   }
 
@@ -127,13 +111,79 @@ function SpaceStyleInput(props) {
   function handleInputChange(value) {
     if (value !== editedStyleValue) {
       if (editedStyleUnit === '' || editedStyleUnit === '-') {
-        dispatch(editStyleProperty([props.style, parseInt(value) + 'px']))
+        updateStyle(props.style, parseInt(value), 'px')
       } else {
-        dispatch(
-          editStyleProperty([props.style, parseInt(value) + editedStyleUnit])
-        )
+        updateStyle(props.style, parseInt(value), editedStyleUnit)
       }
     }
+  }
+
+  const [isEditing, setIsEditing] = useState(false)
+
+  useEffect(() => {
+    if (isEditing) {
+      const style = props.style
+      if (isShiftPressed) {
+        style === 'padding-top' && updateProperty('padding-bottom')
+        style === 'padding-bottom' && updateProperty('padding-top')
+        style === 'padding-left' && updateProperty('padding-right')
+        style === 'padding-right' && updateProperty('padding-left')
+        style === 'margin-top' && updateProperty('margin-bottom')
+        style === 'margin-bottom' && updateProperty('margin-top')
+        style === 'margin-left' && updateProperty('margin-right')
+        style === 'margin-right' && updateProperty('margin-left')
+      }
+      if (isKeyAPressed) {
+        if (isPropertyPadding(style)) {
+          updateAllPaddings()
+        }
+        if (isPropertyMargin(style)) {
+          updateAllMargins()
+        }
+      }
+    }
+    setIsEditing(false)
+  }, [editedStyleValue])
+
+  function updateStyle(property, value, unit) {
+    dispatch(editStyleProperty([property, value + unit]))
+    setIsEditing(true)
+  }
+
+  function updateProperty(property) {
+    updateStyle(property, editedStyleValue, editedStyleUnit)
+  }
+
+  function updateAllMargins() {
+    updateProperty('margin-top')
+    updateProperty('margin-bottom')
+    updateProperty('margin-left')
+    updateProperty('margin-right')
+  }
+
+  function updateAllPaddings() {
+    updateProperty('padding-top')
+    updateProperty('padding-bottom')
+    updateProperty('padding-left')
+    updateProperty('padding-right')
+  }
+
+  function isPropertyPadding(style) {
+    return (
+      style === 'padding-top' ||
+      style === 'padding-bottom' ||
+      style === 'padding-left' ||
+      style === 'padding-right'
+    )
+  }
+
+  function isPropertyMargin(style) {
+    return (
+      style === 'margin-top' ||
+      style === 'margin-bottom' ||
+      style === 'margin-left' ||
+      style === 'margin-right'
+    )
   }
 
   useEffect(() => {
@@ -149,58 +199,6 @@ function SpaceStyleInput(props) {
       dispatch(setKeyboardNavigationOn(true))
     }
   }, [isInputActive])
-
-  useEffect(() => {
-    function updateProperty(property) {
-      dispatch(
-        editStyleProperty([property, editedStyleValue + editedStyleUnit])
-      )
-    }
-
-    function updateAllMargins() {
-      updateProperty('margin-top')
-      updateProperty('margin-bottom')
-      updateProperty('margin-left')
-      updateProperty('margin-right')
-    }
-
-    function updateAllPaddings() {
-      updateProperty('padding-top')
-      updateProperty('padding-bottom')
-      updateProperty('padding-left')
-      updateProperty('padding-right')
-    }
-
-    const style = props.style
-    if (isShiftPressed) {
-      style === 'padding-top' && updateProperty('padding-bottom')
-      style === 'padding-bottom' && updateProperty('padding-top')
-      style === 'padding-left' && updateProperty('padding-right')
-      style === 'padding-right' && updateProperty('padding-left')
-      style === 'margin-top' && updateProperty('margin-bottom')
-      style === 'margin-bottom' && updateProperty('margin-top')
-      style === 'margin-left' && updateProperty('margin-right')
-      style === 'margin-right' && updateProperty('margin-left')
-    }
-    if (isKeyAPressed) {
-      if (
-        style === 'padding-top' ||
-        style === 'padding-bottom' ||
-        style === 'padding-left' ||
-        style === 'padding-right'
-      ) {
-        updateAllPaddings()
-      }
-      if (
-        style === 'margin-top' ||
-        style === 'margin-bottom' ||
-        style === 'margin-left' ||
-        style === 'margin-right'
-      ) {
-        updateAllMargins()
-      }
-    }
-  }, [editedStyleValue])
 
   return (
     <div
@@ -283,4 +281,3 @@ function SpaceStyleInput(props) {
 }
 
 export default SpaceStyleInput
-// export default React.memo(SpaceStyleInput)

@@ -156,6 +156,13 @@ img {
   font-family: Inter, sans-serif;
 }
 
+.cms-current-link-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
 .projectWrapper {
   display: flex;
   height: calc(100vh - 33px);
@@ -248,10 +255,12 @@ img {
 
 .link-settings-modal {
   position: absolute;
-  top: 28px;
+  top: 32px;
   left: -1px;
   width: 200px;
-  height: 151px;
+  height: 152px;
+  padding: 8px;
+  font-size: 12px;
   background: #fff;
   border: 1px solid #bababa;
   z-index: 9999;
@@ -645,7 +654,7 @@ img {
 .add-section_button {
   position: relative;
   top: -14px;
-  height: 18px;
+  height: 24px;
   font-size: 13px;
   padding: 2px 7px;
   color: #fff;
@@ -691,9 +700,9 @@ img {
 
 .add-section_popup-list-box {
   /* max-width: 600px; */
-  width: calc(100% - 100px);
+  width: calc(100% - 20px);
   /* max-height: 500px; */
-  height: calc(100% - 100px);
+  height: calc(100% - 20px);
   background: #fff;
   padding: 24px;
   position: relative;
@@ -706,6 +715,7 @@ img {
 .layout-folders-list {
   overflow-y: scroll;
   height: 100%;
+  width: 100%;
 }
 
 .layouts-list {
@@ -722,7 +732,7 @@ img {
 }
 
 .layouts-list-column {
-  width: calc(33vw - 42px);
+  width: calc(33vw - 31px);
 }
 
 .present-section-in-popup-heading {
@@ -903,6 +913,10 @@ img {
 
 .projectPageItem.active {
   background: #ededed;
+}
+
+.projectPageItem.archived {
+  background-color: #ccc;
 }
 
 .add-section_popup-box .add-section_button {
@@ -1393,7 +1407,8 @@ img {
   }
 
   .collectionsPanel {
-    width: 200px;
+    overflow-y: scroll;
+    width: 205px;
     flex-shrink: 0;
     border-right: 1px solid #d3d3d3;
     display: none;
@@ -1592,7 +1607,7 @@ img {
   .style-edit-input.simple {
     border: none;
     height: 18px;
-    width: 36px;
+    width: 40px;
     padding-right: 6px;
     background: transparent;
     border-radius: 4px;
@@ -2084,7 +2099,7 @@ img {
     position: relative;
     padding-top: 8px;
     padding-bottom: 8px;
-    height: 16px;
+    height: 32px;
     background-color: #f5f5f5;
     display: flex;
     justify-content: space-between;
@@ -2511,7 +2526,7 @@ img {
 
   .seleted-class-delete-button {
     font-size: 8px;
-    padding: 2px;
+    padding-top: 2px;
     position: relative;
     bottom: 1px;
     padding-left: 6px;
@@ -2519,7 +2534,6 @@ img {
     cursor: pointer;
     color: #fff;
     height: 26px;
-    padding-top: 5px;
   }
 
   .seleted-class-delete-button:hover {
@@ -2672,6 +2686,13 @@ img {
 
   .fields-select {
     display: flex;
+    align-items: center;
+  }
+
+  .fields-select_text {
+    margin-bottom: 6px;
+    line-height: 11px;
+    margin-bottom: 0;
   }
 
   .fields-item-arrow {
@@ -2706,7 +2727,7 @@ img {
   }
 
   .page-item_settings-icon {
-    width: 10px;
+    width: 18px;
     padding: 4px;
     position: absolute;
     right: 4px;
@@ -2788,10 +2809,54 @@ img {
     margin-bottom: 6px;
   }
 
+  .cms-field-input-wrap {
+    padding: 8px;
+    border-bottom: 1px solid #d6d6d6;
+  }
+
+  .cms-field-input-label {
+    font-size: 11px;
+    line-height: 11px;
+    margin-bottom: 4px;
+    color: #666;
+  }
+
   .cms-field-input {
     border: 1px solid #b0b0b0;
+    font-size: 12px;
+    line-height: 18px;
+    display: block;
+    height: 28px;
+  }
+
+  .cms-field-input-click-area,
+  .cms-field-input-value {
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0;
+    font-family: Inter;
+    cursor: text;
+  }
+
+  .cms-field-input-click-area {
+    display: none;
     padding: 4px 7px;
-    font-size: 13px;
+    height: 100%;
+    width: 100%;
+  }
+
+  .cms-field-input-click-area.focused {
+    display: block;
+  }
+
+  .cms-field-input-value {
+    display: none;
+    padding: 4px 7px;
+    border: 0;
+    width: 100%;
+  }
+
+  .cms-field-input-value.focused {
     display: block;
   }
 
@@ -2861,10 +2926,22 @@ img {
     line-height: 18px;
   }
 
-  .settings-button.absolute-button {
+  .setting-absolute-buttons {
     position: absolute;
-    top: -29px;
-    right: 8px;
+    top: -32px;
+    right: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .settings-delete-button {
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  .settings-delete-button:hover {
+    opacity: 0.7;
   }
 
   .settings-button:hover {
@@ -3156,7 +3233,8 @@ img {
   .block-item_edit {
     display: none;
     padding: 4px;
-    width: 10px;
+    width: 16px;
+    height: 16px;
     position: absolute;
     right: 8px;
     top: 3px;
@@ -3521,7 +3599,7 @@ img {
   .layout-duplicate-icon {
     display: none;
     padding: 4px;
-    width: 10px;
+    width: 16px;
     position: absolute;
     right: 30px;
     top: 3px;
@@ -4013,7 +4091,25 @@ img {
     border: 1px solid #ddd;
   }
 
-  // .pagesList {
-  //   overflow: scroll;
-  // }
+  .page-settings-action-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .page-settings-action-button {
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 13px;
+    padding: 4px 6px;
+    text-transform: capitalize;
+    font-weight: 400;
+    background-color: #fff;
+    border: 1px solid #d3d3d3;
+  }
+
+  .padding-top-0 {
+    padding-top: 0;
+  }
 }

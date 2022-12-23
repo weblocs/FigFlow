@@ -220,7 +220,8 @@ export function JSONtoCSS(_classes, activeResolution, activeState, swatches) {
     })
   }
 
-  let tempStyle = '* {-webkit-font-smoothing: antialiased;}\n'
+  let tempStyle =
+    '* {-webkit-font-smoothing: antialiased;box-sizing: border-box;}\n'
   tempClasses.forEach((item) => {
     tempStyle += '.' + item.name + '{'
 

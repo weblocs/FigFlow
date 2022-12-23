@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   saveProjectToFirebase,
+  saveProjectToFirebaseOffline,
   setSaveButtonStateText,
 } from '../../../features/project'
 
@@ -46,8 +47,16 @@ export default function SaveButton() {
   }, [])
 
   return (
-    <button className="saveButton" onClick={handleOnClick}>
-      {saveButtonStateText}
-    </button>
+    <>
+      {/* <button
+        className="saveButton"
+        onClick={() => dispatch(saveProjectToFirebaseOffline())}
+      >
+        Save Offline
+      </button> */}
+      <button className="saveButton" onClick={handleOnClick}>
+        {saveButtonStateText}
+      </button>
+    </>
   )
 }

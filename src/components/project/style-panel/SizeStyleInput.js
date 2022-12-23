@@ -8,6 +8,8 @@ import {
 import ProprtyInputLabel from './ProprtyInputLabel'
 import ModalBackgroundCloser from '../_atoms/ModalBackgroundCloser'
 import DragInput from '../_atoms/DragInput'
+import SizeStyleInputProperty from './SizeStyleInputProperty'
+import SizeStyleInputProperties from './SizeStyleInputProperties'
 
 export default function SizeStyleInput(props) {
   const hierarchyStyleProperty = useSelector(
@@ -148,39 +150,11 @@ export default function SizeStyleInput(props) {
           isActiveIf={unitEditorOpened}
         />
 
-        <div
-          className={
-            'style-edit-unit-list' + (unitEditorOpened ? ' active' : '')
-          }
-        >
-          <div
-            className={
-              'style-edit-unit-item' +
-              (editedStyleUnit === 'px' ? ' active' : '')
-            }
-            onClick={() => handleUnitItemClick('px')}
-          >
-            px
-          </div>
-          <div
-            className={
-              'style-edit-unit-item' +
-              (editedStyleUnit === '%' ? ' active' : '')
-            }
-            onClick={() => handleUnitItemClick('%')}
-          >
-            %
-          </div>
-          <div
-            className={
-              'style-edit-unit-item' +
-              (editedStyleUnit === 'em' ? ' active' : '')
-            }
-            onClick={() => handleUnitItemClick('em')}
-          >
-            em
-          </div>
-        </div>
+        <SizeStyleInputProperties
+          isOpen={unitEditorOpened}
+          handleUnitClick={handleUnitItemClick}
+          activeUnit={editedStyleUnit}
+        />
       </div>
     </div>
   )
