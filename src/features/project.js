@@ -14,7 +14,7 @@ import { firebaseConfig } from '../utils/firebase-config.js'
 import { node } from 'prop-types'
 
 const initialState = {
-  offlineMode: true,
+  offlineMode: false,
   offlineProjectName: 'projekt1',
 
   projectMode: 'developer', // developer or creator

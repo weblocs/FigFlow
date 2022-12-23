@@ -9,6 +9,7 @@ import {
 } from '../../../../features/project'
 import AddNewField from './AddNewField'
 import CollectionFieldSettings from './CollectionFieldSettings'
+import DeleteCollection from './DeleteCollection'
 
 export default function CollectionSettings() {
   const activeTab = useSelector((state) => state.project.activeTab)
@@ -114,14 +115,7 @@ export default function CollectionSettings() {
         </div>
       </div>
 
-      <div className="page-settings-wrapper">
-        <div
-          className="settings-button"
-          onClick={() => dispatch(deleteCollection({ id: collection.id }))}
-        >
-          Delete Collection
-        </div>
-      </div>
+      <DeleteCollection name={collection?.name} />
     </div>
   )
 }

@@ -15,8 +15,8 @@ export default function generateNodeText(node, collectionItem, item) {
         ({ fieldId }) => fieldId === node.cmsFieldId
       )?.fieldValue
     } else {
-      return item.data?.find(({ fieldId }) => fieldId === node.cmsFieldId)
-        ?.fieldValue
+      // return item.data?.find(({ fieldId }) => fieldId === node.cmsFieldId)
+      //   ?.fieldValue
     }
   }
 
