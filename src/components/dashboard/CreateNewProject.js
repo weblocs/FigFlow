@@ -132,6 +132,7 @@ export default function CreateNewProject(props) {
       const tempTemplateData = await (
         await getDoc(doc(db, 'projects', id))
       ).data()
+
       setTemplateData({
         pages: tempTemplateData.pages,
         projectPageFolderStructure: tempTemplateData.projectPageFolderStructure,
