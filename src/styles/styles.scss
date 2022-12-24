@@ -1861,6 +1861,7 @@ img {
 
   .color-picker_color-box {
     width: 28px;
+    min-width: 28px;
     height: 100%;
     background: #333;
     margin-right: 8px;
@@ -4122,5 +4123,69 @@ img {
     left: calc(100% - 270px);
     top: 0;
     z-index: 9999;
+  }
+
+  .border-panel_wrapper {
+    display: flex;
+  }
+
+  .border-panel_column {
+    padding-right: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .border-panel_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3px;
+  }
+
+  .border-panel_grid-item {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .border-panel_grid-item.is-active {
+    background-color: #eee;
+  }
+
+  .border-panel_grid-item.is-transparent {
+    background-color: transparent;
+  }
+
+  .border-panel_icon {
+    border-radius: 2px;
+    width: 13px;
+    height: 13px;
+    border: 2px solid #bbb;
+  }
+
+  .border-panel_icon.is-top {
+    border-top: 2px solid #555;
+  }
+
+  .border-panel_icon.is-left {
+    border-left: 2px solid #555;
+  }
+
+  .border-panel_icon.is-right {
+    border-right: 2px solid #555;
+  }
+
+  .border-panel_icon.is-bottom {
+    border-bottom: 2px solid #555;
+  }
+
+  .border-panel_icon.is-center {
+    border: 2px solid #555;
+  }
+
+  .border-panel_wrapper ._1-col-style-grid {
+    width: 100%;
   }
 }

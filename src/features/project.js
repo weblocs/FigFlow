@@ -14,7 +14,7 @@ import { firebaseConfig } from '../utils/firebase-config.js'
 import { node } from 'prop-types'
 
 const initialState = {
-  offlineMode: false,
+  offlineMode: true,
   offlineProjectName: 'projekt1',
 
   projectMode: 'developer', // developer or creator
@@ -1246,10 +1246,10 @@ export const projectSlice = createSlice({
         ({ style }) => style === styleProperty
       )?.isInline
 
-      if (
-        state.activeStyleId === state.stylesInActiveNode?.[0]?.id &&
-        isPropertyInline !== true
-      ) {
+      const isActiveStyleMain =
+        state.stylesInActiveNode?.[0]?.id === state.activeStyleId
+
+      if (isActiveStyleMain && isPropertyInline !== true) {
         if (
           state.preRenderedStyles[state.activeStyleIndex][styleResolution] ===
           undefined
