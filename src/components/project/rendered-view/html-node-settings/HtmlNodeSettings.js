@@ -103,7 +103,7 @@ export default function HtmlNodeSettings() {
             <>
               <div className="rich-element-settings_button active">
                 <div className="rich-element-settings_button-text">
-                  <span>Element</span>
+                  {/* <span>Name</span> */}
                   {activeStyleName}
                 </div>
               </div>
@@ -114,7 +114,7 @@ export default function HtmlNodeSettings() {
               <AltImageSettings />
               <ChangeImageButton />
               <HeadingTypeButton />
-              <StyleButton />
+              {/* <StyleButton /> */}
               <LinkSettings />
               <AddBlockButton addRichSetting={true} />
               <div

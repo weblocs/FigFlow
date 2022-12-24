@@ -17,7 +17,9 @@ export default function ColorPickerPopUp({
   activeSwatchId,
   style,
   swatchName,
+  handleIsOpen,
 }) {
+  const activeNodeId = useSelector((state) => state.project.activeNodeId)
   const projectSwatches = useSelector((state) => state.project.projectSwatches)
   const dispatch = useDispatch()
 
@@ -47,6 +49,14 @@ export default function ColorPickerPopUp({
       setColorPickerState('picked')
     }
   }, [])
+
+  const [nodeId, setNodeId] = useState(activeNodeId)
+
+  useEffect(() => {
+    if (nodeId !== activeNodeId) {
+      handleIsOpen(false)
+    }
+  }, [activeNodeId])
 
   const [colorPickerState, setColorPickerState] = useState('') // "add", "picked", "unlink", "edit", "delete"
 

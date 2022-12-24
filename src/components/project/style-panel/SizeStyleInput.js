@@ -8,7 +8,6 @@ import {
 import ProprtyInputLabel from './ProprtyInputLabel'
 import ModalBackgroundCloser from '../_atoms/ModalBackgroundCloser'
 import DragInput from '../_atoms/DragInput'
-import SizeStyleInputProperty from './SizeStyleInputProperty'
 import SizeStyleInputProperties from './SizeStyleInputProperties'
 
 export default function SizeStyleInput(props) {

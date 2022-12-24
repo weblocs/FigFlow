@@ -10,6 +10,9 @@ import addImage from '../../../../../img/add-button.svg'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 
 export default function AddBlockButton({ addRichSetting }) {
+  const isNodeTypeSection = useSelector(
+    (state) => state.project.activeNodeObject?.type === 'sec'
+  )
   const blocks = useSelector((state) => state.project.blocks)
   const blockFolders = useSelector(
     (state) => state.project.activeNodeObject?.blockFolders
@@ -53,43 +56,47 @@ export default function AddBlockButton({ addRichSetting }) {
     { overrideSystem: false, ignoreInputFields: true, repeatOnHold: false }
   )
 
-  return (
-    <div>
-      <ModalBackgroundCloser
-        handleClick={() => setListIsOpened(false)}
-        isActiveIf={listIsOpened}
-      />
+  if (!isNodeTypeSection) {
+    return (
+      <div>
+        <ModalBackgroundCloser
+          handleClick={() => setListIsOpened(false)}
+          isActiveIf={listIsOpened}
+        />
 
-      <div
-        className={'rich-element-settings_button button-centered active'}
-        onClick={() => setListIsOpened(true)}
-      >
-        <img style={{ width: '12px' }} src={addImage} />
-      </div>
+        <div
+          className={'rich-element-settings_button button-centered active'}
+          onClick={() => setListIsOpened(true)}
+        >
+          <img style={{ width: '12px' }} src={addImage} />
+        </div>
 
-      <div
-        className={
-          'heading-element-settings_list block-list' +
-          (listIsOpened ? ' active' : '')
-        }
-      >
-        {blocks?.map((folder) => (
-          <div className="block-list_folder" key={folder.id}>
-            <div className="blocks-list_name">{folder.name}</div>
-            <div className="block-list_grid">
-              {folder.blocks?.map((item) => (
-                <div
-                  className="blocks-list_item"
-                  key={item.id}
-                  onClick={() => handleAddBlockClick(item.preRenderedHTMLNodes)}
-                >
-                  {item.name}
-                </div>
-              ))}
+        <div
+          className={
+            'heading-element-settings_list block-list' +
+            (listIsOpened ? ' active' : '')
+          }
+        >
+          {blocks?.map((folder) => (
+            <div className="block-list_folder" key={folder.id}>
+              <div className="blocks-list_name">{folder.name}</div>
+              <div className="block-list_grid">
+                {folder.blocks?.map((item) => (
+                  <div
+                    className="blocks-list_item"
+                    key={item.id}
+                    onClick={() =>
+                      handleAddBlockClick(item.preRenderedHTMLNodes)
+                    }
+                  >
+                    {item.name}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }

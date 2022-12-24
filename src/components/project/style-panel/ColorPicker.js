@@ -27,28 +27,28 @@ export default function ColorPicker(props) {
     }
   })
 
-  const preRenderedStyles = useSelector(
-    (state) => state.project.preRenderedStyles
-  )
-
   const dispatch = useDispatch()
 
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="size-style-box">
-      <ProprtyInputLabel text="Color" property={props.style} />
+    <>
+      <div className="size-style-box">
+        <ProprtyInputLabel text="Color" property={props.style} />
 
-      <div className="color-picker_color-wrap">
         <div
-          className="color-picker_color-box"
-          style={{
-            backgroundColor: hierarchyStyleProperty.color || editedStyleValue,
-          }}
+          className="color-picker_color-wrap"
           onClick={() => setIsOpen(!isOpen)}
-        ></div>
-        <div className="text">
-          {hierarchyStyleProperty.name || editedStyleValue}
+        >
+          <div
+            className="color-picker_color-box"
+            style={{
+              backgroundColor: hierarchyStyleProperty.color || editedStyleValue,
+            }}
+          ></div>
+          <div className="text">
+            {hierarchyStyleProperty.name || editedStyleValue}
+          </div>
         </div>
 
         {isOpen && (
@@ -57,9 +57,16 @@ export default function ColorPicker(props) {
             swatchName={hierarchyStyleProperty.name}
             color={hierarchyStyleProperty.color}
             activeSwatchId={hierarchyStyleProperty.id}
+            handleIsOpen={setIsOpen}
           />
         )}
       </div>
-    </div>
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          className="color-picker_popup-closer"
+        ></div>
+      )}
+    </>
   )
 }

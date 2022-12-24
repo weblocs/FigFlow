@@ -1488,6 +1488,7 @@ export const projectSlice = createSlice({
       state.preRenderedStyles.find(
         ({ id }) => id === state.stylesInActiveNode[0].id
       ).childrens[index][property] = value
+      updateGlobalCSS(state)
 
       // console.log(current(state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id)
       // .childrens[index]));
