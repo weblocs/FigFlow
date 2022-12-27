@@ -1249,48 +1249,61 @@ export const projectSlice = createSlice({
       const isActiveStyleMain =
         state.stylesInActiveNode?.[0]?.id === state.activeStyleId
 
-      if (isActiveStyleMain && isPropertyInline !== true) {
-        if (
-          state.preRenderedStyles[state.activeStyleIndex][styleResolution] ===
-          undefined
-        ) {
-          state.preRenderedStyles[state.activeStyleIndex][styleResolution] = {}
-        }
+      function setStyleEmptyObject() {
+        state.preRenderedStyles[state.activeStyleIndex][styleResolution] = {}
+      }
+
+      function setPropertyInMainStyle() {
         state.preRenderedStyles[state.activeStyleIndex][styleResolution][
           styleProperty
         ] = styleValue
-      } else if (state.activeStyleId === '' || isPropertyInline) {
-        const node = findActiveNode(
-          state.preRenderedHTMLNodes,
-          state.activeNodeId
-        )
-        if (node?.styles === undefined) {
-          node.styles = {}
-        }
-        if (node?.styles?.[styleResolution] === undefined) {
-          node.styles[styleResolution] = {}
-        }
-        node.styles[styleResolution][styleProperty] = styleValue
-      } else {
-        if (
-          state.preRenderedStyles
-            .find(({ id }) => id === state.stylesInActiveNode?.[0]?.id)
-            .childrens[state.activeStyleOptionIndex].options.find(
-              ({ id }) => id === state.activeStyleId
-            )[styleResolution] === undefined
-        ) {
-          state.preRenderedStyles
-            .find(({ id }) => id === state.stylesInActiveNode?.[0]?.id)
-            .childrens[state.activeStyleOptionIndex].options.find(
-              ({ id }) => id === state.activeStyleId
-            )[styleResolution] = {}
-        }
-        state.preRenderedStyles
-          .find(({ id }) => id === state.stylesInActiveNode?.[0]?.id)
-          .childrens[state.activeStyleOptionIndex].options.find(
-            ({ id }) => id === state.activeStyleId
-          )[styleResolution][styleProperty] = styleValue
       }
+
+      function setPropertyValue(styleProperty, styleValue) {
+        if (isActiveStyleMain && !isPropertyInline) {
+          const isStyleSet =
+            state.preRenderedStyles[state.activeStyleIndex][styleResolution] !==
+            undefined
+
+          if (!isStyleSet) {
+            setStyleEmptyObject()
+          }
+          setPropertyInMainStyle()
+        } else if (state.activeStyleId === '' || isPropertyInline) {
+          const node = findActiveNode(
+            state.preRenderedHTMLNodes,
+            state.activeNodeId
+          )
+          if (node?.styles === undefined) {
+            node.styles = {}
+          }
+          if (node?.styles?.[styleResolution] === undefined) {
+            node.styles[styleResolution] = {}
+          }
+          node.styles[styleResolution][styleProperty] = styleValue
+        } else {
+          if (
+            state.preRenderedStyles
+              .find(({ id }) => id === state.stylesInActiveNode?.[0]?.id)
+              .childrens[state.activeStyleOptionIndex].options.find(
+                ({ id }) => id === state.activeStyleId
+              )[styleResolution] === undefined
+          ) {
+            state.preRenderedStyles
+              .find(({ id }) => id === state.stylesInActiveNode?.[0]?.id)
+              .childrens[state.activeStyleOptionIndex].options.find(
+                ({ id }) => id === state.activeStyleId
+              )[styleResolution] = {}
+          }
+          state.preRenderedStyles
+            .find(({ id }) => id === state.stylesInActiveNode?.[0]?.id)
+            .childrens[state.activeStyleOptionIndex].options.find(
+              ({ id }) => id === state.activeStyleId
+            )[styleResolution][styleProperty] = styleValue
+        }
+      }
+
+      setPropertyValue(styleProperty, styleValue)
 
       updateGlobalCSS(state)
     },

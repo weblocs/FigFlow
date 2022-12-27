@@ -10,13 +10,39 @@ import ModalBackgroundCloser from '../_atoms/ModalBackgroundCloser'
 import DragInput from '../_atoms/DragInput'
 import SizeStyleInputProperties from './SizeStyleInputProperties'
 
-export default function SizeStyleInput(props) {
-  const hierarchyStyleProperty = useSelector(
-    (state) =>
-      state.project.objectHierarchyStyles?.findLast(
-        ({ style }) => style === props.style
-      )?.value
-  )
+export default function BorderWidthInput(props) {
+  const cssValue = useSelector((state) => {
+    state.project.objectHierarchyStyles?.findLast(
+      ({ style }) => style === props.style
+    )?.value
+  })
+
+  const isCssValueWithSpaces = useSelector((state) => {
+    cssValue?.includes(' ')
+  })
+
+  const hierarchyStyleProperty = useSelector((state) => {
+    if (props.isActiveTab === 'center') {
+      return cssValue
+    }
+
+    const cssValueArray = cssValue?.split(' ')
+    if (!isCssValueWithSpaces) {
+      return cssValue
+    }
+    if (props.isActiveTab === 'top') {
+      return cssValueArray[0]
+    }
+    if (props.isActiveTab === 'right') {
+      return cssValueArray[1]
+    }
+    if (props.isActiveTab === 'bottom') {
+      return cssValueArray[2]
+    }
+    if (props.isActiveTab === 'left') {
+      return cssValueArray[3]
+    }
+  })
 
   const editedStyleValue = useSelector(
     (state) =>
@@ -28,6 +54,7 @@ export default function SizeStyleInput(props) {
         ]
       )
   )
+
   const editedStyleUnit = useSelector(
     (state) =>
       findStyleUnit(hierarchyStyleProperty) ||
@@ -47,7 +74,6 @@ export default function SizeStyleInput(props) {
 
   function setProperty(e) {
     let unit = editedStyleUnit
-    let value = e.target.value
     if (e.key === 'Enter' && (unit === '' || unit === '-')) {
       unit = 'px'
     }
@@ -62,7 +88,9 @@ export default function SizeStyleInput(props) {
       inputRef.current.value = parseInt(editedStyleValue) - 1
     }
     if (e.key === 'Enter' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      setProperty(e)
+      if (props.isActiveTab === 'center') {
+        setProperty(e)
+      }
     }
   }
 
@@ -100,7 +128,6 @@ export default function SizeStyleInput(props) {
   return (
     <div className="size-style-box">
       <ProprtyInputLabel text={props.text} property={props.style} />
-
       <div className="style-edit-input">
         <div className="style-edit-value">
           <span

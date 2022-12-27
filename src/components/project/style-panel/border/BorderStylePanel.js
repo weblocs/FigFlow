@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import BorderWidthInput from '../BorderWidthInput'
 import ColorPicker from '../ColorPicker'
 import SizeStyleInput from '../SizeStyleInput'
 import EmptyGridItem from './EmptyGridItem'
@@ -6,6 +7,17 @@ import Tab from './Tab'
 
 export default function BorderStylePanel() {
   const [isActiveTab, setIsActiveTab] = useState('center')
+  const [borderWidthProperty, setBorderWidthProperty] = useState('')
+  const [borderColorProperty, setBorderColorProperty] = useState('')
+
+  useEffect(() => {
+    setBorderWidthProperty('border-' + isActiveTab + '-width')
+    setBorderColorProperty('border-' + isActiveTab + '-color')
+    if (isActiveTab === 'center') {
+      setBorderWidthProperty('border-width')
+      setBorderColorProperty('border-color')
+    }
+  }, [isActiveTab])
 
   return (
     <div className="style-panel-box">
@@ -52,9 +64,14 @@ export default function BorderStylePanel() {
           </div>
         </div>
         <div className="_1-col-style-grid">
-          <ColorPicker style="border-color" />
           <SizeStyleInput style="border-radius" text="Radius" />
-          <SizeStyleInput style="border-width" text="Width" />
+          <ColorPicker style={borderColorProperty} />
+
+          <BorderWidthInput
+            style="border-width"
+            isActiveTab={isActiveTab}
+            text="Width"
+          />
           <div className="_2-col-style-grid"></div>
         </div>
       </div>
