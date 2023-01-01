@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { findStyleUnit, deleteUnits } from '../../../utils/style-panel'
 import {
   editStyleProperty,
+  editStylePropertyDrag,
   setKeyboardNavigationOn,
 } from '../../../features/project'
 import ProprtyInputLabel from './ProprtyInputLabel'
@@ -18,28 +19,39 @@ export default function BorderWidthInput(props) {
   })
 
   const isCssValueWithSpaces = useSelector((state) => {
-    cssValue?.includes(' ')
+    cssValue?.includes(' ') !== undefined
+  })
+
+  const cssValueArray = useSelector((state) => {
+    cssValue?.split(' ')
   })
 
   const hierarchyStyleProperty = useSelector((state) => {
-    if (props.isActiveTab === 'center') {
+    const cssValue = state.project.objectHierarchyStyles?.findLast(
+      ({ style }) => style === props.style
+    )?.value
+
+    if (props.activeTab === 'center') {
       return cssValue
     }
 
     const cssValueArray = cssValue?.split(' ')
+
+    console.log(cssValue)
+
     if (!isCssValueWithSpaces) {
       return cssValue
     }
-    if (props.isActiveTab === 'top') {
+    if (props.activeTab === 'top') {
       return cssValueArray[0]
     }
-    if (props.isActiveTab === 'right') {
+    if (props.activeTab === 'right') {
       return cssValueArray[1]
     }
-    if (props.isActiveTab === 'bottom') {
+    if (props.activeTab === 'bottom') {
       return cssValueArray[2]
     }
-    if (props.isActiveTab === 'left') {
+    if (props.activeTab === 'left') {
       return cssValueArray[3]
     }
   })
@@ -71,13 +83,39 @@ export default function BorderWidthInput(props) {
 
   const [isInputActive, setIsInputActive] = useState(false)
   const [unitEditorOpened, setUnitEditorOpened] = useState(false)
+  const [isDragged, setIsDragged] = useState(false)
 
   function setProperty(e) {
+    console.log('1')
     let unit = editedStyleUnit
     if (e.key === 'Enter' && (unit === '' || unit === '-')) {
       unit = 'px'
     }
-    dispatch(editStyleProperty([props.style, e.target.value + unit]))
+    console.log(props.activeTab)
+    if (props.activeTab === 'center') {
+      dispatch(editStyleProperty([props.style, e.target.value + unit]))
+    } else if (props.activeTab === 'top') {
+      console.log('2')
+
+      let value = ''
+      if (isCssValueWithSpaces) {
+        value =
+          e.target.value +
+          unit +
+          ' ' +
+          cssValueArray[1] +
+          ' ' +
+          cssValueArray[2] +
+          ' ' +
+          cssValueArray[3]
+      } else {
+        console.log(hierarchyStyleProperty)
+        value = e.target.value + unit + ' ' + '0' + ' ' + '0' + ' ' + '0'
+      }
+
+      console.log('value: ' + value)
+      dispatch(editStyleProperty([props.style, value]))
+    }
   }
 
   function handleKeyPress(e) {
@@ -88,9 +126,7 @@ export default function BorderWidthInput(props) {
       inputRef.current.value = parseInt(editedStyleValue) - 1
     }
     if (e.key === 'Enter' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      if (props.isActiveTab === 'center') {
-        setProperty(e)
-      }
+      setProperty(e)
     }
   }
 
@@ -125,6 +161,28 @@ export default function BorderWidthInput(props) {
     }
   }
 
+  function handleDragChange(value) {
+    if (value !== editedStyleValue) {
+      dispatch(
+        editStylePropertyDrag([
+          props.style,
+          parseFloat(value) + editedStyleUnit,
+        ])
+      )
+    }
+  }
+
+  function handleDragStart() {
+    setIsDragged(true)
+  }
+
+  function handleDragEnd(value) {
+    setIsDragged(false)
+    dispatch(
+      editStyleProperty([props.style, parseFloat(value) + editedStyleUnit])
+    )
+  }
+
   return (
     <div className="size-style-box">
       <ProprtyInputLabel text={props.text} property={props.style} />
@@ -132,13 +190,19 @@ export default function BorderWidthInput(props) {
         <div className="style-edit-value">
           <span
             onClick={() => setIsInputActive(true)}
-            className={'style-edit-text' + (isInputActive ? ' active' : '')}
+            className={
+              'style-edit-text' +
+              (isInputActive ? ' active' : '') +
+              (isDragged ? ' drag' : '')
+            }
           >
             {editedStyleValue}
           </span>
           <DragInput
             defaultValue={editedStyleValue}
-            handleChange={(event) => handleInputChange(event)}
+            handleChange={(event) => handleDragChange(event)}
+            handleStart={() => handleDragStart()}
+            handleEnd={(event) => handleDragEnd(event)}
           />
           <input
             className={

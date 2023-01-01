@@ -12,9 +12,10 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore, updateDoc, doc } from 'firebase/firestore'
 import { firebaseConfig } from '../utils/firebase-config.js'
 import { node } from 'prop-types'
+import { deleteUnits } from '../utils/style-panel'
 
 const initialState = {
-  offlineMode: true,
+  offlineMode: false,
   offlineProjectName: 'projekt1',
 
   projectMode: 'developer', // developer or creator
@@ -1237,10 +1238,21 @@ export const projectSlice = createSlice({
       state.stylesInActiveNode[0].name = newNodeName
     },
 
+    editStylePropertyDrag: (state, action) => {
+      let styleProperty = action.payload[0]
+      let styleValue = action.payload[1]
+
+      document.querySelector('.renderedNode.active').style[styleProperty] =
+        styleValue
+      document.querySelector('.drag').innerHTML = deleteUnits(styleValue)
+    },
+
     editStyleProperty: (state, action) => {
       let styleProperty = action.payload[0]
       let styleValue = action.payload[1]
       let styleResolution = state.activeProjectResolutionStylesListName
+
+      document.querySelector('.renderedNode.active').style[styleProperty] = ''
 
       const isPropertyInline = state.objectHierarchyStyles.findLast(
         ({ style }) => style === styleProperty
@@ -1264,7 +1276,6 @@ export const projectSlice = createSlice({
           const isStyleSet =
             state.preRenderedStyles[state.activeStyleIndex][styleResolution] !==
             undefined
-
           if (!isStyleSet) {
             setStyleEmptyObject()
           }
@@ -3593,6 +3604,7 @@ export const {
   addStyle,
   renameStyle,
   editStyleProperty,
+  editStylePropertyDrag,
   editDefinedStyleProperty,
   assignInlineStylePropertyToClass,
   assignAllInlineStylesToClass,

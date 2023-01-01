@@ -111,6 +111,15 @@ img {
   user-select: none;
 }
 
+.parents-path-item,
+.selector-text,
+.seleted-class-delete-button,
+.style-state_item {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .renderedNode[contenteditable='true'] {
   cursor: text;
 }
@@ -1653,7 +1662,7 @@ img {
     background: transparent;
     padding-left: 8px !important;
     border: none;
-    max-width: 24px;
+    max-width: 32px;
   }
 
   .style-edit-input-text.color-input {
@@ -2509,6 +2518,7 @@ img {
     height: calc(100vh - 33px);
     flex-shrink: 0;
     overflow-y: scroll;
+    overflow-x: hidden;
   }
 
   .select-class-input {

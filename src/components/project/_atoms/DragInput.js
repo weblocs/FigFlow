@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-export default function DragInput({ defaultValue, handleChange }) {
+export default function DragInput({
+  defaultValue,
+  handleChange,
+  handleStart,
+  handleEnd,
+}) {
   const isAltPressed = useSelector((state) => state.project.isAltPressed)
   const [value, setValue] = useState(0)
 
@@ -33,6 +38,7 @@ export default function DragInput({ defaultValue, handleChange }) {
       setIsDragged(true)
       setStartVal(event.clientX)
       setSnapshot(value)
+      handleStart()
     },
     [value]
   )
@@ -58,10 +64,19 @@ export default function DragInput({ defaultValue, handleChange }) {
     const onEnd = () => {
       setIsDragged(false)
       setStartVal(0)
+      if (isDragged) {
+        handleEnd(
+          parseFloat(
+            parseFloat(snapshot) +
+              (event.clientX - startVal) * Math.pow(10, -1 * round) * 0.5
+          ).toFixed(round)
+        )
+      }
     }
 
     document.addEventListener('mousemove', onUpdate)
     document.addEventListener('mouseup', onEnd)
+
     return () => {
       document.removeEventListener('mousemove', onUpdate)
       document.removeEventListener('mouseup', onEnd)

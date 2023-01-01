@@ -6,18 +6,18 @@ import EmptyGridItem from './EmptyGridItem'
 import Tab from './Tab'
 
 export default function BorderStylePanel() {
-  const [isActiveTab, setIsActiveTab] = useState('center')
+  const [activeTab, setActiveTab] = useState('center')
   const [borderWidthProperty, setBorderWidthProperty] = useState('')
   const [borderColorProperty, setBorderColorProperty] = useState('')
 
   useEffect(() => {
-    setBorderWidthProperty('border-' + isActiveTab + '-width')
-    setBorderColorProperty('border-' + isActiveTab + '-color')
-    if (isActiveTab === 'center') {
+    setBorderWidthProperty('border-' + activeTab + '-width')
+    setBorderColorProperty('border-' + activeTab + '-color')
+    if (activeTab === 'center') {
       setBorderWidthProperty('border-width')
       setBorderColorProperty('border-color')
     }
-  }, [isActiveTab])
+  }, [activeTab])
 
   return (
     <div className="style-panel-box">
@@ -28,36 +28,36 @@ export default function BorderStylePanel() {
 
             <Tab
               tab="top"
-              isActiveTab={isActiveTab}
-              handleSetIsActiveTab={setIsActiveTab}
+              activeTab={activeTab}
+              handleSetActiveTab={setActiveTab}
             />
 
             <EmptyGridItem />
 
             <Tab
               tab="left"
-              isActiveTab={isActiveTab}
-              handleSetIsActiveTab={setIsActiveTab}
+              activeTab={activeTab}
+              handleSetActiveTab={setActiveTab}
             />
 
             <Tab
               tab="center"
-              isActiveTab={isActiveTab}
-              handleSetIsActiveTab={setIsActiveTab}
+              activeTab={activeTab}
+              handleSetActiveTab={setActiveTab}
             />
 
             <Tab
               tab="right"
-              isActiveTab={isActiveTab}
-              handleSetIsActiveTab={setIsActiveTab}
+              activeTab={activeTab}
+              handleSetActiveTab={setActiveTab}
             />
 
             <EmptyGridItem />
 
             <Tab
               tab="bottom"
-              isActiveTab={isActiveTab}
-              handleSetIsActiveTab={setIsActiveTab}
+              activeTab={activeTab}
+              handleSetActiveTab={setActiveTab}
             />
 
             <EmptyGridItem />
@@ -69,7 +69,7 @@ export default function BorderStylePanel() {
 
           <BorderWidthInput
             style="border-width"
-            isActiveTab={isActiveTab}
+            activeTab={activeTab}
             text="Width"
           />
           <div className="_2-col-style-grid"></div>

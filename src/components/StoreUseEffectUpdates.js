@@ -108,7 +108,9 @@ export default function StoreUseEffectUpdates() {
     if (activeHoveredCmsItemIndex !== undefined) {
       activeHtmlNode = `[el_id='${hoveredNodeId}'][cms_item_index='${activeHoveredCmsItemIndex}']`
     }
-    document.querySelector(activeHtmlNode)?.classList.add('hovered')
+    if (!isAltPressed) {
+      document.querySelector(activeHtmlNode)?.classList.add('hovered')
+    }
   }, [hoveredNodeId, activeHoveredCmsItemIndex])
 
   useEffect(() => {
@@ -124,9 +126,9 @@ export default function StoreUseEffectUpdates() {
     if (activeClickedCmsItemIndex !== undefined) {
       activeHtmlNode = `[el_id='${activeNodeId}'][cms_item_index='${activeClickedCmsItemIndex}']`
     }
-    if (!isAltPressed) {
-      document.querySelector(activeHtmlNode)?.classList.add('active')
-    }
+    // if (!isAltPressed) {
+    document.querySelector(activeHtmlNode)?.classList.add('active')
+    // }
   }, [
     activeNodeId,
     activeClickedCmsItemIndex,

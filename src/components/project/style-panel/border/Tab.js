@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 
-export default function Tab({ tab, isActiveTab, handleSetIsActiveTab }) {
+export default function Tab({ tab, activeTab, handleSetActiveTab }) {
   const isSet = useSelector((state) => {
     let borderColorProperty = 'border-' + tab + '-width'
     if (tab === 'center') {
@@ -15,10 +15,10 @@ export default function Tab({ tab, isActiveTab, handleSetIsActiveTab }) {
 
   return (
     <div
-      onClick={() => handleSetIsActiveTab(tab)}
+      onClick={() => handleSetActiveTab(tab)}
       className={
         'border-panel_grid-item ' +
-        (isActiveTab === tab ? ' is-active' : '') +
+        (activeTab === tab ? ' is-active' : '') +
         (isSet ? ' is-set' : '')
       }
     >

@@ -5,6 +5,7 @@ import {
   deleteActiveHtmlNodeInlineStyleProperty,
   deleteStyleProperty,
   editStyleProperty,
+  editStylePropertyDrag,
   setKeyboardNavigationOn,
 } from '../../../features/project'
 import ModalBackgroundCloser from '../_atoms/ModalBackgroundCloser'
@@ -68,6 +69,7 @@ function SpaceStyleInput(props) {
 
   const [isInputActive, setIsInputActive] = useState(false)
   const [unitEditorOpened, setUnitEditorOpened] = useState(false)
+  const [isDragged, setIsDragged] = useState(false)
 
   function handleKeyPress(e) {
     if (e.key === 'Enter') {
@@ -200,6 +202,28 @@ function SpaceStyleInput(props) {
     }
   }, [isInputActive])
 
+  function handleDragChange(value) {
+    if (value !== editedStyleValue) {
+      dispatch(
+        editStylePropertyDrag([
+          props.style,
+          parseFloat(value) + editedStyleUnit,
+        ])
+      )
+    }
+  }
+
+  function handleDragStart() {
+    setIsDragged(true)
+  }
+
+  function handleDragEnd(value) {
+    setIsDragged(false)
+    dispatch(
+      editStyleProperty([props.style, parseFloat(value) + editedStyleUnit])
+    )
+  }
+
   return (
     <div
       className={
@@ -211,12 +235,19 @@ function SpaceStyleInput(props) {
     >
       <DragInput
         defaultValue={editedStyleValue}
-        handleChange={handleInputChange}
+        handleChange={(event) => handleDragChange(event)}
+        handleStart={() => handleDragStart()}
+        handleEnd={(event) => handleDragEnd(event)}
       />
+
       <div className="style-edit-value">
         <span
           onClick={() => setIsInputActive(true)}
-          className={'style-edit-text' + (isInputActive ? ' active' : '')}
+          className={
+            'style-edit-text' +
+            (isInputActive ? ' active' : '') +
+            (isDragged ? ' drag' : '')
+          }
         >
           {editedStyleValue}
         </span>
