@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { findStyleUnit, deleteUnits } from '../../../utils/style-panel'
 import {
   editStyleProperty,
+  editStylePropertyDrag,
   setKeyboardNavigationOn,
 } from '../../../features/project'
 import ProprtyInputLabel from './ProprtyInputLabel'
@@ -44,6 +45,7 @@ export default function SizeStyleInput(props) {
 
   const [isInputActive, setIsInputActive] = useState(false)
   const [unitEditorOpened, setUnitEditorOpened] = useState(false)
+  const [isDragged, setIsDragged] = useState(false)
 
   function setProperty(e) {
     let unit = editedStyleUnit
@@ -85,16 +87,27 @@ export default function SizeStyleInput(props) {
     }
   }, [isInputActive])
 
-  function handleInputChange(value) {
+  function handleDragChange(value) {
     if (value !== editedStyleValue) {
-      if (editedStyleUnit === '' || editedStyleUnit === '-') {
-        dispatch(editStyleProperty([props.style, parseFloat(value) + 'px']))
-      } else {
-        dispatch(
-          editStyleProperty([props.style, parseFloat(value) + editedStyleUnit])
-        )
-      }
+      dispatch(
+        editStylePropertyDrag([
+          props.style,
+          parseFloat(value) + editedStyleUnit,
+        ])
+      )
     }
+  }
+
+  function handleDragStart() {
+    setIsDragged(true)
+  }
+
+  function handleDragEnd(value) {
+    setIsDragged(false)
+
+    dispatch(
+      editStyleProperty([props.style, parseFloat(value) + editedStyleUnit])
+    )
   }
 
   return (
@@ -105,14 +118,22 @@ export default function SizeStyleInput(props) {
         <div className="style-edit-value">
           <span
             onClick={() => setIsInputActive(true)}
-            className={'style-edit-text' + (isInputActive ? ' active' : '')}
+            className={
+              'style-edit-text' +
+              (isInputActive ? ' active' : '') +
+              (isDragged ? ' drag' : '')
+            }
           >
             {editedStyleValue}
           </span>
+
           <DragInput
             defaultValue={editedStyleValue}
-            handleChange={(event) => handleInputChange(event)}
+            handleChange={(event) => handleDragChange(event)}
+            handleStart={() => handleDragStart()}
+            handleEnd={(event) => handleDragEnd(event)}
           />
+
           <input
             className={
               'style-edit-input-text' + (!isInputActive ? ' active' : '')
