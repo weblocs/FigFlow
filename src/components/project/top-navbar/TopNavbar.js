@@ -12,11 +12,16 @@ import TabletIcon from '../../../img/tablet.svg'
 import PortraitIcon from '../../../img/portrait.svg'
 import MobileIcon from '../../../img/mobile.svg'
 import DatabaseIcon from '../../../img/database.svg'
+import StructureIcon from '../../../img/structure.svg'
+import BackupIcon from '../../../img/backup.svg'
 import ProjectLogo from './ProjectLogo'
 import CustomResolutionsButton from './CustomResolutionsButton'
+import ExportButtonServer from './ExportButtonServer'
+import RestoreButton from './RestoreButton'
 
 export default function TopNavbar() {
   const projectMode = useSelector((state) => state.project.projectMode)
+  const isBackupOn = useSelector((state) => state.project.isBackupOn !== null)
   const dispatch = useDispatch()
 
   return (
@@ -26,7 +31,11 @@ export default function TopNavbar() {
 
         {projectMode === 'creator' && (
           <div style={{ display: 'flex' }}>
-            <SidebarButton letter="C" tab="Collections" img={DatabaseIcon} />
+            <SidebarButton shortcode="Z" tab="Navigator" img={StructureIcon} />
+            <SidebarButton shortcode="C" tab="Collections" img={DatabaseIcon} />
+            {!isBackupOn && (
+              <SidebarButton shortcode="B" tab="Backups" img={BackupIcon} />
+            )}
           </div>
         )}
         <PageChanger />
@@ -56,12 +65,17 @@ export default function TopNavbar() {
       </div>
 
       <div className="projectNavigationRight">
-        {projectMode === 'developer' && (
+        {isBackupOn ? (
+          <>
+            <RestoreButton />
+          </>
+        ) : (
           <>
             <ExportButton />
+            <SaveButton />
           </>
         )}
-        <SaveButton />
+
         <RightPanelButtonsList />
       </div>
     </div>

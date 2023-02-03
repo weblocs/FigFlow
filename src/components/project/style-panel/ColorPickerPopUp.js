@@ -25,12 +25,17 @@ export default function ColorPickerPopUp({
 
   function handleColorPickerChange(color, event) {
     if (colorPickerState !== 'edit') {
-      dispatch(editStyleProperty([style, color.hex]))
+      dispatch(
+        editStyleProperty([
+          style,
+          `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+        ])
+      )
     } else {
       dispatch(
         editSwatch({
           id: activeSwatchId,
-          color: color.hex,
+          color: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
         })
       )
     }
@@ -63,7 +68,11 @@ export default function ColorPickerPopUp({
   return (
     <div>
       <div className="swatches-box active">
-        <ChromePicker color={color} onChange={handleColorPickerChange} />
+        <ChromePicker
+          color={color}
+          onChange={handleColorPickerChange}
+          // onChangeComplete={handleColorPickerChange}
+        />
         <div className="swatches-list">
           {projectSwatches.map((swatch) => {
             return (

@@ -1,10 +1,15 @@
+import { initializeApp } from 'firebase/app'
+import { doc, getFirestore, updateDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   saveProjectToFirebase,
   saveProjectToFirebaseOffline,
   setSaveButtonStateText,
+  setUpdateNodesLists,
 } from '../../../features/project'
+import { firebaseConfig } from '../../../utils/firebase-config'
+import { firebaseSaveProject } from '../../../utils/nodes-editing'
 
 export default function SaveButton() {
   const saveButtonStateText = useSelector(
@@ -17,12 +22,23 @@ export default function SaveButton() {
     (state) => state.project.preRenderedStyles
   )
   const styleGuide = useSelector((state) => state.project.styleGuide)
+  const projectPageFolderStructure = useSelector(
+    (state) => state.project.projectPageFolderStructure
+  )
+  const collections = useSelector((state) => state.project.collections)
+  const firebaseError = useSelector((state) => state.project.firebaseError)
+  const state = useSelector((state) => state.project)
   const dispatch = useDispatch()
 
   function handleOnClick() {
     dispatch(setSaveButtonStateText('Saving'))
+
     dispatch(saveProjectToFirebase())
-    dispatch(setSaveButtonStateText('Saved'))
+
+    // dispatch(setSaveButtonStateText('Saved'))
+
+    // dispatch(setUpdateNodesLists())
+    // saveProjectToFirebasePreRenderedNodesAndStyles()
   }
 
   useEffect(() => {
@@ -30,17 +46,29 @@ export default function SaveButton() {
     const tempNodes = preRenderedHTMLNodes
     const tempStyles = preRenderedStyles
     const tempStyleGuide = styleGuide
+    const tempProjectPageFolderStructure = projectPageFolderStructure
+    const tempCollections = collections
+
     const timer = setTimeout(() => {
       if (
         tempNodes === preRenderedHTMLNodes &&
         tempStyles === preRenderedStyles &&
-        tempStyleGuide === styleGuide
+        tempStyleGuide === styleGuide &&
+        tempProjectPageFolderStructure === projectPageFolderStructure &&
+        tempCollections === collections
       ) {
         handleOnClick()
       }
-    }, 6000)
+    }, 5000)
+
     return () => clearTimeout(timer)
-  }, [preRenderedHTMLNodes, preRenderedStyles, styleGuide])
+  }, [
+    preRenderedHTMLNodes,
+    preRenderedStyles,
+    styleGuide,
+    projectPageFolderStructure,
+    collections,
+  ])
 
   useEffect(() => {
     dispatch(setSaveButtonStateText('Saved'))
@@ -54,8 +82,11 @@ export default function SaveButton() {
       >
         Save Offline
       </button> */}
-      <button className="saveButton" onClick={handleOnClick}>
-        {saveButtonStateText}
+      <button
+        className={'saveButton save ' + (firebaseError ? ' error-button' : '')}
+        onClick={handleOnClick}
+      >
+        {firebaseError ? 'Error: Not saved' : saveButtonStateText}
       </button>
     </>
   )

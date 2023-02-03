@@ -63,6 +63,26 @@ export function loadProjectPreRenderedNodesAndStyles(projectId) {
   }, [])
 }
 
+export async function loadProjectFromBackup(backupId) {
+  const dispatch = useDispatch()
+  const app = initializeApp(firebaseConfig)
+  const db = getFirestore(app)
+  let backupData = await getDoc(doc(db, 'backups', backupId))
+  backupData = backupData.data().data
+  dispatch(setPages(backupData.pages))
+  dispatch(setCollections(backupData.collections))
+  dispatch(setStyles(backupData.preRenderedStyles))
+  dispatch(setSymbols(backupData.symbols))
+  dispatch(setBlocks(backupData.blocks))
+  dispatch(setSwatches(backupData.swatches))
+  dispatch(setLayouts(backupData.sections))
+  dispatch(setPageFolders(backupData.projectPageFolders))
+  dispatch(setPagesNestedStructure(backupData.projectPageFolderStructure))
+  // dispatch(setProjectSettingsData(backupData.projectSettingsData))
+  // dispatch(setFavicon(backupData.favicon))
+  dispatch(setStyleGuide(backupData.styleGuide))
+}
+
 export async function loadProjectFromFirebasePreRenderedNodesAndStyles(
   projectSlug
 ) {

@@ -18,7 +18,7 @@ const initialState = {
   offlineMode: false,
   offlineProjectName: 'projekt1',
 
-  projectMode: 'developer', // developer or creator
+  projectMode: 'creator', // developer or creator
   nodesEditMode: 'page', // page, layout, cmsTemplate, block
   scrollCount: 0,
   projectLayouts: [],
@@ -30,7 +30,7 @@ const initialState = {
   activeUndoIndex: 1,
   undoActionActive: false,
   activeTab: '',
-  activeRightSidebarTab: 'Style',
+  activeRightSidebarTab: '',
 
   projectPages: [],
   projectPageFolders: [],
@@ -75,7 +75,8 @@ const initialState = {
   activeStyleIndex: 0,
   stylesInActiveNode: [],
   projectFirebaseId: '',
-  saveButtonStateText: 'Publish',
+  firebaseError: false,
+  saveButtonStateText: 'Save',
   copiedNodes: {},
   draggedNavigatorNodes: {},
   draggedOverNodeId: '',
@@ -87,6 +88,7 @@ const initialState = {
   activeNodeParentsPath: [],
   projectUploadedFonts: [
     { name: 'Plus Jakarta Display', weights: ['300', '500', '700'] },
+    { name: 'Plus Jakarta Sans', weights: ['500', '700', '800'] },
     { name: 'Inter', weights: ['300', '500', '700'] },
     { name: 'system-ui', weights: ['300', '400', '500', '600', '700'] },
     { name: 'General Sans' },
@@ -117,6 +119,8 @@ const initialState = {
   isAltPressed: false,
   isShiftPressed: false,
   isKeyAPressed: false,
+
+  isBackupOn: null,
 
   store: [
     {
@@ -243,12 +247,30 @@ function findActiveNode(nodes, id) {
 }
 
 function updateGlobalCSS(state) {
-  state.postRenderedStyles = JSONtoCSS(
-    [...state.preRenderedStyles],
-    state.activeProjectResolution,
-    state.styleState,
-    state.projectSwatches
-  )
+  state.postRenderedStyles =
+    `.heading i {
+    font-style: inherit;
+    position: relative;
+    z-index: 0;
+  }
+    .heading i::before {
+        content: '';
+        position: absolute;
+        left: 0%;
+        bottom: 0.07ch;
+        display: inline-block;
+        height: 0.4ch;
+        width: 100%;
+        border-radius: 0.25rem;
+        background-color: #FFF500;
+        z-index: -1;
+    }` +
+    JSONtoCSS(
+      [...state.preRenderedStyles],
+      state.activeProjectResolution,
+      state.styleState,
+      state.projectSwatches
+    )
 }
 
 function findActiveNodeSiblingArrayAndIndex(nodes, id) {
@@ -450,6 +472,8 @@ export const projectSlice = createSlice({
         .indexOf(collectionId)
 
       state.collections.splice(collectionIndex, 1)
+
+      state.activeSettingsCollectionId = ''
     },
 
     setActiveCollection: (state, action) => {
@@ -902,6 +926,7 @@ export const projectSlice = createSlice({
 
     setPages: (state, action) => {
       state.projectPages = action.payload
+      // console.log('Pages', state.projectPages)
       state.preRenderedHTMLNodes =
         state.projectPages[state.activePageIndex].preRenderedHTMLNodes
       // add setActivePageIndex here
@@ -914,6 +939,7 @@ export const projectSlice = createSlice({
 
     setPagesNestedStructure: (state, action) => {
       state.projectPageFolderStructure = action.payload
+      // console.log('Page structure', state.projectPageFolderStructure)
     },
 
     addPage: (state, action) => {
@@ -941,6 +967,52 @@ export const projectSlice = createSlice({
             class: [{ id: bodyStyleId, name: bodyStyleName }],
           },
         ],
+      })
+      state.projectPageFolderStructure.push({
+        name: newPageName,
+        slug: newPageSlug,
+        id: newPageId,
+      })
+      //navigate to the new page
+      state.activePageId = newPageId
+      state.activePageIndex = state.projectPages
+        .map((x) => {
+          return x.id
+        })
+        .indexOf(state.activePageId)
+
+      updateNodesBasedOnList(state)
+      state.activeNodeId = ''
+    },
+
+    addPageFromStarter: (state, action) => {
+      const bodyStyleId = state.preRenderedStyles.find(
+        ({ name }) => name === 'body'
+      ).id
+      const bodyStyleName = 'body'
+
+      const starterNodes = state.projectPages.find(
+        (page) => page.isStarter === true
+      ).preRenderedHTMLNodes || [
+        {
+          id: uuidv4(),
+          type: 'body',
+          children: [],
+          class: [{ id: bodyStyleId, name: bodyStyleName }],
+        },
+      ]
+
+      updateNodesLists(state)
+      state.nodesEditMode = 'page'
+      // create new page
+      let newPageName = action.payload
+      let newPageSlug = newPageName.toLowerCase().replaceAll(' ', '-')
+      let newPageId = uuidv4()
+      state.projectPages.push({
+        name: newPageName,
+        slug: newPageSlug,
+        id: newPageId,
+        preRenderedHTMLNodes: starterNodes,
       })
       state.projectPageFolderStructure.push({
         name: newPageName,
@@ -994,6 +1066,8 @@ export const projectSlice = createSlice({
         state.preRenderedHTMLNodes =
           state.projectPages[state.activePageIndex].preRenderedHTMLNodes
       }
+
+      // console.log(current(state.projectPages))
     },
 
     setActivePage: (state, action) => {
@@ -1252,11 +1326,13 @@ export const projectSlice = createSlice({
       let styleValue = action.payload[1]
       let styleResolution = state.activeProjectResolutionStylesListName
 
-      document.querySelector('.renderedNode.active').style[styleProperty] = ''
-
       const isPropertyInline = state.objectHierarchyStyles.findLast(
         ({ style }) => style === styleProperty
       )?.isInline
+
+      if (!isPropertyInline) {
+        document.querySelector('.renderedNode.active').style[styleProperty] = ''
+      }
 
       const isActiveStyleMain =
         state.stylesInActiveNode?.[0]?.id === state.activeStyleId
@@ -1695,6 +1771,7 @@ export const projectSlice = createSlice({
 
             border_radius: computedStyle?.['border-radius'],
             border_width: computedStyle?.['border-width'],
+            border_style: computedStyle?.['border-style'],
 
             text_align: computedStyle?.['text-align'],
 
@@ -2158,6 +2235,9 @@ export const projectSlice = createSlice({
         state.preRenderedHTMLNodes,
         state.activeNodeId
       )
+      // if (state.activeNodeObject !== undefined) {
+      //   console.log(current(state.activeNodeObject))
+      // }
     },
 
     toggleHtmlNodeExpandedState: (state, action) => {
@@ -3234,35 +3314,56 @@ export const projectSlice = createSlice({
     },
 
     saveProjectToFirebaseOffline: (state) => {
-      async function saveProjectToFirebasePreRenderedNodesAndStyles() {
-        const app = initializeApp(firebaseConfig)
-        const db = getFirestore(app)
-        await updateDoc(
-          doc(db, 'projects', '75629c26-4f1b-4852-ae41-91ef3f7e905d'),
-          {
-            pages: state.projectPages,
-            projectPageFolders: state.projectPageFolders,
-            projectPageFolderStructure: state.projectPageFolderStructure,
-            collections: state.collections,
-            preRenderedStyles: state.preRenderedStyles,
-            symbols: state.projectSymbols,
-            swatches: state.projectSwatches,
-            sections: state.projectLayouts,
-            blocks: state.blocks,
-            styleGuide: state.styleGuide,
-          }
-        )
-      }
+      let slug = state.offlineProjectName
       updateNodesLists(state)
-      console.log('Saved')
-      saveProjectToFirebasePreRenderedNodesAndStyles()
+      localStorage.setItem(slug + 'pages', JSON.stringify(state.projectPages))
+      localStorage.setItem(
+        slug + 'projectPageFolders',
+        JSON.stringify(state.projectPageFolders)
+      )
+      localStorage.setItem(
+        slug + 'projectPageFolderStructure',
+        JSON.stringify(state.projectPageFolderStructure)
+      )
+      localStorage.setItem(
+        slug + 'collections',
+        JSON.stringify(state.collections)
+      )
+      localStorage.setItem(
+        slug + 'preRenderedStyles',
+        JSON.stringify(state.preRenderedStyles)
+      )
+      localStorage.setItem(
+        slug + 'symbols',
+        JSON.stringify(state.projectSymbols)
+      )
+      localStorage.setItem(
+        slug + 'swatches',
+        JSON.stringify(state.projectSwatches)
+      )
+      localStorage.setItem(
+        slug + 'sections',
+        JSON.stringify(state.projectLayouts)
+      )
+      localStorage.setItem(slug + 'blocks', JSON.stringify(state.blocks))
+      localStorage.setItem(
+        slug + 'styleGuide',
+        JSON.stringify(state.styleGuide)
+      )
+    },
+
+    setUpdateNodesLists: (state) => {
+      updateNodesLists(state)
     },
 
     saveProjectToFirebase: (state) => {
-      if (!state.offlineMode) {
-        async function saveProjectToFirebasePreRenderedNodesAndStyles() {
-          const app = initializeApp(firebaseConfig)
-          const db = getFirestore(app)
+      let isSavingSuccesful = false
+
+      async function saveProjectToFirebasePreRenderedNodesAndStyles() {
+        const app = initializeApp(firebaseConfig)
+        const db = getFirestore(app)
+
+        try {
           await updateDoc(doc(db, 'projects', state.projectFirebaseId), {
             pages: state.projectPages,
             projectPageFolders: state.projectPageFolders,
@@ -3275,46 +3376,16 @@ export const projectSlice = createSlice({
             blocks: state.blocks,
             styleGuide: state.styleGuide,
           })
+          document.querySelector('.saveButton.save').innerHTML = 'Saved'
+        } catch (error) {
+          console.log(error)
+          document.querySelector('.error-wrap').classList.add('active')
         }
+      }
+
+      if (state.isBackupOn === null) {
         updateNodesLists(state)
         saveProjectToFirebasePreRenderedNodesAndStyles()
-      } else {
-        let slug = state.offlineProjectName
-        updateNodesLists(state)
-        localStorage.setItem(slug + 'pages', JSON.stringify(state.projectPages))
-        localStorage.setItem(
-          slug + 'projectPageFolders',
-          JSON.stringify(state.projectPageFolders)
-        )
-        localStorage.setItem(
-          slug + 'projectPageFolderStructure',
-          JSON.stringify(state.projectPageFolderStructure)
-        )
-        localStorage.setItem(
-          slug + 'collections',
-          JSON.stringify(state.collections)
-        )
-        localStorage.setItem(
-          slug + 'preRenderedStyles',
-          JSON.stringify(state.preRenderedStyles)
-        )
-        localStorage.setItem(
-          slug + 'symbols',
-          JSON.stringify(state.projectSymbols)
-        )
-        localStorage.setItem(
-          slug + 'swatches',
-          JSON.stringify(state.projectSwatches)
-        )
-        localStorage.setItem(
-          slug + 'sections',
-          JSON.stringify(state.projectLayouts)
-        )
-        localStorage.setItem(slug + 'blocks', JSON.stringify(state.blocks))
-        localStorage.setItem(
-          slug + 'styleGuide',
-          JSON.stringify(state.styleGuide)
-        )
       }
     },
 
@@ -3358,6 +3429,10 @@ export const projectSlice = createSlice({
 
     setActiveProjectTabOn: (state, action) => {
       state.activeTab = action.payload
+    },
+
+    setActiveRightSidebarTabTrue: (state, action) => {
+      state.activeRightSidebarTab = action.payload
     },
 
     setActiveRightSidebarTab: (state, action) => {
@@ -3539,6 +3614,10 @@ export const projectSlice = createSlice({
     setIsKeyAPressed: (state, action) => {
       state.isKeyAPressed = action.payload
     },
+
+    setIsBackupOn: (state, action) => {
+      state.isBackupOn = action.payload
+    },
   },
 })
 
@@ -3586,6 +3665,7 @@ export const {
   setPageFolders,
   setPagesNestedStructure,
   addPage,
+  addPageFromStarter,
   editPage,
   deletePage,
   setActivePage,
@@ -3660,6 +3740,7 @@ export const {
   removeActiveHtmlNodeStyle,
   deleteActiveHtmlNodeInlineStyleProperty,
   addSpanToText,
+  setUpdateNodesLists,
 
   /* Layouts */
   setLayouts,
@@ -3721,6 +3802,7 @@ export const {
   setProjectPopUp,
   setProjectMode,
   setSaveButtonStateText,
+  setActiveRightSidebarTabTrue,
   setActiveRightSidebarTab,
   setActiveProjectResolution,
   updateResolutionPathName,
@@ -3730,6 +3812,7 @@ export const {
   setIsAltPressed,
   setIsKeyAPressed,
   setIsShiftPressed,
+  setIsBackupOn,
 
   /* Style Guide */
   setStyleGuide,

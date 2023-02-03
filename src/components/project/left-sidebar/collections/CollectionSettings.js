@@ -115,7 +115,7 @@ export default function CollectionSettings() {
         </div>
       </div>
 
-      <DeleteCollection name={collection?.name} />
+      <DeleteCollection name={collection?.name} id={collection?.id} />
     </div>
   )
 }

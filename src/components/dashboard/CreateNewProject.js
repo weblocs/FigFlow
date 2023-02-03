@@ -51,6 +51,7 @@ export default function CreateNewProject(props) {
     sections: [],
     blocks: [],
     images: [],
+    styleGuide: [],
     preRenderedStyles: [
       { name: 'body', id: BODY_ID, childrens: [], styles: {} },
       {

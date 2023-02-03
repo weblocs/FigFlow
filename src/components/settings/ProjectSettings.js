@@ -18,6 +18,7 @@ import {
 } from '../../features/project'
 import ProjectSettingsDelete from './ProjectSettingsDelete'
 import FaviconUploader from './FaviconUploader'
+import SelectPageNavigation from './SelectPageNavigation'
 
 export default function ProjectSettings() {
   const projectSettingsData = useSelector(
@@ -36,6 +37,7 @@ export default function ProjectSettings() {
 
   const inputNameRef = useRef()
   const inputSubdomainRef = useRef()
+  const inputLangRef = useRef()
 
   const [isSubdomainValid, setIsSubdomainValidate] = useState(true)
   const [validationMessage, setValidationMessage] = useState(true)
@@ -49,6 +51,7 @@ export default function ProjectSettings() {
       await updateDoc(projectRef, {
         projectName: inputNameRef.current.value,
         projectId: inputSubdomainRef.current.value,
+        projectLang: inputLangRef.current.value,
       })
       window.location.href = `/design/${inputSubdomainRef.current.value}`
     }
@@ -141,9 +144,19 @@ export default function ProjectSettings() {
 
           <div>{validationMessage}</div>
 
+          <label className="project-settings_label">Lang</label>
+          <input
+            className="project-settings_input"
+            ref={inputLangRef}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+
           <button>Save</button>
 
           {isOfflineModeOn ? null : <FaviconUploader />}
+
+          <SelectPageNavigation />
         </div>
       </form>
     </div>

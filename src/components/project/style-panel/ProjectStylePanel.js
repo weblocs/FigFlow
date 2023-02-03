@@ -15,6 +15,7 @@ import BorderStylePanel from './border/BorderStylePanel'
 import EffectsStylePanel from './EffectsStylePanel'
 import PositionStylePanel from './PositionStylePanel'
 import OverflowStylePanel from './OverflowStylePanel'
+import ShadowStyleEditor from './ShadowStyleEditor'
 
 export default function ProjectStylePanel() {
   const projectMode = useSelector((state) => state.project.projectMode)
@@ -48,7 +49,7 @@ export default function ProjectStylePanel() {
       <StylePanelTitle title="Typography" />
       <TypographyStylePanel />
 
-      <StylePanelTitle title="Size" />
+      <StylePanelTitle title="Position" />
       <PositionStylePanel />
 
       <StylePanelTitle title="Background" />
@@ -59,6 +60,9 @@ export default function ProjectStylePanel() {
 
       <StylePanelTitle title="Effects" />
       <EffectsStylePanel />
+
+      <StylePanelTitle title="Shadow" />
+      <ShadowStyleEditor />
     </div>
   )
 }

@@ -13,6 +13,9 @@ export default function AddBlockButton({ addRichSetting }) {
   const isNodeTypeSection = useSelector(
     (state) => state.project.activeNodeObject?.type === 'sec'
   )
+  const isNodeTypeBody = useSelector(
+    (state) => state.project.activeNodeObject?.type === 'body'
+  )
   const blocks = useSelector((state) => state.project.blocks)
   const blockFolders = useSelector(
     (state) => state.project.activeNodeObject?.blockFolders
@@ -56,7 +59,7 @@ export default function AddBlockButton({ addRichSetting }) {
     { overrideSystem: false, ignoreInputFields: true, repeatOnHold: false }
   )
 
-  if (!isNodeTypeSection) {
+  if (!isNodeTypeSection && !isNodeTypeBody) {
     return (
       <div>
         <ModalBackgroundCloser

@@ -34,6 +34,7 @@ function RenderedNode(props) {
   const nodesEditMode = useSelector((state) => state.project.nodesEditMode)
   const editedSymbolId = useSelector((state) => state.project.editedSymbolId)
   const projectSwatches = useSelector((state) => state.project.projectSwatches)
+  const projectMode = useSelector((state) => state.project.projectMode)
   const activeCollectionTemplateId = useSelector(
     (state) => state.project.activeCollectionTemplateId
   )
@@ -98,6 +99,10 @@ function RenderedNode(props) {
     const isNodeBody = props?.class[0]?.name === 'body'
     if (!isNodeBody) {
       e.stopPropagation()
+      // if (projectMode === 'creator') {
+      //   setEditable(true)
+      //   dispatch(setKeyboardNavigationOn(false))
+      // }
       dispatch(setIsNodeSelectedFromNavigator(false))
       dispatch(setActiveClickedCmsItemIndex(props.itemIndex))
       props.onClick([elementId, props?.class[0]?.name])

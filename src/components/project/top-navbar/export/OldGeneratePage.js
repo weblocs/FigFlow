@@ -32,11 +32,13 @@ function generateCollectionPage(collection, item) {
   }
 
   let genratedHTML = `
+          <!DOCTYPE html>
           <html>
           <head>
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
           <link href="../style.css" rel="stylesheet">
           <meta charset="utf-8">
+          <meta content="width=device-width, initial-scale=1" name="viewport">
           <title>${metaTitle}</title>
           <meta name="description" content="${metaDescription}">
           </head>
@@ -138,12 +140,14 @@ function generatePage(nodes, depth, metaTitle, metaDescription) {
   }
   depth === 1 && (styleURLDots = './')
   let postRenderedHTML = `
+      <!DOCTYPE html>
       <html>
       <head>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
       <link rel="icon" href="">
       <link href="${styleURLDots}style.css" rel="stylesheet">
       <meta charset="utf-8">
+      <meta content="width=device-width, initial-scale=1" name="viewport">
       <title>${metaTitle}</title>
       <meta name="description" content="${metaDescription}">
       </head>

@@ -46,7 +46,7 @@ export default function StyleGuideInput({ styleValue, dispatchEditStyle }) {
   const dispatch = useDispatch()
 
   return (
-    <div className="style-guide-input-wrap">
+    <div className="style-guide-input-wrap" draggable="false">
       <div
         onClick={() => setIsOpen(true)}
         className="style-guide-property-value-wrap"

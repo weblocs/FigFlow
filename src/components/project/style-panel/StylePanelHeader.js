@@ -10,6 +10,7 @@ import {
   setActiveStyleOptionIndex,
   setActiveHtmlNodeParentsPath,
   assignAllInlineStylesToClass,
+  setActiveRightSidebarTabTrue,
 } from '../../../features/project'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from './SubStyleSticker/SubStyleSticker'
@@ -75,8 +76,12 @@ export default function StylePanelHeader() {
   useEffect(() => {
     if (isAddStyleInputOpen || isAddStyleOptionInputOpen) {
       if (isAddStyleInputOpen) {
-        inputRef.current.focus()
-        inputRef.current.value = ''
+        setActiveRightSidebarTabTrue('style')
+        setIsOptionsListOpen(true)
+        if (inputRef.current !== null && inputRef.current !== undefined) {
+          inputRef.current.focus()
+          inputRef.current.value = ''
+        }
       }
       if (isAddStyleOptionInputOpen) {
         styleOptionInputRef.current.focus()

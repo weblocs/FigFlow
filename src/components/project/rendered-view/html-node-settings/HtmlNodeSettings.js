@@ -18,6 +18,9 @@ import InlineStyleButton from './InlineStyleButton'
 
 export default function HtmlNodeSettings() {
   const activeNodeId = useSelector((state) => state.project.activeNodeId)
+  const isActiveNodeSection = useSelector(
+    (state) => state.project.activeNodeObject?.type === 'sec'
+  )
   const activeStyleName = useSelector(
     (state) =>
       state.project.stylesInActiveNode?.[0]?.name
@@ -101,32 +104,41 @@ export default function HtmlNodeSettings() {
         <div className="rich-element-settings_flex">
           {!isNodeSymbol && (
             <>
-              <div className="rich-element-settings_button active">
+              <div
+                className={
+                  'rich-element-settings_button active' +
+                  (!isActiveNodeSection ? ' with-arrow' : '')
+                }
+              >
                 <div className="rich-element-settings_button-text">
                   {/* <span>Name</span> */}
                   {activeStyleName}
                 </div>
               </div>
-
+              {!isActiveNodeSection && <GoToParentNode />}
               <NodeStylesList />
+              <StyleButton />
 
-              <GoToParentNode />
               <AltImageSettings />
               <ChangeImageButton />
               <HeadingTypeButton />
-              {/* <StyleButton /> */}
+
               <LinkSettings />
               <AddBlockButton addRichSetting={true} />
-              <div
-                className="rich-element-settings_button button-centered active"
-                onClick={() => setOpenButtonList(!openButtonList)}
-              >
-                <img src={MoreImg} style={{ width: '11px' }} />
-              </div>
+
+              {!isActiveNodeSection && (
+                <div
+                  className="rich-element-settings_button button-centered active"
+                  onClick={() => setOpenButtonList(!openButtonList)}
+                >
+                  <img src={MoreImg} style={{ width: '11px' }} />
+                </div>
+              )}
 
               <div
                 className={
-                  'html-node_nove-list' + (openButtonList ? ' active' : '')
+                  'html-node_nove-list' +
+                  (openButtonList || isActiveNodeSection ? ' active' : '')
                 }
               >
                 <NodeMoveArrows isHtmlNodeMoveable={true} />

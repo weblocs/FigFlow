@@ -3,7 +3,7 @@ function isCmsField(node) {
 }
 
 export default function generateNodeText(node, collectionItem, item) {
-  console.log(node)
+  // console.log(node)
   if (!isCmsField(node)) {
     return node.title
   } else {

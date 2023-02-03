@@ -2,11 +2,19 @@ import { useSelector, useDispatch } from 'react-redux'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import generateAnyPage from './export/GenerateAnyPage'
+import { useState } from 'react'
+import HowToDeploy from './HowToDeploy'
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import JSZipUtils from './JsZipUtils'
+import { fullJSONtoCSS } from '../../../utils/nodes-editing'
+import Resizer from 'react-image-file-resizer'
+import generatePageCss from './export/GeneratePageCss'
 
 export default function ExportButton() {
   const preRenderedStyles = useSelector(
     (state) => state.project.preRenderedStyles
   )
+  const projectSwatches = useSelector((state) => state.project.projectSwatches)
   const postRenderedStyles = useSelector(
     (state) => state.project.postRenderedStyles
   )
@@ -15,6 +23,12 @@ export default function ExportButton() {
   const projectPageFolderStructure = useSelector(
     (state) => state.project.projectPageFolderStructure
   )
+  const projectSlug = useSelector(
+    (state) => state.project.projectSettingsData.slug
+  )
+  const projectImages = useSelector((state) => state.projectImages.Images)
+
+  const [isOpen, setIsOpen] = useState(false)
 
   function handleOnClick() {
     var zip = new JSZip()
@@ -42,8 +56,19 @@ export default function ExportButton() {
             pageSlug = 'index'
             isFirstPage = false
           }
+
+          let path = `${parentToFolderLink}/${pageSlug}/`
+          if (pageSlug === 'index') {
+            path = `${parentToFolderLink}/`
+          }
+
           zip.file(
-            `${parentToFolderLink}${pageSlug}.html`,
+            `${path}/style.css`,
+            generatePageCss(preRenderedStyles, nodes, projectSwatches)
+          )
+
+          zip.file(
+            `${path}/index.html`,
             // generatePage(nodes, parents.length, metaTitle, metaDescription)
             generateAnyPage(
               preRenderedStyles,
@@ -54,7 +79,9 @@ export default function ExportButton() {
               parents.length,
               metaTitle,
               metaDescription,
-              collections
+              collections,
+              projectPages,
+              pageSlug
             )
           )
         } else {
@@ -73,7 +100,22 @@ export default function ExportButton() {
 
     zip.file(
       'project/style.css',
-      `body{margin:0;}img{display: block;}${postRenderedStyles}`
+      `*{-webkit-font-smoothing: antialiased;box-sizing: border-box;}body{margin:0;}img{display: block;width: 100%; height: auto;}
+      ${fullJSONtoCSS(preRenderedStyles, projectSwatches)}
+      @font-face {
+        font-family: 'Plus Jakarta Sans';
+        src: url('assets/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Plus Jakarta Sans';
+        src: url('assets/fonts/PlusJakartaSans-ExtraBold.woff2') format('woff2');
+        font-weight: 800;
+        font-style: normal;
+        font-display: swap;
+      }`
     )
 
     collections.forEach((collection) => {
@@ -90,11 +132,88 @@ export default function ExportButton() {
             null,
             null,
             null,
-            collections
+            collections,
+            projectPages,
+            item.slug
           )
         )
       })
     })
+
+    function urlToPromise(url) {
+      return new Promise(function (resolve, reject) {
+        JSZipUtils.getBinaryContent(url, function (err, data) {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(data)
+          }
+        })
+      })
+    }
+
+    projectImages.forEach((image) => {
+      const imageUrl =
+        // 'http://phpstack-913418-3170396.cloudwaysapps.com/uploads/image-1.jpeg'
+        'https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/' +
+        image.name +
+        '?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'
+
+      const file = urlToPromise(imageUrl)
+
+      // const resizedfFile = resizeFile(file)
+
+      // console.log(file)
+
+      // function resizeFile(file) {
+      //   return new Promise((resolve) => {
+      //     Resizer.imageFileResizer(
+      //       file,
+      //       300,
+      //       300,
+      //       'webp',
+      //       100,
+      //       0,
+      //       (uri) => {
+      //         resolve(uri)
+      //       },
+      //       'base64'
+      //     )
+      //   })
+      // }
+      let imageSrc = image.name
+      const types = ['webp', 'avif', 'jpg', 'jpeg', 'png', 'gif', 'svg']
+      types.forEach((type) => {
+        console.log('1')
+        if (imageSrc.slice(-4) === '-' + type) {
+          console.log('2')
+          imageSrc = imageSrc.slice(0, -4)
+          imageSrc = imageSrc.concat('.' + type)
+        }
+      })
+
+      zip.file(`project/assets/images/${imageSrc}`, file, {
+        binary: true,
+      })
+      // zip.file(`project/assets/images/${image.name}`, resizedfFile, {
+      //   binary: true,
+      // })
+    })
+
+    getFontFile(
+      'http://phpstack-913418-3170396.cloudwaysapps.com/uploads/PlusJakartaSans-Regular.woff2',
+      'PlusJakartaSans-Regular.woff2'
+    )
+    getFontFile(
+      'http://phpstack-913418-3170396.cloudwaysapps.com/uploads/PlusJakartaSans-ExtraBold.woff2',
+      'PlusJakartaSans-ExtraBold.woff2'
+    )
+
+    function getFontFile(fontUrl, name) {
+      zip.file(`project/assets/fonts/${name}`, urlToPromise(fontUrl), {
+        binary: true,
+      })
+    }
 
     zip.generateAsync({ type: 'blob' }).then(function (content) {
       saveAs(content, 'project.zip')
@@ -102,8 +221,25 @@ export default function ExportButton() {
   }
 
   return (
-    <button className="saveButton light" onClick={handleOnClick}>
-      Export
-    </button>
+    <div className="is-relative">
+      <button className="saveButton light" onClick={() => setIsOpen(!isOpen)}>
+        Export
+      </button>
+      {isOpen && (
+        <div className="export-modal">
+          <div className="export-modal_link" onClick={handleOnClick}>
+            1. Download Code
+          </div>
+          <a
+            className="export-modal_link"
+            target="_blank"
+            href={`https://app.netlify.com/sites/${projectSlug}/deploys`}
+          >
+            2. Open Netlify Deployment
+          </a>
+          <HowToDeploy />
+        </div>
+      )}
+    </div>
   )
 }

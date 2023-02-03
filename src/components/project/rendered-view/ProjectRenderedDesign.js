@@ -12,6 +12,9 @@ export default function ProjectRenderedDesign() {
   const preRenderedHTMLNodes = useSelector(
     (state) => state.project.preRenderedHTMLNodes
   )
+  const isProjectModeDev = useSelector(
+    (state) => state.project.projectMode === 'developer'
+  )
   const postRenderedStyles = useSelector(
     (state) => state.project.postRenderedStyles
   )
@@ -75,8 +78,7 @@ export default function ProjectRenderedDesign() {
           })}
         </div>
       </div>
-
-      <ProjectParentsPathBar />
+      {isProjectModeDev && <ProjectParentsPathBar />}
     </div>
   )
 }

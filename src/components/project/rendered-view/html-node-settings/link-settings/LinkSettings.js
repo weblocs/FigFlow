@@ -16,7 +16,11 @@ function LinkSettings() {
   const activeNodeLink = useSelector((state) => {
     return state.project.activeNodeObject?.link
   })
-  const projectPages = useSelector((state) => state.project.projectPages)
+  const projectPages = useSelector((state) =>
+    state.project.projectPages
+      .filter((page) => page.is404 !== true)
+      .filter((page) => page.isStarter !== true)
+  )
   const dispatch = useDispatch()
 
   const [isOpen, setIsOpen] = useState(false)

@@ -88,13 +88,12 @@ export default function SizeStyleInput(props) {
   }, [isInputActive])
 
   function handleDragChange(value) {
+    let unit = editedStyleUnit
+    if (unit === '' || unit === '-') {
+      unit = 'px'
+    }
     if (value !== editedStyleValue) {
-      dispatch(
-        editStylePropertyDrag([
-          props.style,
-          parseFloat(value) + editedStyleUnit,
-        ])
-      )
+      dispatch(editStylePropertyDrag([props.style, parseFloat(value) + unit]))
     }
   }
 
@@ -104,10 +103,11 @@ export default function SizeStyleInput(props) {
 
   function handleDragEnd(value) {
     setIsDragged(false)
-
-    dispatch(
-      editStyleProperty([props.style, parseFloat(value) + editedStyleUnit])
-    )
+    let unit = editedStyleUnit
+    if (unit === '' || unit === '-') {
+      unit = 'px'
+    }
+    dispatch(editStyleProperty([props.style, parseFloat(value) + unit]))
   }
 
   return (

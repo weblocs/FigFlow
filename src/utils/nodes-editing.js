@@ -1,3 +1,5 @@
+import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
 import { useDispatch, useSelector } from 'react-redux'
 import { setKeyboardNavigationOn } from '../features/project'
 
@@ -156,25 +158,62 @@ export function getIdOfPreRenderedStyleByName(
   return res
 }
 
-export function JSONtoCSS(_classes, activeResolution, activeState, swatches) {
+export function fullJSONtoCSS(_classes, _swatches) {
+  let fullCSS = ''
+  fullCSS += JSONtoCSS(_classes, '1', 'default', _swatches, true)
+  fullCSS += getResolutionCssMedia('2') + '{'
+  fullCSS += JSONtoCSS(_classes, '2', 'default', _swatches, true)
+  fullCSS += '}'
+  fullCSS += getResolutionCssMedia('3') + '{'
+  fullCSS += JSONtoCSS(_classes, '3', 'default', _swatches, true)
+  fullCSS += '}'
+  fullCSS += getResolutionCssMedia('4') + '{'
+  fullCSS += JSONtoCSS(_classes, '4', 'default', _swatches, true)
+  fullCSS += '}'
+  fullCSS += getResolutionCssMedia('5') + '{'
+  fullCSS += JSONtoCSS(_classes, '5', 'default', _swatches, true)
+  fullCSS += '}'
+  fullCSS += getResolutionCssMedia('6') + '{'
+  fullCSS += JSONtoCSS(_classes, '6', 'default', _swatches, true)
+  fullCSS += '}'
+  fullCSS += getResolutionCssMedia('7') + '{'
+  fullCSS += JSONtoCSS(_classes, '7', 'default', _swatches, true)
+  fullCSS += '}'
+  return fullCSS
+}
+
+export function JSONtoCSS(
+  _classes,
+  activeResolution,
+  activeState,
+  swatches,
+  isSingle = false
+) {
   let tempClasses = []
   let tempName = ''
   let tempResolution = ''
   let styleState = 'default'
 
-  styleState = 'default'
-  for (let j = 1; j <= 7; j++) {
-    tempResolution = j.toString()
-    if (isStyleContained(activeResolution, tempResolution)) {
-      _classes.forEach(createTempClassesResolution)
+  if (!isSingle) {
+    styleState = 'default'
+    for (let j = 1; j <= 7; j++) {
+      tempResolution = j.toString()
+      if (isStyleContained(activeResolution, tempResolution)) {
+        _classes.forEach(createTempClassesResolution)
+      }
     }
-  }
-
-  styleState = 'hover'
-  for (let j = 1; j <= 7; j++) {
-    tempResolution = j.toString()
-    isStyleContained(activeResolution, tempResolution) &&
-      _classes.forEach(createTempClassesResolution)
+    styleState = 'hover'
+    for (let j = 1; j <= 7; j++) {
+      tempResolution = j.toString()
+      isStyleContained(activeResolution, tempResolution) &&
+        _classes.forEach(createTempClassesResolution)
+    }
+  } else {
+    styleState = 'default'
+    tempResolution = activeResolution
+    _classes.forEach(createTempClassesResolution)
+    styleState = 'hover'
+    _classes.forEach(createTempClassesResolution)
   }
 
   function createTempClassesResolution(_class, i) {
@@ -183,11 +222,15 @@ export function JSONtoCSS(_classes, activeResolution, activeState, swatches) {
     }
     tempName = _classes[i].name
     if (styleState === 'hover') {
-      tempName =
-        tempName +
-        ':hover, .d2g3-is-hover .' +
-        tempName +
-        '.renderedNode.active'
+      if (!isSingle) {
+        tempName =
+          tempName +
+          ':hover, .d2g3-is-hover .' +
+          tempName +
+          '.renderedNode.active'
+      } else {
+        tempName = tempName + ':hover'
+      }
     }
     let resolutionPathName = getResolutionPathName(tempResolution, styleState)
     _classes[i][resolutionPathName] &&
@@ -220,8 +263,12 @@ export function JSONtoCSS(_classes, activeResolution, activeState, swatches) {
     })
   }
 
-  let tempStyle =
-    '* {-webkit-font-smoothing: antialiased;box-sizing: border-box;}\n'
+  let tempStyle = ''
+  if (!isSingle) {
+    tempStyle =
+      '*{-webkit-font-smoothing: antialiased;box-sizing: border-box;}\n'
+  }
+
   tempClasses.forEach((item) => {
     tempStyle += '.' + item.name + '{'
 
@@ -234,7 +281,7 @@ export function JSONtoCSS(_classes, activeResolution, activeState, swatches) {
       }
       tempStyle += key + ': ' + value + ';'
     }
-    tempStyle += '}\n'
+    tempStyle += '}'
   })
 
   return tempStyle
@@ -290,4 +337,23 @@ export function findActiveNode(nodes, id) {
   }
   findNode(nodes)
   return response
+}
+
+export function firebaseSaveProject(state, app, db) {
+  try {
+    updateDoc(doc(db, 'projects', state.projectFirebaseId), {
+      pages: state.projectPages,
+      projectPageFolders: state.projectPageFolders,
+      projectPageFolderStructure: state.projectPageFolderStructure,
+      collections: state.collections,
+      preRenderedStyles: state.preRenderedStyles,
+      symbols: state.projectSymbols,
+      swatches: state.projectSwatches,
+      sections: state.projectLayouts,
+      blocks: state.blocks,
+      styleGuide: state.styleGuide,
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }

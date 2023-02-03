@@ -96,19 +96,22 @@ export default function StoreUseEffectUpdates() {
   }, [undoActionActive])
 
   useEffect(() => {
-    document
-      .querySelector(`.navigation-node.hovered`)
-      ?.classList.remove('hovered')
-    document
-      .querySelector(`[nodeid='${hoveredNodeId}']`)
-      ?.classList.add('hovered')
-    document.querySelector(`.renderedNode.hovered`)?.classList.remove('hovered')
-
-    let activeHtmlNode = `[el_id='${hoveredNodeId}']`
-    if (activeHoveredCmsItemIndex !== undefined) {
-      activeHtmlNode = `[el_id='${hoveredNodeId}'][cms_item_index='${activeHoveredCmsItemIndex}']`
-    }
     if (!isAltPressed) {
+      document
+        .querySelector(`.navigation-node.hovered`)
+        ?.classList.remove('hovered')
+      document
+        .querySelector(`[nodeid='${hoveredNodeId}']`)
+        ?.classList.add('hovered')
+      document
+        .querySelector(`.renderedNode.hovered`)
+        ?.classList.remove('hovered')
+
+      let activeHtmlNode = `[el_id='${hoveredNodeId}']`
+      if (activeHoveredCmsItemIndex !== undefined) {
+        activeHtmlNode = `[el_id='${hoveredNodeId}'][cms_item_index='${activeHoveredCmsItemIndex}']`
+      }
+
       document.querySelector(activeHtmlNode)?.classList.add('hovered')
     }
   }, [hoveredNodeId, activeHoveredCmsItemIndex])
@@ -167,7 +170,7 @@ export default function StoreUseEffectUpdates() {
   }, [preRenderedHTMLNodes, preRenderedStyles])
 
   useEffect(() => {
-    if (projectMode === 'developer' && activeTab === 'Navigator') {
+    if (activeTab === 'Navigator') {
       setTimeout(() => {
         const actualNodePosition = document
           .querySelector(`[nodeid="${activeNodeId}"]`)

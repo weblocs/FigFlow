@@ -1,73 +1,112 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {addImageToProjectImages} from "../../../../features/project-images"
-import {v4 as uuidv4} from "uuid"
-import { initializeApp } from "firebase/app";
-import { getFirestore, setDoc, doc, updateDoc } from "firebase/firestore";
-import { firebaseConfig } from "../../../../utils/firebase-config.js";
-import { editHtmlNode } from "../../../../features/project"
-import ImageItem from "./ImageItem";
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { addImageToProjectImages } from '../../../../features/project-images'
+import { v4 as uuidv4 } from 'uuid'
+import { initializeApp } from 'firebase/app'
+import { getFirestore, setDoc, doc, updateDoc } from 'firebase/firestore'
+import { firebaseConfig } from '../../../../utils/firebase-config.js'
+import { editHtmlNode } from '../../../../features/project'
+import ImageItem from './ImageItem'
+import axios from 'axios'
 
-const fileToDataUri = (file) => new Promise((resolve, reject) => {
-    const reader = new FileReader();
+const fileToDataUri = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
     reader.onload = (event) => {
       resolve(event.target.result)
-    };
-    reader.readAsDataURL(file);
-})
+    }
+    reader.readAsDataURL(file)
+  })
 
-export default function ProjectImagesPanel(){
-    const dispatch = useDispatch()
-    const activeTab = useSelector((state) => state.project.activeTab)
-    const projectFirebaseId = useSelector((state) => state.project.projectFirebaseId)
-    const activeNodeId = useSelector((state) => state.project.activeNodeId)
-    const projectImages = useSelector((state) => state.projectImages.Images)
+export default function ProjectImagesPanel() {
+  const dispatch = useDispatch()
+  const activeTab = useSelector((state) => state.project.activeTab)
+  const projectFirebaseId = useSelector(
+    (state) => state.project.projectFirebaseId
+  )
+  const activeNodeId = useSelector((state) => state.project.activeNodeId)
+  const projectImages = useSelector((state) => state.projectImages.Images)
 
-    const storage = getStorage();
+  const storage = getStorage()
 
-    
-
-    const imageUploading = (file) => {
-        if(!file) {
-        return;
-        }
-        fileToDataUri(file)
-        .then(dataUri => {
-            const tempStorageRef = ref(storage, projectFirebaseId+"-"+file.name);
-            uploadBytes(tempStorageRef, file).then((snapshot) => {
-            });
+  const imageUploadingFirebase = (file) => {
+    const fileName = projectFirebaseId + '-' + file.name.replaceAll('.', '-')
+    if (!file) {
+      return
+    }
+    fileToDataUri(file)
+      .then((dataUri) => {
+        const tempStorageRef = ref(storage, fileName)
+        uploadBytes(tempStorageRef, file).then((snapshot) => {})
+      })
+      .then(async () => {
+        const app = initializeApp(firebaseConfig)
+        const db = getFirestore(app)
+        await updateDoc(doc(db, 'projects', projectFirebaseId), {
+          images: [
+            ...projectImages,
+            {
+              name: fileName,
+              id: uuidv4(),
+            },
+          ],
         })
-        .then(async() => {
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-            await updateDoc(doc(db, "projects", projectFirebaseId), {
-                images: [...projectImages, {
-                    name: projectFirebaseId+"-"+file.name,
-                    id: uuidv4()
-                }],
-            });
-        })
-        .then(async() => {
-            dispatch(addImageToProjectImages(projectFirebaseId+"-"+file.name));
-            dispatch(editHtmlNode({id: activeNodeId, field: 'src', value: projectFirebaseId+"-"+file.name}))
-        })
+      })
+      .then(async () => {
+        dispatch(addImageToProjectImages(fileName))
+        dispatch(
+          editHtmlNode({
+            id: activeNodeId,
+            field: 'src',
+            value: fileName,
+          })
+        )
+      })
+  }
+
+  function imageUploading(fileToUpload) {
+    let formData = new FormData()
+    formData.append('fileToUpload', fileToUpload)
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      body: formData,
     }
 
-    return(
-        <div className={"collectionsPanel "+ ((activeTab === "Images") ? "active" : "" )}>
-            <div className="projectTabTitleBox">Images</div>
-            <div style={{overflow:"hidden"}}>
-            <label className="custom-file-upload panel-button">
-                <input type="file" onChange={(event) => imageUploading(event.target.files[0] || null)} />
-                Upload Photo 
-                </label>
-            </div>
-            <div className="libraryImageGrid">
-                {projectImages.map((image) => (
-                    <ImageItem key={image.id} image={image} />
-                ))} 
-            </div>  
-        </div>
-    )
+    fetch(
+      'http://phpstack-913418-3170396.cloudwaysapps.com/uploads/index.php',
+      requestOptions
+    ).then((res) => {
+      console.log(res)
+    })
+  }
+
+  return (
+    <div
+      className={'collectionsPanel ' + (activeTab === 'Images' ? 'active' : '')}
+    >
+      <div className="projectTabTitleBox">Images</div>
+
+      <div style={{ overflow: 'hidden' }}>
+        <label className="custom-file-upload panel-button">
+          <input
+            type="file"
+            name="fileToUpload"
+            id="fileToUpload"
+            onChange={(event) =>
+              imageUploadingFirebase(event.target.files[0] || null)
+            }
+          />
+          Upload Photo
+        </label>
+      </div>
+      <div className="libraryImageGrid">
+        {projectImages.map((image) => (
+          <ImageItem key={image.id} image={image} />
+        ))}
+      </div>
+    </div>
+  )
 }

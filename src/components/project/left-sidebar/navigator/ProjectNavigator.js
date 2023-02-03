@@ -1,27 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import NavigationNodeFolder from './NavigationNodeFolder'
-
-import {
-  deleteHtmlNode,
-  setActiveHtmlNode,
-  setHoveredHtmlNode,
-  setHtmlNodes,
-} from '../../../../features/project'
 import AddNodeButton from './AddNodeButton'
-import NavigationNodeSection from './NavigationNodeSection'
 
 export default function ProjectNavigator() {
   const preRenderedHTMLNodes = useSelector(
     (state) => state.project.preRenderedHTMLNodes
   )
   const activeTab = useSelector((state) => state.project.activeTab)
-
-  const dispatch = useDispatch()
-  const [items, setItems] = useState([])
-  useEffect(() => {
-    setItems(preRenderedHTMLNodes)
-  }, [preRenderedHTMLNodes])
 
   if (activeTab === 'Navigator') {
     return (
@@ -44,7 +29,11 @@ export default function ProjectNavigator() {
 
         <div
           id="nodes-navigator"
-          style={{ overflowY: 'scroll', height: 'calc(100vh - 193px)' }}
+          style={{
+            overflowX: 'hidden',
+            overflowY: 'scroll',
+            height: 'calc(100vh - 193px)',
+          }}
         >
           {preRenderedHTMLNodes.map((node) => (
             <NavigationNodeFolder
@@ -54,10 +43,6 @@ export default function ProjectNavigator() {
               key={node.id}
             />
           ))}
-
-          {/* {preRenderedHTMLNodes.map((node) => 
-                <NavigationNodeSection key={node.id} node={node} />
-            )} */}
         </div>
       </div>
     )

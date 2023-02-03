@@ -1,57 +1,75 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import addImage from "../../../../img/styling.svg";
+import addImage from '../../../../img/styling.svg'
 
 export default function StyleButton() {
-    const objectGlobalStyles = useSelector(
-        (state) => state.project.objectHierarchyStyles.filter(style => style.isInline === false)
+  //   const objectGlobalStyles = useSelector((state) =>
+  //     state.project.objectHierarchyStyles.filter(
+  //       (style) => style.isInline === false
+  //     )
+  //   )
+  const objectLocalStyles = useSelector((state) =>
+    state.project.objectHierarchyStyles.filter(
+      (style) => style.isInline === true
     )
-    const objectLocalStyles = useSelector(
-        (state) => state.project.objectHierarchyStyles.filter(style => style.isInline === true)
-    )
-    const dispatch = useDispatch()
+  )
+  const dispatch = useDispatch()
 
-    const [isListOpen, setIsListOpen] = useState(false);
+  const [isListOpen, setIsListOpen] = useState(false)
 
-    function handleClick() {
-        setIsListOpen(!isListOpen);
-    }
+  function handleClick() {
+    setIsListOpen(!isListOpen)
+  }
 
-    return (
-        <div style={{position: "relative"}}>
-            <div 
-            onClick={handleClick}
-            className="rich-element-settings_button button-centered active">
-                <img style={{width: "12px"}} src={addImage} />
-            </div>
-            <div className={"heading-element-settings_list" + ((isListOpen) ? " active" : "")}>
-                <div className='rich-element-settings_button-text hierarchy-item'>
-                    Global
-                </div>
-                {objectGlobalStyles.map((style,i) => (
-                    <div className='rich-element-settings_button-text hierarchy-item' key={i}>
-                        <span>{style.style}</span>
-                        {style.value}
-                        <div className='hierarchy-from-wrap'>
-                            <span>{style.origin}</span>
-                            <span>{style.option}</span>
-                        </div>
-                    </div>
-                ))}
-                <div className='rich-element-settings_button-text hierarchy-item'>
-                    Local
-                </div>
-                {objectLocalStyles.map((style,i) => (
-                    <div className='rich-element-settings_button-text hierarchy-item' key={i}>
-                        <span>{style.style}</span>
-                        {style.value}
-                        <div className='hierarchy-from-wrap'>
-                            <span>{style.origin}</span>
-                            <span>{style.option}</span>
-                        </div>
-                    </div>
-                ))}
-            </div>
+  if (objectLocalStyles.length === 0) return null
+
+  return (
+    <div
+      style={{ position: 'relative' }}
+      onMouseEnter={() => setIsListOpen(true)}
+      onMouseLeave={() => setIsListOpen(false)}
+    >
+      <div className="rich-element-settings_button button-centered active">
+        <img style={{ width: '12px' }} src={addImage} />
+      </div>
+      <div
+        className={
+          'heading-element-settings_list' + (isListOpen ? ' active' : '')
+        }
+      >
+        {/* <div className="rich-element-settings_button-text hierarchy-item">
+          Global
         </div>
-    )
+        {objectGlobalStyles.map((style, i) => (
+          <div
+            className="rich-element-settings_button-text hierarchy-item"
+            key={i}
+          >
+            <span>{style.style}</span>
+            {style.value}
+            <div className="hierarchy-from-wrap">
+              <span>{style.origin}</span>
+              <span>{style.option}</span>
+            </div>
+          </div>
+        ))} */}
+        <div className="rich-element-settings_button-text hierarchy-item">
+          Inline Styles
+        </div>
+        {objectLocalStyles.map((style, i) => (
+          <div
+            className="rich-element-settings_button-text hierarchy-item"
+            key={i}
+          >
+            <span>{style.style}</span>
+            {style.value}
+            {/* <div className="hierarchy-from-wrap">
+              <span>{style.origin}</span>
+              <span>{style.option}</span>
+            </div> */}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }

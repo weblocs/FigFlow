@@ -13,7 +13,10 @@ import ProjectSettingsPanel from './components/project/settings-panel/ProjectSet
 import ProjectSymbolsPanel from './components/project/left-sidebar/symbols/ProjectSymbolsPanel'
 import ProjectLayoutsPanel from './components/project/left-sidebar/layouts/ProjectLayoutsPanel'
 
-import { loadProjectFromFirebasePreRenderedNodesAndStyles } from './utils/save-load-project'
+import {
+  loadProjectFromBackup,
+  loadProjectFromFirebasePreRenderedNodesAndStyles,
+} from './utils/save-load-project'
 import loadShortcuts from './utils/shortcuts'
 import ProjectImagesPanel from './components/project/left-sidebar/images/ProjectImagesPanel'
 import { useDispatch, useSelector } from 'react-redux'
@@ -27,32 +30,49 @@ import ProjectSettings from './components/settings/ProjectSettings'
 import FindAnything from './components/project/find-anything/FindAnything'
 import CollectionSettings from './components/project/left-sidebar/collections/CollectionSettings'
 import StyleGuidePanel from './components/project/style-guide/StyleGuidePanel'
+import ProjectBackupsPanel from './components/project/left-sidebar/collections/ProjectBackupsPanel'
+import { useSearchParams } from 'react-router-dom'
+import BackupLoader from './components/project/backup/BackupLoader'
 
 export default function DevMode() {
   const offlineMode = useSelector((state) => state.project.offlineMode)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const isCreatorMode = useSelector(
+    (state) => state.project.projectMode === 'creator'
+  )
   const dispatch = useDispatch()
 
-  loadProjectFromFirebasePreRenderedNodesAndStyles()
+  if (searchParams.get('backup') === null) {
+    loadProjectFromFirebasePreRenderedNodesAndStyles()
+  } else {
+    loadProjectFromBackup(searchParams.get('backup'))
+  }
   loadShortcuts()
 
   return (
     <>
       <StoreUseEffectUpdates />
+      <BackupLoader />
 
       <div className="user-panel">
+        <div className="error-wrap">
+          Error: Project has not been saved succesfully. Refresh the browser.
+        </div>
         <ProjectSettings />
         <ProjectTopNavbar />
         <UpdateSymbolButton />
         <FindAnything />
       </div>
 
-      <div className="projectWrapper">
+      <div className={'projectWrapper ' + (isCreatorMode ? 'is-creator' : '')}>
         <div className="user-panel flex-panel">
           <LeftSidebar />
           <ProjectNavigator />
           <ProjectAddPanel />
           <ProjectPagesPanel />
           <PageSettingsPanel />
+          <ProjectBackupsPanel />
           <ProjectCollectionsPanel />
           <CollectionSettings />
           {!offlineMode && <ProjectImagesPanel />}

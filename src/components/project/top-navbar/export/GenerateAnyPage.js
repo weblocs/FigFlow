@@ -2,6 +2,7 @@ import generateHead from './GenerateHead'
 import generateNodeText from './GenerateNodeText'
 import generateStylesList from './GenerateStyleList'
 import getImgSrc from './GetImgSrc'
+import GetLinkHref from './GetLinkHref'
 import getStyleUrlDots from './GetStyleUrlDots'
 import replaceCmsFieldsInMetaData from './ReplaceCmsFieldsInMetaData'
 import transformTypeIntoHtml from './TransformTypeIntoHtml'
@@ -25,7 +26,9 @@ export default function generateAnyPage(
   depth,
   metaTitle,
   metaDescription,
-  collections
+  collections,
+  pages,
+  slug
 ) {
   if (type === 'collection') {
     nodes = collection.preRenderedHTMLNodes
@@ -37,8 +40,14 @@ export default function generateAnyPage(
     )
   }
 
-  const styleURLDots = getStyleUrlDots(type, depth)
-  let generatedHTML = generateHead(metaTitle, metaDescription, styleURLDots)
+  const styleURLDots = getStyleUrlDots(type, depth, slug)
+
+  let generatedHTML = generateHead(
+    metaTitle,
+    metaDescription,
+    styleURLDots,
+    slug
+  )
 
   function generateHtmlNodes(nodes, collectionItem) {
     for (let i = 0; i < nodes.length; i++) {
@@ -47,7 +56,8 @@ export default function generateAnyPage(
       const nodeStyleList = generateStylesList(node, preRenderedStyles)
       generatedHTML += `<${type} class="${nodeStyleList}" `
       generatedHTML += `el='${nodes[i].id}' `
-      type === 'img' && (generatedHTML += getImgSrc(node))
+      type === 'a' && (generatedHTML += GetLinkHref(node, pages))
+      type === 'img' && (generatedHTML += getImgSrc(node, styleURLDots))
       generatedHTML += `>`
 
       if (node.type === 'col') {
@@ -73,6 +83,11 @@ export default function generateAnyPage(
 
   generateHtmlNodes(nodes, null)
 
-  generatedHTML += `</body></html>`
+  generatedHTML += `
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4KQZS"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  </body></html>`
   return generatedHTML
 }

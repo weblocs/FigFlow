@@ -8,6 +8,7 @@ export default function DragInput({
   handleEnd,
 }) {
   const isAltPressed = useSelector((state) => state.project.isAltPressed)
+
   const [value, setValue] = useState(0)
 
   const [snapshot, setSnapshot] = useState(value)
@@ -22,15 +23,6 @@ export default function DragInput({
     } else {
       setValue(0)
     }
-    // if (defaultValue < 1) {
-    //   setRound(1)
-    // }
-    // if (defaultValue < 0.1) {
-    //   setRound(2)
-    // }
-    // if (defaultValue < 0.01) {
-    //   setRound(3)
-    // }
   }, [defaultValue])
 
   const onStart = useCallback(

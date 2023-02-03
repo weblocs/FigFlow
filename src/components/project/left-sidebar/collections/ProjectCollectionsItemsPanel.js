@@ -55,6 +55,7 @@ export default function ProjectCollectionsItemsPanel() {
 
         <CreateNewItemInput
           visibility={createInputVisible}
+          setVisibility={setCreateInputVisible}
           create={addCollectionItem}
           placeholder="New item"
         />

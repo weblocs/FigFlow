@@ -6,12 +6,19 @@ import SettingsIcon from '../../../img/settings.svg'
 import StyleGuideIcon from '../../../img/book.svg'
 
 export default function RightPanelButtonsList() {
-  const projectMode = useSelector((state) => state.project.projectMode)
+  const projectModeCreator = useSelector(
+    (state) => state.project.projectMode === 'creator'
+  )
 
   return (
-    <div className="project-right-sidebar-nav_wrap">
+    <div
+      className={
+        'project-right-sidebar-nav_wrap' +
+        (projectModeCreator ? ' is-small' : '')
+      }
+    >
       <ProjectRightSidebarButton letter="S" icon={StyleIcon} tab="Style" />
-      {projectMode === 'developer' && (
+      {!projectModeCreator && (
         <ProjectRightSidebarButton
           letter="D"
           icon={SettingsIcon}

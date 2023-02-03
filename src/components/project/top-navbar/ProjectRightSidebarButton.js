@@ -1,17 +1,27 @@
-import React from "react"
-import { useDispatch, useSelector } from "react-redux"
-import {setActiveRightSidebarTab} from "../../../features/project" 
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setActiveRightSidebarTab } from '../../../features/project'
 
 export default function ProjectRightSidebarButton(props) {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-    const activeRightSidebarTab = useSelector((state) => state.project.activeRightSidebarTab)
-    
-    return (
-        <div 
-        className={"projectRightSidebarNav" + ((activeRightSidebarTab === props.tab) ? " active" : "")}
-        onClick={() => dispatch(setActiveRightSidebarTab(props.tab))}>
-            <img src={props.icon} style={{width: "14px"}} />
-        </div>
-    )
+  const activeRightSidebarTab = useSelector(
+    (state) => state.project.activeRightSidebarTab
+  )
+  const projectModeCreator = useSelector(
+    (state) => state.project.projectMode === 'creator'
+  )
+
+  return (
+    <div
+      className={
+        'projectRightSidebarNav' +
+        (activeRightSidebarTab === props.tab ? ' active' : '') +
+        (projectModeCreator ? ' is-small' : '')
+      }
+      onClick={() => dispatch(setActiveRightSidebarTab(props.tab))}
+    >
+      <img src={props.icon} style={{ width: '14px' }} />
+    </div>
+  )
 }

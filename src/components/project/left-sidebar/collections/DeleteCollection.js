@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteCollection } from '../../../../features/project'
 import ConfirmDeleteModalButton from '../../modals/ConfirmDeleteModalButton'
 
-export default function DeleteCollection({ name }) {
+export default function DeleteCollection({ name, id }) {
   const dispatch = useDispatch()
 
-  function handleDelete(id) {
+  function handleDelete() {
     dispatch(deleteCollection({ id: id }))
   }
 
@@ -14,7 +14,7 @@ export default function DeleteCollection({ name }) {
     <div className="page-settings-wrapper">
       <div>
         <ConfirmDeleteModalButton
-          handleOnClick={() => handleDelete(element.id)}
+          handleOnClick={handleDelete}
           deleteItemName={name}
           deleteItemType="collection"
           redButton={true}
