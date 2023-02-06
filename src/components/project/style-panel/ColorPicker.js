@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { editStyleProperty } from '../../../features/project'
 import ColorPickerPopUp from './ColorPickerPopUp'
 import ProprtyInputLabel from './ProprtyInputLabel'
 
@@ -58,6 +59,7 @@ export default function ColorPicker(props) {
             color={hierarchyStyleProperty.color}
             activeSwatchId={hierarchyStyleProperty.id}
             handleIsOpen={setIsOpen}
+            editStyleProperty={editStyleProperty}
           />
         )}
       </div>
