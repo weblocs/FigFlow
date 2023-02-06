@@ -174,23 +174,71 @@ export default function loadShortcuts() {
     }
   )
 
+  const { rightShortcut } = useKeyboardShortcut(
+    ['ArrowRight'],
+    (shortcutKeys) => {
+      dispatch(handleArrowNodesNavigation({ key: 'right' }))
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { leftShortcut } = useKeyboardShortcut(
+    ['ArrowLeft'],
+    (shortcutKeys) => {
+      dispatch(handleArrowNodesNavigation({ key: 'left' }))
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { upShortcut } = useKeyboardShortcut(
+    ['ArrowUp'],
+    (shortcutKeys) => {
+      dispatch(handleArrowNodesNavigation({ key: 'up' }))
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { downShortcut } = useKeyboardShortcut(
+    ['ArrowDown'],
+    (shortcutKeys) => {
+      dispatch(handleArrowNodesNavigation({ key: 'down' }))
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
   function handleKeyDown({ key }) {
     if (keys[keys.length - 1] !== key) {
       keys.push(key)
     }
 
-    if (RIGHT_ARROW.includes(String(key))) {
-      dispatch(handleArrowNodesNavigation({ key: 'right' }))
-    }
-    if (LEFT_ARROW.includes(String(key))) {
-      dispatch(handleArrowNodesNavigation({ key: 'left' }))
-    }
-    if (UP_ARROW.includes(String(key))) {
-      dispatch(handleArrowNodesNavigation({ key: 'up' }))
-    }
-    if (DOWN_ARROW.includes(String(key))) {
-      dispatch(handleArrowNodesNavigation({ key: 'down' }))
-    }
+    // if (RIGHT_ARROW.includes(String(key))) {
+    //   dispatch(handleArrowNodesNavigation({ key: 'right' }))
+    // }
+    // if (LEFT_ARROW.includes(String(key))) {
+    //   dispatch(handleArrowNodesNavigation({ key: 'left' }))
+    // }
+    // if (UP_ARROW.includes(String(key))) {
+    //   dispatch(handleArrowNodesNavigation({ key: 'up' }))
+    // }
+    // if (DOWN_ARROW.includes(String(key))) {
+    //   dispatch(handleArrowNodesNavigation({ key: 'down' }))
+    // }
   }
 
   function handleKeyUp({ key }) {

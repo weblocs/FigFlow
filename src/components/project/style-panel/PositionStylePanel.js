@@ -10,11 +10,11 @@ export default function PositionStylePanel() {
     <>
       <div className="style-panel-box">
         <div className="display-horizontal-grid">
-          <div className="input-label-box">
+          <div className="select-input-wrap-label-box">
             <ProprtyInputLabel text="Position" property="position" />
           </div>
           <div className="position-box">
-            <div className="input position-select-input">
+            <div className="select-input-wrap position-select-input">
               <PositionInput />
             </div>
 

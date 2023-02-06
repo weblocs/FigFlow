@@ -14,5 +14,8 @@ export default function transformTypeIntoHtml(node) {
   if (node.type === 'col') {
     return 'div'
   }
+  if (node.type === 'i') {
+    return 'input'
+  }
   return node.type
 }

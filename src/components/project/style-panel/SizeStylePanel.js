@@ -15,10 +15,10 @@ export default function SizeStylePanel() {
           <SizeStyleInput style="max-height" text="Max H" />
         </div>
         <div className="size-style-box">
-          <div className="input-label-box">
+          <div className="select-input-wrap-label-box">
             <ProprtyInputLabel text="Fit" property="object-fit" />
           </div>
-          <div className="input position-select-input">
+          <div className="select-input-wrap position-select-input">
             <ObjectFitStyleInput />
           </div>
         </div>

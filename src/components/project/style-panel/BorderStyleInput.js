@@ -12,16 +12,17 @@ export default function BorderStyleInput() {
   }
 
   return (
-    <div className="input">
+    <div className="select-input-wrap">
       <select
         className="style-panel-select text"
         value={nodeStyleValue}
         onChange={handleInputChange}
       >
-        <option value="initial">Hidden</option>
+        <option value="initial">Initial</option>
         <option value="solid">Line</option>
         <option value="dotted">Dotted</option>
         <option value="dash">Dashed</option>
+        <option value="hidden">Hidden</option>
       </select>
     </div>
   )

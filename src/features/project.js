@@ -316,6 +316,7 @@ function nodeIsFolder(node) {
     node.type === 'l' ||
     node.type === 'sym' ||
     node.type === 'sec' ||
+    node.type === 'form' ||
     node.type === 'body'
   ) {
     return true
@@ -2017,6 +2018,7 @@ export const projectSlice = createSlice({
     },
 
     copyHtmlNodes: (state) => {
+      console.log('1')
       const isNodeBody = state.activeNodeObject?.type === 'body'
       if (state.keyboardNavigationOn) {
         if (!isNodeBody) {

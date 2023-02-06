@@ -28,6 +28,10 @@ img {
   width: 100px;
 }
 
+.project-rendered-design .f-input {
+  caret-color: #0000;
+}
+
 .settings-modal {
   font-family: Inter;
   display: none;
@@ -981,7 +985,8 @@ img {
   z-index: 10000;
 }
 
-.user-panel {
+.user-panel,
+.settings-panel {
   h1,
   h2,
   h3 {
@@ -1912,7 +1917,7 @@ img {
     margin-right: 8px;
   }
 
-  .input.color-picker {
+  .select-input-wrap.color-picker {
     display: flex;
     position: relative;
     padding: 0;
@@ -2008,7 +2013,7 @@ img {
     font-weight: 900;
   }
 
-  .input.change-swatch-input {
+  .select-input-wrap.change-swatch-input {
     width: 164px;
     height: 24px;
     border-color: #cdcdcd;
@@ -2366,7 +2371,7 @@ img {
     position: relative;
   }
 
-  .input {
+  .select-input-wrap {
     width: 100%;
     height: 28px;
     border-style: solid;
@@ -2661,7 +2666,7 @@ img {
     position: relative;
   }
 
-  .input {
+  .select-input-wrap {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -2993,6 +2998,10 @@ img {
 
   .settings-input.no-margin-bottom {
     margin-bottom: 0;
+  }
+
+  .settings-input.full-width {
+    width: 100%;
   }
 
   .settings-close-button {
@@ -3905,6 +3914,12 @@ img {
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
+  }
+
+  .style-edit-unit.read-only {
+    position: absolute;
+    right: 0;
+    cursor: default;
   }
 
   .style-guide-edit_modal {

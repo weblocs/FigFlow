@@ -69,7 +69,6 @@ export default function DevMode() {
         <div className="user-panel flex-panel">
           <LeftSidebar />
           <ProjectNavigator />
-          <ProjectAddPanel />
           <ProjectPagesPanel />
           <PageSettingsPanel />
           <ProjectBackupsPanel />

@@ -1,11 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import ColorPickerSwatch from './ColorPickerSwatch'
 import { ChromePicker } from 'react-color'
-import {
-  deleteSwatch,
-  editStyleProperty,
-  editSwatch,
-} from '../../../features/project'
+import { deleteSwatch, editSwatch } from '../../../features/project'
 import { useEffect, useState } from 'react'
 import addIcon from '../../../img/plus.svg'
 import ColorPickerAddSwatch from './ColorPickerAddSwatch'
@@ -18,6 +14,7 @@ export default function ColorPickerPopUp({
   style,
   swatchName,
   handleIsOpen,
+  editStyleProperty,
 }) {
   const activeNodeId = useSelector((state) => state.project.activeNodeId)
   const projectSwatches = useSelector((state) => state.project.projectSwatches)

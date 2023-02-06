@@ -15,6 +15,7 @@ import AltImageSettings from './AltImageSettings'
 import ChangeImageButton from './ChangeImageButton'
 import StyleButton from './StyleButton'
 import InlineStyleButton from './InlineStyleButton'
+import InputSettings from './InputSettings'
 
 export default function HtmlNodeSettings() {
   const activeNodeId = useSelector((state) => state.project.activeNodeId)
@@ -124,6 +125,7 @@ export default function HtmlNodeSettings() {
               <HeadingTypeButton />
 
               <LinkSettings />
+              <InputSettings />
               <AddBlockButton addRichSetting={true} />
 
               {!isActiveNodeSection && (

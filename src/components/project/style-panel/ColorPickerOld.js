@@ -186,7 +186,7 @@ export default function ColorPicker(props) {
 
       <ProprtyInputLabel text="Color" property={props.style} />
 
-      <div className="input color-picker">
+      <div className="select-input-wrap color-picker">
         <div
           className="color-picker_color-box"
           style={{ backgroundColor: editedStyleValue }}
@@ -234,14 +234,14 @@ export default function ColorPicker(props) {
             placeholder="swatch name"
             ref={swatchNameRef}
             onKeyDown={inputOnChange}
-            className="input change-swatch-input"
+            className="select-input-wrap change-swatch-input"
             defaultValue={activeSwatch.name}
           />
           <input
             placeholder="swatch value"
             ref={swatchColorRef}
             onKeyDown={inputOnChange}
-            className="input change-swatch-input"
+            className="select-input-wrap change-swatch-input"
             defaultValue={activeSwatch.color}
           />
           <button className="swatch-save-button">{formButtonText}</button>

@@ -215,6 +215,7 @@ function RenderedNode(props) {
       {props.children.map((el) => (
         <RenderedNode
           id={el.id}
+          inputPlaceholder={el.inputPlaceholder}
           title={el.title}
           subtype={el.subtype}
           src={el.src}
@@ -266,6 +267,7 @@ function RenderedNode(props) {
         {props.children.map((el) => (
           <RenderedNode
             id={el.id}
+            inputPlaceholder={el.inputPlaceholder}
             title={el.title}
             subtype={el.subtype}
             src={el.src}
@@ -306,6 +308,7 @@ function RenderedNode(props) {
           {props.children.map((el) => (
             <RenderedNode
               id={el.id}
+              inputPlaceholder={el.inputPlaceholder}
               title={el.title}
               subtype={el.subtype}
               src={el.src}
@@ -347,6 +350,7 @@ function RenderedNode(props) {
           <div key={el.id}>
             <RenderedNode
               id={el.id}
+              inputPlaceholder={el.inputPlaceholder}
               title={el.title}
               subtype={el.subtype}
               src={el.src}
@@ -412,6 +416,7 @@ function RenderedNode(props) {
         {props.children.map((el) => (
           <RenderedNode
             id={el.id}
+            inputPlaceholder={el.inputPlaceholder}
             title={el.title}
             subtype={el.subtype}
             src={el.src}
@@ -468,6 +473,7 @@ function RenderedNode(props) {
               {props.children.map((el) => (
                 <RenderedNode
                   id={el.id}
+                  inputPlaceholder={el.inputPlaceholder}
                   title={el.title}
                   subtype={el.subtype}
                   src={el.src}
@@ -602,6 +608,29 @@ function RenderedNode(props) {
     }
   }
 
+  if (props.type === 'i') {
+    elementHTML = (
+      <input
+        style={customStyle}
+        onClick={handleOnClick}
+        onBlur={() => setEditable(false)}
+        onDoubleClick={handleDoubleClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        className={listOfNodeStyles + ' f-input'}
+        el_id={elementId}
+        cms_item_index={props.itemIndex}
+        readOnly
+        placeholder={props?.inputPlaceholder || ''}
+        // tagName={props?.subtype !== undefined ? props.subtype : 'h1'}
+        // html={nodeText}
+      />
+    )
+    if (props.children.length > 0) {
+      // console.log(props.children)
+    }
+  }
+
   if (props.type === 'h') {
     elementHTML = (
       <ContentEditable
@@ -676,6 +705,7 @@ function RenderedNode(props) {
         {props.children.map((el) => (
           <RenderedNode
             id={el.id}
+            inputPlaceholder={el.inputPlaceholder}
             title={el.title}
             subtype={el.subtype}
             src={el.src}

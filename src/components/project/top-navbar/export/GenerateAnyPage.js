@@ -2,6 +2,7 @@ import generateHead from './GenerateHead'
 import generateNodeText from './GenerateNodeText'
 import generateStylesList from './GenerateStyleList'
 import getImgSrc from './GetImgSrc'
+import GetInputData from './GetInputData'
 import GetLinkHref from './GetLinkHref'
 import getStyleUrlDots from './GetStyleUrlDots'
 import replaceCmsFieldsInMetaData from './ReplaceCmsFieldsInMetaData'
@@ -58,6 +59,7 @@ export default function generateAnyPage(
       generatedHTML += `el='${nodes[i].id}' `
       type === 'a' && (generatedHTML += GetLinkHref(node, pages))
       type === 'img' && (generatedHTML += getImgSrc(node, styleURLDots))
+      type === 'input' && (generatedHTML += GetInputData(node))
       generatedHTML += `>`
 
       if (node.type === 'col') {
@@ -83,11 +85,11 @@ export default function generateAnyPage(
 
   generateHtmlNodes(nodes, null)
 
-  generatedHTML += `
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4KQZS"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-  </body></html>`
+  // generatedHTML += `
+  // <!-- Google Tag Manager (noscript) -->
+  // <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4KQZS"
+  // height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  // <!-- End Google Tag Manager (noscript) -->`
+  generatedHTML += ` </body></html>`
   return generatedHTML
 }

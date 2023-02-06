@@ -23,6 +23,8 @@ export default function ProjectNavigator() {
             <AddNodeButton type="col" text="Collection" />
             <AddNodeButton type="sec" text="Section" />
             <AddNodeButton type="body" text="Body" />
+            <AddNodeButton type="form" text="Form" />
+            <AddNodeButton type="i" text="Input" />
           </div>
           <div className="projectTabTitleBox">Navigator</div>
         </div>
