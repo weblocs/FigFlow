@@ -317,7 +317,9 @@ function nodeIsFolder(node) {
     node.type === 'sym' ||
     node.type === 'sec' ||
     node.type === 'form' ||
-    node.type === 'body'
+    node.type === 'body' ||
+    node.type === 'nav_tr' ||
+    node.type === 'nav_l'
   ) {
     return true
   } else if (node.type === 'col' && node.cmsCollectionId) {
@@ -994,7 +996,7 @@ export const projectSlice = createSlice({
 
       const starterNodes = state.projectPages.find(
         (page) => page.isStarter === true
-      ).preRenderedHTMLNodes || [
+      )?.preRenderedHTMLNodes || [
         {
           id: uuidv4(),
           type: 'body',
@@ -1586,10 +1588,14 @@ export const projectSlice = createSlice({
       const property = action.payload.property
       const value = action.payload.value
       const index = action.payload.index
+
       state.preRenderedStyles.find(
         ({ id }) => id === state.stylesInActiveNode[0].id
       ).childrens[index][property] = value
+
       updateGlobalCSS(state)
+
+      console.log(state.activeNodeId)
 
       // console.log(current(state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id)
       // .childrens[index]));
@@ -2237,9 +2243,10 @@ export const projectSlice = createSlice({
         state.preRenderedHTMLNodes,
         state.activeNodeId
       )
-      // if (state.activeNodeObject !== undefined) {
-      //   console.log(current(state.activeNodeObject))
-      // }
+
+      if (state?.activeNodeObject !== undefined) {
+        console.log(current(state.activeNodeObject))
+      }
     },
 
     toggleHtmlNodeExpandedState: (state, action) => {
@@ -3170,7 +3177,7 @@ export const projectSlice = createSlice({
                   origin: '',
                   option: '',
                   resolution: resolution,
-                  state: 'default',
+                  state: styleState,
                 })
               }
             }

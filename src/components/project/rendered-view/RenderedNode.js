@@ -211,6 +211,8 @@ function RenderedNode(props) {
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       className={listOfNodeStyles}
+      isnavlist={props.type === 'nav_l' && 'true'}
+      isnavtrigger={props.type === 'nav_tr' && 'true'}
     >
       {props.children.map((el) => (
         <RenderedNode

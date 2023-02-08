@@ -17,5 +17,11 @@ export default function transformTypeIntoHtml(node) {
   if (node.type === 'i') {
     return 'input'
   }
+  if (node.type === 'nav_tr') {
+    return 'div'
+  }
+  if (node.type === 'nav_l') {
+    return 'div'
+  }
   return node.type
 }

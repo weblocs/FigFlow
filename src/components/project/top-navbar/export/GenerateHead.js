@@ -17,11 +17,11 @@ export default function GenerateHead(
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>${metaTitle}</title>
     <meta name="description" content="${metaDescription}">
-
     <style>
     a { color: #000; text-decoration: none; }
+    @media(min-width:901px){[nav-trigger]{ display: none;}}
+    @media(max-width:900px){.navbar_link-list:not(.is-open){display: none;}}
     </style>
-
     </head>
     <body>
     `

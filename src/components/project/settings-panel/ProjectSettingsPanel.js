@@ -9,6 +9,7 @@ import ElementsClassChanger from './functions/ElementsClassChanger'
 import CollectionFieldsList from '../left-sidebar/collections/CollectionFieldsList'
 import CollectionListFieldsConnetor from './CollectionListFieldsConnetor'
 import CollectionListCollectionConnector from './CollectionListCollectionConnector'
+import OpenElement from './OpenElement'
 
 export default function ProjectSettingsPanel() {
   const dispatch = useDispatch()
@@ -84,8 +85,8 @@ export default function ProjectSettingsPanel() {
 
         <CollectionTemplatePageFieldsConnector />
 
+        {/* <OpenElement /> */}
         {/* <ElementsClassChanger /> */}
-
         {/* <NodeRepeatableSettings /> */}
       </div>
     )

@@ -43,7 +43,12 @@ export default function DefaultNameForm({ index }) {
 
   return (
     <form onSubmit={handleDefaultNameSubmit}>
-      <div className="select-input-wrap-label">Default name</div>
+      <div
+        className="select-input-wrap-label"
+        style={{ color: 'black', fontSize: '11px' }}
+      >
+        Default name
+      </div>
       <input
         ref={defaultNameRef}
         onFocus={handleOnFocus}

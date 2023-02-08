@@ -16,6 +16,7 @@ import ChangeImageButton from './ChangeImageButton'
 import StyleButton from './StyleButton'
 import InlineStyleButton from './InlineStyleButton'
 import InputSettings from './InputSettings'
+import ActionButton from './ActionButton'
 
 export default function HtmlNodeSettings() {
   const activeNodeId = useSelector((state) => state.project.activeNodeId)
@@ -65,20 +66,25 @@ export default function HtmlNodeSettings() {
   })
 
   const activeNodePositionX = useSelector((state) => {
-    return (
+    const positionLeft =
       activeNode?.getBoundingClientRect().left -
       document
         .getElementsByClassName('project-rendered-design')[0]
         ?.getBoundingClientRect().left
-    )
+
+    return positionLeft
   })
 
   const activeNodePositionY = useSelector((state) => {
     if (
-      activeNode?.getBoundingClientRect().top <= 50 &&
+      activeNode?.getBoundingClientRect().top <= 60 &&
       activeNode?.getBoundingClientRect().top > 0
     ) {
-      return 5
+      if (activeNode?.getBoundingClientRect().bottom < 100) {
+        return activeNode?.getBoundingClientRect().bottom - 27
+      } else {
+        return 5
+      }
     }
     return activeNode?.getBoundingClientRect().top - 61
   })
@@ -124,6 +130,7 @@ export default function HtmlNodeSettings() {
               <ChangeImageButton />
               <HeadingTypeButton />
 
+              <ActionButton />
               <LinkSettings />
               <InputSettings />
               <AddBlockButton addRichSetting={true} />

@@ -161,24 +161,12 @@ export function getIdOfPreRenderedStyleByName(
 export function fullJSONtoCSS(_classes, _swatches) {
   let fullCSS = ''
   fullCSS += JSONtoCSS(_classes, '1', 'default', _swatches, true)
-  fullCSS += getResolutionCssMedia('2') + '{'
-  fullCSS += JSONtoCSS(_classes, '2', 'default', _swatches, true)
-  fullCSS += '}'
-  fullCSS += getResolutionCssMedia('3') + '{'
-  fullCSS += JSONtoCSS(_classes, '3', 'default', _swatches, true)
-  fullCSS += '}'
-  fullCSS += getResolutionCssMedia('4') + '{'
-  fullCSS += JSONtoCSS(_classes, '4', 'default', _swatches, true)
-  fullCSS += '}'
-  fullCSS += getResolutionCssMedia('5') + '{'
-  fullCSS += JSONtoCSS(_classes, '5', 'default', _swatches, true)
-  fullCSS += '}'
-  fullCSS += getResolutionCssMedia('6') + '{'
-  fullCSS += JSONtoCSS(_classes, '6', 'default', _swatches, true)
-  fullCSS += '}'
-  fullCSS += getResolutionCssMedia('7') + '{'
-  fullCSS += JSONtoCSS(_classes, '7', 'default', _swatches, true)
-  fullCSS += '}'
+  for (let i = 2; i <= 7; i++) {
+    const resolutionNumber = i.toString()
+    fullCSS += getResolutionCssMedia(resolutionNumber) + '{'
+    fullCSS += JSONtoCSS(_classes, resolutionNumber, 'default', _swatches, true)
+    fullCSS += '}'
+  }
   return fullCSS
 }
 
@@ -296,6 +284,20 @@ export function setStylesInActiveNode(nodes, id) {
     if (nodes[i].children) {
       setStylesInActiveNode(nodes[i].children, id)
     }
+  }
+}
+
+export function checkIfNodeContainesStyle(node) {
+  if (
+    Object.keys(node?.styles?.styles || {}).length > 0 ||
+    Object.keys(node?.styles?.mobileStyles || {}).length > 0 ||
+    Object.keys(node?.styles?.tabletStyles || {}).length > 0 ||
+    Object.keys(node?.styles?.portraitStyles || {}).length > 0 ||
+    Object.keys(node?.styles?.desktopStyles || {}).length > 0 ||
+    Object.keys(node?.styles?.desktopLargeStyles || {}).length > 0 ||
+    Object.keys(node?.styles?.desktopExtraLargeStyles || {}).length > 0
+  ) {
+    return true
   }
 }
 

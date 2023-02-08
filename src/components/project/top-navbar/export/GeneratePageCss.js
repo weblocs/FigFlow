@@ -1,4 +1,8 @@
-import { fullJSONtoCSS } from '../../../../utils/nodes-editing'
+import {
+  fullJSONtoCSS,
+  getResolutionCssMedia,
+  getResolutionPathName,
+} from '../../../../utils/nodes-editing'
 
 function hasChildren(node) {
   return node.children.length > 0
@@ -77,9 +81,60 @@ export default function generatePageCss(preRenderedStyles, nodes, swatches) {
       }
     })
 
+  function getInlineStyle(styles, id, swatches, isHover) {
+    if (Object.keys(styles).length === 0) return ''
+    let tempStyles = `[el="` + id.slice(0, 8) + `"]${isHover ? ':hover' : ''} {`
+    for (const [key, value] of Object.entries(styles)) {
+      const isPropertySwatch =
+        value.charAt(0) === '{' && value.charAt(1) === '{'
+      if (isPropertySwatch) {
+        value = value.replaceAll('{{', '').replaceAll('}}', '')
+        value = swatches?.find((swatch) => swatch.id === value)?.color
+      }
+      tempStyles += key + ': ' + value + ' !important;'
+    }
+    tempStyles += '}'
+    return tempStyles
+  }
+
+  let inlineStyles = '/** Inline Style **/ '
+  function getNodesInlineStyles(nodes, swatches, resolutionName) {
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i]
+      inlineStyles += getInlineStyle(
+        node?.styles?.[resolutionName] || {},
+        node.id,
+        swatches,
+        false
+      )
+      inlineStyles += getInlineStyle(
+        node?.styles?.[resolutionName + '-hover'] || {},
+        node.id,
+        swatches,
+        true
+      )
+
+      if (hasChildren(node)) {
+        getNodesInlineStyles(node.children, swatches, resolutionName)
+      }
+    }
+  }
+
+  for (let i = 1; i <= 7; i++) {
+    let resolutionNumber = i.toString()
+    inlineStyles += getResolutionCssMedia(resolutionNumber) + '{'
+    getNodesInlineStyles(
+      nodes,
+      swatches,
+      getResolutionPathName(resolutionNumber, 'default')
+    )
+    inlineStyles += '}'
+  }
+
   return (
     `*{-webkit-font-smoothing: antialiased;box-sizing: border-box;}body{margin:0;}img{display: block;width: 100%; height: auto;}` +
-    fullJSONtoCSS(updatedPreRenderedStyles, swatches)
+    fullJSONtoCSS(updatedPreRenderedStyles, swatches) +
+    inlineStyles
   )
   //   return generatedCSS
 }

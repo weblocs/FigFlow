@@ -81,11 +81,15 @@ export default function ProprtyInputLabel({ text, property }) {
         onClick={() => setIsInfoOpen(false)}
         className={'style-property-info_closer' + (isInfoOpen ? ' active' : '')}
       ></div>
+
       <div className={'style-property-info' + (isInfoOpen ? ' active' : '')}>
         <div
           className={
             'reset-button' +
-            (isStylePropertyInline || doesStylePropertyBelongToActiveClass
+            ((isStylePropertyInline &&
+              isStylePropertyFromActiveResolution &&
+              isStylePropertyFromActiveState) ||
+            doesStylePropertyBelongToActiveClass
               ? ' active'
               : '')
           }

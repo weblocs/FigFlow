@@ -64,6 +64,22 @@ export default function StoreUseEffectUpdates() {
   }, [activeNodeId, preRenderedHTMLNodes])
 
   useEffect(() => {
+    const navList = document.querySelector("[isnavlist='true']")
+    const navTrigger = document.querySelector("[isnavtrigger='true']")
+    if (
+      activeProjectResolution === '1' ||
+      activeProjectResolution === '5' ||
+      activeProjectResolution === '6' ||
+      activeProjectResolution === '7'
+    ) {
+      navList?.classList.remove('is-nav-hidden')
+      navTrigger?.classList.remove('is-trigger-visible')
+    } else {
+      navList?.classList.add('is-nav-hidden')
+      navTrigger?.classList.add('is-trigger-visible')
+    }
+  }, [activeProjectResolution])
+  useEffect(() => {
     dispatch(editActiveStyleProperties())
   }, [
     activeNodeId,

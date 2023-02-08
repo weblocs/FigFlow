@@ -1,3 +1,4 @@
+import { checkIfNodeContainesStyle } from '../../../../utils/nodes-editing'
 import generateHead from './GenerateHead'
 import generateNodeText from './GenerateNodeText'
 import generateStylesList from './GenerateStyleList'
@@ -7,7 +8,6 @@ import GetLinkHref from './GetLinkHref'
 import getStyleUrlDots from './GetStyleUrlDots'
 import replaceCmsFieldsInMetaData from './ReplaceCmsFieldsInMetaData'
 import transformTypeIntoHtml from './TransformTypeIntoHtml'
-import updateDataIfCollection from './UpdateDataIfCollection'
 
 function hasChildren(node) {
   return node.children.length > 0
@@ -56,10 +56,13 @@ export default function generateAnyPage(
       const type = transformTypeIntoHtml(node)
       const nodeStyleList = generateStylesList(node, preRenderedStyles)
       generatedHTML += `<${type} class="${nodeStyleList}" `
-      generatedHTML += `el='${nodes[i].id}' `
+      checkIfNodeContainesStyle(node) &&
+        (generatedHTML += `el='${node.id.slice(0, 8)}' `)
       type === 'a' && (generatedHTML += GetLinkHref(node, pages))
       type === 'img' && (generatedHTML += getImgSrc(node, styleURLDots))
       type === 'input' && (generatedHTML += GetInputData(node))
+      node.type === 'nav_tr' && (generatedHTML += 'nav-trigger ')
+      node.type === 'nav_l' && (generatedHTML += 'nav-list ')
       generatedHTML += `>`
 
       if (node.type === 'col') {
@@ -85,11 +88,7 @@ export default function generateAnyPage(
 
   generateHtmlNodes(nodes, null)
 
-  // generatedHTML += `
-  // <!-- Google Tag Manager (noscript) -->
-  // <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4KQZS"
-  // height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  // <!-- End Google Tag Manager (noscript) -->`
+  generatedHTML += `<script>document.querySelector('[nav-trigger]').addEventListener("click", function() {document.querySelector('[nav-list]').classList.toggle('is-open')});</script>`
   generatedHTML += ` </body></html>`
   return generatedHTML
 }

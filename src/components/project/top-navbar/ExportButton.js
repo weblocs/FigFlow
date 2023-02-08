@@ -184,9 +184,7 @@ export default function ExportButton() {
       let imageSrc = image.name
       const types = ['webp', 'avif', 'jpg', 'jpeg', 'png', 'gif', 'svg']
       types.forEach((type) => {
-        console.log('1')
         if (imageSrc.slice(-4) === '-' + type) {
-          console.log('2')
           imageSrc = imageSrc.slice(0, -4)
           imageSrc = imageSrc.concat('.' + type)
         }
