@@ -30,6 +30,8 @@ import {
   setProjectSettingsData,
   setFavicon,
   setStyleGuide,
+  setScripts,
+  setLibraries,
 } from '../features/project'
 import { setProjectImages } from '../features/project-images'
 
@@ -136,6 +138,8 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(
         })
       )
       dispatch(setFavicon(projectData.data()?.favicon))
+      dispatch(setScripts(projectData.data()?.scripts))
+      dispatch(setLibraries(projectData.data()?.libraries))
     }
   } else {
     let projectPagesStorage = localStorage.getItem(offlineProjectName + 'pages')

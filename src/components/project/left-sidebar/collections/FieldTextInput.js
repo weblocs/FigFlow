@@ -43,7 +43,7 @@ export default function FieldTextInput({ field, handleInputChange }) {
           onFocus={() => dispatch(setKeyboardNavigationOn(true))}
           onBlur={inputBlurHandler}
           className={'cms-field-input-value' + (isFocused ? ' focused' : '')}
-          onChange={(e) => handleInputChange(field.id, e.target.value, 'text')}
+          onChange={(e) => handleInputChange(field.id, e.target.value)}
         />
       </div>
     </div>

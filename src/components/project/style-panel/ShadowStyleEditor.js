@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { editStyleProperty } from '../../../features/project'
-import ColorPickerPopUp from './ColorPickerPopUp'
 import ProprtyInputLabel from './ProprtyInputLabel'
 import ShodowStyleInput from './ShodowStyleInput'
-import SizeStyleInput from './SizeStyleInput'
-import SpaceStyleInput from './SpaceStyleInput'
 import { ChromePicker } from 'react-color'
 
 export default function ShadowStyleEditor() {
@@ -30,18 +27,73 @@ export default function ShadowStyleEditor() {
   )
 
   useEffect(() => {
+    if (hierarchyStyleProperty !== undefined) {
+      const [_x, _y, _blur, _spread] = hierarchyStyleProperty.split(' ')
+      const _color = hierarchyStyleProperty
+        .replace(_x, '')
+        .replace(_y, '')
+        .replace(_blur, '')
+        .replace(_spread, '')
+        .replace('   ', '')
+      if (parseInt(_x) !== x) {
+        setX(parseInt(_x))
+      }
+      if (parseInt(_y) !== y) {
+        setY(parseInt(_y))
+      }
+      if (parseInt(_blur) !== blur) {
+        setBlur(parseInt(_blur))
+      }
+      if (parseInt(_spread) !== spread) {
+        setSpread(parseInt(_spread))
+      }
+      if (parseInt(_color) !== color) {
+        setColor(_color)
+      }
+    } else {
+      setX(0)
+      setY(0)
+      setBlur(0)
+      setSpread(0)
+      setColor('')
+    }
+  }, [hierarchyStyleProperty])
+
+  function handleX(value) {
+    setX(value)
+    updateShadow()
+  }
+
+  function handleY(value) {
+    setY(value)
+    updateShadow()
+  }
+
+  function handleBlur(value) {
+    setBlur(value)
+    updateShadow()
+  }
+
+  function handleSpread(value) {
+    setSpread(value)
+    updateShadow()
+  }
+
+  function handleColor(value) {
+    setColor(value)
+    updateShadow()
+  }
+
+  function updateShadow() {
     if (isAnyNodeSelected) {
-      console.log(color)
       dispatch(
         editStyleProperty([
           'box-shadow',
           `${x}px ${y}px ${blur}px ${spread}px ${color}`,
         ])
       )
-
-      console.log('style: ' + hierarchyStyleProperty)
     }
-  }, [x, y, blur, spread, color])
+  }
 
   return (
     <div className="style-panel-box">
@@ -52,25 +104,25 @@ export default function ShadowStyleEditor() {
           name="Horizontal"
           unit="px"
           value={x}
-          handleChange={setX}
+          handleChange={handleX}
         />
         <ShodowStyleInput
           name="Vertical"
           unit="px"
           value={y}
-          handleChange={setY}
+          handleChange={handleY}
         />
         <ShodowStyleInput
           name="Blur"
           unit="px"
           value={blur}
-          handleChange={setBlur}
+          handleChange={handleBlur}
         />
         <ShodowStyleInput
           name="Spread"
           unit="px"
           value={spread}
-          handleChange={setSpread}
+          handleChange={handleSpread}
         />
       </div>
       <div style={{ height: '8px' }}></div>
@@ -96,7 +148,7 @@ export default function ShadowStyleEditor() {
             <ChromePicker
               color={color}
               onChange={(color) =>
-                setColor(
+                handleColor(
                   `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
                 )
               }

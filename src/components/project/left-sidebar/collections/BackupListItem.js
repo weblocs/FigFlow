@@ -12,6 +12,8 @@ import {
   setBlocks,
   setLayouts,
   setStyleGuide,
+  setScripts,
+  setLibraries,
 } from '../../../../features/project'
 import DotsIcon from '../../../../img/dots-vertical.svg'
 
@@ -40,6 +42,8 @@ export default function BackupListItem({ backup }) {
     dispatch(setBlocks([...data.blocks]))
     dispatch(setLayouts([...data.sections]))
     dispatch(setStyleGuide([...data?.styleGuide]))
+    dispatch(setScripts([...data?.scripts]))
+    dispatch(setLibraries([...data?.libraries]))
   }
 
   return (

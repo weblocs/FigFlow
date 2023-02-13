@@ -15,6 +15,8 @@ import PanelTabTitle from '../_atoms/PanelTabTitle'
 import PageListFolder from './PageListFolder'
 import CollectionPageListItem from './CollectionPageListItem'
 import PagesHeader from './PagesHeader'
+import { node } from 'prop-types'
+import UtilityPageListItem from './UtilityPageListItem'
 
 export default function ProjectPagesPanel() {
   const dispatch = useDispatch()
@@ -120,13 +122,7 @@ export default function ProjectPagesPanel() {
       {projectPages
         .filter((page) => isUtilityPage(page))
         .map((page, index) => (
-          <div
-            onClick={() => dispatch(setActivePage(page.id))}
-            className="projectPageItem"
-            key={page.id}
-          >
-            {page.name}
-          </div>
+          <UtilityPageListItem node={page} key={page.id} />
         ))}
     </div>
   )

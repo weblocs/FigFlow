@@ -23,6 +23,9 @@ export default function CollectionFieldSettings({ field }) {
   if (field.type === 'text') {
     typeText = 'Plain Text'
   }
+  if (field.type === 'rich_text') {
+    typeText = 'Rich Text'
+  }
 
   useEffect(() => {
     nameRef.current.value = field.name

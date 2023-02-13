@@ -7,6 +7,8 @@ import {
 import { activeCollectionSelector } from '../../../../selectors/active-collection'
 import FieldImageInput from './FieldImageInput'
 import FieldNameInput from './FieldNameInput'
+import FieldRichTextInput from './FieldRichTextInput'
+import FieldSlugInput from './FieldSlugInput'
 import FieldTextInput from './FieldTextInput'
 
 export default function CollectionFieldsList() {
@@ -18,7 +20,7 @@ export default function CollectionFieldsList() {
 
   const [editedCollectionItemData, setEditedCollectionItemData] = useState([])
 
-  function handleInputChange(fieldId, fieldValue, type) {
+  function handleInputChange(fieldId, fieldValue) {
     let fieldValueExist = false
     let editedCollectionItemFieldIndex = editedCollectionItemData
       .map((x) => {
@@ -51,6 +53,7 @@ export default function CollectionFieldsList() {
   return (
     <form onSubmit={handleSubmit}>
       <FieldNameInput />
+      <FieldSlugInput />
       {activeCollection?.fields.map((field) => (
         <div key={field.id}>
           {
@@ -64,6 +67,12 @@ export default function CollectionFieldsList() {
 
               img: (
                 <FieldImageInput
+                  field={field}
+                  handleInputChange={handleInputChange}
+                />
+              ),
+              rich_text: (
+                <FieldRichTextInput
                   field={field}
                   handleInputChange={handleInputChange}
                 />

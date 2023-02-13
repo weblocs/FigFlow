@@ -26,13 +26,14 @@ export default function FileUploaderToCollectionField({ handleInputChange }) {
   const storage = getStorage()
 
   const imageUploading = (file) => {
+    const fileName = projectFirebaseId + '-' + file.name.replaceAll('.', '-')
     if (!file) {
       return
     }
 
     fileToDataUri(file)
       .then((dataUri) => {
-        const tempStorageRef = ref(storage, projectFirebaseId + '-' + file.name)
+        const tempStorageRef = ref(storage, fileName)
         uploadBytes(tempStorageRef, file).then((snapshot) => {})
       })
       .then(async () => {
@@ -42,13 +43,13 @@ export default function FileUploaderToCollectionField({ handleInputChange }) {
           images: [
             ...projectImages,
             {
-              name: projectFirebaseId + '-' + file.name,
+              name: fileName,
               id: uuidv4(),
             },
           ],
         })
-        dispatch(addImageToProjectImages(projectFirebaseId + '-' + file.name))
-        handleInputChange(projectFirebaseId + '-' + file.name)
+        dispatch(addImageToProjectImages(fileName))
+        handleInputChange(fileName)
       })
   }
 

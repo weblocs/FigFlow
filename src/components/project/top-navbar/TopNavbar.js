@@ -10,6 +10,7 @@ import VersionsChanger from './VersionsChanger'
 import DesktopIcon from '../../../img/desktop.svg'
 import TabletIcon from '../../../img/tablet.svg'
 import PortraitIcon from '../../../img/portrait.svg'
+import ScriptsIcon from '../../../img/code.svg'
 import MobileIcon from '../../../img/mobile.svg'
 import DatabaseIcon from '../../../img/database.svg'
 import StructureIcon from '../../../img/structure.svg'
@@ -36,6 +37,7 @@ export default function TopNavbar() {
             {!isBackupOn && (
               <SidebarButton shortcode="B" tab="Backups" img={BackupIcon} />
             )}
+            <SidebarButton shortcode="S" tab="Scripts" img={ScriptsIcon} />
           </div>
         )}
         <PageChanger />

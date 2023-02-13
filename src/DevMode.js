@@ -33,6 +33,7 @@ import StyleGuidePanel from './components/project/style-guide/StyleGuidePanel'
 import ProjectBackupsPanel from './components/project/left-sidebar/collections/ProjectBackupsPanel'
 import { useSearchParams } from 'react-router-dom'
 import BackupLoader from './components/project/backup/BackupLoader'
+import ProjectScriptsPanel from './components/project/left-sidebar/scripts/ProjectScriptsPanel'
 
 export default function DevMode() {
   const offlineMode = useSelector((state) => state.project.offlineMode)
@@ -73,6 +74,7 @@ export default function DevMode() {
           <PageSettingsPanel />
           <ProjectBackupsPanel />
           <ProjectCollectionsPanel />
+          <ProjectScriptsPanel />
           <CollectionSettings />
           {!offlineMode && <ProjectImagesPanel />}
           <ProjectCollectionsItemsPanel />

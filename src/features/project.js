@@ -11,7 +11,6 @@ import sanitizeHtml from 'sanitize-html'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, updateDoc, doc } from 'firebase/firestore'
 import { firebaseConfig } from '../utils/firebase-config.js'
-import { node } from 'prop-types'
 import { deleteUnits } from '../utils/style-panel'
 
 const initialState = {
@@ -19,6 +18,7 @@ const initialState = {
   offlineProjectName: 'projekt1',
 
   projectMode: 'creator', // developer or creator
+  elementsInlineStyleMode: true,
   nodesEditMode: 'page', // page, layout, cmsTemplate, block
   scrollCount: 0,
   projectLayouts: [],
@@ -121,6 +121,11 @@ const initialState = {
   isKeyAPressed: false,
 
   isBackupOn: null,
+
+  scripts: [],
+  activeScriptId: null,
+
+  libraries: [],
 
   store: [
     {
@@ -631,6 +636,13 @@ export const projectSlice = createSlice({
       ].name = collectionItemName
     },
 
+    editCollectionItemSlug: (state, action) => {
+      const collectionItemSlug = action.payload
+      state.collections[state.activeCollectionIndex].items[
+        state.activeCollectionItemIndex
+      ].slug = collectionItemSlug
+    },
+
     addCollectionField: (state, action) => {
       state.collections
         .find(({ id }) => id === state.activeSettingsCollectionId)
@@ -690,6 +702,14 @@ export const projectSlice = createSlice({
 
     setCollectionPanelState: (state, action) => {
       state.collectionPanelState = action.payload
+      if (
+        state.collectionPanelState === 'fields' &&
+        state.activeTab === 'Collections'
+      ) {
+        state.keyboardNavigationOn = false
+      } else {
+        state.keyboardNavigationOn = true
+      }
     },
 
     setActiveClickedCmsItemIndex: (state, action) => {
@@ -1005,6 +1025,10 @@ export const projectSlice = createSlice({
         },
       ]
 
+      const starterScripts =
+        state.projectPages.find((page) => page.isStarter === true)?.scripts ||
+        []
+
       updateNodesLists(state)
       state.nodesEditMode = 'page'
       // create new page
@@ -1016,6 +1040,7 @@ export const projectSlice = createSlice({
         slug: newPageSlug,
         id: newPageId,
         preRenderedHTMLNodes: starterNodes,
+        scripts: starterScripts,
       })
       state.projectPageFolderStructure.push({
         name: newPageName,
@@ -1043,6 +1068,69 @@ export const projectSlice = createSlice({
         state.openedSettingsPage.id
       )
       settingsOpenedPage[action.payload.property] = action.payload.value
+    },
+
+    addScriptToPage: (state, action) => {
+      function isPageCMS() {
+        return state.openedSettingsPage?.items !== undefined
+      }
+
+      if (!isPageCMS()) {
+        if (
+          state.projectPages.find(
+            ({ id }) => id === state.openedSettingsPage.id
+          )?.scripts === undefined
+        ) {
+          state.projectPages.find(
+            ({ id }) => id === state.openedSettingsPage.id
+          ).scripts = []
+        }
+        state.projectPages
+          .find(({ id }) => id === state.openedSettingsPage.id)
+          .scripts.push({
+            id: action.payload,
+          })
+      } else {
+        if (
+          state.collections.find(({ id }) => id === state.openedSettingsPage.id)
+            ?.scripts === undefined
+        ) {
+          state.collections.find(
+            ({ id }) => id === state.openedSettingsPage.id
+          ).scripts = []
+        }
+        state.collections
+          .find(({ id }) => id === state.openedSettingsPage.id)
+          .scripts.push({
+            id: action.payload,
+          })
+      }
+    },
+
+    removeScriptFromPage: (state, action) => {
+      function isPageCMS() {
+        return state.openedSettingsPage?.items !== undefined
+      }
+
+      if (!isPageCMS()) {
+        state.projectPages
+          .find(({ id }) => id === state.openedSettingsPage.id)
+          .scripts.splice(
+            state.projectPages
+              .find(({ id }) => id === state.openedSettingsPage.id)
+              .scripts.findIndex(({ id }) => id === action.payload),
+            1
+          )
+      } else {
+        state.collections
+          .find(({ id }) => id === state.openedSettingsPage.id)
+          .scripts.splice(
+            state.collections
+              .find(({ id }) => id === state.openedSettingsPage.id)
+              .scripts.findIndex(({ id }) => id === action.payload),
+            1
+          )
+      }
     },
 
     // TO DO deletePageFolder
@@ -1145,6 +1233,7 @@ export const projectSlice = createSlice({
 
     openPageSettings: (state, action) => {
       state.openedSettingsPage = action.payload
+      console.log(state.openedSettingsPage)
     },
 
     closePageSettings: (state) => {
@@ -1587,18 +1676,20 @@ export const projectSlice = createSlice({
     editStyleOption: (state, action) => {
       const property = action.payload.property
       const value = action.payload.value
-      const index = action.payload.index
+      let index = action.payload.index
+
+      if (index === null) {
+        index =
+          state.preRenderedStyles.find(
+            ({ id }) => id === state.stylesInActiveNode[0].id
+          ).childrens.length - 1
+      }
 
       state.preRenderedStyles.find(
         ({ id }) => id === state.stylesInActiveNode[0].id
       ).childrens[index][property] = value
 
       updateGlobalCSS(state)
-
-      console.log(state.activeNodeId)
-
-      // console.log(current(state.preRenderedStyles.find(({id}) => id === state.stylesInActiveNode[0].id)
-      // .childrens[index]));
     },
 
     removeStyleOption: (state, action) => {
@@ -1820,10 +1911,20 @@ export const projectSlice = createSlice({
       )
     },
 
+    setElementsInlineStyleMode: (state, action) => {
+      state.elementsInlineStyleMode = action.payload
+      if (state.elementsInlineStyleMode === true) {
+        state.activeStyleId = ''
+      }
+    },
+
     updateActiveStyleListAndId: (state) => {
       state.stylesInActiveNode = state.activeNodeObject?.class
 
-      if (state.projectMode === 'developer') {
+      if (
+        state.projectMode === 'developer' ||
+        state.elementsInlineStyleMode === false
+      ) {
         state.activeStyleIndex = getIndexOfElementInArrayById(
           state.preRenderedStyles,
           state.stylesInActiveNode?.[0]?.id
@@ -2244,9 +2345,9 @@ export const projectSlice = createSlice({
         state.activeNodeId
       )
 
-      if (state?.activeNodeObject !== undefined) {
-        console.log(current(state.activeNodeObject))
-      }
+      // if (state?.activeNodeObject !== undefined) {
+      //   console.log(current(state.activeNodeObject))
+      // }
     },
 
     toggleHtmlNodeExpandedState: (state, action) => {
@@ -2467,6 +2568,7 @@ export const projectSlice = createSlice({
       if (state.keyboardNavigationOn) {
         findNode(state.preRenderedHTMLNodes, state.activeNodeId)
         state.activeNodeId = response
+        console.log('state.activeNodeId: ', state.activeNodeId)
       }
     },
 
@@ -2583,16 +2685,14 @@ export const projectSlice = createSlice({
 
     setProjectMode: (state, action) => {
       state.projectMode = action.payload
-      if (state.projectMode === 'creator') {
-        if (state.nodesEditMode === 'layout') {
-          state.nodesEditMode = 'page'
-          state.activePageId = state.projectPages[0].id
-          state.activePageIndex = 0
-          state.preRenderedHTMLNodes =
-            state.projectPages[0].preRenderedHTMLNodes
-        }
-        state.activeTab = ''
-      }
+      state.nodesEditMode = 'page'
+      state.activePageId = state.projectPages[0].id
+      state.activeCollectionTemplateId = ''
+      state.activeLayoutId = ''
+      state.activeBlockId = ''
+      state.activePageIndex = 0
+      state.preRenderedHTMLNodes = state.projectPages[0].preRenderedHTMLNodes
+      state.activeTab = ''
     },
 
     setBlocks: (state, action) => {
@@ -3384,6 +3484,8 @@ export const projectSlice = createSlice({
             sections: state.projectLayouts,
             blocks: state.blocks,
             styleGuide: state.styleGuide,
+            scripts: state.scripts,
+            libraries: state.libraries,
           })
           document.querySelector('.saveButton.save').innerHTML = 'Saved'
         } catch (error) {
@@ -3627,6 +3729,110 @@ export const projectSlice = createSlice({
     setIsBackupOn: (state, action) => {
       state.isBackupOn = action.payload
     },
+
+    setScripts: (state, action) => {
+      state.scripts = [...action.payload]
+    },
+
+    addScript: (state, action) => {
+      state.scripts.push({
+        id: uuidv4(),
+        name: action.payload.name,
+        js: '',
+        css: '',
+        requires: [],
+      })
+    },
+
+    deleteScript: (state, action) => {
+      let id = action.payload.id
+      if (id === null) {
+        id = state.activeScriptId
+      }
+      state.activeScriptId = null
+
+      state.scripts = state.scripts.filter((script) => script.id !== id)
+
+      state.projectPages.forEach((page) => {
+        if (page.scripts !== undefined) {
+          page.scripts = page?.scripts?.filter((script) => script.id !== id)
+        }
+      })
+
+      state.collections.forEach((collection) => {
+        if (collection.scripts !== undefined) {
+          collection.scripts = collection?.scripts?.filter(
+            (script) => script.id !== id
+          )
+        }
+      })
+
+      console.log(current(state.projectPages))
+    },
+
+    editScript: (state, action) => {
+      let id = action.payload.id
+      if (id === null) {
+        id = state.activeScriptId
+      }
+      const property = action.payload.property
+      const value = action.payload.value
+
+      const script = state.scripts.find((script) => script.id === id)
+      script[property] = value
+    },
+
+    setActiveScriptId: (state, action) => {
+      state.activeScriptId = action.payload
+    },
+
+    setLibraries: (state, action) => {
+      state.libraries = [...action.payload]
+    },
+
+    addLibrary: (state, action) => {
+      state.libraries.push({
+        id: uuidv4(),
+        name: action.payload.name,
+        url: action.payload.url,
+        type: action.payload.type,
+      })
+    },
+
+    deleteLibrary: (state, action) => {
+      let id = action.payload.id
+      state.activeLibraryId = null
+      state.libraries = state.libraries.filter((library) => library.id !== id)
+    },
+
+    editLibrary: (state, action) => {
+      let id = action.payload.id
+      if (id === null) {
+        id = state.activeLibraryId
+      }
+      const property = action.payload.property
+      const value = action.payload.value
+
+      const library = state.libraries.find((library) => library.id === id)
+      library[property] = value
+    },
+
+    connectLibraryWithScript: (state, action) => {
+      const script = state.scripts.find(
+        (script) => script.id === state.activeScriptId
+      )
+      script.requires.push(action.payload.libraryId)
+      console.log(script)
+    },
+
+    disConnectLibraryWithScript: (state, action) => {
+      const script = state.scripts.find(
+        (script) => script.id === state.activeScriptId
+      )
+      script.requires = script.requires.filter(
+        (libraryId) => libraryId !== action.payload.libraryId
+      )
+    },
   },
 })
 
@@ -3645,6 +3851,7 @@ export const {
   unArchiveCollectionItem,
   duplicateCollectionItem,
   editCollectionItemName,
+  editCollectionItemSlug,
   addCollectionField,
   editCollectionField,
   deleteCollectionField,
@@ -3676,6 +3883,8 @@ export const {
   addPage,
   addPageFromStarter,
   editPage,
+  addScriptToPage,
+  removeScriptFromPage,
   deletePage,
   setActivePage,
   addPageFolder,
@@ -3810,6 +4019,7 @@ export const {
   setKeyboardNavigationOn,
   setProjectPopUp,
   setProjectMode,
+  setElementsInlineStyleMode,
   setSaveButtonStateText,
   setActiveRightSidebarTabTrue,
   setActiveRightSidebarTab,
@@ -3835,6 +4045,21 @@ export const {
   moveStyleGuideItem,
   addStyleGuideItemStyle,
   deleteStyleGuideItemStyle,
+
+  /* Scripts */
+  setScripts,
+  addScript,
+  editScript,
+  deleteScript,
+  setActiveScriptId,
+
+  /* Libraries */
+  setLibraries,
+  addLibrary,
+  editLibrary,
+  deleteLibrary,
+  connectLibraryWithScript,
+  disConnectLibraryWithScript,
 } = projectSlice.actions
 
 export default projectSlice.reducer

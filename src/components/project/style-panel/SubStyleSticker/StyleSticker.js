@@ -20,9 +20,11 @@ export default function StyleSticker({
   }
 
   function handleClickInSticker(id, index) {
+    console.log(id)
     if (styleIsSet) {
       dispatch(setActiveStyleId(id))
       dispatch(setActiveStyleOptionIndex(index))
+      console.log(index)
     } else {
       handleOpenDropdown()
     }

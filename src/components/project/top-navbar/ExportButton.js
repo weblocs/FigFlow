@@ -20,6 +20,8 @@ export default function ExportButton() {
   )
   const projectPages = useSelector((state) => state.project.projectPages)
   const collections = useSelector((state) => state.project.collections)
+  const allScripts = useSelector((state) => state.project.scripts)
+  const libraries = useSelector((state) => state.project.libraries)
   const projectPageFolderStructure = useSelector(
     (state) => state.project.projectPageFolderStructure
   )
@@ -41,6 +43,8 @@ export default function ExportButton() {
           const nodes = projectPages.find(
             ({ slug }) => slug === page.slug
           ).preRenderedHTMLNodes
+          const scripts =
+            projectPages.find(({ slug }) => slug === page.slug)?.scripts || []
           const metaTitle = projectPages.find(
             ({ slug }) => slug === page.slug
           ).metaTitle
@@ -62,28 +66,33 @@ export default function ExportButton() {
             path = `${parentToFolderLink}/`
           }
 
-          zip.file(
-            `${path}/style.css`,
-            generatePageCss(preRenderedStyles, nodes, projectSwatches)
-          )
-
-          zip.file(
-            `${path}/index.html`,
-            // generatePage(nodes, parents.length, metaTitle, metaDescription)
-            generateAnyPage(
-              preRenderedStyles,
-              'page',
-              null,
-              null,
-              nodes,
-              parents.length,
-              metaTitle,
-              metaDescription,
-              collections,
-              projectPages,
-              pageSlug
+          if (!page.isStarter) {
+            zip.file(
+              `${path}/style.css`,
+              generatePageCss(preRenderedStyles, nodes, projectSwatches)
             )
-          )
+
+            zip.file(
+              `${path}/index.html`,
+              // generatePage(nodes, parents.length, metaTitle, metaDescription)
+              generateAnyPage(
+                preRenderedStyles,
+                'page',
+                null,
+                null,
+                nodes,
+                parents.length,
+                metaTitle,
+                metaDescription,
+                collections,
+                projectPages,
+                pageSlug,
+                scripts,
+                allScripts,
+                libraries
+              )
+            )
+          }
         } else {
           let updatedParents = [...parents, pageSlug]
           let parentToFolderLink = ''
@@ -98,28 +107,18 @@ export default function ExportButton() {
 
     renderPages(projectPageFolderStructure, ['project'])
 
-    zip.file(
-      'project/style.css',
-      `*{-webkit-font-smoothing: antialiased;box-sizing: border-box;}body{margin:0;}img{display: block;width: 100%; height: auto;}
-      ${fullJSONtoCSS(preRenderedStyles, projectSwatches)}
-      @font-face {
-        font-family: 'Plus Jakarta Sans';
-        src: url('assets/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
-        font-weight: 500;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'Plus Jakarta Sans';
-        src: url('assets/fonts/PlusJakartaSans-ExtraBold.woff2') format('woff2');
-        font-weight: 800;
-        font-style: normal;
-        font-display: swap;
-      }`
-    )
-
     collections.forEach((collection) => {
       collection.items.forEach((item) => {
+        const scripts = collection?.scripts || []
+        zip.file(
+          `project/${collection.slug}/style.css`,
+          generatePageCss(
+            preRenderedStyles,
+            collection.preRenderedHTMLNodes,
+            projectSwatches
+          )
+        )
+
         zip.file(
           `project/${collection.slug}/${item.slug}.html`,
           // generateCollectionPage(collection, item)
@@ -134,7 +133,10 @@ export default function ExportButton() {
             null,
             collections,
             projectPages,
-            item.slug
+            item.slug,
+            scripts,
+            allScripts,
+            libraries
           )
         )
       })

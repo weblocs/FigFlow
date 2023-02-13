@@ -11,6 +11,8 @@ import {
   setActiveHtmlNodeParentsPath,
   assignAllInlineStylesToClass,
   setActiveRightSidebarTabTrue,
+  editStyleOption,
+  setElementsInlineStyleMode,
 } from '../../../features/project'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from './SubStyleSticker/SubStyleSticker'
@@ -34,12 +36,16 @@ export default function StylePanelHeader() {
   const stylesInActiveNode = useSelector(
     (state) => state.project.stylesInActiveNode
   )
+  const elementsInlineStyleMode = useSelector(
+    (state) => state.project.elementsInlineStyleMode
+  )
   // const stylesInActiveNode = useSelector((state) => state.project.activeNodeObject?.class || [])
 
   const dispatch = useDispatch()
 
   const inputRef = useRef()
   const styleOptionInputRef = useRef()
+  const styleOptionDefaultInputRef = useRef()
   const renameInputRef = useRef()
 
   const [isOptionsListOpen, setIsOptionsListOpen] = useState(false)
@@ -84,8 +90,9 @@ export default function StylePanelHeader() {
         }
       }
       if (isAddStyleOptionInputOpen) {
-        styleOptionInputRef.current.focus()
+        styleOptionDefaultInputRef.current.focus()
         styleOptionInputRef.current.value = ''
+        styleOptionDefaultInputRef.current.value = ''
       }
       dispatch(setKeyboardNavigationOn(false))
     } else {
@@ -128,7 +135,29 @@ export default function StylePanelHeader() {
       if (e.target.value !== '') {
         dispatch(addStyle(e.target.value))
         setIsAddStyleOptionInputOpen(false)
+        dispatch(
+          editStyleOption({
+            property: 'defaultName',
+            value: styleOptionDefaultInputRef.current.value,
+            index: null,
+          })
+        )
       }
+
+      // Make new option active in style editor
+
+      // console.log(stylesInActiveNode)
+
+      // setTimeout(() => {
+      //   dispatch(
+      //     setActiveStyleId(stylesInActiveNode[stylesInActiveNode.length - 1].id)
+      //   )
+      //   dispatch(
+      //     setActiveStyleOptionIndex({
+      //       index: stylesInActiveNode.length - 1,
+      //     })
+      //   )
+      // }, 100)
     }
     if (e.key === 'Escape') {
       setIsAddStyleOptionInputOpen(false)
@@ -217,21 +246,27 @@ export default function StylePanelHeader() {
         <div
           className={
             'selector-text' +
-            (activeStyleId === '' && activeNodeId !== '' ? ' active' : '')
+            (elementsInlineStyleMode === true && activeNodeId !== ''
+              ? ' active'
+              : '')
           }
-          onClick={() => dispatch(setActiveStyleId(''))}
+          onClick={() => dispatch(setElementsInlineStyleMode(true))}
         >
           Edit element
         </div>
 
-        {!isDeveloperMode && (
-          <div
-            onClick={() => setIsOptionsListOpen(!isOptionsListOpen)}
-            className="edit-options-button"
-          >
-            Edit options
-          </div>
-        )}
+        <div
+          // onClick={() => setIsOptionsListOpen(!isOptionsListOpen)}
+          onClick={() => dispatch(setElementsInlineStyleMode(false))}
+          className={
+            'edit-options-button' +
+            (elementsInlineStyleMode === false && activeNodeId !== ''
+              ? ' active'
+              : '')
+          }
+        >
+          Edit styles
+        </div>
 
         {/* <div className="inheriting-box">
                     <div className="text">Inheriting</div>
@@ -239,7 +274,7 @@ export default function StylePanelHeader() {
                 </div> */}
       </div>
 
-      {isOptionsListOpen && (
+      {!elementsInlineStyleMode && (
         <div className="select-class-input">
           <div
             className="new-class-toggle"
@@ -281,7 +316,14 @@ export default function StylePanelHeader() {
               (isAddStyleOptionInputOpen ? ' active' : '')
             }
           >
-            New option
+            Class name
+            <input
+              type="text"
+              ref={styleOptionDefaultInputRef}
+              className="add-class_input"
+            />
+            <div style={{ height: '6px' }}></div>
+            Option name
             <input
               onKeyDown={handleOptionInputKeyPress}
               ref={styleOptionInputRef}

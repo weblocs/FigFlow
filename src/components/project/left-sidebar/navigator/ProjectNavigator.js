@@ -27,6 +27,7 @@ export default function ProjectNavigator() {
             <AddNodeButton type="i" text="Input" />
             <AddNodeButton type="nav_tr" text="Nav Trigger" />
             <AddNodeButton type="nav_l" text="Nav List" />
+            <AddNodeButton type="rich_text" text="Rich Text" />
           </div>
           <div className="projectTabTitleBox">Navigator</div>
         </div>

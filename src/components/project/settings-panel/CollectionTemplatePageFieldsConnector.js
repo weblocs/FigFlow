@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { editHtmlNode } from '../../../features/project'
 import Arrow from '../../../img/arrow-down.svg'
@@ -41,6 +42,12 @@ export default function CollectionTemplatePageFieldsConnector() {
     return false
   })
 
+  const nodeType =
+    ((activeNodeObject?.type === 'h' || activeNodeObject?.type === 'p') &&
+      'text') ||
+    (activeNodeObject?.type === 'img' && 'img') ||
+    (activeNodeObject?.type === 'rich_text' && 'rich_text')
+
   const dispatch = useDispatch()
 
   function handleClickInFieldItem(id) {
@@ -65,6 +72,18 @@ export default function CollectionTemplatePageFieldsConnector() {
     }
   }
 
+  useEffect(() => {
+    if (
+      collections?.find(({ id }) => id === activeCollectionTemplateId)
+        ?.fields === undefined
+    ) {
+      return
+    }
+    console.log(
+      collections.find(({ id }) => id === activeCollectionTemplateId)?.fields
+    )
+  }, [activeCollectionTemplateId])
+
   return (
     <div>
       {isInTemplateEditingPage && !isNodeInCollection ? (
@@ -72,7 +91,9 @@ export default function CollectionTemplatePageFieldsConnector() {
           <StylePanelTitle title="Collection Template" />
           <div className="style-panel-box">
             {(activeNodeObject?.type === 'h' ||
-              activeNodeObject?.type === 'p') && (
+              activeNodeObject?.type === 'p' ||
+              activeNodeObject?.type === 'img' ||
+              activeNodeObject?.type === 'rich_text') && (
               <div style={{ display: 'flex' }}>
                 CMS Template Editing:
                 <input
@@ -84,7 +105,9 @@ export default function CollectionTemplatePageFieldsConnector() {
             )}
 
             {(activeNodeObject?.type === 'h' ||
-              activeNodeObject?.type === 'p') &&
+              activeNodeObject?.type === 'p' ||
+              activeNodeObject?.type === 'img' ||
+              activeNodeObject?.type === 'rich_text') &&
               isNodeCmsEditable && (
                 <div>
                   <div className="fields-select">
@@ -97,29 +120,22 @@ export default function CollectionTemplatePageFieldsConnector() {
                     <img src={Arrow} className="fields-item-arrow" />
                   </div>
                   <div className="fields-select_list">
-                    <ConnectorFieldItem
-                      field={{ name: 'Name', id: '0' }}
-                      handleClick={handleClickInFieldItem}
-                    />
+                    {(activeNodeObject?.type === 'h' ||
+                      activeNodeObject?.type === 'p') && (
+                      <ConnectorFieldItem
+                        field={{ name: 'Name', id: '0' }}
+                        handleClick={handleClickInFieldItem}
+                      />
+                    )}
                     {collections
                       .find(({ id }) => id === activeCollectionTemplateId)
-                      ?.fields.filter(({ type }) => type === 'text')
+                      ?.fields.filter(({ type }) => type === nodeType)
                       .map((field) => (
                         <ConnectorFieldItem
                           key={field.id}
                           field={field}
                           handleClick={handleClickInFieldItem}
                         />
-                        // <div
-                        //   onClick={() => handleClickInFieldItem(field.id)}
-                        //   key={field.id}
-                        //   className={
-                        //     'fields-select_item' +
-                        //     (activeCmsFieldId === field.id ? ' active' : '')
-                        //   }
-                        // >
-                        //   {field.name}
-                        // </div>
                       ))}
                   </div>
                 </div>

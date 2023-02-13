@@ -26,6 +26,7 @@ export default function SaveButton() {
     (state) => state.project.projectPageFolderStructure
   )
   const collections = useSelector((state) => state.project.collections)
+  const scripts = useSelector((state) => state.project.scripts)
   const firebaseError = useSelector((state) => state.project.firebaseError)
   const state = useSelector((state) => state.project)
   const dispatch = useDispatch()
@@ -48,6 +49,7 @@ export default function SaveButton() {
     const tempStyleGuide = styleGuide
     const tempProjectPageFolderStructure = projectPageFolderStructure
     const tempCollections = collections
+    const tempScripts = scripts
 
     const timer = setTimeout(() => {
       if (
@@ -55,7 +57,8 @@ export default function SaveButton() {
         tempStyles === preRenderedStyles &&
         tempStyleGuide === styleGuide &&
         tempProjectPageFolderStructure === projectPageFolderStructure &&
-        tempCollections === collections
+        tempCollections === collections &&
+        tempScripts === scripts
       ) {
         handleOnClick()
       }
@@ -68,6 +71,7 @@ export default function SaveButton() {
     styleGuide,
     projectPageFolderStructure,
     collections,
+    scripts,
   ])
 
   useEffect(() => {

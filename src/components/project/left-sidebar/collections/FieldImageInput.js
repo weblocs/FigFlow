@@ -24,7 +24,7 @@ export default function FieldImageInput({ field, handleInputChange }) {
       />
       <FileUploaderToCollectionField
         handleInputChange={(fieldValue) =>
-          handleInputChange(field.id, fieldValue, 'img')
+          handleInputChange(field.id, fieldValue)
         }
       />
     </div>

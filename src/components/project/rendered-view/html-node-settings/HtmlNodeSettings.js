@@ -23,6 +23,9 @@ export default function HtmlNodeSettings() {
   const isActiveNodeSection = useSelector(
     (state) => state.project.activeNodeObject?.type === 'sec'
   )
+  const isActiveNodeBody = useSelector(
+    (state) => state.project.activeNodeObject?.type === 'body'
+  )
   const activeStyleName = useSelector(
     (state) =>
       state.project.stylesInActiveNode?.[0]?.name
@@ -114,7 +117,9 @@ export default function HtmlNodeSettings() {
               <div
                 className={
                   'rich-element-settings_button active' +
-                  (!isActiveNodeSection ? ' with-arrow' : '')
+                  (!isActiveNodeSection && !isActiveNodeBody
+                    ? ' with-arrow'
+                    : '')
                 }
               >
                 <div className="rich-element-settings_button-text">
@@ -122,7 +127,7 @@ export default function HtmlNodeSettings() {
                   {activeStyleName}
                 </div>
               </div>
-              {!isActiveNodeSection && <GoToParentNode />}
+              {!isActiveNodeSection && !isActiveNodeBody && <GoToParentNode />}
               <NodeStylesList />
               <StyleButton />
 
@@ -135,7 +140,7 @@ export default function HtmlNodeSettings() {
               <InputSettings />
               <AddBlockButton addRichSetting={true} />
 
-              {!isActiveNodeSection && (
+              {!isActiveNodeSection && !isActiveNodeBody && (
                 <div
                   className="rich-element-settings_button button-centered active"
                   onClick={() => setOpenButtonList(!openButtonList)}

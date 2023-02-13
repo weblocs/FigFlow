@@ -56,11 +56,7 @@ export default function ProjectSettingsPanel() {
 
   if (activeRightSidebarTab === 'Settings') {
     return (
-      <div
-        className={
-          'projectSettingsPanel' + (isProjectModeDeveloper ? ' active' : '')
-        }
-      >
+      <div className={'projectSettingsPanel active'}>
         <div className="style-panel-box sticky">
           <div className="style-panel-title-box">
             <div className="text">{activeNodeObject?.type} settings</div>

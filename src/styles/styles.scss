@@ -90,6 +90,7 @@ img {
 .user-panel,
 .parents-path,
 .projectPageItem {
+  position: relative;
   font-family: Inter, sans-serif;
   color: #333;
   font-size: 14px;
@@ -1142,6 +1143,7 @@ img {
     flex-shrink: 0;
     border-right: 1px solid #d3d3d3;
     display: none;
+    background-color: #fff;
   }
 
   .navigatorWrapper.active {
@@ -1418,6 +1420,7 @@ img {
   .projectSidebar {
     width: 32px;
     flex-shrink: 0;
+    background-color: #fff;
     border-right: 1px solid #d3d3d3;
   }
 
@@ -1454,6 +1457,7 @@ img {
     position: relative;
     overflow-y: scroll;
     overflow-x: hidden;
+    background-color: #fff;
   }
 
   .projectPagesPanel.wider {
@@ -1481,10 +1485,25 @@ img {
     flex-shrink: 0;
     border-right: 1px solid #d3d3d3;
     display: none;
+    background-color: #fff;
   }
 
   .collectionsPanel.active {
     display: block;
+  }
+
+  .collectionsPanel.is-script {
+    width: 450px;
+    height: calc(100vh - 32px);
+  }
+
+  .collectionsPanel.item-edit-panel {
+    width: 600px;
+    height: calc(100% - 24px);
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 100001;
   }
 
   .projectRightSidebarNav {
@@ -1519,6 +1538,7 @@ img {
     flex-shrink: 0;
     display: none;
     font-size: 11px;
+    background-color: #fff;
   }
 
   .projectSettingsPanel.active {
@@ -1527,6 +1547,7 @@ img {
 
   .style-panel {
     display: none;
+    background-color: #fff;
   }
 
   .style-panel.active {
@@ -2932,6 +2953,12 @@ img {
     height: 28px;
   }
 
+  .cms-field-input.is-code {
+    font-family: monospace;
+    min-height: 220px;
+    overflow-y: scroll;
+  }
+
   .cms-field-input-click-area,
   .cms-field-input-value {
     font-size: 12px;
@@ -2939,6 +2966,10 @@ img {
     letter-spacing: 0;
     font-family: Inter;
     cursor: text;
+  }
+
+  .cms-field-input-value.is-code {
+    height: 100%;
   }
 
   .cms-field-input-click-area {
@@ -3192,7 +3223,7 @@ img {
   }
 
   .add-class-box.option-box {
-    top: -70px;
+    top: -64px;
   }
 
   .add-class-box.active {
@@ -3243,7 +3274,6 @@ img {
     font-size: 11px;
     line-height: 13px;
     padding: 1px 2px;
-    background: #e4e4e4;
     border-radius: 4px;
     cursor: pointer;
   }
@@ -3955,6 +3985,11 @@ img {
     line-height: 15px;
   }
 
+  .edit-options-button.active {
+    color: #544cca;
+    background: #f3f3f9;
+  }
+
   .input-drag-resize-wrap {
     position: absolute;
     width: 100%;
@@ -4397,5 +4432,89 @@ img {
   }
   .error-wrap.active {
     display: flex;
+  }
+
+  .cms-field-rich-text {
+    padding: 12px;
+    border: 1px solid #b0b0b0;
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+
+  .select-input {
+    width: 100%;
+    height: 26px;
+    border: 1px solid #929292bb;
+    font-size: 11px;
+    padding-left: 4px;
+  }
+
+  .font-light {
+    font-weight: 300;
+  }
+
+  .color-light {
+    color: #999;
+  }
+
+  .mb-0 {
+    margin-bottom: 0;
+  }
+
+  .mb-8 {
+    margin-bottom: 8px;
+  }
+
+  .mb-16 {
+    margin-bottom: 16px;
+  }
+
+  .pb-8 {
+    padding-bottom: 8px;
+  }
+
+  .pb-16 {
+    padding-bottom: 16px;
+  }
+
+  .gap-8 {
+    gap: 8px;
+  }
+
+  .gap-16 {
+    gap: 16px;
+  }
+
+  .border-bottom-gray {
+    border-bottom: 1px solid #d6d6d6;
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-row {
+    flex-direction: row;
+  }
+
+  .flex-vert-center {
+    align-items: center;
+  }
+
+  .flex-column {
+    flex-direction: column;
+  }
+
+  .flex-center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flex-between {
+    justify-content: space-between;
   }
 }

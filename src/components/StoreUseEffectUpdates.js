@@ -33,8 +33,10 @@ export default function StoreUseEffectUpdates() {
   const undoActionActive = useSelector(
     (state) => state.project.undoActionActive
   )
-  const projectMode = useSelector((state) => state.project.projectMode)
   const activeTab = useSelector((state) => state.project.activeTab)
+  const elementsInlineStyleMode = useSelector(
+    (state) => state.project.elementsInlineStyleMode
+  )
   const activeClickedCmsItemIndex = useSelector(
     (state) => state.project.activeClickedCmsItemIndex
   )
@@ -42,6 +44,8 @@ export default function StoreUseEffectUpdates() {
     (state) => state.project.activeHoveredCmsItemIndex
   )
   const styleState = useSelector((state) => state.project.styleState)
+  const activePageId = useSelector((state) => state.project.activePageId)
+  const editedSymbolId = useSelector((state) => state.project.editedSymbolId)
 
   const dispatch = useDispatch()
 
@@ -51,7 +55,7 @@ export default function StoreUseEffectUpdates() {
 
   useEffect(() => {
     dispatch(updateActiveStyleListAndId())
-  }, [activeNodeId, preRenderedHTMLNodes])
+  }, [activeNodeId, preRenderedHTMLNodes, elementsInlineStyleMode])
 
   useEffect(() => {
     if (styleState !== 'default') {
@@ -78,7 +82,7 @@ export default function StoreUseEffectUpdates() {
       navList?.classList.add('is-nav-hidden')
       navTrigger?.classList.add('is-trigger-visible')
     }
-  }, [activeProjectResolution])
+  }, [activeProjectResolution, activePageId, editedSymbolId])
   useEffect(() => {
     dispatch(editActiveStyleProperties())
   }, [
@@ -183,7 +187,7 @@ export default function StoreUseEffectUpdates() {
     setTimeout(() => {
       dispatch(editSymbolsClickableArea())
     }, 500)
-  }, [preRenderedHTMLNodes, preRenderedStyles])
+  }, [preRenderedHTMLNodes, preRenderedStyles, activeProjectResolution])
 
   useEffect(() => {
     if (activeTab === 'Navigator') {

@@ -18,13 +18,13 @@ export default function RightPanelButtonsList() {
       }
     >
       <ProjectRightSidebarButton letter="S" icon={StyleIcon} tab="Style" />
-      {!projectModeCreator && (
-        <ProjectRightSidebarButton
-          letter="D"
-          icon={SettingsIcon}
-          tab="Settings"
-        />
-      )}
+
+      <ProjectRightSidebarButton
+        letter="D"
+        icon={SettingsIcon}
+        tab="Settings"
+      />
+
       <ProjectRightSidebarButton
         letter="G"
         icon={StyleGuideIcon}

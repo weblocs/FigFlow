@@ -211,8 +211,8 @@ function RenderedNode(props) {
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       className={listOfNodeStyles}
-      isnavlist={props.type === 'nav_l' && 'true'}
-      isnavtrigger={props.type === 'nav_tr' && 'true'}
+      isnavlist={props.type === 'nav_l' ? 'true' : ''}
+      isnavtrigger={props.type === 'nav_tr' ? 'true' : ''}
     >
       {props.children.map((el) => (
         <RenderedNode
@@ -470,9 +470,11 @@ function RenderedNode(props) {
                 nodesEditMode === 'cmsTemplate'
               )
           )
-          ?.map((item, itemIndex) => (
-            <div key={item.id + itemIndex}>
-              {props.children.map((el) => (
+          ?.map(
+            (item, itemIndex) =>
+              // <div key={item.id + itemIndex}>
+              // {
+              props.children.map((el) => (
                 <RenderedNode
                   id={el.id}
                   inputPlaceholder={el.inputPlaceholder}
@@ -496,9 +498,10 @@ function RenderedNode(props) {
                     props.onClick([nodeId, className])
                   }
                 />
-              ))}
-            </div>
-          ))}
+              ))
+            // }
+            // </div>
+          )}
       </div>
     )
 
@@ -554,6 +557,16 @@ function RenderedNode(props) {
       imageSrc = collections[props.renderedCollectionIndex]?.items[
         props.itemIndex
       ].data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue
+
+      if (nodesEditMode === 'cmsTemplate') {
+        const activeCollectionItem = collections
+          .find(({ id }) => id === activeCollectionTemplateId)
+          ?.items?.find(({ id }) => id === activeCollectionItemTemplateId)
+
+        imageSrc = activeCollectionItem.data.find(
+          ({ fieldId }) => fieldId === props.cmsFieldId
+        )?.fieldValue
+      }
     }
     elementHTML = (
       <img
@@ -574,6 +587,33 @@ function RenderedNode(props) {
       />
     )
   }
+
+  // function isNodeTextType(type) {
+  //   return type === 'h' || type === 'p'
+  // }
+
+  // function isNodeConnectedWithCMSNameField(node) {
+  //   return node.cmsFieldId === '0'
+  // }
+
+  // function isNodeConnectedWithAnyCMSField(node) {
+  //   return node.cmsFieldId !== ''
+  // }
+
+  // function generateNodeText(node) {
+  //   if (!isNodeTextType(node.type)) {
+  //     return null
+  //   }
+
+  //   if (isNodeConnectedWithCMSNameField(node)) {
+  //     return node.collectionItemName
+  //   }
+  //   if (isNodeConnectedWithAnyCMSField(node)) {
+  //     return node.collectionItems.find(
+  //       ({ fieldId }) => fieldId === node.cmsFieldId
+  //     )?.fieldValue
+  //   }
+  // }
 
   let nodeText = props.title
   if (props.type === 'h' || props.type === 'p') {
@@ -631,6 +671,36 @@ function RenderedNode(props) {
     if (props.children.length > 0) {
       // console.log(props.children)
     }
+  }
+
+  if (props.type === 'rich_text') {
+    let richText = collections[props.renderedCollectionIndex]?.items[
+      props.itemIndex
+    ].data.find(({ fieldId }) => fieldId === props.cmsFieldId)?.fieldValue
+
+    if (nodesEditMode === 'cmsTemplate') {
+      const activeCollectionItem = collections
+        .find(({ id }) => id === activeCollectionTemplateId)
+        ?.items?.find(({ id }) => id === activeCollectionItemTemplateId)
+
+      richText = activeCollectionItem.data.find(
+        ({ fieldId }) => fieldId === props.cmsFieldId
+      )?.fieldValue
+    }
+
+    elementHTML = (
+      <div
+        el_id={elementId}
+        cms_item_index={props.itemIndex}
+        onClick={handleOnClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        className={listOfNodeStyles}
+        dangerouslySetInnerHTML={{
+          __html: richText,
+        }}
+      ></div>
+    )
   }
 
   if (props.type === 'h') {

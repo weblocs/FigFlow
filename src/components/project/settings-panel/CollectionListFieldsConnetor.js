@@ -42,12 +42,17 @@ export default function CollectionListFieldsConnetor({
   const isNodeAvailbleForCMS =
     activeNodeObject?.type === 'h' ||
     activeNodeObject?.type === 'p' ||
-    activeNodeObject?.type === 'img'
+    activeNodeObject?.type === 'img' ||
+    activeNodeObject?.type === 'rich_text'
   const isNodeText =
     activeNodeObject?.type === 'h' || activeNodeObject?.type === 'p'
   const isNodeImage = activeNodeObject?.type === 'img'
+  const isNodeRichText = activeNodeObject?.type === 'rich_text'
 
-  const nodeType = (isNodeText && 'text') || (isNodeImage && 'img')
+  const nodeType =
+    (isNodeText && 'text') ||
+    (isNodeImage && 'img') ||
+    (isNodeRichText && 'rich_text')
 
   if (isNodeInCollection && isNodeAvailbleForCMS) {
     return (

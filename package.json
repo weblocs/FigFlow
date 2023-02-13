@@ -5,7 +5,11 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "@lexical/react": "^0.8.0",
     "@reduxjs/toolkit": "^1.8.5",
+    "@tiptap/pm": "^2.0.0-beta.217",
+    "@tiptap/react": "^2.0.0-beta.217",
+    "@tiptap/starter-kit": "^2.0.0-beta.217",
     "@types/jest": "^29.0.2",
     "@types/node": "^18.7.18",
     "@types/react": "^18.0.20",
@@ -18,6 +22,7 @@
     "file-saver": "^2.0.5",
     "firebase": "^9.8.1",
     "jszip": "^3.10.0",
+    "lexical": "^0.8.0",
     "lodash": "^4.17.21",
     "prop-types": "15.8.1",
     "react": "18.0.0",
@@ -36,6 +41,7 @@
     "reselect": "^4.1.6",
     "sanitize-html": "^2.7.0",
     "sass": "^1.53.0",
+    "tiptap": "^1.32.2",
     "use-keyboard-shortcut": "^1.1.4",
     "uuid": "8.3.2"
   },
