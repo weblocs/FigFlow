@@ -2,16 +2,10 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { editStyleProperty } from '../../../features/project'
 import ProprtyInputLabel from './ProprtyInputLabel'
-import ShodowStyleInput from './ShodowStyleInput'
+import ShadowStyleInput from './ShadowStyleInput'
 import { ChromePicker } from 'react-color'
 
 export default function ShadowStyleEditor() {
-  const [x, setX] = useState(0)
-  const [y, setY] = useState(0)
-  const [blur, setBlur] = useState(0)
-  const [spread, setSpread] = useState(0)
-  const [color, setColor] = useState('')
-
   const [isOpen, setIsOpen] = useState(false)
 
   const dispatch = useDispatch()
@@ -26,72 +20,61 @@ export default function ShadowStyleEditor() {
       )?.value
   )
 
-  useEffect(() => {
-    if (hierarchyStyleProperty !== undefined) {
-      const [_x, _y, _blur, _spread] = hierarchyStyleProperty.split(' ')
-      const _color = hierarchyStyleProperty
-        .replace(_x, '')
-        .replace(_y, '')
-        .replace(_blur, '')
-        .replace(_spread, '')
-        .replace('   ', '')
-      if (parseInt(_x) !== x) {
-        setX(parseInt(_x))
-      }
-      if (parseInt(_y) !== y) {
-        setY(parseInt(_y))
-      }
-      if (parseInt(_blur) !== blur) {
-        setBlur(parseInt(_blur))
-      }
-      if (parseInt(_spread) !== spread) {
-        setSpread(parseInt(_spread))
-      }
-      if (parseInt(_color) !== color) {
-        setColor(_color)
-      }
-    } else {
-      setX(0)
-      setY(0)
-      setBlur(0)
-      setSpread(0)
-      setColor('')
-    }
-  }, [hierarchyStyleProperty])
+  const valueX = useSelector((state) =>
+    (parseInt(hierarchyStyleProperty?.split(' ')[0]) || '0').toString()
+  )
+  const valueY = useSelector((state) =>
+    (parseInt(hierarchyStyleProperty?.split(' ')[1]) || '0').toString()
+  )
+  const valueBlur = useSelector((state) =>
+    parseInt(hierarchyStyleProperty?.split(' ')[2] || '0').toString()
+  )
+  const valueSpread = useSelector((state) =>
+    parseInt(hierarchyStyleProperty?.split(' ')[3] || '0').toString()
+  )
+  const valueColor = useSelector((state) =>
+    hierarchyStyleProperty
+      ?.replace(valueX, '')
+      ?.replace(valueY, '')
+      ?.replace(valueBlur, '')
+      ?.replace(valueSpread, '')
+      ?.replace('   ', '')
+  )
 
   function handleX(value) {
-    setX(value)
-    updateShadow()
+    updateShadow(
+      `${value}px ${valueY}px ${valueBlur}px ${valueSpread}px ${valueColor}`
+    )
   }
 
   function handleY(value) {
-    setY(value)
-    updateShadow()
+    updateShadow(
+      `${valueX}px ${value}px ${valueBlur}px ${valueSpread}px ${valueColor}`
+    )
   }
 
   function handleBlur(value) {
-    setBlur(value)
-    updateShadow()
+    updateShadow(
+      `${valueX}px ${valueY}px ${value}px ${valueSpread}px ${valueColor}`
+    )
   }
 
   function handleSpread(value) {
-    setSpread(value)
-    updateShadow()
+    updateShadow(
+      `${valueX}px ${valueY}px ${valueBlur}px ${value}px ${valueColor}`
+    )
   }
 
   function handleColor(value) {
-    setColor(value)
-    updateShadow()
+    updateShadow(
+      `${valueX}px ${valueY}px ${valueBlur}px ${valueSpread}px ${value}`
+    )
   }
 
-  function updateShadow() {
+  function updateShadow(shadow) {
+    console.log(shadow)
     if (isAnyNodeSelected) {
-      dispatch(
-        editStyleProperty([
-          'box-shadow',
-          `${x}px ${y}px ${blur}px ${spread}px ${color}`,
-        ])
-      )
+      dispatch(editStyleProperty(['box-shadow', shadow]))
     }
   }
 
@@ -100,28 +83,28 @@ export default function ShadowStyleEditor() {
       <ProprtyInputLabel text="Shadow" property="box-shadow" />
       <div style={{ height: '10px' }}></div>
       <div className="_2-col-style-grid">
-        <ShodowStyleInput
+        <ShadowStyleInput
           name="Horizontal"
           unit="px"
-          value={x}
+          value={valueX}
           handleChange={handleX}
         />
-        <ShodowStyleInput
+        <ShadowStyleInput
           name="Vertical"
           unit="px"
-          value={y}
+          value={valueY}
           handleChange={handleY}
         />
-        <ShodowStyleInput
+        <ShadowStyleInput
           name="Blur"
           unit="px"
-          value={blur}
+          value={valueBlur}
           handleChange={handleBlur}
         />
-        <ShodowStyleInput
+        <ShadowStyleInput
           name="Spread"
           unit="px"
-          value={spread}
+          value={valueSpread}
           handleChange={handleSpread}
         />
       </div>
@@ -137,16 +120,16 @@ export default function ShadowStyleEditor() {
           <div
             className="color-picker_color-box"
             style={{
-              backgroundColor: color,
+              backgroundColor: valueColor,
             }}
           ></div>
-          <div className="text">{color}</div>
+          <div className="text">{valueColor}</div>
         </div>
 
         {isOpen && (
           <div className="swatches-box active">
             <ChromePicker
-              color={color}
+              color={valueColor}
               onChange={(color) =>
                 handleColor(
                   `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`

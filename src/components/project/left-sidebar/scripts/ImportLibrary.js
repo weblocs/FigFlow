@@ -23,7 +23,7 @@ export default function ImportLibrary({ closeLibraryImport }) {
   }
 
   return (
-    <div className="mb-16 pb-16 border-bottom-gray">
+    <div className="mb-16 mt-8 pb-16 border-bottom-gray">
       <div className="mb-8">
         <div className="cms-field-input-label">Library Name</div>
         <input

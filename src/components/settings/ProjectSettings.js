@@ -155,8 +155,6 @@ export default function ProjectSettings() {
           <button>Save</button>
 
           {isOfflineModeOn ? null : <FaviconUploader />}
-
-          <SelectPageNavigation />
         </div>
       </form>
     </div>

@@ -242,7 +242,11 @@ function RenderedNode(props) {
     </div>
   )
 
-  if (props.children.length === 0 && props.class.length === 0) {
+  if (
+    props.children.length === 0 &&
+    props.class.length === 0 &&
+    Object.keys(customStyle).length === 0
+  ) {
     elementHTML = (
       <div
         el_id={elementId}
@@ -332,6 +336,7 @@ function RenderedNode(props) {
             />
           ))}
         </div>
+
         <AddSectionButton sectionId={elementId} />
       </div>
     )

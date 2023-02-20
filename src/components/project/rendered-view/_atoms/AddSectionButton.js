@@ -20,6 +20,7 @@ export default function AddSectionButton({ sectionId }) {
     return (
       <div
         className={
+          // 'rich-element-settings_button add-section-button button-centered active' +
           'add-section_box active' +
           (hoveredSectionId === sectionId ? ' active' : '')
         }
@@ -28,7 +29,7 @@ export default function AddSectionButton({ sectionId }) {
           className="add-section_button"
           onClick={handleAddSectionButtonClick}
         >
-          +
+          +{/* Add section */}
         </div>
       </div>
     )

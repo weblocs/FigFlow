@@ -37,7 +37,7 @@ export default function TopNavbar() {
             {!isBackupOn && (
               <SidebarButton shortcode="B" tab="Backups" img={BackupIcon} />
             )}
-            <SidebarButton shortcode="S" tab="Scripts" img={ScriptsIcon} />
+            <SidebarButton shortcode="" tab="Scripts" img={ScriptsIcon} />
           </div>
         )}
         <PageChanger />

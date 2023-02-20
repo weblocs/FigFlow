@@ -29,6 +29,7 @@ export default function Libraries() {
   const selectRef = useRef()
 
   const [isLibraryImportOpen, setIsLibraryImportOpen] = useState(false)
+  const [isLibraryConnectionOpen, setIsLibraryConnectionOpen] = useState(false)
 
   function addLibrary() {
     const libraryId = selectRef.current.value
@@ -39,11 +40,19 @@ export default function Libraries() {
     <div className="cms-field-input-wrap">
       <div className="flex flex-between">
         <div className="cms-field-input-label">Libraries</div>
-        <div
-          className="text color-light pointer mb-8"
-          onClick={() => setIsLibraryImportOpen(!isLibraryImportOpen)}
-        >
-          Import library
+        <div className="flex gap-8">
+          <div
+            className="text color-light pointer"
+            onClick={() => setIsLibraryConnectionOpen(!isLibraryConnectionOpen)}
+          >
+            Connect library
+          </div>
+          <div
+            className="text color-light pointer"
+            onClick={() => setIsLibraryImportOpen(!isLibraryImportOpen)}
+          >
+            Import library
+          </div>
         </div>
       </div>
 
@@ -53,17 +62,19 @@ export default function Libraries() {
         />
       )}
 
-      <div className="flex flex-between gap-8 flex-vert-center">
-        <select ref={selectRef} className="select-input">
-          {notIncludedLibraries.map((library) => (
-            <option key={library.id} value={library.id}>
-              {library.name}
-            </option>
-          ))}
-        </select>
+      {isLibraryConnectionOpen && (
+        <div className="flex flex-between gap-8 flex-vert-center mt-8">
+          <select ref={selectRef} className="select-input">
+            {notIncludedLibraries.map((library) => (
+              <option key={library.id} value={library.id}>
+                {library.name}
+              </option>
+            ))}
+          </select>
 
-        <AddButton fx={addLibrary} />
-      </div>
+          <AddButton fx={addLibrary} />
+        </div>
+      )}
 
       {activeScriptLibraries.length > 0 && (
         <div className="mt-8">

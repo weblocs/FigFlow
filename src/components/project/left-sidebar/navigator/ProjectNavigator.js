@@ -37,7 +37,7 @@ export default function ProjectNavigator() {
           style={{
             overflowX: 'hidden',
             overflowY: 'scroll',
-            height: 'calc(100vh - 193px)',
+            height: 'calc(100vh - 254px)',
           }}
         >
           {preRenderedHTMLNodes.map((node) => (

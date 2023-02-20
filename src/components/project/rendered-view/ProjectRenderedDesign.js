@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   editHtmlNode,
@@ -9,6 +10,9 @@ import ProjectParentsPathBar from './html-nodes-path/ProjectParentsPathBar'
 import RenderedNode from './RenderedNode'
 
 export default function ProjectRenderedDesign() {
+  const activeRightSidebarTab = useSelector(
+    (state) => state.project.activeRightSidebarTab
+  )
   const preRenderedHTMLNodes = useSelector(
     (state) => state.project.preRenderedHTMLNodes
   )
@@ -31,23 +35,35 @@ export default function ProjectRenderedDesign() {
 
   const dispatch = useDispatch()
 
+  const [scale, setScale] = useState(1)
+  const [style, setStyle] = useState({})
+
+  // useEffect(() => {
+  //   if (activeRightSidebarTab !== '' && activeProjectResolution === '1') {
+  //     setStyle({
+  //       minWidth: '1440px',
+  //       transformOrigin: '720px 0',
+  //       scale: ((document.body.clientWidth - 265) / 1440).toString(),
+  //       height: '1068px',
+  //     })
+  //   } else {
+  //     setStyle({})
+  //   }
+  // }, [activeRightSidebarTab, activeProjectResolution])
+
   return (
     <div
       className={'Project  ' + 'd2g3-is-' + styleState}
       onWheel={() => dispatch(updateStateOnScroll())}
     >
       <style>{postRenderedStyles}</style>
+
       <div
-        // style={{
-        //   transform: 'scale(0.2)',
-        //   height: '484%',
-        //   transformOrigin: 'top',
-        // }}
+        style={style}
         id="project-view"
         className={'project-rendered-design state-' + activeProjectResolution}
       >
         <HtmlNodeSettings />
-
         {nodesEditModeLayoutOrBlock && <div className="body"></div>}
 
         <div className={nodesEditModeLayoutOrBlock ? 'body' : ''}>

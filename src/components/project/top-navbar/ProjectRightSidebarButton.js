@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import useKeyboardShortcut from 'use-keyboard-shortcut'
 import { setActiveRightSidebarTab } from '../../../features/project'
 
 export default function ProjectRightSidebarButton(props) {
@@ -10,6 +11,23 @@ export default function ProjectRightSidebarButton(props) {
   )
   const projectModeCreator = useSelector(
     (state) => state.project.projectMode === 'creator'
+  )
+  const keyboardNavigationOn = useSelector(
+    (state) => state.project.keyboardNavigationOn
+  )
+
+  const { openNavigatorShortcut } = useKeyboardShortcut(
+    [props.letter],
+    (shortcutKeys) => {
+      if (keyboardNavigationOn && !window.event.metaKey) {
+        dispatch(setActiveRightSidebarTab(props.tab))
+      }
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
   )
 
   return (

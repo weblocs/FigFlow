@@ -13,6 +13,7 @@ import {
   setHtmlNodesWithoutExpandedState,
   updateResolutionPathName,
   setStyleState,
+  setActiveClickedCmsItemIndex,
 } from '../features/project'
 
 export default function StoreUseEffectUpdates() {
@@ -147,15 +148,20 @@ export default function StoreUseEffectUpdates() {
 
     let activeHtmlNode = `[el_id='${activeNodeId}']`
     if (activeClickedCmsItemIndex !== undefined) {
+      console.log(activeClickedCmsItemIndex)
       activeHtmlNode = `[el_id='${activeNodeId}'][cms_item_index='${activeClickedCmsItemIndex}']`
     }
-    // if (!isAltPressed) {
+    let selectedNode = document.querySelector(activeHtmlNode)
+    if (selectedNode === null) {
+      dispatch(setActiveClickedCmsItemIndex(undefined))
+    }
+
     document.querySelector(activeHtmlNode)?.classList.add('active')
-    // }
   }, [
     activeNodeId,
     activeClickedCmsItemIndex,
     preRenderedHTMLNodes,
+    preRenderedStyles,
     isAltPressed,
   ])
 

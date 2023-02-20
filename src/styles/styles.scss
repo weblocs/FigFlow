@@ -485,13 +485,17 @@ img {
 .rich-element-settings_button {
   min-height: 32px;
   min-width: 32px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
   display: none;
   border-right: 1px solid #c3c3c3;
   cursor: pointer;
   background: #fff;
   color: #111;
+}
+
+.rich-element-settings_button.add-section-button {
+  padding: 0 12px;
 }
 
 .rich-element-settings_button.center-align {
@@ -680,10 +684,11 @@ img {
 
 .renderedNode.hovered {
   outline: 1px solid #8181e1;
+  outline: 1px solid #b4b4eb;
 }
 
 .renderedNode.active {
-  outline: 1px solid blue;
+  outline: 1px solid rgb(140, 140, 232);
 }
 
 :focus-visible {
@@ -716,6 +721,7 @@ img {
   color: #8a8a8a;
   border-radius: 0;
   cursor: pointer;
+  line-height: 18px;
 }
 
 .add-section_popup-box {
@@ -1845,7 +1851,7 @@ img {
 
   .style-property-info {
     display: none;
-    width: 156px;
+    width: 162px;
     padding: 8px;
     background: #f4f4f4;
     border: 1px solid #cbcbcbdd;
@@ -4467,6 +4473,10 @@ img {
 
   .mb-16 {
     margin-bottom: 16px;
+  }
+
+  .mt-8 {
+    margin-top: 8px;
   }
 
   .pb-8 {

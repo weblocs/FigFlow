@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-export default function ShodowStyleInput({ name, unit, value, handleChange }) {
+export default function ShadowStyleInput({ name, unit, value, handleChange }) {
   const preRenderedHTMLNodes = useSelector(
     (state) => state.project.preRenderedHTMLNodes
   )
@@ -13,6 +13,7 @@ export default function ShodowStyleInput({ name, unit, value, handleChange }) {
 
   function handleKeyPress(e) {
     if (e.key === 'Enter') {
+      console.log(e.target.value)
       handleChange(e.target.value)
       setIsActive(false)
     }

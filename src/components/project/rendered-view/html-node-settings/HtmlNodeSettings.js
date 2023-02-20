@@ -17,6 +17,7 @@ import StyleButton from './StyleButton'
 import InlineStyleButton from './InlineStyleButton'
 import InputSettings from './InputSettings'
 import ActionButton from './ActionButton'
+import AddSectionButton from '../_atoms/AddSectionButton'
 
 export default function HtmlNodeSettings() {
   const activeNodeId = useSelector((state) => state.project.activeNodeId)
@@ -74,7 +75,6 @@ export default function HtmlNodeSettings() {
       document
         .getElementsByClassName('project-rendered-design')[0]
         ?.getBoundingClientRect().left
-
     return positionLeft
   })
 
@@ -159,6 +159,9 @@ export default function HtmlNodeSettings() {
 
                 <DuplicateButton />
                 <DeleteButton />
+
+                {/* {isActiveNodeSection && <AddSectionButton />} */}
+
                 <div
                   className="rich-element-settings_button button-centered active"
                   onClick={handleClickClearId}
