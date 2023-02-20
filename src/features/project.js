@@ -87,11 +87,14 @@ const initialState = {
   activeProjectResolutionStylesListName: 'styles',
   activeNodeParentsPath: [],
   projectUploadedFonts: [
-    { name: 'Plus Jakarta Display', weights: ['300', '500', '700'] },
+    {
+      name: 'Plus Jakarta Display',
+      weights: ['300', '400', '500', '600', '700'],
+    },
     { name: 'Plus Jakarta Sans', weights: ['500', '700', '800'] },
-    { name: 'Inter', weights: ['300', '500', '700'] },
+    { name: 'Inter', weights: ['300', '500', '700', '800'] },
     { name: 'system-ui', weights: ['300', '400', '500', '600', '700'] },
-    { name: 'General Sans' },
+    { name: 'General Sans', weights: ['300', '400', '500', '600', '700'] },
     { name: 'Hauora' },
     { name: 'Clash Display' },
     { name: 'Roboto' },
@@ -113,6 +116,7 @@ const initialState = {
   isSettingsModalOpen: false,
   projectSettingsData: {},
   faviconImage: '',
+  faviconMobileImage: '',
 
   styleGuide: [],
 
@@ -253,23 +257,23 @@ function findActiveNode(nodes, id) {
 
 function updateGlobalCSS(state) {
   state.postRenderedStyles =
-    `.heading i {
-    font-style: inherit;
-    position: relative;
-    z-index: 0;
-  }
-    .heading i::before {
-        content: '';
-        position: absolute;
-        left: 0%;
-        bottom: 0.07ch;
-        display: inline-block;
-        height: 0.4ch;
-        width: 100%;
-        border-radius: 0.25rem;
-        background-color: #FFF500;
-        z-index: -1;
-    }` +
+    //   `.heading i {
+    //   font-style: inherit;
+    //   position: relative;
+    //   z-index: 0;
+    // }
+    //   .heading i::before {
+    //       content: '';
+    //       position: absolute;
+    //       left: 0%;
+    //       bottom: 0.07ch;
+    //       display: inline-block;
+    //       height: 0.4ch;
+    //       width: 100%;
+    //       border-radius: 0.25rem;
+    //       background-color: #FFF500;
+    //       z-index: -1;
+    //   }` +
     JSONtoCSS(
       [...state.preRenderedStyles],
       state.activeProjectResolution,
@@ -319,12 +323,12 @@ function nodeIsFolder(node) {
   if (
     node.type === 'div' ||
     node.type === 'l' ||
-    node.type === 'sym' ||
     node.type === 'sec' ||
     node.type === 'form' ||
     node.type === 'body' ||
     node.type === 'nav_tr' ||
-    node.type === 'nav_l'
+    node.type === 'nav_l' ||
+    (node.type === 'sym' && node.expanded === true)
   ) {
     return true
   } else if (node.type === 'col' && node.cmsCollectionId) {
@@ -451,6 +455,22 @@ export const projectSlice = createSlice({
     },
 
     addCollection: (state, action) => {
+      const bodyStyleId = state.preRenderedStyles.find(
+        ({ name }) => name === 'body'
+      ).id
+      const bodyStyleName = 'body'
+
+      const starterNodes = state.projectPages.find(
+        (page) => page.isStarter === true
+      )?.preRenderedHTMLNodes || [
+        {
+          id: uuidv4(),
+          type: 'body',
+          children: [],
+          class: [{ id: bodyStyleId, name: bodyStyleName }],
+        },
+      ]
+
       const collectionName = action.payload
       state.collections.push({
         id: uuidv4(),
@@ -458,7 +478,7 @@ export const projectSlice = createSlice({
         slug: collectionName.toLowerCase().replaceAll(' ', '-'),
         fields: [],
         items: [],
-        preRenderedHTMLNodes: [],
+        preRenderedHTMLNodes: starterNodes,
       })
     },
 
@@ -2377,6 +2397,7 @@ export const projectSlice = createSlice({
 
     dropDraggedNavigatorNodes: (state) => {
       let stopAction = false
+
       function deleteOldNode(nodes) {
         for (let i = 0; i < nodes.length; i++) {
           if (state.draggedNavigatorNodes.id === state.draggedOverNodeId) {
@@ -2568,7 +2589,6 @@ export const projectSlice = createSlice({
       if (state.keyboardNavigationOn) {
         findNode(state.preRenderedHTMLNodes, state.activeNodeId)
         state.activeNodeId = response
-        console.log('state.activeNodeId: ', state.activeNodeId)
       }
     },
 
@@ -3421,6 +3441,9 @@ export const projectSlice = createSlice({
     setFavicon: (state, action) => {
       state.faviconImage = action.payload
     },
+    setFaviconMobile: (state, action) => {
+      state.faviconMobileImage = action.payload
+    },
 
     saveProjectToFirebaseOffline: (state) => {
       let slug = state.offlineProjectName
@@ -3466,8 +3489,6 @@ export const projectSlice = createSlice({
     },
 
     saveProjectToFirebase: (state) => {
-      let isSavingSuccesful = false
-
       async function saveProjectToFirebasePreRenderedNodesAndStyles() {
         const app = initializeApp(firebaseConfig)
         const db = getFirestore(app)
@@ -3558,7 +3579,7 @@ export const projectSlice = createSlice({
       let activeProjectVersion = state.projectVersions.find(
         ({ id }) => id === state.activeProjectVersionId
       )
-      console.log(current(activeProjectVersion))
+      // console.log(current(activeProjectVersion))
       activeProjectVersion.preRenderedHTMLNodes = state.preRenderedHTMLNodes
       activeProjectVersion.preRenderedStyles = state.preRenderedStyles
 
