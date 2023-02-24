@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { editHtmlNode } from '../../../../features/project'
 import SettingsIcon from '../../../../img/settings.svg'
+import Checkbox from '../../../ui/Checkbox'
+import Input from '../../../ui/Input'
+import Label from '../../../ui/Label'
+import Select from '../../../ui/Select'
 import ModalBackgroundCloser from '../../_atoms/ModalBackgroundCloser'
 
 export default function InputSettings() {
@@ -18,27 +22,43 @@ export default function InputSettings() {
 
   const inputNameRef = useRef()
   const inputPlaceholderRef = useRef()
+  const inputTypeRef = useRef()
+  const inputRequiredRef = useRef()
+  const inputAutofocusRef = useRef()
+
+  function dispatchEditNode(field, value) {
+    dispatch(editHtmlNode({ field, value }))
+  }
 
   function onNameBlur() {
-    dispatch(
-      editHtmlNode({ field: 'inputName', value: inputNameRef.current.value })
-    )
+    dispatchEditNode('inputName', inputNameRef.current.value)
   }
 
   function onPlaceholderBlur() {
-    dispatch(
-      editHtmlNode({
-        field: 'inputPlaceholder',
-        value: inputPlaceholderRef.current.value,
-      })
-    )
+    dispatchEditNode('inputPlaceholder', inputPlaceholderRef.current.value)
+  }
+
+  function onTypeInput() {
+    dispatchEditNode('inputType', inputTypeRef.current.value)
+  }
+
+  function onRequiredInput() {
+    dispatchEditNode('inputRequired', inputRequiredRef.current.checked)
+  }
+
+  function onAutofocusInput() {
+    dispatchEditNode('inputAutofocus', inputAutofocusRef.current.checked)
   }
 
   useEffect(() => {
     if (!isOpen) return
-    console.log(activeNodeObject?.inputName)
+    // console.log(activeNodeObject?.inputType)
     inputNameRef.current.value = activeNodeObject?.inputName || ''
     inputPlaceholderRef.current.value = activeNodeObject?.inputPlaceholder || ''
+    inputTypeRef.current.value = activeNodeObject?.inputType || 'text'
+    inputRequiredRef.current.checked = activeNodeObject?.inputRequired || false
+    inputAutofocusRef.current.checked =
+      activeNodeObject?.inputAutofocus || false
   }, [isOpen])
 
   if (isNodeInput) {
@@ -58,17 +78,35 @@ export default function InputSettings() {
 
         {isOpen && (
           <div className="link-settings-modal settings-panel">
-            <div className="settings-label">Name</div>
-            <input
-              className="settings-input full-width"
-              onBlur={onNameBlur}
-              ref={inputNameRef}
+            <Label text="Name" />
+            <Input useRef={inputNameRef} onBlur={onNameBlur} />
+
+            <Label text="Placeholder" />
+            <Input useRef={inputPlaceholderRef} onBlur={onPlaceholderBlur} />
+
+            <Label text="Type" />
+            <Select
+              useRef={inputTypeRef}
+              onInput={onTypeInput}
+              options={[
+                { value: 'text', label: 'Text' },
+                { value: 'email', label: 'Email' },
+                { value: 'password', label: 'Password' },
+                { value: 'number', label: 'Number' },
+                { value: 'tel', label: 'Telephone' },
+                { value: 'url', label: 'URL' },
+              ]}
             />
-            <div className="settings-label">Placeholder</div>
-            <input
-              className="settings-input full-width"
-              ref={inputPlaceholderRef}
-              onBlur={onPlaceholderBlur}
+
+            <Checkbox
+              label="Required"
+              onInput={onRequiredInput}
+              useRef={inputRequiredRef}
+            />
+            <Checkbox
+              label="Autofocus"
+              onInput={onAutofocusInput}
+              useRef={inputAutofocusRef}
             />
           </div>
         )}
