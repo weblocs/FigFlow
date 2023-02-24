@@ -2597,7 +2597,10 @@ export const projectSlice = createSlice({
 
             if (pressedKey == 'up') {
               if (initailNodes !== nodes) {
-                response = parentNodes.id
+                response =
+                  state.activeNodeParentsPath[
+                    state.activeNodeParentsPath.length - 2
+                  ].id
               }
             }
 
