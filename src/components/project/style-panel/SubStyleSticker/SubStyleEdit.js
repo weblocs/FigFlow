@@ -39,7 +39,7 @@ export default function SubStyleEdit({
     <div>
       <img
         className={
-          'block-item_edit' +
+          'block-item_edit relative-item ' +
           (active ? ' active' : '') +
           (folderItem ? ' folder-item' : '')
         }

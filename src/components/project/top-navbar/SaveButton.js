@@ -1,15 +1,9 @@
-import { initializeApp } from 'firebase/app'
-import { doc, getFirestore, updateDoc } from 'firebase/firestore'
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   saveProjectToFirebase,
-  saveProjectToFirebaseOffline,
   setSaveButtonStateText,
-  setUpdateNodesLists,
 } from '../../../features/project'
-import { firebaseConfig } from '../../../utils/firebase-config'
-import { firebaseSaveProject } from '../../../utils/nodes-editing'
 
 export default function SaveButton() {
   const saveButtonStateText = useSelector(
@@ -27,8 +21,8 @@ export default function SaveButton() {
   )
   const collections = useSelector((state) => state.project.collections)
   const scripts = useSelector((state) => state.project.scripts)
+  const fonts = useSelector((state) => state.project.fonts)
   const firebaseError = useSelector((state) => state.project.firebaseError)
-  const state = useSelector((state) => state.project)
   const dispatch = useDispatch()
 
   function handleOnClick() {
@@ -50,6 +44,7 @@ export default function SaveButton() {
     const tempProjectPageFolderStructure = projectPageFolderStructure
     const tempCollections = collections
     const tempScripts = scripts
+    const tempFonts = fonts
 
     const timer = setTimeout(() => {
       if (
@@ -58,7 +53,8 @@ export default function SaveButton() {
         tempStyleGuide === styleGuide &&
         tempProjectPageFolderStructure === projectPageFolderStructure &&
         tempCollections === collections &&
-        tempScripts === scripts
+        tempScripts === scripts &&
+        tempFonts === fonts
       ) {
         handleOnClick()
       }
@@ -72,6 +68,7 @@ export default function SaveButton() {
     projectPageFolderStructure,
     collections,
     scripts,
+    fonts,
   ])
 
   useEffect(() => {
@@ -82,7 +79,7 @@ export default function SaveButton() {
     <>
       {/* <button
         className="saveButton"
-        onClick={() => dispatch(saveProjectToFirebaseOffline())}
+        onClick={() => dispatch(offineProjectSave())}
       >
         Save Offline
       </button> */}

@@ -17,13 +17,16 @@ import CollectionPageListItem from './CollectionPageListItem'
 import PagesHeader from './PagesHeader'
 import { node } from 'prop-types'
 import UtilityPageListItem from './UtilityPageListItem'
+import SidePanel from '../../../ui/SidePanel'
 
 export default function ProjectPagesPanel() {
   const dispatch = useDispatch()
   const projectPages = useSelector((state) => state.project.projectPages)
   const collections = useSelector((state) => state.project.collections)
   const activePageId = useSelector((state) => state.project.activePageId)
-  const activeTab = useSelector((state) => state.project.activeTab)
+  const isActiveTab = useSelector(
+    (state) => state.project.activeTab === 'Pages'
+  )
 
   const projectPageFolderStructure = useSelector(
     (state) => state.project.projectPageFolderStructure
@@ -72,14 +75,12 @@ export default function ProjectPagesPanel() {
   }
 
   return (
-    <div
-      className={'projectPagesPanel ' + (activeTab === 'Pages' ? 'active' : '')}
-    >
+    <SidePanel isActive={isActiveTab}>
       <PagesHeader
         openPage={() => setCreatePageInputVisible(true)}
         openFolder={() => setCreateFolderInputVisible(true)}
       />
-      {/* <div className="projectTabTitleBox">
+      {/* <div className="side-panel-title">
                 Pages
                 <div className="projectTabTitleButtonsBox">
                     <button className="settings-list-add-button"></button>
@@ -124,6 +125,6 @@ export default function ProjectPagesPanel() {
         .map((page, index) => (
           <UtilityPageListItem node={page} key={page.id} />
         ))}
-    </div>
+    </SidePanel>
   )
 }

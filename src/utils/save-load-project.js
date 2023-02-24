@@ -27,13 +27,14 @@ import {
   setLayouts,
   setPageFolders,
   setPagesNestedStructure,
-  setProjectSettingsData,
+  setProjectNameAndSlug,
   setFavicon,
   setStyleGuide,
   setScripts,
   setLibraries,
+  setImages,
+  loadProject,
 } from '../features/project'
-import { setProjectImages } from '../features/project-images'
 
 export default function saveProject(items, preRenderedStyles) {
   axios
@@ -80,7 +81,7 @@ export async function loadProjectFromBackup(backupId) {
   dispatch(setLayouts(backupData.sections))
   dispatch(setPageFolders(backupData.projectPageFolders))
   dispatch(setPagesNestedStructure(backupData.projectPageFolderStructure))
-  // dispatch(setProjectSettingsData(backupData.projectSettingsData))
+  // dispatch(setProjectNameAndSlug(backupData.projectNameAndSlug))
   // dispatch(setFavicon(backupData.favicon))
   dispatch(setStyleGuide(backupData.styleGuide))
 }
@@ -116,30 +117,7 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(
 
     if (projectFirebaseId !== '') {
       const projectData = await getDoc(doc(db, 'projects', projectFirebaseId))
-      dispatch(setPages([...projectData.data().pages]))
-      dispatch(setCollections([...projectData.data().collections]))
-      dispatch(setStyles([...projectData.data().preRenderedStyles]))
-      dispatch(setSymbols([...projectData.data()?.symbols]))
-      dispatch(setSwatches([...projectData.data()?.swatches]))
-      dispatch(setPageFolders([...projectData.data()?.projectPageFolders]))
-      dispatch(
-        setPagesNestedStructure([
-          ...projectData.data()?.projectPageFolderStructure,
-        ])
-      )
-      dispatch(setBlocks([...projectData.data()?.blocks]))
-      dispatch(setProjectImages([...projectData.data()?.images]))
-      dispatch(setLayouts([...projectData.data()?.sections]))
-      dispatch(setStyleGuide([...projectData.data()?.styleGuide]))
-      dispatch(
-        setProjectSettingsData({
-          name: projectData.data()?.projectName,
-          slug: projectData.data()?.projectId,
-        })
-      )
-      dispatch(setFavicon(projectData.data()?.favicon))
-      dispatch(setScripts(projectData.data()?.scripts))
-      dispatch(setLibraries(projectData.data()?.libraries))
+      dispatch(loadProject(projectData.data()))
     }
   } else {
     let projectPagesStorage = localStorage.getItem(offlineProjectName + 'pages')
@@ -184,7 +162,7 @@ export async function loadProjectFromFirebasePreRenderedNodesAndStyles(
       dispatch(setSwatches(getParsedItem('swatches')))
       dispatch(setPageFolders(getParsedItem('projectPageFolders')))
       dispatch(setBlocks(getParsedItem('blocks')))
-      // dispatch(setProjectImages(getParsedItem('images')))
+      // dispatch(setImages(getParsedItem('images')))
       dispatch(setLayouts(getParsedItem('sections')))
       dispatch(setStyleGuide(getParsedItem('styleGuide')))
       // dispatch(setFavicon(getParsedItem('favicon')))

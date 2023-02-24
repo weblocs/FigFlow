@@ -1,26 +1,11 @@
-import { initializeApp } from 'firebase/app'
-import { doc, getDoc, getFirestore } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import { setIsBackupOn } from '../../../features/project'
-import {
-  setPages,
-  setCollections,
-  setStyles,
-  setSymbols,
-  setSwatches,
-  setPageFolders,
-  setPagesNestedStructure,
-  setBlocks,
-  setLayouts,
-  setStyleGuide,
-} from '../../../features/project'
-import { firebaseConfig } from '../../../utils/firebase-config'
 
 export default function BackupLoader() {
   const projectName = useSelector(
-    (state) => state.project.projectSettingsData.name
+    (state) => state.project.projectNameAndSlug.name
   )
   const dispatch = useDispatch()
 

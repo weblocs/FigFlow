@@ -9,6 +9,7 @@ import JSZipUtils from './JsZipUtils'
 import { fullJSONtoCSS } from '../../../utils/nodes-editing'
 import Resizer from 'react-image-file-resizer'
 import generatePageCss from './export/GeneratePageCss'
+import getStyleUrlDots, { getFontsUrlDots } from './export/GetStyleUrlDots'
 
 export default function ExportButton() {
   const preRenderedStyles = useSelector(
@@ -26,9 +27,22 @@ export default function ExportButton() {
     (state) => state.project.projectPageFolderStructure
   )
   const projectSlug = useSelector(
-    (state) => state.project.projectSettingsData.slug
+    (state) => state.project.projectNameAndSlug.slug
   )
-  const projectImages = useSelector((state) => state.projectImages.Images)
+  const projectImages = useSelector((state) =>
+    state.project.images.concat([
+      { name: state.project?.faviconImage },
+      { name: state.project?.faviconMobileImage },
+    ])
+  )
+  const projectSettings = useSelector((state) => {
+    return {
+      favicon: state.project.faviconImage,
+      faviconMobile: state.project.faviconMobileImage,
+    }
+  })
+
+  const fonts = useSelector((state) => state.project.fonts)
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -67,9 +81,20 @@ export default function ExportButton() {
           }
 
           if (!page.isStarter) {
+            const fontsURLDots = getFontsUrlDots(
+              'page',
+              parents.length,
+              pageSlug
+            )
             zip.file(
               `${path}/style.css`,
-              generatePageCss(preRenderedStyles, nodes, projectSwatches)
+              generatePageCss(
+                preRenderedStyles,
+                nodes,
+                projectSwatches,
+                fonts,
+                fontsURLDots
+              )
             )
 
             zip.file(
@@ -89,7 +114,8 @@ export default function ExportButton() {
                 pageSlug,
                 scripts,
                 allScripts,
-                libraries
+                libraries,
+                projectSettings
               )
             )
           }
@@ -110,12 +136,15 @@ export default function ExportButton() {
     collections.forEach((collection) => {
       collection.items.forEach((item) => {
         const scripts = collection?.scripts || []
+        const fontsURLDots = getFontsUrlDots('collection', null, item.slug)
         zip.file(
           `project/${collection.slug}/style.css`,
           generatePageCss(
             preRenderedStyles,
             collection.preRenderedHTMLNodes,
-            projectSwatches
+            projectSwatches,
+            fonts,
+            fontsURLDots
           )
         )
 
@@ -136,7 +165,8 @@ export default function ExportButton() {
             item.slug,
             scripts,
             allScripts,
-            libraries
+            libraries,
+            projectSettings
           )
         )
       })
@@ -160,34 +190,16 @@ export default function ExportButton() {
         'https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/' +
         image.name +
         '?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'
-
       const file = urlToPromise(imageUrl)
-
-      // const resizedfFile = resizeFile(file)
-
-      // console.log(file)
-
-      // function resizeFile(file) {
-      //   return new Promise((resolve) => {
-      //     Resizer.imageFileResizer(
-      //       file,
-      //       300,
-      //       300,
-      //       'webp',
-      //       100,
-      //       0,
-      //       (uri) => {
-      //         resolve(uri)
-      //       },
-      //       'base64'
-      //     )
-      //   })
-      // }
       let imageSrc = image.name
       const types = ['webp', 'avif', 'jpg', 'jpeg', 'png', 'gif', 'svg']
       types.forEach((type) => {
         if (imageSrc.slice(-4) === '-' + type) {
           imageSrc = imageSrc.slice(0, -4)
+          imageSrc = imageSrc.concat('.' + type)
+        }
+        if (imageSrc.slice(-5) === '-' + type) {
+          imageSrc = imageSrc.slice(0, -5)
           imageSrc = imageSrc.concat('.' + type)
         }
       })
@@ -200,14 +212,28 @@ export default function ExportButton() {
       // })
     })
 
-    getFontFile(
-      'http://phpstack-913418-3170396.cloudwaysapps.com/uploads/PlusJakartaSans-Regular.woff2',
-      'PlusJakartaSans-Regular.woff2'
-    )
-    getFontFile(
-      'http://phpstack-913418-3170396.cloudwaysapps.com/uploads/PlusJakartaSans-ExtraBold.woff2',
-      'PlusJakartaSans-ExtraBold.woff2'
-    )
+    fonts.forEach((font) => {
+      font.weights.forEach((weight) => {
+        const types = ['ttf', 'otf', 'woff', 'woff2']
+        let fontName = weight.url
+        types.forEach((type) => {
+          if (fontName.slice(-4) === '-' + type) {
+            fontName = fontName.slice(0, -4)
+            fontName = fontName.concat('.' + type)
+          }
+          if (fontName.slice(-5) === '-' + type) {
+            fontName = fontName.slice(0, -5)
+            fontName = fontName.concat('.' + type)
+          }
+          if (fontName.slice(-6) === '-' + type) {
+            fontName = fontName.slice(0, -6)
+            fontName = fontName.concat('.' + type)
+          }
+        })
+        let fontSrc = `https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/${weight.url}?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a`
+        getFontFile(fontSrc, fontName)
+      })
+    })
 
     function getFontFile(fontUrl, name) {
       zip.file(`project/assets/fonts/${name}`, urlToPromise(fontUrl), {

@@ -10,14 +10,18 @@ import {
   editPageFolder,
   editCollection,
 } from '../../../../features/project'
+import SidePanel from '../../../ui/SidePanel'
 import ConfirmDeleteModalButton from '../../modals/ConfirmDeleteModalButton'
 import PageScriptsSettings from './PageScriptsSettings'
 
 export default function PageSettingsPanel() {
-  const activeTab = useSelector((state) => state.project.activeTab)
   const openedSettingsPage = useSelector(
     (state) => state.project.openedSettingsPage
   )
+  const isActiveTab = useSelector(
+    (state) => state.project.activeTab === 'Pages' && openedSettingsPage?.id
+  )
+
   const isCmsPage = useSelector(
     (state) => state.project.openedSettingsPage?.items !== undefined
   )
@@ -117,13 +121,8 @@ export default function PageSettingsPanel() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div
-        className={
-          'projectPagesPanel wider ' +
-          (activeTab === 'Pages' && openedSettingsPage?.id ? 'active' : '')
-        }
-      >
-        <div className="projectTabTitleBox">
+      <SidePanel isActive={isActiveTab} width={280}>
+        <div className="side-panel-title">
           {isCmsPage && 'CMS '}Page Settings
           <div className="projectTabTitleButtonsBox">
             {!isCmsPage &&
@@ -224,7 +223,7 @@ export default function PageSettingsPanel() {
             </>
           )}
         </div>
-      </div>
+      </SidePanel>
     </form>
   )
 }

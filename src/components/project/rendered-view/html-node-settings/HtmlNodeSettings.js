@@ -18,6 +18,7 @@ import InlineStyleButton from './InlineStyleButton'
 import InputSettings from './InputSettings'
 import ActionButton from './ActionButton'
 import AddSectionButton from '../_atoms/AddSectionButton'
+import EmbedSettings from './EmbedSettings'
 
 export default function HtmlNodeSettings() {
   const activeNodeId = useSelector((state) => state.project.activeNodeId)
@@ -138,6 +139,7 @@ export default function HtmlNodeSettings() {
               <ActionButton />
               <LinkSettings />
               <InputSettings />
+              <EmbedSettings />
               <AddBlockButton addRichSetting={true} />
 
               {!isActiveNodeSection && !isActiveNodeBody && (

@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setCollectionPanelState } from '../../../../features/project'
 import Arrow from '../../../../img/arrow-left.svg'
 import { activeCollectionItemSelector } from '../../../../selectors/active-collection'
+import SidePanel from '../../../ui/SidePanel'
 import Editor from '../../editor/Editor'
 import RichTextEditor from '../../rich-text-editor/Editor'
 import CollectionFieldsList from './CollectionFieldsList'
 import ItemActionButtons from './ItemActionButtons'
 
 export default function ProjectCollectionsFieldsPanel() {
-  const isActiveTabCollections = useSelector(
+  const isActiveTab = useSelector(
     (state) => state.project.activeTab === 'Collections'
   )
   const isCollectionPanelStateFields = useSelector(
@@ -22,13 +23,8 @@ export default function ProjectCollectionsFieldsPanel() {
 
   if (isCollectionPanelStateFields) {
     return (
-      <div
-        className={
-          'collectionsPanel item-edit-panel ' +
-          (isActiveTabCollections ? 'active' : '')
-        }
-      >
-        <div className="projectTabTitleBox">
+      <SidePanel isActive={isActiveTab} width={600} isFieldPanel={true}>
+        <div className="side-panel-title">
           <div>
             <span
               className="panel_back-button"
@@ -45,7 +41,7 @@ export default function ProjectCollectionsFieldsPanel() {
         </div>
 
         <ItemActionButtons />
-      </div>
+      </SidePanel>
     )
   }
 }

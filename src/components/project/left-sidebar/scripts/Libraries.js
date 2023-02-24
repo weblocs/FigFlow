@@ -38,17 +38,17 @@ export default function Libraries() {
 
   return (
     <div className="cms-field-input-wrap">
-      <div className="flex flex-between">
+      <div className="flex justify-between">
         <div className="cms-field-input-label">Libraries</div>
         <div className="flex gap-8">
           <div
-            className="text color-light pointer"
+            className="text text-gray-400 pointer"
             onClick={() => setIsLibraryConnectionOpen(!isLibraryConnectionOpen)}
           >
             Connect library
           </div>
           <div
-            className="text color-light pointer"
+            className="text text-gray-400 pointer"
             onClick={() => setIsLibraryImportOpen(!isLibraryImportOpen)}
           >
             Import library
@@ -63,7 +63,7 @@ export default function Libraries() {
       )}
 
       {isLibraryConnectionOpen && (
-        <div className="flex flex-between gap-8 flex-vert-center mt-8">
+        <div className="flex justify-between gap-8 items-center mt-8">
           <select ref={selectRef} className="select-input">
             {notIncludedLibraries.map((library) => (
               <option key={library.id} value={library.id}>
@@ -83,7 +83,7 @@ export default function Libraries() {
               onDoubleClick={() =>
                 dispatch(disConnectLibraryWithScript({ libraryId: library.id }))
               }
-              className="text color-light"
+              className="text text-gray-400"
               key={library.id + i}
             >
               {library.name}

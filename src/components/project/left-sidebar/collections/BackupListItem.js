@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setProjectImages } from '../../../../features/project-images'
 import {
   setPages,
   setCollections,

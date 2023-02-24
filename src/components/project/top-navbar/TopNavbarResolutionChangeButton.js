@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setActiveProjectResolution } from '../../../features/project'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
+import { isCmdPressed } from '../../../utils/utils'
 
 export default function TopNavbarResolutionChangeButton({
   resolutionNumber,
@@ -17,8 +18,9 @@ export default function TopNavbarResolutionChangeButton({
   const { copyShortcut } = useKeyboardShortcut(
     [resolutionNumber],
     (shortcutKeys) => {
-      keyboardNavigationOn &&
+      if (!isCmdPressed() && keyboardNavigationOn) {
         dispatch(setActiveProjectResolution(resolutionNumber))
+      }
     },
     {
       overrideSystem: false,

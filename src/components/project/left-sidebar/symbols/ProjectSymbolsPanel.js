@@ -12,11 +12,14 @@ import ListItemEditIcon from '../_atoms/ListItemEditIcon'
 import { arrayMoveImmutable } from 'array-move'
 import addIcon from '../../../../img/plus.svg'
 import SymbolEditButton from './SymbolEditButton'
+import SidePanel from '../../../ui/SidePanel'
 
 export default function ProjectSymbolsPanel() {
   const dispatch = useDispatch()
   const projectSymbols = useSelector((state) => state.project.projectSymbols)
-  const activeTab = useSelector((state) => state.project.activeTab)
+  const isActiveTab = useSelector(
+    (state) => state.project.activeTab === 'Symbols'
+  )
 
   const [createInputVisible, setCreateInputVisible] = useState(false)
 
@@ -53,12 +56,8 @@ export default function ProjectSymbolsPanel() {
   }
 
   return (
-    <div
-      className={
-        'projectPagesPanel ' + (activeTab === 'Symbols' ? 'active' : '')
-      }
-    >
-      <div className="projectTabTitleBox">
+    <SidePanel isActive={isActiveTab}>
+      <div className="side-panel-title">
         Symbols
         <div className="projectTabTitleButtonsBox">
           <button
@@ -117,6 +116,6 @@ export default function ProjectSymbolsPanel() {
           )
         })}
       </div>
-    </div>
+    </SidePanel>
   )
 }

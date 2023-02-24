@@ -1,14 +1,14 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { addImageToProjectImages } from '../../../../features/project-images'
 import { v4 as uuidv4 } from 'uuid'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, setDoc, doc, updateDoc } from 'firebase/firestore'
 import { firebaseConfig } from '../../../../utils/firebase-config.js'
-import { editHtmlNode } from '../../../../features/project'
+import { addImage, editHtmlNode } from '../../../../features/project'
 import ImageItem from './ImageItem'
 import axios from 'axios'
+import SidePanel from '../../../ui/SidePanel.js'
 
 const fileToDataUri = (file) =>
   new Promise((resolve, reject) => {
@@ -21,12 +21,14 @@ const fileToDataUri = (file) =>
 
 export default function ProjectImagesPanel() {
   const dispatch = useDispatch()
-  const activeTab = useSelector((state) => state.project.activeTab)
+  const isActiveTab = useSelector(
+    (state) => state.project.activeTab === 'Images'
+  )
   const projectFirebaseId = useSelector(
     (state) => state.project.projectFirebaseId
   )
   const activeNodeId = useSelector((state) => state.project.activeNodeId)
-  const projectImages = useSelector((state) => state.projectImages.Images)
+  const projectImages = useSelector((state) => state.project.images)
 
   const storage = getStorage()
 
@@ -54,7 +56,7 @@ export default function ProjectImagesPanel() {
         })
       })
       .then(async () => {
-        dispatch(addImageToProjectImages(fileName))
+        dispatch(addImage(fileName))
         dispatch(
           editHtmlNode({
             id: activeNodeId,
@@ -84,10 +86,8 @@ export default function ProjectImagesPanel() {
   }
 
   return (
-    <div
-      className={'collectionsPanel ' + (activeTab === 'Images' ? 'active' : '')}
-    >
-      <div className="projectTabTitleBox">Images</div>
+    <SidePanel isActive={isActiveTab}>
+      <div className="side-panel-title">Images</div>
 
       <div style={{ overflow: 'hidden' }}>
         <label className="custom-file-upload panel-button">
@@ -107,6 +107,6 @@ export default function ProjectImagesPanel() {
           <ImageItem key={image.id} image={image} />
         ))}
       </div>
-    </div>
+    </SidePanel>
   )
 }

@@ -1,10 +1,6 @@
-.collectionsPanel.item-edit-panel p {
-  letter-spacing: 0;
-}
-
-.collectionsPanel.item-edit-panel p:nth-child(1),
-.collectionsPanel.item-edit-panel h1:nth-child(1),
-.collectionsPanel.item-edit-panel h2:nth-child(1) {
+.cms-field-rich-text p:nth-child(1),
+.cms-field-rich-text h1:nth-child(1),
+.cms-field-rich-text h2:nth-child(1) {
   margin-top: 0;
 }
 

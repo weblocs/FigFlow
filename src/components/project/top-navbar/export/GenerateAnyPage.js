@@ -32,7 +32,8 @@ export default function generateAnyPage(
   slug,
   pageScripts,
   allScripts,
-  libraries
+  libraries,
+  projectSettings
 ) {
   if (type === 'collection') {
     nodes = collection.preRenderedHTMLNodes
@@ -68,7 +69,8 @@ export default function generateAnyPage(
     metaTitle,
     metaDescription,
     styleURLDots,
-    slug
+    slug,
+    projectSettings
   )
 
   function generateHtmlNodes(nodes, collection, collectionItem) {

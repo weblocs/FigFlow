@@ -12,7 +12,7 @@ export default function ProjectNavigator() {
     return (
       <div className={'navigatorWrapper active'}>
         <div style={{ position: 'sticky', top: '0', zIndex: '1' }}>
-          <div className="projectTabTitleBox">Add</div>
+          <div className="side-panel-title">Add</div>
           <div style={{ display: 'flex', flexWrap: 'wrap' }}>
             <AddNodeButton type="div" text="Div" />
             <AddNodeButton type="h" text="Heading" />
@@ -28,8 +28,9 @@ export default function ProjectNavigator() {
             <AddNodeButton type="nav_tr" text="Nav Trigger" />
             <AddNodeButton type="nav_l" text="Nav List" />
             <AddNodeButton type="rich_text" text="Rich Text" />
+            <AddNodeButton type="embed" text="Embed" />
           </div>
-          <div className="projectTabTitleBox">Navigator</div>
+          <div className="side-panel-title">Navigator</div>
         </div>
 
         <div

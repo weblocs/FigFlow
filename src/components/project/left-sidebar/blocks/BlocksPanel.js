@@ -6,11 +6,14 @@ import CreateNewItemInput from '../navigator/CreateNewItemInput'
 import BlockListItem from './BlockListItem'
 import AddButton from '../_atoms/AddButton'
 import BlockFolder from './BlockFolder'
+import SidePanel from '../../../ui/SidePanel'
 
 export default function BlocksPanel() {
   const dispatch = useDispatch()
   const blocks = useSelector((state) => state.project.blocks)
-  const activeTab = useSelector((state) => state.project.activeTab)
+  const isActiveTab = useSelector(
+    (state) => state.project.activeTab === 'Rich Text'
+  )
 
   const onSortEnd = (oldIndex, newIndex) => {
     if (newIndex > oldIndex) {
@@ -42,12 +45,8 @@ export default function BlocksPanel() {
   }
 
   return (
-    <div
-      className={
-        'projectPagesPanel ' + (activeTab === 'Rich Text' ? 'active' : '')
-      }
-    >
-      <div className="projectTabTitleBox">
+    <SidePanel isActive={isActiveTab}>
+      <div className="side-panel-title">
         Blocks
         <div className="projectTabTitleButtonsBox">
           <AddButton fx={() => setCreateInputVisible(!createInputVisible)} />
@@ -80,6 +79,6 @@ export default function BlocksPanel() {
           </div>
         ))}
       </div>
-    </div>
+    </SidePanel>
   )
 }

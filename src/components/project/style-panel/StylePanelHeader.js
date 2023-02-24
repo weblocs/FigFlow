@@ -71,6 +71,14 @@ export default function StylePanelHeader() {
     shortcutSystemConfig
   )
 
+  const { openClassEditorShortcutWindows } = useKeyboardShortcut(
+    ['Control', 'Enter'],
+    (shortcutKeys) => {
+      handleOpenNewStyleInput()
+    },
+    shortcutSystemConfig
+  )
+
   const { closeClassEditorShortcut } = useKeyboardShortcut(
     ['Escape'],
     (shortcutKeys) => {

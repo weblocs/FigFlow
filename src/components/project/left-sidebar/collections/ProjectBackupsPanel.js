@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { initializeApp } from 'firebase/app'
 import {
   collection,
@@ -7,7 +6,6 @@ import {
   getFirestore,
   query,
   setDoc,
-  updateDoc,
   where,
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
@@ -16,6 +14,7 @@ import { firebaseConfig } from '../../../../utils/firebase-config'
 import AddButton from '../_atoms/AddButton'
 import { v4 as uuidv4 } from 'uuid'
 import BackupListItem from './BackupListItem'
+import SidePanel from '../../../ui/SidePanel'
 
 export default function ProjectBackupsPanel() {
   const projectFirebaseId = useSelector(
@@ -31,7 +30,6 @@ export default function ProjectBackupsPanel() {
   const db = getFirestore(app)
 
   const [backupsData, setBackupsData] = useState([])
-  const [backupDataId, setBackupDataId] = useState('')
 
   async function makeBackup() {
     const backupId = uuidv4()
@@ -72,13 +70,6 @@ export default function ProjectBackupsPanel() {
     })
 
     setBackupsData(backupSnapshot.sort((a, b) => b.dateFull - a.dateFull))
-
-    // console.log(backupsData)
-
-    // backups.forEach((doc) => {
-    //   setBackupDataId(doc.id)
-    //   setBackupsData(doc.data().backups)
-    // })
   }
 
   useEffect(() => {
@@ -87,24 +78,22 @@ export default function ProjectBackupsPanel() {
     }
   }, [isActiveTab])
 
-  if (isActiveTab) {
-    return (
-      <div className="collectionsPanel active">
-        <div className="projectTabTitleBox">
-          Backups
-          <div className="projectTabTitleButtonsBox">
-            <AddButton fx={makeBackup} />
-          </div>
-        </div>
-
-        <div className="pagesList">
-          {backupsData
-            // .sort((a, b) => a.date - b.date)
-            .map((backup) => (
-              <BackupListItem key={backup.id} backup={backup} />
-            ))}
+  return (
+    <SidePanel isActive={isActiveTab}>
+      <div className="side-panel-title">
+        Backups
+        <div className="projectTabTitleButtonsBox">
+          <AddButton fx={makeBackup} />
         </div>
       </div>
-    )
-  }
+
+      <div className="pagesList">
+        {backupsData
+          // .sort((a, b) => a.date - b.date)
+          .map((backup) => (
+            <BackupListItem key={backup.id} backup={backup} />
+          ))}
+      </div>
+    </SidePanel>
+  )
 }

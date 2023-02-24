@@ -5,7 +5,7 @@ import {
   setKeyboardNavigationOn,
 } from '../../../../features/project'
 
-export default function AddNewField() {
+export default function FieldsTitleBar() {
   const activeSettingsCollectionId = useSelector(
     (state) => state.project.activeSettingsCollectionId
   )
@@ -49,7 +49,7 @@ export default function AddNewField() {
 
   return (
     <>
-      <div className="projectTabTitleBox">
+      <div className="side-panel-title">
         CMS Fields
         <div className="projectTabTitleButtonsBox">
           <div

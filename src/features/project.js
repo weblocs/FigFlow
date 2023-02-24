@@ -29,8 +29,10 @@ const initialState = {
   undoStates: [],
   activeUndoIndex: 1,
   undoActionActive: false,
+
   activeTab: '',
   activeRightSidebarTab: '',
+  activeSettingsTab: 'general',
 
   projectPages: [],
   projectPageFolders: [],
@@ -51,6 +53,10 @@ const initialState = {
   activeCollectionTemplateId: '',
   activeCollectionItemTemplateId: '',
   collectionPanelState: 'collections',
+
+  images: [],
+
+  projectSettings: {},
 
   activeClickedCmsItemIndex: undefined,
   activeHoveredCmsItemIndex: undefined,
@@ -86,18 +92,43 @@ const initialState = {
   activeProjectResolution: '1',
   activeProjectResolutionStylesListName: 'styles',
   activeNodeParentsPath: [],
-  projectUploadedFonts: [
+  fonts: [
     {
+      id: '1',
       name: 'Plus Jakarta Display',
-      weights: ['300', '400', '500', '600', '700'],
+      weights: [
+        {
+          url: 'plus-jakarta-display-v1-latin-regular-woff2',
+          weight: '300',
+          style: 'normal',
+          id: '1',
+        },
+        {
+          url: 'plus-jakarta-display-v1-latin-regular-woff',
+          weight: '400',
+          style: 'normal',
+          id: '2',
+        },
+        {
+          url: 'plus-jakarta-display-v1-latin-regular-woff2',
+          weight: '500',
+          style: 'normal',
+          id: '3',
+        },
+        {
+          url: 'plus-jakarta-display-v1-latin-regular-woff2',
+          weight: '600',
+          style: 'normal',
+          id: '4',
+        },
+        {
+          url: 'plus-jakarta-display-v1-latin-regular-woff2',
+          weight: '700',
+          style: 'normal',
+          id: '5',
+        },
+      ],
     },
-    { name: 'Plus Jakarta Sans', weights: ['500', '700', '800'] },
-    { name: 'Inter', weights: ['300', '500', '700', '800'] },
-    { name: 'system-ui', weights: ['300', '400', '500', '600', '700'] },
-    { name: 'General Sans', weights: ['300', '400', '500', '600', '700'] },
-    { name: 'Hauora' },
-    { name: 'Clash Display' },
-    { name: 'Roboto' },
   ],
   projectSwatches: [],
   projectPopUp: '',
@@ -114,7 +145,7 @@ const initialState = {
   activeProjectVersionId: '1',
 
   isSettingsModalOpen: false,
-  projectSettingsData: {},
+  projectNameAndSlug: {},
   faviconImage: '',
   faviconMobileImage: '',
 
@@ -3445,7 +3476,7 @@ export const projectSlice = createSlice({
       state.faviconMobileImage = action.payload
     },
 
-    saveProjectToFirebaseOffline: (state) => {
+    offineProjectSave: (state) => {
       let slug = state.offlineProjectName
       updateNodesLists(state)
       localStorage.setItem(slug + 'pages', JSON.stringify(state.projectPages))
@@ -3488,6 +3519,36 @@ export const projectSlice = createSlice({
       updateNodesLists(state)
     },
 
+    loadProject: (state, action) => {
+      state.projectPages = action.payload.pages
+      state.preRenderedHTMLNodes =
+        state.projectPages[state.activePageIndex].preRenderedHTMLNodes
+      state.activePageId = state.projectPages[state.activePageIndex].id
+
+      state.projectPageFolders = action.payload.projectPageFolders
+      state.projectPageFolderStructure =
+        action.payload.projectPageFolderStructure
+      state.collections = action.payload.collections
+      state.preRenderedStyles = action.payload.preRenderedStyles
+      updateGlobalCSS(state)
+      state.projectSymbols = action.payload.symbols
+      state.projectSwatches = action.payload.swatches
+      state.projectLayouts = action.payload.sections
+      state.blocks = action.payload.blocks
+      state.styleGuide = action.payload.styleGuide
+      state.scripts = action.payload.scripts
+      state.libraries = action.payload.libraries
+      state.swatches = action.payload.swatches
+      state.faviconImage = action.payload.favicon
+      state.faviconMobileImage = action.payload.faviconMobile
+      state.fonts = action.payload.fonts
+      state.projectNameAndSlug = {
+        name: action.payload.projectName,
+        slug: action.payload.projectId,
+      }
+      state.images = action.payload.images
+    },
+
     saveProjectToFirebase: (state) => {
       async function saveProjectToFirebasePreRenderedNodesAndStyles() {
         const app = initializeApp(firebaseConfig)
@@ -3507,6 +3568,8 @@ export const projectSlice = createSlice({
             styleGuide: state.styleGuide,
             scripts: state.scripts,
             libraries: state.libraries,
+            images: state.images,
+            fonts: state.fonts,
           })
           document.querySelector('.saveButton.save').innerHTML = 'Saved'
         } catch (error) {
@@ -3557,6 +3620,10 @@ export const projectSlice = createSlice({
       } else {
         state.activeTab = action.payload
       }
+    },
+
+    setActiveSettingsTab: (state, action) => {
+      state.activeSettingsTab = action.payload
     },
 
     setActiveProjectTabOn: (state, action) => {
@@ -3618,8 +3685,8 @@ export const projectSlice = createSlice({
       state.isSettingsModalOpen = action.payload
     },
 
-    setProjectSettingsData: (state, action) => {
-      state.projectSettingsData = action.payload
+    setProjectNameAndSlug: (state, action) => {
+      state.projectNameAndSlug = action.payload
     },
 
     /* Style Guide */
@@ -3854,6 +3921,89 @@ export const projectSlice = createSlice({
         (libraryId) => libraryId !== action.payload.libraryId
       )
     },
+
+    /* Images */
+    setImages: (state, action) => {
+      state.images = action.payload
+    },
+    addImage: (state, action) => {
+      state.images.push({
+        name: action.payload,
+        id: uuidv4(),
+      })
+    },
+    deleteImage: (state, action) => {
+      state.images = state.images.filter(
+        (image) => image.id !== action.payload.id
+      )
+    },
+
+    /* Fonts */
+
+    setFonts: (state, action) => {
+      state.fonts = action.payload
+    },
+
+    addFontFamily: (state, action) => {
+      state.fonts.push({
+        name: action.payload,
+        id: uuidv4(),
+        weights: [],
+      })
+    },
+
+    editFontFamily: (state, action) => {
+      const font = state.fonts.find((font) => font.id === action.payload.id)
+      font.name = action.payload.name
+    },
+
+    deleteFontFamily: (state, action) => {
+      state.fonts = state.fonts.filter((font) => font.id !== action.payload.id)
+    },
+
+    addFont: (state, action) => {
+      state.fonts
+        .find((font) => font.id === action.payload.fontId)
+        .weights.push({
+          id: uuidv4(),
+          weight: action.payload.weight,
+          name: action.payload.name,
+          url: action.payload.url,
+          style: 'normal',
+        })
+    },
+
+    deleteFont: (state, action) => {
+      const id = action.payload.id
+      const fontId = action.payload.fontId
+      state.fonts
+        .find((font) => font.id === fontId)
+        .weights.splice(
+          state.fonts
+            .find((font) => font.id === fontId)
+            .weights.findIndex((weight) => weight.id === id),
+          1
+        )
+    },
+
+    editFontWeight: (state, action) => {
+      const fontId = action.payload.fontId
+      const weightId = action.payload.weightId
+      const weight = state.fonts
+        .find((font) => font.id === fontId)
+        .weights.find((weight) => weight.id === weightId)
+
+      weight.weight = action.payload.weight
+    },
+    editFontStyle: (state, action) => {
+      const fontId = action.payload.fontId
+      const weightId = action.payload.weightId
+      const weight = state.fonts
+        .find((font) => font.id === fontId)
+        .weights.find((weight) => weight.id === weightId)
+
+      weight.style = action.payload.style
+    },
   },
 })
 
@@ -4029,14 +4179,16 @@ export const {
 
   /* Firebase */
   saveProjectToFirebase,
-  saveProjectToFirebaseOffline,
+  offineProjectSave,
   setProjectFirebaseId,
+  loadProject,
 
   /* Others */
   setIsNodeSelectedFromNavigator, // [to-do] propably no longer needed
   updateStateOnScroll,
   setActiveProjectTab,
   setActiveProjectTabOn,
+  setActiveSettingsTab,
   setKeyboardNavigationOn,
   setProjectPopUp,
   setProjectMode,
@@ -4047,8 +4199,9 @@ export const {
   setActiveProjectResolution,
   updateResolutionPathName,
   setIsSettingsModalOpen,
-  setProjectSettingsData,
+  setProjectNameAndSlug,
   setFavicon,
+  setFaviconMobile,
   setIsAltPressed,
   setIsKeyAPressed,
   setIsShiftPressed,
@@ -4081,6 +4234,21 @@ export const {
   deleteLibrary,
   connectLibraryWithScript,
   disConnectLibraryWithScript,
+
+  /* Images */
+  setImages,
+  addImage,
+  deleteImage,
+
+  /* Fonts */
+  setFonts,
+  addFontFamily,
+  editFontFamily,
+  deleteFontFamily,
+  addFont,
+  deleteFont,
+  editFontWeight,
+  editFontStyle,
 } = projectSlice.actions
 
 export default projectSlice.reducer

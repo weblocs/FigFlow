@@ -2,9 +2,33 @@ export default function GenerateHead(
   metaTitle,
   metaDescription,
   styleURLDots,
-  slug
+  slug,
+  projectSettings
 ) {
+  function getImgUrl(imageSrc) {
+    const types = ['webp', 'avif', 'jpg', 'jpeg', 'png', 'gif', 'svg']
+    types.forEach((type) => {
+      if (imageSrc.slice(-4) === '-' + type) {
+        imageSrc = imageSrc.slice(0, -4)
+        imageSrc = imageSrc.concat('.' + type)
+      }
+      if (imageSrc.slice(-5) === '-' + type) {
+        imageSrc = imageSrc.slice(0, -5)
+        imageSrc = imageSrc.concat('.' + type)
+      }
+    })
+    return `${styleURLDots}assets/images/${imageSrc}`
+  }
+
+  // function getImgUrl(img) {
+  //   return (
+  //     'https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/' +
+  //     img +
+  //     '?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'
+  //   )
+  // }
   // <link href="${styleURLDots}style.css" rel="stylesheet">
+
   return `
     <!DOCTYPE html>
     <html lang="pl-PL">
@@ -17,6 +41,13 @@ export default function GenerateHead(
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>${metaTitle}</title>
     <meta name="description" content="${metaDescription}">
+    <link href="${getImgUrl(
+      projectSettings.favicon
+    )}" rel="shortcut icon" type="image/x-icon">
+    <link href="${getImgUrl(
+      projectSettings.faviconMobile
+    )}" rel="apple-touch-icon">
+
     <style>
     a { color: #000; text-decoration: none; }
     @media(min-width:901px){[nav-trigger]{ display: none;}}

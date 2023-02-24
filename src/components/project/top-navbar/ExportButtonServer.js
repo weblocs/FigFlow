@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 
 export default function ExportButtonServer() {
-  const projectData = useSelector((state) => state.project.projectSettingsData)
+  const projectData = useSelector((state) => state.project.projectNameAndSlug)
   const projectPages = useSelector((state) => state.project.projectPages)
   const collections = useSelector((state) => state.project.collections)
   const projectPageFolderStructure = useSelector(

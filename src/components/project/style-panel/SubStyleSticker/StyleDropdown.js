@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AddOption from './AddOption'
 import AssignInlineStyles from './AssignInlineStyles'
 import DefaultNameForm from './DefaultNameForm'
@@ -19,9 +19,22 @@ export default function StyleDropdown({
 }) {
   const [editingOptionsTurnOn, setEditingOptionsTurnOn] = useState(false)
 
+  useEffect(() => {
+    if (!isOpen) return
+    const el = document.querySelector(`[dropdown='${id}']`)
+    const rect = el?.getBoundingClientRect()
+    const right = rect?.right
+    const windowWidth = window?.innerWidth
+    const position = right - windowWidth
+    if (right > windowWidth) {
+      el.style.left = `-${position}px`
+      el.style.marginLeft = `-24px`
+    }
+  }, [isOpen])
+
   if (isOpen) {
     return (
-      <div className="style-options-dropdown active">
+      <div className="style-options-dropdown active" dropdown={`${id}`}>
         <StyleOptionsList
           index={index}
           handleOpen={handleOpen}

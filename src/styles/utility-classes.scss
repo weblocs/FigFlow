@@ -1,0 +1,527 @@
+.user-panel,
+.settings-panel {
+  /* Typography */
+
+  .font-light {
+    font-weight: 300;
+  }
+
+  .font-bold {
+    font-weight: 600;
+  }
+
+  .text-white {
+    color: #fff;
+  }
+
+  .text-gray-400 {
+    color: #999;
+  }
+
+  .text-sm {
+    font-size: 11px;
+    line-height: 13px;
+  }
+
+  .text-md {
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  .text-lg {
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  /* Text Transform */
+
+  .uppercase {
+    text-transform: uppercase;
+  }
+
+  .lowercase {
+    text-transform: lowercase;
+  }
+
+  .capitalize {
+    text-transform: capitalize;
+  }
+
+  .normal-case {
+    text-transform: none;
+  }
+
+  /* Margin */
+
+  .mb-0 {
+    margin-bottom: 0;
+  }
+
+  .mb-2 {
+    margin-bottom: 2px;
+  }
+
+  .mb-4 {
+    margin-bottom: 4px;
+  }
+
+  .mb-8 {
+    margin-bottom: 8px;
+  }
+
+  .mb-12 {
+    margin-bottom: 12px;
+  }
+
+  .mb-16 {
+    margin-bottom: 16px;
+  }
+
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+
+  .mb-24 {
+    margin-bottom: 24px;
+  }
+
+  .mt-8 {
+    margin-top: 8px;
+  }
+
+  /* Padding */
+
+  .p-8 {
+    padding: 8px;
+  }
+
+  .p-16 {
+    padding: 16px;
+  }
+
+  .p-32 {
+    padding: 32px;
+  }
+
+  .pb-8 {
+    padding-bottom: 8px;
+  }
+
+  .pb-16 {
+    padding-bottom: 16px;
+  }
+
+  .py-4 {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .py-6 {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .py-8 {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .py-12 {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .px-4 {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .px-8 {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .px-10 {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .px-12 {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .px-16 {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Display */
+
+  .block {
+    display: block;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .inline-block {
+    display: inline-block;
+  }
+
+  .inline-flex {
+    display: inline-flex;
+  }
+
+  .inline {
+    display: inline;
+  }
+
+  .none {
+    display: none;
+  }
+
+  /* Flex */
+
+  .flex-row {
+    flex-direction: row;
+  }
+
+  .shrink-0 {
+    flex-shrink: 0;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .items-bottom {
+    align-items: end;
+  }
+
+  .flex-column {
+    flex-direction: column;
+  }
+
+  .flex-center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }
+
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  /* Gaps */
+
+  .gap-4 {
+    gap: 4px;
+  }
+
+  .gap-8 {
+    gap: 8px;
+  }
+
+  .gap-16 {
+    gap: 16px;
+  }
+
+  /* Cursor */
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  /* Background */
+
+  .bg-white {
+    background-color: #fff;
+  }
+
+  .bg-black {
+    background-color: #111;
+  }
+
+  .bg-gray-100 {
+    background-color: #f5f5f5;
+  }
+
+  .bg-gray-200 {
+    background-color: #f1f1f1;
+  }
+
+  .bg-gray-300 {
+    background-color: #eaeaea;
+  }
+
+  .hover-bg-gray-300:hover {
+    background-color: #eaeaea;
+  }
+
+  .bg-red-200 {
+    background-color: #d33535;
+  }
+
+  .hover-bg-red-300:hover {
+    background-color: #c41818;
+  }
+
+  .bg-blue-200 {
+    background-color: #726de2;
+  }
+
+  .hover-bg-blue-300:hover {
+    background-color: #5b5bd8;
+  }
+
+  /* Radius */
+
+  .rounded {
+    border-radius: 4px;
+  }
+
+  .rounded-md {
+    border-radius: 8px;
+  }
+
+  .rounded-lg {
+    border-radius: 16px;
+  }
+
+  .rounded-full {
+    border-radius: 9999px;
+  }
+
+  /* Border */
+
+  .border {
+    border: 1px solid #d6d6d6;
+  }
+
+  .border-b {
+    border-bottom: 1px solid #d6d6d6;
+  }
+
+  .border-r {
+    border-right: 1px solid #d6d6d6;
+  }
+
+  .border-l {
+    border-left: 1px solid #d6d6d6;
+  }
+
+  .border-b-0 {
+    border-bottom: 0;
+  }
+
+  .border-gray-200 {
+    border-color: #ddd;
+  }
+
+  .border-gray-300 {
+    border-color: #bbb;
+  }
+
+  .border-red-200 {
+    border-color: #d33535;
+  }
+
+  .border-blue-200 {
+    border-color: #726de2;
+  }
+
+  /* Position */
+
+  .absolute {
+    position: absolute;
+  }
+
+  .relative {
+    position: relative;
+  }
+
+  .fixed {
+    position: fixed;
+  }
+
+  .sticky {
+    position: sticky;
+  }
+
+  /* Top */
+
+  .top-0 {
+    top: 0;
+  }
+
+  /* Left */
+
+  .left-0 {
+    left: 0;
+  }
+
+  .left-full {
+    left: 100%;
+  }
+
+  /* Overflow */
+
+  .overflow-hidden {
+    overflow: hidden;
+  }
+
+  .overflow-scroll {
+    overflow: scroll;
+  }
+
+  .overflow-x-scroll {
+    overflow-x: scroll;
+  }
+
+  .overflow-y-scroll {
+    overflow-y: scroll;
+  }
+
+  /* Shadow */
+
+  .shadow {
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-md {
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-lg {
+    box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  /* Transition */
+
+  .transition {
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* Opacity */
+
+  .opacity-0 {
+    opacity: 0;
+  }
+
+  .opacity-50 {
+    opacity: 0.5;
+  }
+
+  .opacity-100 {
+    opacity: 1;
+  }
+
+  /* Visibility */
+
+  .visible {
+    visibility: visible;
+  }
+
+  .hidden {
+    visibility: hidden;
+  }
+
+  /* Z-Index */
+
+  .z-10 {
+    z-index: 10;
+  }
+
+  .z-20 {
+    z-index: 20;
+  }
+
+  .z-30 {
+    z-index: 30;
+  }
+
+  .z-40 {
+    z-index: 40;
+  }
+
+  .z-50 {
+    z-index: 10001;
+  }
+
+  /* Width */
+
+  .w-full {
+    width: 100%;
+  }
+
+  .w-screen {
+    width: 100vw;
+  }
+
+  .w-200 {
+    width: 205px;
+  }
+
+  .w-280 {
+    width: 280px;
+  }
+
+  .w-450 {
+    width: 450px;
+  }
+
+  .w-600 {
+    width: 600px;
+  }
+
+  /* Height */
+
+  .h-full {
+    height: 100%;
+  }
+
+  .h-screen {
+    height: 100vh;
+  }
+
+  .h-24 {
+    height: 24px;
+  }
+
+  .h-32 {
+    height: 32px;
+  }
+
+  .h-40 {
+    height: 40px;
+  }
+
+  .h-full--24 {
+    height: calc(100% - 24px);
+  }
+
+  .h-full--32 {
+    height: calc(100% - 32px);
+  }
+
+  /* Max Width */
+
+  .max-w-300 {
+    max-width: 300px;
+  }
+
+  .max-w-screen--120 {
+    max-width: calc(100vw - 120px);
+  }
+
+  /* Max Height */
+
+  .max-h-screen--120 {
+    max-height: calc(100vh - 120px);
+  }
+}

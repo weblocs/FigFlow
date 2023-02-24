@@ -6,23 +6,22 @@ import ListItemEditIcon from '../_atoms/ListItemEditIcon'
 import CreateLayoutButton from './CreateLayoutButton'
 import ProjectLayoutListFolder from './ProjectLayoutListFolder'
 import AddButton from '../_atoms/AddButton'
+import SidePanel from '../../../ui/SidePanel'
 
 export default function ProjectLayoutsPanel() {
   const dispatch = useDispatch()
   const projectLayouts = useSelector((state) => state.project.projectLayouts)
-  const activeTab = useSelector((state) => state.project.activeTab)
+  const isActiveTab = useSelector(
+    (state) => state.project.activeTab === 'Layouts'
+  )
 
   const [createPageInputVisible, setCreatePageInputVisible] = useState(false)
   const [createFolderInputVisible, setCreateFolderInputVisible] =
     useState(false)
 
   return (
-    <div
-      className={
-        'projectPagesPanel ' + (activeTab === 'Layouts' ? 'active' : '')
-      }
-    >
-      <div className="projectTabTitleBox">
+    <SidePanel isActive={isActiveTab}>
+      <div className="side-panel-title">
         Layouts
         <div className="projectTabTitleButtonsBox">
           {/* <button onClick={() => setCreatePageInputVisible(!createPageInputVisible)}>L</button> */}
@@ -44,6 +43,6 @@ export default function ProjectLayoutsPanel() {
           <ProjectLayoutListFolder folder={folder} key={folder.id} />
         ))}
       </div>
-    </div>
+    </SidePanel>
   )
 }

@@ -39,7 +39,7 @@ export default function PageScriptsSettings() {
   return (
     <div>
       <div className="settings-label">Scripts</div>
-      <div className="flex flex-between flex-vert-center">
+      <div className="flex justify-between items-center">
         <select ref={inputRef}>
           {notIncludedPageScripts.map((script) => {
             return (

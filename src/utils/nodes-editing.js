@@ -341,21 +341,50 @@ export function findActiveNode(nodes, id) {
   return response
 }
 
-export function firebaseSaveProject(state, app, db) {
-  try {
-    updateDoc(doc(db, 'projects', state.projectFirebaseId), {
-      pages: state.projectPages,
-      projectPageFolders: state.projectPageFolders,
-      projectPageFolderStructure: state.projectPageFolderStructure,
-      collections: state.collections,
-      preRenderedStyles: state.preRenderedStyles,
-      symbols: state.projectSymbols,
-      swatches: state.projectSwatches,
-      sections: state.projectLayouts,
-      blocks: state.blocks,
-      styleGuide: state.styleGuide,
+export function renderFontCss(fonts, fontsURLDots, isForInternalAppUse) {
+  let css = ''
+
+  fonts.forEach((font) => {
+    font?.weights.forEach((weight) => {
+      let fontName = weight.url
+      let fontType = ''
+      const types = ['ttf', 'otf', 'woff', 'woff2']
+      types.forEach((type) => {
+        if (fontName.slice(-4) === '-' + type) {
+          fontName = fontName.slice(0, -4)
+          fontName = fontName.concat('.' + type)
+          fontType = type
+        }
+        if (fontName.slice(-5) === '-' + type) {
+          fontName = fontName.slice(0, -5)
+          fontName = fontName.concat('.' + type)
+          fontType = type
+        }
+        if (fontName.slice(-6) === '-' + type) {
+          fontName = fontName.slice(0, -6)
+          fontName = fontName.concat('.' + type)
+          fontType = type
+        }
+      })
+      if (fontType === 'ttf') {
+        fontType = 'truetype'
+      }
+      if (fontType === 'otf') {
+        fontType = 'opentype'
+      }
+      let fontSrc = `url('${fontsURLDots}assets/fonts/${fontName}') format('${fontType}')`
+      if (isForInternalAppUse) {
+        fontSrc = `url('https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/${weight.url}?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a') format('${fontType}')`
+      }
+
+      css += `\n@font-face {
+  font-family: '${font.name}';
+  src: ${fontSrc};
+  font-weight: ${weight.weight};
+  font-style: ${weight.style};
+  font-display: swap;
+}`
     })
-  } catch (error) {
-    console.log(error)
-  }
+  })
+  return css
 }

@@ -3,13 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   pasteLayoutHtmlNodes,
   copyLayoutHtmlNodes,
-  setProjectPopUp,
 } from '../../../../../features/project'
 import ModalBackgroundCloser from '../../../_atoms/ModalBackgroundCloser'
 import addImage from '../../../../../img/add-button.svg'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 
-export default function AddBlockButton({ addRichSetting }) {
+export default function AddBlockButton() {
   const isNodeTypeSection = useSelector(
     (state) => state.project.activeNodeObject?.type === 'sec'
   )
@@ -17,17 +16,6 @@ export default function AddBlockButton({ addRichSetting }) {
     (state) => state.project.activeNodeObject?.type === 'body'
   )
   const blocks = useSelector((state) => state.project.blocks)
-  const blockFolders = useSelector(
-    (state) => state.project.activeNodeObject?.blockFolders
-  )
-  const keyboardNavigationOn = useSelector(
-    (state) => state.project.keyboardNavigationOn
-  )
-  const activeBlockFolders = useSelector((state) =>
-    state.project.activeNodeObject?.blockFolders?.filter((folder) =>
-      blockFoldersInclude(folder.id)
-    )
-  )
   const dispatch = useDispatch()
 
   const [listIsOpened, setListIsOpened] = useState(false)
@@ -38,23 +26,10 @@ export default function AddBlockButton({ addRichSetting }) {
     setListIsOpened(false)
   }
 
-  function blockFoldersInclude(id) {
-    if (blockFolders !== undefined) {
-      for (let i = 0; i < blockFolders.length; i++) {
-        if (blockFolders[i]?.id === id && blockFolders[i]?.state) {
-          return true
-        }
-      }
-    }
-    return false
-  }
-
   const { openListShortcut } = useKeyboardShortcut(
     ['E'],
     (shortcutKeys) => {
-      if (keyboardNavigationOn) {
-        setListIsOpened(!listIsOpened)
-      }
+      setListIsOpened(!listIsOpened)
     },
     { overrideSystem: false, ignoreInputFields: true, repeatOnHold: false }
   )

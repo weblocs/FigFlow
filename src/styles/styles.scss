@@ -38,20 +38,6 @@ img {
 .project-rendered-design .f-input {
   caret-color: #0000;
 }
-
-.settings-modal {
-  font-family: Inter;
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 10001;
-  justify-content: center;
-  align-items: center;
-}
-
 .empty-div {
   width: 75px;
   height: 75px;
@@ -59,18 +45,6 @@ img {
 
 .settings-modal.active {
   display: flex;
-}
-
-.settings-modal_modal-content-area {
-  background-color: #fff;
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-  max-width: calc(100vw - 120px);
-  max-height: calc(100vh - 120px);
-  padding: 32px;
-  border-radius: 8px;
 }
 
 .settings-modal_close-area {
@@ -592,6 +566,7 @@ img {
   border: 1px solid #c9c9c9;
   border-radius: 4px;
   min-height: 64px;
+  min-width: 204px;
   top: 34px;
   left: -1px;
   display: none;
@@ -636,7 +611,6 @@ img {
 }
 
 .style-option-item_icons {
-  margin-left: 4px;
   display: none;
 }
 
@@ -943,7 +917,7 @@ img {
   background-color: #635ecf;
 }
 
-.projectTabTitleBox {
+.side-panel-title {
   padding: 5px 16px;
   font-weight: 600;
   font-size: 12px;
@@ -999,25 +973,22 @@ img {
   z-index: 10000;
 }
 
+button {
+  outline: none;
+  border: 0;
+}
+
 .user-panel,
 .settings-panel {
-  h1,
-  h2,
-  h3 {
-    letter-spacing: -0.03em;
-  }
+  // h1,
+  // h2,
+  // h3 {
+  //   letter-spacing: -0.03em;
+  // }
 
-  p {
-    letter-spacing: -0.15em;
-  }
-
-  button {
-    font-weight: 900;
-    text-transform: uppercase;
-    font-size: 12px;
-    outline: none;
-    border: 0;
-  }
+  // p {
+  //   letter-spacing: -0.15em;
+  // }
 
   /* Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
@@ -1454,22 +1425,6 @@ img {
     width: 16px;
   }
 
-  .projectPagesPanel {
-    width: 200px;
-    height: 100%;
-    flex-shrink: 0;
-    border-right: 1px solid #d3d3d3;
-    display: none;
-    position: relative;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    background-color: #fff;
-  }
-
-  .projectPagesPanel.wider {
-    width: 280px;
-  }
-
   .projectTabTitleButtonsBox {
     display: flex;
     grid-column-gap: 8px;
@@ -1479,37 +1434,6 @@ img {
 
   .projectTabTitleButtonsBox.no-gap {
     grid-column-gap: 0;
-  }
-
-  .projectPagesPanel.active {
-    display: block;
-  }
-
-  .collectionsPanel {
-    overflow-y: scroll;
-    width: 205px;
-    flex-shrink: 0;
-    border-right: 1px solid #d3d3d3;
-    display: none;
-    background-color: #fff;
-  }
-
-  .collectionsPanel.active {
-    display: block;
-  }
-
-  .collectionsPanel.is-script {
-    width: 450px;
-    height: calc(100vh - 32px);
-  }
-
-  .collectionsPanel.item-edit-panel {
-    width: 600px;
-    height: calc(100% - 24px);
-    position: absolute;
-    top: 0;
-    left: 100%;
-    z-index: 100001;
   }
 
   .projectRightSidebarNav {
@@ -3378,11 +3302,17 @@ img {
     padding: 4px;
     width: 16px;
     height: 16px;
-    position: absolute;
-    right: 8px;
-    top: 3px;
     cursor: pointer;
     background-color: transparent;
+    position: absolute;
+    top: 4px;
+    right: 8px;
+  }
+
+  .block-item_edit.relative-item {
+    position: relative;
+    top: auto;
+    right: auto;
   }
 
   .block-item_edit:hover {
@@ -3409,7 +3339,7 @@ img {
     padding: 8px;
     top: 30px;
     left: 5px;
-    width: 172px;
+    width: 186px;
     cursor: default;
     border: 1px solid #cbcbcb;
     border-radius: 4px;
@@ -4348,7 +4278,7 @@ img {
 
   .new-page-options {
     position: absolute;
-    top: 30px;
+    top: 24px;
     right: 0;
     min-width: 140px;
     background-color: #fff;
@@ -4453,78 +4383,5 @@ img {
     border: 1px solid #929292bb;
     font-size: 11px;
     padding-left: 4px;
-  }
-
-  .font-light {
-    font-weight: 300;
-  }
-
-  .color-light {
-    color: #999;
-  }
-
-  .mb-0 {
-    margin-bottom: 0;
-  }
-
-  .mb-8 {
-    margin-bottom: 8px;
-  }
-
-  .mb-16 {
-    margin-bottom: 16px;
-  }
-
-  .mt-8 {
-    margin-top: 8px;
-  }
-
-  .pb-8 {
-    padding-bottom: 8px;
-  }
-
-  .pb-16 {
-    padding-bottom: 16px;
-  }
-
-  .gap-8 {
-    gap: 8px;
-  }
-
-  .gap-16 {
-    gap: 16px;
-  }
-
-  .border-bottom-gray {
-    border-bottom: 1px solid #d6d6d6;
-  }
-
-  .pointer {
-    cursor: pointer;
-  }
-
-  .flex {
-    display: flex;
-  }
-
-  .flex-row {
-    flex-direction: row;
-  }
-
-  .flex-vert-center {
-    align-items: center;
-  }
-
-  .flex-column {
-    flex-direction: column;
-  }
-
-  .flex-center {
-    align-items: center;
-    justify-content: center;
-  }
-
-  .flex-between {
-    justify-content: space-between;
   }
 }

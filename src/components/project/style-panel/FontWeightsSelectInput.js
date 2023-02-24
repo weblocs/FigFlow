@@ -10,12 +10,10 @@ export default function FontWeightsSelectInput({ style }) {
   const activeStyleValue = useSelector(
     (state) => state.project.activeNodeComputedStyles?.[style.replace('-', '_')]
   )
-  const projectUploadedFonts = useSelector(
-    (state) => state.project.projectUploadedFonts
-  )
+  const fonts = useSelector((state) => state.project.fonts)
   const activeFontWeights = useSelector(
     (state) =>
-      state.project.projectUploadedFonts?.find(
+      state.project.fonts?.find(
         ({ name }) =>
           name === activeNodeFontFamilyNamePreRender?.replaceAll('"', '')
       )?.weights || ['']
@@ -34,9 +32,9 @@ export default function FontWeightsSelectInput({ style }) {
         onChange={handleInputChange}
         value={activeStyleValue?.replaceAll('"', '')}
       >
-        {activeFontWeights.map((option) => (
-          <option value={option} key={option}>
-            {option}
+        {activeFontWeights.map((option, i) => (
+          <option value={option.weight} key={i + option.weight}>
+            {option.weight}
           </option>
         ))}
       </select>

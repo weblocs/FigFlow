@@ -2,13 +2,20 @@ import {
   fullJSONtoCSS,
   getResolutionCssMedia,
   getResolutionPathName,
+  renderFontCss,
 } from '../../../../utils/nodes-editing'
 
 function hasChildren(node) {
   return node.children.length > 0
 }
 
-export default function generatePageCss(preRenderedStyles, nodes, swatches) {
+export default function generatePageCss(
+  preRenderedStyles,
+  nodes,
+  swatches,
+  fonts,
+  fontsURLDots
+) {
   let usedCSSClasses = []
   function findUsedClasses(nodes) {
     for (let i = 0; i < nodes.length; i++) {
@@ -134,7 +141,8 @@ export default function generatePageCss(preRenderedStyles, nodes, swatches) {
   return (
     `*{-webkit-font-smoothing: antialiased;box-sizing: border-box;}body{margin:0;}img{display: block;width: 100%; height: auto;}` +
     fullJSONtoCSS(updatedPreRenderedStyles, swatches) +
-    inlineStyles
+    inlineStyles +
+    renderFontCss(fonts, fontsURLDots)
   )
   //   return generatedCSS
 }

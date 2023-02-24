@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import EditImg from '../../../../img/edit-white.svg'
 import { setKeyboardNavigationOn } from '../../../../features/project'
 import ConfirmDeleteModalButton from '../../modals/ConfirmDeleteModalButton'
+import Button from '../../../ui/Button'
+import Input from '../../../ui/Input'
+import Label from '../../../ui/Label'
 
 export default function SubStyleEditForm({
   index,
@@ -30,6 +33,10 @@ export default function SubStyleEditForm({
     setIsEditorOpened(false)
   }
 
+  function handleCancel() {
+    setIsEditorOpened(false)
+  }
+
   function handleDelete(id) {
     dispatch(deleteFx({ optionIndex: index, subOptionId: id }))
     setIsEditorOpened(false)
@@ -42,13 +49,13 @@ export default function SubStyleEditForm({
   return (
     <form
       draggable="true"
-      style={{ right: '0px', left: 'auto', color: '#333' }}
+      style={{ left: '0px', color: '#333' }}
       onSubmit={() => handleSubmit(element.id)}
       className={'edit-block_toolbox' + (isEditorOpened ? ' active' : '')}
     >
-      <div className="edit-block_toolbox-text">{text}</div>
-      <input className="edit-node-input" ref={blockNameRef} />
-      <div className="projectTabTitleButtonsBox">
+      <Label text={text} />
+      <Input useRef={blockNameRef} />
+      <div className="flex gap-4">
         {isDeleteButtonVisible && (
           <ConfirmDeleteModalButton
             handleOnClick={() => handleDelete(element.id)}
@@ -57,13 +64,8 @@ export default function SubStyleEditForm({
             redButton={true}
           />
         )}
-        <div
-          className="settings-button white-button"
-          onClick={() => setIsEditorOpened(false)}
-        >
-          Cancel
-        </div>
-        <button className="settings-button blue-button">Save</button>
+        <Button text="Cancel" size="sm" onClick={handleCancel} />
+        <Button type="action" text="Save" size="sm" submit={true} />
       </div>
     </form>
   )

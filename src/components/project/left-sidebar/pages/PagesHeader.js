@@ -21,7 +21,7 @@ export default function PagesHeader({ openPage, openFolder }) {
   }
 
   return (
-    <div className="projectTabTitleBox" style={{ zIndex: '3' }}>
+    <div className="side-panel-title" style={{ zIndex: '3' }}>
       Pages
       <div className="projectTabTitleButtonsBox no-gap">
         <button

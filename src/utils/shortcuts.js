@@ -89,8 +89,34 @@ export default function loadShortcuts() {
     }
   )
 
+  const { undoProjectShortcutWindows } = useKeyboardShortcut(
+    ['Control', 'Z'],
+    (shortcutKeys) => {
+      if (!window.event.shiftKey) {
+        dispatch(undoProject())
+      }
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
   const { reUndoProjectShortcut } = useKeyboardShortcut(
     ['Meta', 'Shift', 'Z'],
+    (shortcutKeys) => {
+      dispatch(reUndoProject())
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { reUndoProjectShortcutWindows } = useKeyboardShortcut(
+    ['Control', 'Shift', 'Z'],
     (shortcutKeys) => {
       dispatch(reUndoProject())
     },
@@ -137,6 +163,18 @@ export default function loadShortcuts() {
     }
   )
 
+  const { copyShortcutWindows } = useKeyboardShortcut(
+    ['Control', 'C'],
+    (shortcutKeys) => {
+      dispatch(copyHtmlNodes())
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
   const { copyandDeleteShortcut } = useKeyboardShortcut(
     ['Meta', 'X'],
     (shortcutKeys) => {
@@ -150,8 +188,33 @@ export default function loadShortcuts() {
     }
   )
 
+  const { copyandDeleteShortcutWindows } = useKeyboardShortcut(
+    ['Control', 'X'],
+    (shortcutKeys) => {
+      dispatch(copyHtmlNodes())
+      dispatch(deleteActiveHtmlNode())
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
   const { pasteShortcut } = useKeyboardShortcut(
     ['Meta', 'V'],
+    (shortcutKeys) => {
+      dispatch(pasteHtmlNodes())
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { pasteShortcutWindows } = useKeyboardShortcut(
+    ['Control', 'V'],
     (shortcutKeys) => {
       dispatch(pasteHtmlNodes())
     },

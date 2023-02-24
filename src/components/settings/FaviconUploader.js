@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore, setDoc, doc, updateDoc } from 'firebase/firestore'
 import { firebaseConfig } from '../../utils/firebase-config'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { setFavicon } from '../../features/project'
+import { setFavicon, setFaviconMobile } from '../../features/project'
 
 const fileToDataUri = (file) =>
   new Promise((resolve, reject) => {
@@ -19,12 +19,15 @@ export default function FaviconUploader() {
     (state) => state.project.projectFirebaseId
   )
   const faviconImage = useSelector((state) => state.project.faviconImage)
+  const faviconMobileImage = useSelector(
+    (state) => state.project.faviconMobileImage
+  )
 
   const dispatch = useDispatch()
 
   const storage = getStorage()
 
-  const imageUploading = (file) => {
+  const imageUploading = (file, type) => {
     if (!file) {
       return
     }
@@ -36,19 +39,29 @@ export default function FaviconUploader() {
       .then(async () => {
         const app = initializeApp(firebaseConfig)
         const db = getFirestore(app)
-        await updateDoc(doc(db, 'projects', projectFirebaseId), {
+        let node = {
           favicon: projectFirebaseId + '-' + file.name,
-        })
+        }
+        if (type === 'mobileFavicon') {
+          node = {
+            faviconMobile: projectFirebaseId + '-' + file.name,
+          }
+        }
+        await updateDoc(doc(db, 'projects', projectFirebaseId), node)
       })
       .then(async () => {
-        dispatch(setFavicon(projectFirebaseId + '-' + file.name))
+        if (type === 'favicon') {
+          dispatch(setFavicon(projectFirebaseId + '-' + file.name))
+        } else {
+          dispatch(setFaviconMobile(projectFirebaseId + '-' + file.name))
+        }
       })
   }
 
   return (
     <div className="favicons-settings-grid">
       <div>
-        <label className="project-settings_label">Favicon</label>
+        <label className="project-settings_label">Favicon (32px x 32px) </label>
         <img
           className="favicon-settings-image"
           src={
@@ -60,26 +73,32 @@ export default function FaviconUploader() {
         <label className="custom-file-upload">
           <input
             type="file"
-            onChange={(event) => imageUploading(event.target.files[0] || null)}
+            onChange={(event) =>
+              imageUploading(event.target.files[0] || null, 'favicon')
+            }
           />
           Choose Image
         </label>
       </div>
 
       <div>
-        <label className="project-settings_label">Favicon Mobile</label>
+        <label className="project-settings_label">
+          Favicon Mobile (256px x 256px)
+        </label>
         <img
           className="favicon-settings-image"
           src={
             'https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/' +
-            faviconImage +
+            faviconMobileImage +
             '?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'
           }
         />
         <label className="custom-file-upload">
           <input
             type="file"
-            onChange={(event) => imageUploading(event.target.files[0] || null)}
+            onChange={(event) =>
+              imageUploading(event.target.files[0] || null, 'mobileFavicon')
+            }
           />
           Choose Image
         </label>

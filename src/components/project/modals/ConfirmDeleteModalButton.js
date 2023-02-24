@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPageSettings } from '../../../features/project'
+import Button from '../../ui/Button'
 
 export default function ConfirmDeleteModalButton({
   handleOnClick,
@@ -56,7 +57,15 @@ export default function ConfirmDeleteModalButton({
           </div>
         </div>
       </div>
-      {redButton ? (
+
+      <Button
+        text={buttonText ? `Delete ${buttonText}` : 'Delete'}
+        size="sm"
+        type={redButton ? 'danger' : 'white'}
+        onClick={() => setConfirmPopUpOpened(true)}
+      />
+
+      {/* {redButton ? (
         <div
           className="settings-button delete-button"
           onClick={() => setConfirmPopUpOpened(true)}
@@ -70,7 +79,7 @@ export default function ConfirmDeleteModalButton({
         >
           Delete {buttonText}
         </div>
-      )}
+      )} */}
     </div>
   )
 }

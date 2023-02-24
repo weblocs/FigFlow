@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addCollection } from '../../../../features/project'
+import SidePanel from '../../../ui/SidePanel'
 import CreateNewItemInput from '../navigator/CreateNewItemInput'
 import AddButton from '../_atoms/AddButton'
 import CollectionListItem from './CollectionListItem'
@@ -8,17 +9,15 @@ import CollectionListItem from './CollectionListItem'
 export default function ProjectCollectionsPanel() {
   const dispatch = useDispatch()
   const collections = useSelector((state) => state.project.collections)
-  const activeTab = useSelector((state) => state.project.activeTab)
+  const isTabActive = useSelector(
+    (state) => state.project.activeTab === 'Collections'
+  )
   const [createInputVisible, setCreateInputVisible] = useState(false)
 
   // if(activeTab === 'Collections') {
   return (
-    <div
-      className={
-        'collectionsPanel ' + (activeTab === 'Collections' ? 'active' : '')
-      }
-    >
-      <div className="projectTabTitleBox">
+    <SidePanel isActive={isTabActive}>
+      <div className="side-panel-title">
         Collections
         <div className="projectTabTitleButtonsBox">
           <AddButton fx={() => setCreateInputVisible(!createInputVisible)} />
@@ -41,7 +40,7 @@ export default function ProjectCollectionsPanel() {
           />
         ))}
       </div>
-    </div>
+    </SidePanel>
   )
   // }
 }

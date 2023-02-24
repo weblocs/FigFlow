@@ -218,6 +218,7 @@ function RenderedNode(props) {
         <RenderedNode
           id={el.id}
           inputPlaceholder={el.inputPlaceholder}
+          embed={el.embed}
           title={el.title}
           subtype={el.subtype}
           src={el.src}
@@ -274,6 +275,7 @@ function RenderedNode(props) {
           <RenderedNode
             id={el.id}
             inputPlaceholder={el.inputPlaceholder}
+            embed={el.embed}
             title={el.title}
             subtype={el.subtype}
             src={el.src}
@@ -299,6 +301,39 @@ function RenderedNode(props) {
     )
   }
 
+  if (props.type === 'embed') {
+    if (props.embed === '' || props.embed === undefined) {
+      elementHTML = (
+        <div
+          style={customStyle}
+          el_id={elementId}
+          cms_item_index={props.itemIndex}
+          onClick={handleOnClick}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
+          className="empty-collection-wrapper renderedNode"
+        >
+          Set embed code clicking in icon above
+        </div>
+      )
+    } else {
+      elementHTML = (
+        <div
+          style={customStyle}
+          el_id={elementId}
+          cms_item_index={props.itemIndex}
+          onClick={handleOnClick}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
+          className={listOfNodeStyles}
+          dangerouslySetInnerHTML={{
+            __html: props.embed,
+          }}
+        ></div>
+      )
+    }
+  }
+
   if (props.type === 'sec') {
     elementHTML = (
       <div onMouseEnter={handleSectionMouseOver}>
@@ -315,6 +350,7 @@ function RenderedNode(props) {
             <RenderedNode
               id={el.id}
               inputPlaceholder={el.inputPlaceholder}
+              embed={el.embed}
               title={el.title}
               subtype={el.subtype}
               src={el.src}
@@ -358,6 +394,7 @@ function RenderedNode(props) {
             <RenderedNode
               id={el.id}
               inputPlaceholder={el.inputPlaceholder}
+              embed={el.embed}
               title={el.title}
               subtype={el.subtype}
               src={el.src}
@@ -424,6 +461,7 @@ function RenderedNode(props) {
           <RenderedNode
             id={el.id}
             inputPlaceholder={el.inputPlaceholder}
+            embed={el.embed}
             title={el.title}
             subtype={el.subtype}
             src={el.src}
@@ -483,6 +521,7 @@ function RenderedNode(props) {
                 <RenderedNode
                   id={el.id}
                   inputPlaceholder={el.inputPlaceholder}
+                  embed={el.embed}
                   title={el.title}
                   subtype={el.subtype}
                   src={el.src}
@@ -783,6 +822,7 @@ function RenderedNode(props) {
           <RenderedNode
             id={el.id}
             inputPlaceholder={el.inputPlaceholder}
+            embed={el.embed}
             title={el.title}
             subtype={el.subtype}
             src={el.src}

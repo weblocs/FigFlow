@@ -9,11 +9,14 @@ import CreateNewItemInput from '../navigator/CreateNewItemInput'
 import Arrow from '../../../../img/arrow-left.svg'
 import { activeCollectionSelector } from '../../../../selectors/active-collection'
 import AddButton from '../_atoms/AddButton'
+import SidePanel from '../../../ui/SidePanel'
 
 export default function ProjectCollectionsItemsPanel() {
-  const activeTab = useSelector((state) => state.project.activeTab)
-  const collectionPanelState = useSelector(
-    (state) => state.project.collectionPanelState
+  const isTabActive = useSelector(
+    (state) =>
+      state.project.activeTab === 'Collections' &&
+      (state.project.collectionPanelState === 'items' ||
+        state.project.collectionPanelState === 'fields')
   )
   const activeCollection = useSelector((state) =>
     activeCollectionSelector(state)
@@ -31,53 +34,47 @@ export default function ProjectCollectionsItemsPanel() {
     dispatch(setCollectionPanelState('fields'))
   }
 
-  if (collectionPanelState === 'items' || collectionPanelState === 'fields') {
-    return (
-      <div
-        className={
-          'collectionsPanel ' + (activeTab === 'Collections' ? 'active' : '')
-        }
-      >
-        <div className="projectTabTitleBox">
-          <div>
-            <span
-              className="panel_back-button"
-              onClick={() => dispatch(setCollectionPanelState('collections'))}
-            >
-              <img src={Arrow} />
-            </span>
-            {activeCollection?.name} Items
-          </div>
-          <div className="projectTabTitleButtonsBox">
-            <AddButton fx={() => setCreateInputVisible(!createInputVisible)} />
-          </div>
+  return (
+    <SidePanel isActive={isTabActive}>
+      <div className="side-panel-title">
+        <div>
+          <span
+            className="panel_back-button"
+            onClick={() => dispatch(setCollectionPanelState('collections'))}
+          >
+            <img src={Arrow} />
+          </span>
+          {activeCollection?.name} Items
         </div>
-
-        <CreateNewItemInput
-          visibility={createInputVisible}
-          setVisibility={setCreateInputVisible}
-          create={addCollectionItem}
-          placeholder="New item"
-        />
-
-        <div className="pagesList">
-          {activeCollection?.items.map((item) => (
-            <div
-              onClick={() => handleItemClick(item.id)}
-              className={
-                'projectPageItem' +
-                (activeCollectionItemId === item.id ? ' active' : '') +
-                (item?.archived !== undefined && item?.archived !== false
-                  ? ' archived'
-                  : '')
-              }
-              key={item.id}
-            >
-              {item.name}
-            </div>
-          ))}
+        <div className="projectTabTitleButtonsBox">
+          <AddButton fx={() => setCreateInputVisible(!createInputVisible)} />
         </div>
       </div>
-    )
-  }
+
+      <CreateNewItemInput
+        visibility={createInputVisible}
+        setVisibility={setCreateInputVisible}
+        create={addCollectionItem}
+        placeholder="New item"
+      />
+
+      <div className="pagesList">
+        {activeCollection?.items.map((item) => (
+          <div
+            onClick={() => handleItemClick(item.id)}
+            className={
+              'projectPageItem' +
+              (activeCollectionItemId === item.id ? ' active' : '') +
+              (item?.archived !== undefined && item?.archived !== false
+                ? ' archived'
+                : '')
+            }
+            key={item.id}
+          >
+            {item.name}
+          </div>
+        ))}
+      </div>
+    </SidePanel>
+  )
 }

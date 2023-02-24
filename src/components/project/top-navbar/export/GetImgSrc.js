@@ -33,6 +33,10 @@ export default function getImgSrc(node, styleURLDots, collectionItem, item) {
       imageSrc = imageSrc.slice(0, -4)
       imageSrc = imageSrc.concat('.' + type)
     }
+    if (imageSrc.slice(-5) === '-' + type) {
+      imageSrc = imageSrc.slice(0, -5)
+      imageSrc = imageSrc.concat('.' + type)
+    }
   })
 
   return (

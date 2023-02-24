@@ -1,5 +1,3 @@
-export default function PanelTabTitle({text}) {
-    return (
-        <div className="projectTabTitleBox">{text}</div>
-    )
+export default function PanelTabTitle({ text }) {
+  return <div className="side-panel-title">{text}</div>
 }

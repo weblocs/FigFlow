@@ -34,7 +34,7 @@ export default function StyleOptionsList({
       {preRenderedStyles
         .find(({ id }) => id === stylesInActiveNode?.[0].id)
         ?.childrens[index].options.map((option) => (
-          <div className="style-option-item" key={option.id}>
+          <div className="style-option-item relative" key={option.id}>
             <div
               className="style-option-item-text"
               onClick={() => handleStyleOptionClick(option.id, option.name)}
@@ -42,19 +42,17 @@ export default function StyleOptionsList({
               {option.name}
             </div>
             {editingOptionsTurnOn && (
-              <div className={'style-option-item_icons active'}>
-                <div className="style-option-item_delete-icon">
-                  <SubStyleEdit
-                    index={index}
-                    text="Edit Option"
-                    itemType="option"
-                    element={option}
-                    editFx={editStyleSubOption}
-                    deleteFx={deleteStyleSubOption}
-                    active={true}
-                    isDeleteButtonVisible={true}
-                  />
-                </div>
+              <div className="px-4 py-4 flex items-center">
+                <SubStyleEdit
+                  index={index}
+                  text="Edit Option"
+                  itemType="option"
+                  element={option}
+                  editFx={editStyleSubOption}
+                  deleteFx={deleteStyleSubOption}
+                  active={true}
+                  isDeleteButtonVisible={true}
+                />
               </div>
             )}
           </div>

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { addImageToProjectImages } from '../../../../features/project-images'
 import { v4 as uuidv4 } from 'uuid'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, setDoc, doc, updateDoc } from 'firebase/firestore'
 import { firebaseConfig } from '../../../../utils/firebase-config.js'
+import { addImage } from '../../../../features/project'
 
 const fileToDataUri = (file) =>
   new Promise((resolve, reject) => {
@@ -21,7 +21,7 @@ export default function FileUploaderToCollectionField({ handleInputChange }) {
   const projectFirebaseId = useSelector(
     (state) => state.project.projectFirebaseId
   )
-  const projectImages = useSelector((state) => state.projectImages.Images)
+  const projectImages = useSelector((state) => state.project.images)
 
   const storage = getStorage()
 
@@ -48,7 +48,7 @@ export default function FileUploaderToCollectionField({ handleInputChange }) {
             },
           ],
         })
-        dispatch(addImageToProjectImages(fileName))
+        dispatch(addImage(fileName))
         handleInputChange(fileName)
       })
   }

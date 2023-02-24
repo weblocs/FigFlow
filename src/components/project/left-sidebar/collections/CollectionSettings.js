@@ -1,20 +1,26 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  deleteCollection,
   editCollection,
   setActiveSettingsCollectionId,
-  setCollectionPanelState,
   setKeyboardNavigationOn,
 } from '../../../../features/project'
-import AddNewField from './AddNewField'
+import Button from '../../../ui/Button'
+import Input from '../../../ui/Input'
+import Label from '../../../ui/Label'
+import SidePanel from '../../../ui/SidePanel'
+import SidePanelSection from '../../../ui/SidePanelSection'
+import SidePanelTitleBar from '../../../ui/SidePanelTitleBar'
+import FieldsTitleBar from './FieldsTitleBar'
 import CollectionFieldSettings from './CollectionFieldSettings'
 import DeleteCollection from './DeleteCollection'
 
 export default function CollectionSettings() {
-  const activeTab = useSelector((state) => state.project.activeTab)
-  const collectionPanelState = useSelector(
-    (state) => state.project.collectionPanelState
+  const isActiveTab = useSelector(
+    (state) =>
+      state.project.activeTab === 'Collections' &&
+      state.project.collectionPanelState === 'settings' &&
+      state.project.activeSettingsCollectionId !== ''
   )
   const activeSettingsCollectionId = useSelector(
     (state) => state.project.activeSettingsCollectionId
@@ -48,12 +54,8 @@ export default function CollectionSettings() {
     dispatch(setActiveSettingsCollectionId(''))
   }
 
-  function handleFocus() {
-    dispatch(setKeyboardNavigationOn(false))
-  }
-
-  function handleBlur() {
-    dispatch(setKeyboardNavigationOn(true))
+  function handleCloseClick() {
+    dispatch(setActiveSettingsCollectionId(''))
   }
 
   useEffect(() => {
@@ -62,60 +64,39 @@ export default function CollectionSettings() {
   }, [activeSettingsCollectionId])
 
   return (
-    <div
-      className={
-        'projectPagesPanel wider ' +
-        (activeTab === 'Collections' &&
-        collectionPanelState === 'settings' &&
-        activeSettingsCollectionId !== ''
-          ? 'active'
-          : '')
-      }
-    >
+    <SidePanel isActive={isActiveTab} width={280}>
       <form onSubmit={handleSubmit}>
-        <div className="projectTabTitleBox">
-          {collection?.name} CMS Settings
-          <div className="projectTabTitleButtonsBox">
-            <div
-              className="settings-button white-button"
-              onClick={() => dispatch(setActiveSettingsCollectionId(''))}
-            >
-              Close
-            </div>
-            <button className="settings-button blue-button">Save</button>
+        <SidePanelTitleBar title={collection?.name + ' CMS Settings'}>
+          <div className="flex gap-8">
+            <Button
+              text="Close"
+              size="sm"
+              type="white"
+              onClick={handleCloseClick}
+            />
+            <Button text="Save" size="sm" type="action" submit={true} />
           </div>
-        </div>
+        </SidePanelTitleBar>
 
-        <div className="page-settings-wrapper bottom-line">
-          <label className="settings-label">Collection Name</label>
-          <input
-            ref={nameRef}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            className="settings-input"
-          />
-
-          <label className="settings-label">Collection URL</label>
-          <input
-            ref={slugRef}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            className="settings-input no-margin-bottom"
-          />
-        </div>
+        <SidePanelSection>
+          <Label text="Collection Name" />
+          <Input useRef={nameRef} />
+          <Label text="Collection URL" />
+          <Input useRef={slugRef} mb0={true} />
+        </SidePanelSection>
       </form>
 
-      <AddNewField />
+      <FieldsTitleBar />
 
-      <div className="page-settings-wrapper">
-        <div className="collection-fields-settings_list">
+      <SidePanelSection>
+        <div className="border-b">
           {collection?.fields.map((field) => (
             <CollectionFieldSettings field={field} key={field.id} />
           ))}
         </div>
-      </div>
+      </SidePanelSection>
 
       <DeleteCollection name={collection?.name} id={collection?.id} />
-    </div>
+    </SidePanel>
   )
 }

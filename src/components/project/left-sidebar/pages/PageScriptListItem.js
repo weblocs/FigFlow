@@ -8,7 +8,7 @@ export default function PageScriptListItem({ scriptId }) {
   const dispatch = useDispatch()
 
   return (
-    <div className="flex flex-between">
+    <div className="flex justify-between">
       {script?.name}
       <span onClick={() => dispatch(removeScriptFromPage(scriptId))}>-</span>
     </div>

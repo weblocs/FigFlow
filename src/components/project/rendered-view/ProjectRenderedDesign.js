@@ -5,6 +5,7 @@ import {
   setActiveHtmlNode,
   updateStateOnScroll,
 } from '../../../features/project'
+import { renderFontCss } from '../../../utils/nodes-editing'
 import HtmlNodeSettings from './html-node-settings/HtmlNodeSettings'
 import ProjectParentsPathBar from './html-nodes-path/ProjectParentsPathBar'
 import RenderedNode from './RenderedNode'
@@ -26,6 +27,7 @@ export default function ProjectRenderedDesign() {
     (state) => state.project.activeProjectResolution
   )
   const styleState = useSelector((state) => state.project.styleState)
+  const fonts = useSelector((state) => state.project.fonts)
 
   const nodesEditModeLayoutOrBlock = useSelector(
     (state) =>
@@ -51,12 +53,19 @@ export default function ProjectRenderedDesign() {
   //   }
   // }, [activeRightSidebarTab, activeProjectResolution])
 
+  const [fontsCss, setFontsCss] = useState('')
+
+  useEffect(() => {
+    setFontsCss(renderFontCss(fonts, null, true))
+  }, [fonts])
+
   return (
     <div
       className={'Project  ' + 'd2g3-is-' + styleState}
       onWheel={() => dispatch(updateStateOnScroll())}
     >
       <style>{postRenderedStyles}</style>
+      <style>{fontsCss}</style>
 
       <div
         style={style}

@@ -14,15 +14,20 @@ import { initializeApp } from 'firebase/app'
 import {
   setIsSettingsModalOpen,
   setKeyboardNavigationOn,
-  setProjectSettingsData,
+  setProjectNameAndSlug,
 } from '../../features/project'
 import ProjectSettingsDelete from './ProjectSettingsDelete'
 import FaviconUploader from './FaviconUploader'
 import SelectPageNavigation from './SelectPageNavigation'
+import FontsSettings from './fonts/FontsSettings'
+import SettingsTab from './SettingsTab'
+import Input from '../ui/Input'
+import Label from '../ui/Label'
+import Button from '../ui/Button'
 
 export default function ProjectSettings() {
-  const projectSettingsData = useSelector(
-    (state) => state.project.projectSettingsData
+  const projectNameAndSlug = useSelector(
+    (state) => state.project.projectNameAndSlug
   )
   const isOfflineModeOn = useSelector(
     (state) => state.project.offlineMode === true
@@ -33,6 +38,7 @@ export default function ProjectSettings() {
   const projectFirebaseId = useSelector(
     (state) => state.project.projectFirebaseId
   )
+  const tab = useSelector((state) => state.project.activeSettingsTab)
   const dispatch = useDispatch()
 
   const inputNameRef = useRef()
@@ -76,7 +82,7 @@ export default function ProjectSettings() {
       )
       const availabilityTest =
         sameNameProjects.size === 0 ||
-        inputSubdomainRef.current.value === projectSettingsData.slug
+        inputSubdomainRef.current.value === projectNameAndSlug.slug
       if (!availabilityTest) {
         setIsSubdomainValidate(false)
         setValidationMessage('This sub-domain is currently taken.')
@@ -88,9 +94,9 @@ export default function ProjectSettings() {
   }
 
   useEffect(() => {
-    inputNameRef.current.value = projectSettingsData.name
-    inputSubdomainRef.current.value = projectSettingsData.slug
-  }, [projectSettingsData])
+    inputNameRef.current.value = projectNameAndSlug.name
+    inputSubdomainRef.current.value = projectNameAndSlug.slug
+  }, [projectNameAndSlug])
 
   function handleFocus() {
     dispatch(setKeyboardNavigationOn(false))
@@ -101,49 +107,52 @@ export default function ProjectSettings() {
   }
 
   return (
-    <div className={'settings-modal' + (isSettingsModalOpen ? ' active' : '')}>
+    <div
+      className={
+        'fixed top-0 left-0 w-screen h-screen z-50 justify-center items-center ' +
+        (isSettingsModalOpen ? 'flex' : 'none')
+      }
+    >
       <div
         onClick={() => dispatch(setIsSettingsModalOpen(false))}
-        className="settings-modal_close-area"
+        className="bg-black opacity-50 absolute w-full h-full"
       ></div>
-      <form
-        onSubmit={handleSubmit}
-        className="settings-modal_modal-content-area"
-      >
-        <div className="project-settings_nav">
-          <div className="project-settings_nav-list">
+      <div className="bg-white relative inline-block w-full h-full max-w-screen--120 max-h-screen--120 p-32 rounded-md overflow-y-scroll">
+        <div className="flex justify-between mb-16">
+          <div className="flex items-center">
             <h3>Settings</h3>
           </div>
-          <div className="project-settings_nav-list">
+          <div className="flex items-center gap-8">
             <ProjectSettingsDelete />
-            <div
-              className="project-settings_close-button"
+            <Button
+              text="Close"
               onClick={() => dispatch(setIsSettingsModalOpen(false))}
-            >
-              Close
-            </div>
+            />
           </div>
         </div>
-        <div className="project-settings_form">
-          <label className="project-settings_label">Name</label>
-          <input
-            className="project-settings_input"
-            ref={inputNameRef}
+        <div className="flex gap-8 mb-8">
+          <SettingsTab tab="general" />
+          <SettingsTab tab="fonts" />
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className={'max-w-300 ' + (tab !== 'general' ? 'none' : '')}
+        >
+          <Label text="Name" />
+          <Input
+            useRef={inputNameRef}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
-
-          <label className="project-settings_label">Subdomain</label>
-          <input
-            className="project-settings_input"
-            ref={inputSubdomainRef}
+          <Label text="Subdomain" />
+          <Input
+            useRef={inputSubdomainRef}
             onInput={subdomainValidation}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
-
           <div>{validationMessage}</div>
-
           <label className="project-settings_label">Lang</label>
           <input
             className="project-settings_input"
@@ -151,12 +160,12 @@ export default function ProjectSettings() {
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
-
-          <button>Save</button>
-
+          <Button type="action" text="Save" submit={true} />
           {isOfflineModeOn ? null : <FaviconUploader />}
-        </div>
-      </form>
+        </form>
+
+        {tab === 'fonts' ? <FontsSettings /> : null}
+      </div>
     </div>
   )
 }
