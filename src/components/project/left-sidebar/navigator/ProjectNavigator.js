@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import NavigationNodeFolder from './NavigationNodeFolder'
-import AddNodeButton from './AddNodeButton'
+import AddPanel from './AddPanel'
 
 export default function ProjectNavigator() {
   const preRenderedHTMLNodes = useSelector(
@@ -11,34 +11,14 @@ export default function ProjectNavigator() {
   if (activeTab === 'Navigator') {
     return (
       <div className={'navigatorWrapper active'}>
-        <div style={{ position: 'sticky', top: '0', zIndex: '1' }}>
-          <div className="side-panel-title">Add</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            <AddNodeButton type="div" text="Div" />
-            <AddNodeButton type="h" text="Heading" />
-            <AddNodeButton type="p" text="Paragraph" />
-            <AddNodeButton type="img" text="Image" />
-            <AddNodeButton type="a" text="Text Link" />
-            <AddNodeButton type="l" text="Link" />
-            <AddNodeButton type="col" text="Collection" />
-            <AddNodeButton type="sec" text="Section" />
-            <AddNodeButton type="body" text="Body" />
-            <AddNodeButton type="form" text="Form" />
-            <AddNodeButton type="i" text="Input" />
-            <AddNodeButton type="nav_tr" text="Nav Trigger" />
-            <AddNodeButton type="nav_l" text="Nav List" />
-            <AddNodeButton type="rich_text" text="Rich Text" />
-            <AddNodeButton type="embed" text="Embed" />
-          </div>
-          <div className="side-panel-title">Navigator</div>
-        </div>
+        <AddPanel />
 
+        <div className="side-panel-title">Navigator</div>
         <div
           id="nodes-navigator"
           style={{
             overflowX: 'hidden',
             overflowY: 'scroll',
-            height: 'calc(100vh - 254px)',
           }}
         >
           {preRenderedHTMLNodes.map((node) => (

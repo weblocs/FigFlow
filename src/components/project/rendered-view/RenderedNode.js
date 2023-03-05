@@ -708,12 +708,73 @@ function RenderedNode(props) {
         cms_item_index={props.itemIndex}
         readOnly
         placeholder={props?.inputPlaceholder || ''}
-        // tagName={props?.subtype !== undefined ? props.subtype : 'h1'}
-        // html={nodeText}
       />
     )
     if (props.children.length > 0) {
-      // console.log(props.children)
+    }
+  }
+
+  if (props.type === 'area') {
+    elementHTML = (
+      <textarea
+        style={customStyle}
+        onClick={handleOnClick}
+        onBlur={() => setEditable(false)}
+        onDoubleClick={handleDoubleClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        className={listOfNodeStyles + ' f-input'}
+        el_id={elementId}
+        cms_item_index={props.itemIndex}
+        readOnly
+        placeholder={props?.inputPlaceholder || ''}
+      />
+    )
+    if (props.children.length > 0) {
+    }
+  }
+
+  if (props.type === 'c') {
+    elementHTML = (
+      <input
+        type={'checkbox'}
+        checked={false}
+        onChange={() => {}}
+        style={customStyle}
+        onClick={handleOnClick}
+        onBlur={() => setEditable(false)}
+        onDoubleClick={handleDoubleClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        className={listOfNodeStyles + ' f-input'}
+        el_id={elementId}
+        cms_item_index={props.itemIndex}
+        placeholder={props?.inputPlaceholder || ''}
+      />
+    )
+    if (props.children.length > 0) {
+    }
+  }
+
+  if (props.type === 'r') {
+    elementHTML = (
+      <input
+        type={'radio'}
+        checked={false}
+        onChange={() => {}}
+        style={customStyle}
+        onClick={handleOnClick}
+        onBlur={() => setEditable(false)}
+        onDoubleClick={handleDoubleClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        className={listOfNodeStyles + ' f-input'}
+        el_id={elementId}
+        cms_item_index={props.itemIndex}
+        placeholder={props?.inputPlaceholder || ''}
+      />
+    )
+    if (props.children.length > 0) {
     }
   }
 
@@ -767,6 +828,25 @@ function RenderedNode(props) {
     if (props.children.length > 0) {
       // console.log(props.children)
     }
+  }
+
+  if (props.type === 'sub') {
+    elementHTML = (
+      <ContentEditable
+        style={customStyle}
+        className={listOfNodeStyles}
+        onBlur={() => setEditable(false)}
+        el_id={elementId}
+        cms_item_index={props.itemIndex}
+        tagName="div"
+        onClick={handleOnClick}
+        onDoubleClick={handleDoubleClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        html={nodeText}
+        disabled={!editable}
+      />
+    )
   }
 
   if (props.type === 'p') {

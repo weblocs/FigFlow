@@ -3,15 +3,41 @@ import { useDispatch, useSelector } from 'react-redux'
 import { editHtmlNode } from '../../../../features/project'
 import SettingsIcon from '../../../../img/settings.svg'
 import Checkbox from '../../../ui/Checkbox'
+import CheckboxNoRef from '../../../ui/CheckboxNoRef'
 import Input from '../../../ui/Input'
 import Label from '../../../ui/Label'
 import Select from '../../../ui/Select'
 import ModalBackgroundCloser from '../../_atoms/ModalBackgroundCloser'
 
 export default function InputSettings() {
+  const inNodeFormElement = useSelector(
+    (state) =>
+      state.project.activeNodeObject?.type === 'i' ||
+      state.project.activeNodeObject?.type === 'area' ||
+      state.project.activeNodeObject?.type === 'c' ||
+      state.project.activeNodeObject?.type === 'r' ||
+      state.project.activeNodeObject?.type === 'form'
+  )
   const isNodeInput = useSelector(
     (state) => state.project.activeNodeObject?.type === 'i'
   )
+
+  const isNodeTextArea = useSelector(
+    (state) => state.project.activeNodeObject?.type === 'area'
+  )
+
+  const isNodeCheckbox = useSelector(
+    (state) => state.project.activeNodeObject?.type === 'c'
+  )
+
+  const isNodeRadio = useSelector(
+    (state) => state.project.activeNodeObject?.type === 'r'
+  )
+
+  const isNodeForm = useSelector(
+    (state) => state.project.activeNodeObject?.type === 'form'
+  )
+
   const dispatch = useDispatch()
 
   const activeNodeObject = useSelector(
@@ -25,6 +51,8 @@ export default function InputSettings() {
   const inputTypeRef = useRef()
   const inputRequiredRef = useRef()
   const inputAutofocusRef = useRef()
+  const inputStartCheckedRef = useRef()
+  const inputRadioValueRef = useRef()
 
   function dispatchEditNode(field, value) {
     dispatch(editHtmlNode({ field, value }))
@@ -50,18 +78,45 @@ export default function InputSettings() {
     dispatchEditNode('inputAutofocus', inputAutofocusRef.current.checked)
   }
 
+  function onStartCheckedInput() {
+    dispatchEditNode('inputStartChecked', inputStartCheckedRef.current.checked)
+  }
+
+  function onRadioValueBlur() {
+    dispatchEditNode('inputRadioValue', inputRadioValueRef.current.value)
+  }
+
   useEffect(() => {
     if (!isOpen) return
-    // console.log(activeNodeObject?.inputType)
     inputNameRef.current.value = activeNodeObject?.inputName || ''
-    inputPlaceholderRef.current.value = activeNodeObject?.inputPlaceholder || ''
-    inputTypeRef.current.value = activeNodeObject?.inputType || 'text'
-    inputRequiredRef.current.checked = activeNodeObject?.inputRequired || false
-    inputAutofocusRef.current.checked =
-      activeNodeObject?.inputAutofocus || false
+    if (isNodeInput || isNodeTextArea) {
+      inputPlaceholderRef.current.value =
+        activeNodeObject?.inputPlaceholder || ''
+    }
+    if (isNodeInput) {
+      inputTypeRef.current.value = activeNodeObject?.inputType || 'text'
+    }
+
+    if (isNodeRadio) {
+      inputRadioValueRef.current.value = activeNodeObject?.inputRadioValue || ''
+    }
+
+    if (!isNodeForm) {
+      inputRequiredRef.current.checked =
+        activeNodeObject?.inputRequired === 'true' || false
+    }
+
+    if (isNodeInput || isNodeTextArea) {
+      inputAutofocusRef.current.checked =
+        activeNodeObject?.inputAutofocus === 'true' || false
+    }
+    if (isNodeCheckbox) {
+      inputStartCheckedRef.current.checked =
+        activeNodeObject?.inputStartChecked === 'true' || false
+    }
   }, [isOpen])
 
-  if (isNodeInput) {
+  if (inNodeFormElement) {
     return (
       <>
         <div
@@ -81,33 +136,64 @@ export default function InputSettings() {
             <Label text="Name" />
             <Input useRef={inputNameRef} onBlur={onNameBlur} />
 
-            <Label text="Placeholder" />
-            <Input useRef={inputPlaceholderRef} onBlur={onPlaceholderBlur} />
+            {(isNodeInput || isNodeTextArea) && (
+              <>
+                <Label text="Placeholder" />
+                <Input
+                  useRef={inputPlaceholderRef}
+                  onBlur={onPlaceholderBlur}
+                />
+              </>
+            )}
 
-            <Label text="Type" />
-            <Select
-              useRef={inputTypeRef}
-              onInput={onTypeInput}
-              options={[
-                { value: 'text', label: 'Text' },
-                { value: 'email', label: 'Email' },
-                { value: 'password', label: 'Password' },
-                { value: 'number', label: 'Number' },
-                { value: 'tel', label: 'Telephone' },
-                { value: 'url', label: 'URL' },
-              ]}
-            />
+            {isNodeRadio && (
+              <>
+                <Label text="Radio Value" />
+                <Input useRef={inputRadioValueRef} onBlur={onRadioValueBlur} />
+              </>
+            )}
 
-            <Checkbox
-              label="Required"
-              onInput={onRequiredInput}
-              useRef={inputRequiredRef}
-            />
-            <Checkbox
-              label="Autofocus"
-              onInput={onAutofocusInput}
-              useRef={inputAutofocusRef}
-            />
+            {isNodeInput && (
+              <>
+                <Label text="Type" />
+                <Select
+                  useRef={inputTypeRef}
+                  onInput={onTypeInput}
+                  options={[
+                    { value: 'text', label: 'Text' },
+                    { value: 'email', label: 'Email' },
+                    { value: 'password', label: 'Password' },
+                    { value: 'number', label: 'Number' },
+                    { value: 'tel', label: 'Telephone' },
+                    { value: 'url', label: 'URL' },
+                  ]}
+                />
+              </>
+            )}
+
+            {!isNodeForm && (
+              <Checkbox
+                label="Required"
+                onInput={onRequiredInput}
+                useRef={inputRequiredRef}
+              />
+            )}
+
+            {isNodeCheckbox && (
+              <Checkbox
+                label="Start checked"
+                onInput={onStartCheckedInput}
+                useRef={inputStartCheckedRef}
+              />
+            )}
+
+            {(isNodeInput || isNodeTextArea) && (
+              <Checkbox
+                label="Autofocus"
+                onInput={onAutofocusInput}
+                useRef={inputAutofocusRef}
+              />
+            )}
           </div>
         )}
       </>

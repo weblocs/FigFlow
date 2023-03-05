@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   pasteLayoutHtmlNodes,
@@ -7,6 +7,8 @@ import {
 import ModalBackgroundCloser from '../../../_atoms/ModalBackgroundCloser'
 import addImage from '../../../../../img/add-button.svg'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
+import Input from '../../../../ui/Input'
+import BlocksList from './BlocksList'
 
 export default function AddBlockButton() {
   const isNodeTypeSection = useSelector(
@@ -15,20 +17,26 @@ export default function AddBlockButton() {
   const isNodeTypeBody = useSelector(
     (state) => state.project.activeNodeObject?.type === 'body'
   )
-  const blocks = useSelector((state) => state.project.blocks)
+  const keyboardNavigationOn = useSelector(
+    (state) => state.project.keyboardNavigationOn
+  )
   const dispatch = useDispatch()
 
   const [listIsOpened, setListIsOpened] = useState(false)
 
-  function handleAddBlockClick(sectionNodes) {
-    dispatch(copyLayoutHtmlNodes(sectionNodes))
-    dispatch(pasteLayoutHtmlNodes())
-    setListIsOpened(false)
-  }
+  const { closeListShortcut } = useKeyboardShortcut(
+    ['Escape'],
+    (shortcutKeys) => {
+      if (!keyboardNavigationOn) return
+      setListIsOpened(false)
+    },
+    { overrideSystem: false, ignoreInputFields: false, repeatOnHold: false }
+  )
 
   const { openListShortcut } = useKeyboardShortcut(
     ['E'],
     (shortcutKeys) => {
+      if (!keyboardNavigationOn) return
       setListIsOpened(!listIsOpened)
     },
     { overrideSystem: false, ignoreInputFields: true, repeatOnHold: false }
@@ -49,31 +57,10 @@ export default function AddBlockButton() {
           <img style={{ width: '12px' }} src={addImage} />
         </div>
 
-        <div
-          className={
-            'heading-element-settings_list block-list' +
-            (listIsOpened ? ' active' : '')
-          }
-        >
-          {blocks?.map((folder) => (
-            <div className="block-list_folder" key={folder.id}>
-              <div className="blocks-list_name">{folder.name}</div>
-              <div className="block-list_grid">
-                {folder.blocks?.map((item) => (
-                  <div
-                    className="blocks-list_item"
-                    key={item.id}
-                    onClick={() =>
-                      handleAddBlockClick(item.preRenderedHTMLNodes)
-                    }
-                  >
-                    {item.name}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        <BlocksList
+          listIsOpened={listIsOpened}
+          setListIsOpened={setListIsOpened}
+        />
       </div>
     )
   }

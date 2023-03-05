@@ -113,10 +113,10 @@ export default function AddSectionModal() {
                   <div className="layouts-list-column">
                     {folder.items
                       .filter((item, i) => i % 3 === 0)
-                      .map((section) => (
+                      .map((section, i) => (
                         <SectionModalItem
                           section={section}
-                          key={section.preRenderedHTMLNodes.id}
+                          key={'a' + i + section.preRenderedHTMLNodes.id}
                         />
                       ))}
                   </div>
@@ -124,10 +124,10 @@ export default function AddSectionModal() {
                   <div className="layouts-list-column">
                     {folder.items
                       .filter((item, i) => i % 3 === 1)
-                      .map((section) => (
+                      .map((section, i) => (
                         <SectionModalItem
                           section={section}
-                          key={section.preRenderedHTMLNodes.id}
+                          key={'b' + i + section.preRenderedHTMLNodes.id}
                         />
                       ))}
                   </div>
@@ -135,10 +135,10 @@ export default function AddSectionModal() {
                   <div className="layouts-list-column">
                     {folder.items
                       .filter((item, i) => i % 3 === 2)
-                      .map((section) => (
+                      .map((section, i) => (
                         <SectionModalItem
                           section={section}
-                          key={section.preRenderedHTMLNodes.id}
+                          key={'c' + i + section.preRenderedHTMLNodes.id}
                         />
                       ))}
                   </div>

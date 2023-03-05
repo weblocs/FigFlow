@@ -105,17 +105,17 @@ function NavigationNodeItem({ parents, node, depth }) {
     }
   }
 
-  const paddingLeft = { paddingLeft: depth * 8 + 'px' }
+  const paddingLeft = { paddingLeft: depth * 12 + 'px' }
 
   return (
     <div
       className={
-        'navigation-node ' +
+        'navigation-node flex ' +
         (navigatorItemDragBehindState ? 'dragged-before ' : '') +
         (node.id === draggedOverNodeId ? 'dragged-over ' : ' ')
         // + ((node.id == activeNodeId) ? "active " : " ")
       }
-      style={paddingLeft}
+      // style={paddingLeft}
       onMouseOver={() => dispatch(setHoveredHtmlNode(node.id))}
       onMouseOut={() => dispatch(setHoveredHtmlNode(''))}
       onClick={handleClick}
@@ -129,6 +129,18 @@ function NavigationNodeItem({ parents, node, depth }) {
       nodetype={node.type}
       nodecmscollectionid={node?.cmsCollectionId}
     >
+      <div className="flex">
+        {[...Array(depth)].map((e, i) => (
+          <div
+            key={i}
+            style={{
+              borderLeft: '1px solid #ddd',
+              width: '12px',
+              height: '100%',
+            }}
+          ></div>
+        ))}
+      </div>
       <div
         onDoubleClick={() =>
           node.type === 'sym' &&

@@ -89,9 +89,34 @@ export default function generateAnyPage(
         (generatedHTML += GetLinkHref(node, pages, collection, collectionItem))
       type === 'img' &&
         (generatedHTML += getImgSrc(node, styleURLDots, collectionItem, item))
-      type === 'input' && (generatedHTML += GetInputData(node))
+      if (type === 'input' || type === 'textarea') {
+        generatedHTML += GetInputData(node)
+      }
+      node.type === 'form' && (generatedHTML += `name="${node.inputName}" `)
+      node.type === 'form' && (generatedHTML += `method="post" `)
+      node.type === 'form' && (generatedHTML += `netlify `)
+      node.type === 'i' && (generatedHTML += `type="${node.inputType}" `)
+      node.type === 'c' && (generatedHTML += `type="checkbox" `)
+      node.type === 'r' && (generatedHTML += `type="radio" `)
+      node.type === 'sub' &&
+        (generatedHTML += `type="submit" value=${node.title} `)
       node.type === 'nav_tr' && (generatedHTML += 'nav-trigger ')
       node.type === 'nav_l' && (generatedHTML += 'nav-list ')
+      if (
+        (type === 'input' || type === 'textarea') &&
+        node.inputRequired === 'true'
+      ) {
+        generatedHTML += `required `
+      }
+      if (node.type === 'r') {
+        generatedHTML += `value="${node.inputRadioValue}" `
+      }
+      if (
+        (type === 'input' || type === 'textarea') &&
+        node.inputAutofocus === 'true'
+      ) {
+        generatedHTML += `autofocus `
+      }
       generatedHTML += `>`
 
       if (node.type === 'col') {

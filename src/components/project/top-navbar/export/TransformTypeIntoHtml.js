@@ -17,8 +17,11 @@ export default function transformTypeIntoHtml(node) {
   if (node.type === 'col') {
     return 'div'
   }
-  if (node.type === 'i') {
+  if (node.type === 'i' || node.type === 'c' || node.type === 'r') {
     return 'input'
+  }
+  if (node.type === 'area') {
+    return 'textarea'
   }
   if (node.type === 'nav_tr') {
     return 'div'
@@ -28,6 +31,9 @@ export default function transformTypeIntoHtml(node) {
   }
   if (node.type === 'l') {
     return 'a'
+  }
+  if (node.type === 'sub') {
+    return 'input'
   }
   return node.type
 }

@@ -354,6 +354,7 @@ function nodeIsFolder(node) {
   if (
     node.type === 'div' ||
     node.type === 'l' ||
+    node.type === 'label' ||
     node.type === 'sec' ||
     node.type === 'form' ||
     node.type === 'body' ||
@@ -3470,6 +3471,7 @@ export const projectSlice = createSlice({
 
     setProjectFirebaseId: (state, action) => {
       state.projectFirebaseId = action.payload
+      console.log(state.projectFirebaseId)
     },
 
     setFavicon: (state, action) => {

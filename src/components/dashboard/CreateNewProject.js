@@ -52,6 +52,11 @@ export default function CreateNewProject(props) {
     blocks: [],
     images: [],
     styleGuide: [],
+    scripts: [],
+    libraries: [],
+    fonts: [],
+    images: [],
+
     preRenderedStyles: [
       { name: 'body', id: BODY_ID, childrens: [], styles: {} },
       {
@@ -120,6 +125,9 @@ export default function CreateNewProject(props) {
         sections: templateData.sections,
         blocks: templateData.blocks,
         images: templateData.images,
+        scripts: templateData.scripts,
+        libraries: templateData.libraries,
+        fonts: templateData.fonts,
         preRenderedStyles: templateData.preRenderedStyles,
         styleGuide: templateData.styleGuide,
       }).then((res) => {
@@ -147,6 +155,9 @@ export default function CreateNewProject(props) {
         images: tempTemplateData.images,
         preRenderedStyles: tempTemplateData.preRenderedStyles,
         styleGuide: tempTemplateData.styleGuide,
+        scripts: tempTemplateData.scripts,
+        libraries: tempTemplateData.libraries,
+        fonts: tempTemplateData.fonts,
       })
     }
     setModalStep(1)

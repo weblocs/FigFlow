@@ -684,7 +684,7 @@ img {
 
 .add-section_button {
   position: relative;
-  top: -14px;
+  top: -12px;
   height: 24px;
   font-size: 13px;
   padding: 1px 7px;
@@ -694,7 +694,7 @@ img {
   color: #8a8a8a;
   border-radius: 0;
   cursor: pointer;
-  line-height: 18px;
+  line-height: 16px;
 }
 
 .add-section_popup-box {
@@ -1119,11 +1119,12 @@ button {
     flex-shrink: 0;
     border-right: 1px solid #d3d3d3;
     display: none;
+    flex-direction: column;
     background-color: #fff;
   }
 
   .navigatorWrapper.active {
-    display: block;
+    display: flex;
   }
 
   .styleWrapper {
@@ -1504,6 +1505,7 @@ button {
     padding-left: 8px;
     font-size: 11px;
     white-space: nowrap;
+    width: 100%;
   }
 
   .navigation-node-inside span {
@@ -1513,7 +1515,7 @@ button {
 
   .navigation-node-inside.lined {
     padding: 3px 0 3px 8px;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid #ddd;
   }
 
   .navigation-node-inside.lined.white {
@@ -1533,7 +1535,7 @@ button {
   }
 
   .navigation-node.active {
-    background: #ddd;
+    background: #e4e3e3;
   }
 
   .navigation-node.dragged-over .navigation-node-inside.lined {
@@ -2807,12 +2809,20 @@ button {
     min-width: 32px;
   }
 
-  .update-symbol-button {
+  .update-symbol-wrap {
     position: fixed;
     bottom: 32px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10001;
+  }
+
+  .update-symbol-wrap.top {
+    top: 40px;
+    bottom: auto;
+  }
+
+  .update-symbol-button {
     padding: 16px 32px;
     background: #fff;
     border: 1px solid #cecece;

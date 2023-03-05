@@ -1,5 +1,6 @@
 .user-panel,
-.settings-panel {
+.settings-panel,
+.block-list {
   /* Typography */
 
   .font-light {
@@ -111,6 +112,11 @@
     padding-bottom: 16px;
   }
 
+  .py-2 {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
   .py-4 {
     padding-top: 4px;
     padding-bottom: 4px;
@@ -129,6 +135,11 @@
   .py-12 {
     padding-top: 12px;
     padding-bottom: 12px;
+  }
+
+  .px-2 {
+    padding-left: 2px;
+    padding-right: 2px;
   }
 
   .px-4 {
@@ -363,14 +374,25 @@
     top: 0;
   }
 
+  .bottom-32 {
+    bottom: 32px;
+  }
+
   /* Left */
 
   .left-0 {
     left: 0;
   }
+  .left-50-p {
+    left: 100%;
+  }
 
   .left-full {
     left: 100%;
+  }
+
+  .translate-x--50-p {
+    transform: translateX(-50%);
   }
 
   /* Overflow */
@@ -465,6 +487,10 @@
 
   .w-screen {
     width: 100vw;
+  }
+
+  .w-12 {
+    width: 12px;
   }
 
   .w-200 {
