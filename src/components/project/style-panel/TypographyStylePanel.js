@@ -4,6 +4,7 @@ import FontStyleEditor from './FontStyleEditor'
 import ColorPickerOld from './ColorPickerOld'
 import AlignStyleInput from './AlignStyleInput'
 import ColorPicker from './ColorPicker'
+import TextTransformInput from './TextTransformInput'
 
 export default function TypographyStylePanel() {
   return (
@@ -29,6 +30,7 @@ export default function TypographyStylePanel() {
         <ColorPicker style="color" />
 
         <AlignStyleInput />
+        <TextTransformInput />
       </div>
     </div>
   )

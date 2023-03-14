@@ -41,7 +41,7 @@ export default function FieldNameInput() {
         </div>
         <input
           ref={inputRef}
-          onFocus={() => dispatch(setKeyboardNavigationOn(true))}
+          onFocus={() => dispatch(setKeyboardNavigationOn(false))}
           onBlur={inputBlurHandler}
           className={'cms-field-input-value' + (isFocused ? ' focused' : '')}
         />

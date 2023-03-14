@@ -148,7 +148,6 @@ export default function StoreUseEffectUpdates() {
 
     let activeHtmlNode = `[el_id='${activeNodeId}']`
     if (activeClickedCmsItemIndex !== undefined) {
-      console.log(activeClickedCmsItemIndex)
       activeHtmlNode = `[el_id='${activeNodeId}'][cms_item_index='${activeClickedCmsItemIndex}']`
     }
     let selectedNode = document.querySelector(activeHtmlNode)

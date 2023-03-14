@@ -667,7 +667,7 @@ function RenderedNode(props) {
         ?.items?.find(({ id }) => id === activeCollectionItemTemplateId)
 
       if (props.cmsFieldId !== '' && props.cmsFieldId !== undefined) {
-        nodeText = activeCollectionItem.data.find(
+        nodeText = activeCollectionItem?.data?.find(
           ({ fieldId }) => fieldId === props.cmsFieldId
         )?.fieldValue
       }

@@ -13,6 +13,7 @@ import {
   setActiveRightSidebarTabTrue,
   editStyleOption,
   setElementsInlineStyleMode,
+  setActiveRightSidebarTab,
 } from '../../../features/project'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
 import SubStyleSticker from './SubStyleSticker/SubStyleSticker'
@@ -59,13 +60,15 @@ export default function StylePanelHeader() {
 
   const shortcutSystemConfig = {
     overrideSystem: false,
-    ignoreInputFields: true,
+    ignoreInputFields: false,
     repeatOnHold: false,
   }
 
   const { openClassEditorShortcut } = useKeyboardShortcut(
     ['Meta', 'Enter'],
     (shortcutKeys) => {
+      dispatch(setActiveRightSidebarTabTrue('Style'))
+      dispatch(setElementsInlineStyleMode(false))
       handleOpenNewStyleInput()
     },
     shortcutSystemConfig
@@ -74,6 +77,8 @@ export default function StylePanelHeader() {
   const { openClassEditorShortcutWindows } = useKeyboardShortcut(
     ['Control', 'Enter'],
     (shortcutKeys) => {
+      dispatch(setActiveRightSidebarTabTrue('Style'))
+      dispatch(setElementsInlineStyleMode(false))
       handleOpenNewStyleInput()
     },
     shortcutSystemConfig
@@ -131,6 +136,7 @@ export default function StylePanelHeader() {
 
   function handleCloseNewStyleInput() {
     setIsAddStyleInputOpen(false)
+    setIsAddStyleOptionInputOpen(false)
   }
 
   function handleItemClick(name) {

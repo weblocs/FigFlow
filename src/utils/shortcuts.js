@@ -2,6 +2,7 @@ import useEventListener from '@use-it/event-listener'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import useKeyboardShortcut from 'use-keyboard-shortcut'
+import { createKeybindingsHandler } from 'tinykeys'
 
 import {
   handleArrowNodesNavigation,
@@ -16,6 +17,10 @@ import {
   setIsShiftPressed,
   setIsKeyAPressed,
   addSpanToText,
+  wrapActiveHtmlNode,
+  unwrapActiveHtmlNode,
+  pasteTextToActiveHtmlNode,
+  togglePasteTextMode,
 } from '../features/project'
 
 let keys = []
@@ -27,6 +32,41 @@ const DOWN_ARROW = ['40', 'ArrowDown']
 
 export default function loadShortcuts() {
   const dispatch = useDispatch()
+
+  let handler = createKeybindingsHandler({
+    '$mod+KeyS': (event) => {
+      event.preventDefault()
+    },
+    '$mod+KeyP': (event) => {
+      event.preventDefault()
+    },
+    '$mod+KeyO': (event) => {
+      event.preventDefault()
+    },
+    '$mod+KeyL': (event) => {
+      event.preventDefault()
+    },
+    '$mod+KeyF': (event) => {
+      event.preventDefault()
+    },
+    '$mod+KeyD': (event) => {
+      event.preventDefault()
+    },
+    '$mod+Shift+KeyD': (event) => {
+      event.preventDefault()
+    },
+    '$mod+Shift+KeyA': (event) => {
+      event.preventDefault()
+    },
+    '$mod+KeyG': (event) => {
+      event.preventDefault()
+    },
+    '$mod+Shift+KeyG': (event) => {
+      event.preventDefault()
+    },
+  })
+
+  window.addEventListener('keydown', handler)
 
   window.addEventListener(
     'keydown',
@@ -201,6 +241,12 @@ export default function loadShortcuts() {
     }
   )
 
+  document.addEventListener('paste', (e) => {
+    e.clipboardData.items[0].getAsString((s) => {
+      dispatch(pasteTextToActiveHtmlNode(s))
+    })
+  })
+
   const { pasteShortcut } = useKeyboardShortcut(
     ['Meta', 'V'],
     (shortcutKeys) => {
@@ -217,6 +263,76 @@ export default function loadShortcuts() {
     ['Control', 'V'],
     (shortcutKeys) => {
       dispatch(pasteHtmlNodes())
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { textModeOnShortcut } = useKeyboardShortcut(
+    ['T'],
+    (shortcutKeys) => {
+      if (
+        !window.event.shiftKey &&
+        !window.event.metaKey &&
+        !window.event.ctrlKey
+      ) {
+        dispatch(togglePasteTextMode(true))
+      }
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { wrapShortcut } = useKeyboardShortcut(
+    ['Meta', 'D'],
+    (shortcutKeys) => {
+      if (!window.event.shiftKey) {
+        dispatch(wrapActiveHtmlNode())
+      }
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { unwrapShortcut } = useKeyboardShortcut(
+    ['Meta', 'Shift', 'D'],
+    (shortcutKeys) => {
+      dispatch(unwrapActiveHtmlNode())
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { wrapShortcutG } = useKeyboardShortcut(
+    ['Meta', 'G'],
+    (shortcutKeys) => {
+      if (!window.event.shiftKey) {
+        dispatch(wrapActiveHtmlNode())
+      }
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+
+  const { unwrapShortcutG } = useKeyboardShortcut(
+    ['Meta', 'Shift', 'G'],
+    (shortcutKeys) => {
+      dispatch(unwrapActiveHtmlNode())
     },
     {
       overrideSystem: false,

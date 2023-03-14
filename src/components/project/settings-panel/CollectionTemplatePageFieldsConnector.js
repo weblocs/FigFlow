@@ -55,17 +55,22 @@ export default function CollectionTemplatePageFieldsConnector() {
   }
 
   function handleCheckboxClick() {
+    console.log('1')
+    console.log(activeCollectionItems)
     if (isNodeCmsEditable) {
+      console.log('2')
       dispatch(
         editHtmlNode({ id: activeNodeId, field: 'cmsFieldId', value: '' })
       )
     } else {
-      if (activeCollectionItems[0]?.data[0]?.fieldId !== undefined) {
+      // if (activeCollectionItems[0]?.data[0]?.fieldId !== undefined) {
+
+      if (activeCollectionItems?.[0] !== undefined) {
         dispatch(
           editHtmlNode({
             id: activeNodeId,
             field: 'cmsFieldId',
-            value: activeCollectionItems[0]?.data[0]?.fieldId,
+            value: '0',
           })
         )
       }

@@ -1,5 +1,21 @@
 @import url('https://fonts.googleapis.com/css?family=Inter:regular,medium,bold,italic&subset=latin,latin-ext');
 
+@font-face {
+  font-family: 'Neue';
+  // src: url('../fonts/NeueHaasDisplayRoman.ttf');
+  src: url('https://fonts.googleapis.com/css?family=Inter:regular,medium,bold,italic&subset=latin,latin-ext');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg-black: #1b1b1b;
+  --bg-black-hover: #242424;
+  --bg-black-active: #2f2f2f;
+  --bg-gray-300: #a5a5a5;
+}
+
 ::-webkit-scrollbar {
   width: 4px; /* width of the entire scrollbar */
 }
@@ -65,17 +81,18 @@ img {
 .parents-path,
 .projectPageItem {
   position: relative;
-  font-family: Inter, sans-serif;
+  font-family: Neue, sans-serif;
   color: #333;
   font-size: 14px;
   line-height: 20px;
 }
 
 .add-section_popup-box {
-  font-family: Inter, sans-serif;
+  font-family: Neue, sans-serif;
 }
 
 .symbol-box-wrapper {
+  width: 100%;
   display: block;
 }
 
@@ -155,7 +172,7 @@ img {
 }
 
 .rich-element-settings {
-  font-family: Inter, sans-serif;
+  font-family: Neue, sans-serif;
 }
 
 .cms-current-link-wrap {
@@ -229,6 +246,10 @@ img {
 
 .blocks-list_item:hover {
   background-color: #eee;
+}
+
+.blocks-list_item.active {
+  background-color: #ebebeb;
 }
 
 .parents-path {
@@ -328,7 +349,7 @@ img {
   padding: 8px;
 }
 .alt-text-box textarea {
-  font-family: 'Inter';
+  font-family: Neue;
   padding: 4px;
   border: 1px solid #b7b7b7;
 }
@@ -683,6 +704,7 @@ img {
 }
 
 .add-section_button {
+  font-family: Inter;
   position: relative;
   top: -12px;
   height: 24px;
@@ -1082,23 +1104,19 @@ button {
   }
 
   .saveButton {
+    background-color: var(--bg-black);
+    color: var(--bg-gray-300);
     display: inline-block;
-    height: 32px;
-    padding: 10px;
+    height: 40px;
+    padding: 12px;
     cursor: pointer;
-    border-left: 1px solid #d3d3d3;
     font-size: 11px;
     font-weight: 500;
-    background: #f5f5f5;
     text-transform: initial;
   }
 
   .saveButton.error-button {
     background: #e51c1c;
-  }
-
-  .saveButton.light {
-    background: #fff;
   }
 
   .typeSeparator {
@@ -1110,7 +1128,7 @@ button {
   }
 
   .saveButton:hover {
-    background-color: #efefef;
+    background-color: var(--bg-black-hover);
   }
 
   .navigatorWrapper {
@@ -1263,11 +1281,12 @@ button {
 
   .addNodeWrapper {
     display: flex;
+    background-color: var(--bg-black);
     justify-content: space-between;
     position: sticky;
-    background: #fff;
-    border-bottom: 1px solid #d3d3d3;
     z-index: 99999;
+    height: 40px;
+    color: var(--bg-gray-300);
   }
 
   a {
@@ -1278,15 +1297,13 @@ button {
     display: flex;
     font-size: 11px;
     cursor: pointer;
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     line-height: 32px;
-    /* background-color: #f5f5f5; */
-    border-right: 1px solid #d3d3d3;
     justify-content: center;
     text-decoration: none;
-    background: #fff;
     position: relative;
+    align-items: center;
   }
 
   .addNodeButton.no-border-left {
@@ -1336,16 +1353,23 @@ button {
   }
 
   .addNodeButton:hover {
-    background-color: #f8f8f8;
+    background-color: var(--bg-black-hover);
   }
 
   .addNodeButton.left-margin {
     margin-left: 24px;
-    border-left: 1px solid #d3d3d3;
   }
 
   .addNodeButton.active {
-    background-color: #eee;
+    background-color: var(--bg-black-active);
+  }
+
+  .addNodeButton img {
+    opacity: 0.6;
+  }
+
+  .addNodeButton.active img {
+    opacity: 0.8;
   }
 
   .displayButtonsWrapper {
@@ -1402,9 +1426,8 @@ button {
   }
 
   .projectSidebarButton {
-    height: 32px;
+    height: 40px;
     width: 100%;
-    border-bottom: 1px solid #d3d3d3;
     display: flex;
     align-content: center;
     justify-content: center;
@@ -1413,12 +1436,12 @@ button {
     cursor: pointer;
   }
 
-  .projectSidebarButton.active {
-    background-color: #eee;
+  .projectSidebarButton:hover {
+    background-color: var(--bg-black-hover);
   }
 
-  .projectSidebarButton:hover {
-    background-color: #eee;
+  .projectSidebarButton.active {
+    background-color: var(--bg-black-active);
   }
 
   .projectSidebarButton img {
@@ -1441,12 +1464,11 @@ button {
     font-size: 11px;
     cursor: pointer;
     width: 134.5px;
-    height: 32px;
-    line-height: 32px;
-    /* background-color: #f5f5f5; */
-    border-left: 1px solid #d3d3d3;
+    height: 40px;
+    line-height: 40px;
     justify-content: center;
     text-decoration: none;
+    align-items: center;
   }
 
   .projectRightSidebarNav.is-small {
@@ -1538,12 +1560,16 @@ button {
     background: #e4e3e3;
   }
 
+  .navigation-node {
+    transition: border 0.2s;
+  }
+
   .navigation-node.dragged-over .navigation-node-inside.lined {
-    border-bottom: 3px solid #ccc;
+    border-bottom: 3px solid rgb(129, 129, 238);
   }
 
   .navigation-node.dragged-over.dragged-before .navigation-node-inside.lined {
-    border-top: 3px solid #ccc;
+    border-top: 3px solid rgb(129, 129, 238);
     border-bottom: 0;
   }
 
@@ -1569,7 +1595,6 @@ button {
   .centerNavbar {
     transform: translateX(20%);
     display: flex;
-    border-left: 1px solid #d3d3d3;
     position: relative;
   }
 
@@ -1710,7 +1735,7 @@ button {
   }
 
   .style-edit-input-text {
-    font-family: 'Inter';
+    font-family: Neue;
     font-size: 11px;
     color: #333;
     padding: 0;
@@ -2006,7 +2031,7 @@ button {
     -webkit-justify-content: flex-end;
     -ms-flex-pack: end;
     justify-content: flex-end;
-    font-family: Inter, sans-serif;
+    font-family: Neue, sans-serif;
   }
 
   .text {
@@ -2804,9 +2829,8 @@ button {
   }
 
   .projectNavigationLeft .projectSidebarButton {
-    border-right: 1px solid #cecece;
     border-bottom: 0;
-    min-width: 32px;
+    min-width: 40px;
   }
 
   .update-symbol-wrap {
@@ -2903,7 +2927,7 @@ button {
     font-size: 12px;
     line-height: 18px;
     letter-spacing: 0;
-    font-family: Inter;
+    font-family: Neue;
     cursor: text;
   }
 
@@ -3033,13 +3057,12 @@ button {
   .page-changer {
     font-size: 11px;
     padding: 0 12px;
-    border-right: 1px solid #d3d3d3;
     display: flex;
     align-items: center;
     cursor: pointer;
   }
   .page-changer:hover {
-    background-color: #eee;
+    background-color: var(--bg-black-hover);
   }
 
   .collection-item-changer_list {
@@ -3092,8 +3115,20 @@ button {
     margin-right: 4px;
   }
 
+  .projectRightSidebarNav:hover {
+    background-color: var(--bg-black-hover);
+  }
+
   .projectRightSidebarNav.active {
-    background-color: #eee;
+    background-color: var(--bg-black-active);
+  }
+
+  .projectRightSidebarNav img {
+    opacity: 0.6;
+  }
+
+  .projectRightSidebarNav.active img {
+    opacity: 0.8;
   }
 
   .node-folder-item {
@@ -3162,7 +3197,7 @@ button {
   }
 
   .add-class-box.option-box {
-    top: -64px;
+    top: 36px;
   }
 
   .add-class-box.active {
@@ -3400,6 +3435,10 @@ button {
 
   .projectSidebarButton .sidebar-button_image {
     width: 16px;
+    opacity: 0.6;
+  }
+
+  .projectSidebarButton.active .sidebar-button_image {
     opacity: 0.8;
   }
 
@@ -3412,7 +3451,7 @@ button {
   }
 
   .project-logo_wrapper:hover {
-    background-color: #eee;
+    background-color: var(--bg-black-hover);
   }
 
   .custom-resolutions-list {
@@ -3578,7 +3617,7 @@ button {
   }
 
   .project-settings_delete-modal {
-    font-family: Inter;
+    font-family: Neue;
     display: none;
     position: fixed;
     top: 0;

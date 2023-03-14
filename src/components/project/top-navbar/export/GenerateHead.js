@@ -8,11 +8,11 @@ export default function GenerateHead(
   function getImgUrl(imageSrc) {
     const types = ['webp', 'avif', 'jpg', 'jpeg', 'png', 'gif', 'svg']
     types.forEach((type) => {
-      if (imageSrc.slice(-4) === '-' + type) {
+      if (imageSrc?.slice(-4) === '-' + type) {
         imageSrc = imageSrc.slice(0, -4)
         imageSrc = imageSrc.concat('.' + type)
       }
-      if (imageSrc.slice(-5) === '-' + type) {
+      if (imageSrc?.slice(-5) === '-' + type) {
         imageSrc = imageSrc.slice(0, -5)
         imageSrc = imageSrc.concat('.' + type)
       }

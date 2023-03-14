@@ -90,7 +90,7 @@ export default function HtmlNodeSettings() {
         return 5
       }
     }
-    return activeNode?.getBoundingClientRect().top - 61
+    return activeNode?.getBoundingClientRect().top - 67
   })
 
   const [openButtonList, setOpenButtonList] = useState(false)

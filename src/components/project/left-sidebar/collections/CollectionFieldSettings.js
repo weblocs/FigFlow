@@ -4,7 +4,6 @@ import {
   deleteCollectionField,
   editCollectionField,
   setActiveSettingsCollectionFieldId,
-  setKeyboardNavigationOn,
 } from '../../../../features/project'
 
 export default function CollectionFieldSettings({ field }) {
@@ -43,14 +42,6 @@ export default function CollectionFieldSettings({ field }) {
     dispatch(setActiveSettingsCollectionFieldId(''))
   }
 
-  function handleFocus() {
-    dispatch(setKeyboardNavigationOn(false))
-  }
-
-  function handleBlur() {
-    dispatch(setKeyboardNavigationOn(true))
-  }
-
   return (
     <div>
       <div
@@ -80,19 +71,9 @@ export default function CollectionFieldSettings({ field }) {
           </div>
         </div>
         <label className="settings-label">NAME</label>
-        <input
-          className="settings-input"
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          ref={nameRef}
-        />
+        <input className="settings-input" ref={nameRef} />
         <label className="settings-label">HELP TEXT</label>
-        <input
-          className="settings-input"
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          ref={helpTextRef}
-        />
+        <input className="settings-input" ref={helpTextRef} />
 
         <button className="settings-button blue-button">Save</button>
       </form>

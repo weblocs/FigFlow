@@ -1,3 +1,10 @@
-<svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M22.9694 0H11.0308C8.67394 0 6.78076 1.89318 6.78076 4.25V29.75C6.78076 32.1068 8.71258 34 11.0308 34H22.9694C25.3262 34 27.2194 32.1068 27.2194 29.75V4.25C27.2194 1.89318 25.3262 0 22.9694 0ZM17.0194 31.2568C15.9376 31.2568 15.0876 30.4068 15.0876 29.325C15.0876 28.2432 15.9376 27.3932 17.0194 27.3932C18.1012 27.3932 18.9512 28.2432 18.9512 29.325C18.9512 30.4068 18.1012 31.2568 17.0194 31.2568ZM25.2876 25.3455H8.71258V5.67955H25.2876V25.3455Z" fill="#525252"/>
+<svg width="12" height="17" viewBox="0 0 12 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="0.25" x2="0.25" y2="12.86" stroke="white" stroke-width="0.5"/>
+<line x1="10.9492" x2="10.9492" y2="12.86" stroke="white" stroke-width="0.5"/>
+<line x1="10.6992" y1="0.25" y2="0.25" stroke="white" stroke-width="0.5"/>
+<line y1="-0.25" x2="3.85799" y2="-0.25" transform="matrix(0 -1 -1 0 0 16.718)" stroke="white" stroke-width="0.5"/>
+<line y1="-0.25" x2="3.85799" y2="-0.25" transform="matrix(0 -1 -1 0 10.6992 16.718)" stroke="white" stroke-width="0.5"/>
+<line y1="-0.25" x2="10.9996" y2="-0.25" transform="matrix(-1 0 0 1 11 13.7964)" stroke="white" stroke-width="0.5"/>
+<line y1="-0.25" x2="10.6992" y2="-0.25" transform="matrix(-1 0 0 1 10.6992 16.718)" stroke="white" stroke-width="0.5"/>
+<line x1="4.99805" y1="15.0934" x2="6.37305" y2="15.0934" stroke="white" stroke-width="0.5"/>
 </svg>

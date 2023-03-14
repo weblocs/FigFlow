@@ -40,7 +40,7 @@ export default function ProjectRightSidebarButton(props) {
       }
       onClick={() => dispatch(setActiveRightSidebarTab(props.tab))}
     >
-      <img src={props.icon} style={{ width: '14px' }} />
+      <img src={props.icon} style={{ maxWidth: '18px', maxHeight: '18px' }} />
     </div>
   )
 }

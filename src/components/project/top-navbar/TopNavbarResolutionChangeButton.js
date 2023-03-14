@@ -39,7 +39,7 @@ export default function TopNavbarResolutionChangeButton({
       }
       onClick={() => dispatch(setActiveProjectResolution(resolutionNumber))}
     >
-      <img src={image} style={{ width: '16px' }} />
+      <img src={image} style={{ maxWidth: '18px', maxHeight: '18px' }} />
     </div>
   )
 }

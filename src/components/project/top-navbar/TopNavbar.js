@@ -11,15 +11,19 @@ import DesktopIcon from '../../../img/desktop.svg'
 import TabletIcon from '../../../img/tablet.svg'
 import PortraitIcon from '../../../img/portrait.svg'
 import ScriptsIcon from '../../../img/code.svg'
+import LayoutsIcon from '../../../img/layout.svg'
+import BlocksIcon from '../../../img/components-2.svg'
+import ComponentIcon from '../../../img/components.svg'
 import MobileIcon from '../../../img/mobile.svg'
-import DatabaseIcon from '../../../img/database.svg'
+import DatabaseIcon from '../../../img/cmsbase.svg'
 import AddIcon from '../../../img/add.svg'
-import StructureIcon from '../../../img/structure.svg'
+import StructureIcon from '../../../img/navigator.svg'
 import BackupIcon from '../../../img/backup.svg'
 import ProjectLogo from './ProjectLogo'
 import CustomResolutionsButton from './CustomResolutionsButton'
 import ExportButtonServer from './ExportButtonServer'
 import RestoreButton from './RestoreButton'
+import TextModeChanger from './TextModeChanger'
 
 export default function TopNavbar() {
   const projectMode = useSelector((state) => state.project.projectMode)
@@ -30,7 +34,7 @@ export default function TopNavbar() {
     <div className="addNodeWrapper">
       <div className="projectNavigationLeft">
         <ProjectLogo />
-
+        <PageChanger />
         {projectMode === 'creator' && (
           <div style={{ display: 'flex' }}>
             <SidebarButton shortcode="Z" tab="Navigator" img={StructureIcon} />
@@ -39,9 +43,27 @@ export default function TopNavbar() {
               <SidebarButton shortcode="B" tab="Backups" img={BackupIcon} />
             )}
             <SidebarButton shortcode="" tab="Scripts" img={ScriptsIcon} />
+            <SidebarButton
+              letter="L"
+              shortcode="L"
+              tab="Layouts"
+              img={LayoutsIcon}
+            />
+            <SidebarButton
+              letter="B"
+              shortcode="B"
+              tab="Rich Text"
+              img={BlocksIcon}
+            />
+            <SidebarButton
+              letter="C"
+              shortcode="C"
+              tab="Symbols"
+              img={ComponentIcon}
+            />
           </div>
         )}
-        <PageChanger />
+        <TextModeChanger />
         <VersionsChanger />
       </div>
 

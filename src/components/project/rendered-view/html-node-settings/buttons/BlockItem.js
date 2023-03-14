@@ -4,7 +4,7 @@ import {
   pasteLayoutHtmlNodes,
 } from '../../../../../features/project'
 
-export default function BlockItem({ item, closeTab, inputText }) {
+export default function BlockItem({ item, closeTab, activeIndex, index }) {
   const preRenderedHTMLNodes = useSelector(
     (state) => state.project.preRenderedHTMLNodes
   )
@@ -12,19 +12,18 @@ export default function BlockItem({ item, closeTab, inputText }) {
 
   function handleAddBlockClick(sectionNodes) {
     dispatch(copyLayoutHtmlNodes(sectionNodes))
-    dispatch(pasteLayoutHtmlNodes())
+    setTimeout(() => {
+      dispatch(pasteLayoutHtmlNodes())
+    }, 1)
     closeTab()
   }
 
-  //   if (
-  //     inputText !== '' &&
-  //     !item.name.toLowerCase().includes(inputText.toLowerCase())
-  //   ) {
-  //     return null
-  //   }
   return (
     <div
-      className="blocks-list_item"
+      className={
+        'blocks-list_item' +
+        (activeIndex === index && index !== undefined ? ' active' : '')
+      }
       key={item.id}
       onClick={() => handleAddBlockClick(item.preRenderedHTMLNodes)}
     >

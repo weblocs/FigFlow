@@ -28,11 +28,11 @@ function NavigationNodeItem({ parents, node, depth }) {
   )
 
   const nodeName =
-    node?.symbolId === undefined
+    node?.symbolId === undefined || node?.symbolId === null
       ? node?.class[0]?.name !== undefined
         ? node?.class[0]?.name
         : node?.type
-      : projectSymbols.find(({ id }) => id === node.symbolId)?.name
+      : projectSymbols?.find(({ id }) => id === node?.symbolId)?.name
 
   function handleClick() {
     dispatch(setActiveHtmlNode({ id: node.id }))
@@ -57,7 +57,7 @@ function NavigationNodeItem({ parents, node, depth }) {
       if (
         event.clientY -
           document.querySelector(`[nodeid="${node.id}"]`).offsetTop <
-        10
+        50
       ) {
         if (!navigatorItemDragBehindState) {
           dispatch(setNavigatorItemDragBehindState(true))
@@ -110,7 +110,7 @@ function NavigationNodeItem({ parents, node, depth }) {
   return (
     <div
       className={
-        'navigation-node flex ' +
+        'navigation-node flex relative ' +
         (navigatorItemDragBehindState ? 'dragged-before ' : '') +
         (node.id === draggedOverNodeId ? 'dragged-over ' : ' ')
         // + ((node.id == activeNodeId) ? "active " : " ")
@@ -120,15 +120,26 @@ function NavigationNodeItem({ parents, node, depth }) {
       onMouseOut={() => dispatch(setHoveredHtmlNode(''))}
       onClick={handleClick}
       // onDoubleClick={() => handleDoubleClick(node.id)} // openSymbol here
-      draggable="true"
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
+
       nodeid={node.id}
       nodename={nodeName}
       nodetype={node.type}
       nodecmscollectionid={node?.cmsCollectionId}
     >
+      <div
+        draggable="true"
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        style={{
+          zIndex: '0',
+          position: 'absolute',
+          left: '0',
+          right: '0',
+          top: '0',
+          bottom: '0',
+        }}
+      ></div>
       <div className="flex">
         {[...Array(depth)].map((e, i) => (
           <div

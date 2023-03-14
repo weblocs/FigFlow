@@ -4,7 +4,7 @@ import SidebarButton from './_atoms/SidebarButton'
 
 import StructureIcon from '../../../img/structure.svg'
 import PageIcon from '../../../img/page.svg'
-import DatabaseIcon from '../../../img/database.svg'
+import DatabaseIcon from '../../../img/cmsbase.svg'
 import ImageIcon from '../../../img/image.svg'
 import SymbolIcon from '../../../img/components.svg'
 import LayoutsIcon from '../../../img/layout.svg'

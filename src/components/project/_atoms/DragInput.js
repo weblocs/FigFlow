@@ -40,14 +40,12 @@ export default function DragInput({
       if (startVal) {
         setValue(
           parseFloat(
-            parseFloat(snapshot) +
-              (event.clientX - startVal) * Math.pow(10, -1 * round) * 0.5
+            parseFloat(snapshot) + (event.clientX - startVal) * 1 * 0.5
           ).toFixed(round)
         )
         handleChange(
           parseFloat(
-            parseFloat(snapshot) +
-              (event.clientX - startVal) * Math.pow(10, -1 * round) * 0.5
+            parseFloat(snapshot) + (event.clientX - startVal) * 1 * 0.5
           ).toFixed(round)
         )
       }

@@ -20,6 +20,7 @@ const initialState = {
   projectMode: 'creator', // developer or creator
   elementsInlineStyleMode: true,
   nodesEditMode: 'page', // page, layout, cmsTemplate, block
+  pasteTextMode: false,
   scrollCount: 0,
   projectLayouts: [],
   activeLayoutFolder: '',
@@ -241,6 +242,7 @@ const initialState = {
     letter_spacing: '',
     color: '',
     text_align: '',
+    text_transform: '',
     display: '',
     margin_top: '',
     margin_bottom: '',
@@ -311,6 +313,10 @@ function updateGlobalCSS(state) {
       state.styleState,
       state.projectSwatches
     )
+}
+
+function isEditingSymbolOn(state) {
+  return state.editedSymbolId.symbolId !== ''
 }
 
 function findActiveNodeSiblingArrayAndIndex(nodes, id) {
@@ -530,6 +536,17 @@ export const projectSlice = createSlice({
           return x.id
         })
         .indexOf(collectionId)
+
+      if (
+        state.nodesEditMode === 'cmsTemplate' &&
+        state.activeCollectionTemplateId ===
+          state.collections[collectionIndex].id
+      ) {
+        state.activePageId = state.projectPages[0].id
+        state.activePageIndex = 0
+        state.nodesEditMode = 'page'
+        state.preRenderedHTMLNodes = state.projectPages[0].preRenderedHTMLNodes
+      }
 
       state.collections.splice(collectionIndex, 1)
 
@@ -814,10 +831,13 @@ export const projectSlice = createSlice({
 
       activeNode.type = 'sym'
       activeNode.title = ''
+      activeNode.styles = {}
       activeNode.symbolId = symbolId
       activeNode.id = uuidv4()
       activeNode.class = []
       activeNode.children = [{ ...state.activeNodeObject }]
+
+      state.activeNodeId = activeNode.id
     },
 
     editSymbolName: (state, action) => {
@@ -843,6 +863,7 @@ export const projectSlice = createSlice({
       let newNode = state.projectSymbols.find(
         ({ id }) => id === action.payload.id
       ).preRenderedHTMLNodes
+      newNode.expanded = false
       regenerateIdsInNodes(newNode)
 
       function findNode(nodes, id) {
@@ -884,17 +905,83 @@ export const projectSlice = createSlice({
         state.activeNodeId
       )
       tempNode.expanded = true
+      state.activeNodeId = tempNode.children[0].id
+    },
+
+    unlinkSymbolNodes: (state, action) => {
+      if (state.keyboardNavigationOn) {
+        let updatedSymbolNodes = findActiveNode(
+          state.preRenderedHTMLNodes,
+          state.activeNodeObject.id
+        )
+
+        // updatedSymbolNodes.symbolId = null
+        // updatedSymbolNodes.type = 'div'
+        updatedSymbolNodes = updatedSymbolNodes.children[0]
+      }
     },
 
     editSymbolNodes: (state, action) => {
+      if (state.keyboardNavigationOn) {
+        const symbolId = state.editedSymbolId.symbolId
+        const elementId = state.editedSymbolId.elementId
+
+        let updatedSymbolId = symbolId
+        let updatedSymbolNodes = findActiveNode(
+          state.preRenderedHTMLNodes,
+          elementId
+        )
+
+        state.projectSymbols.find(
+          ({ id }) => id === updatedSymbolId
+        ).preRenderedHTMLNodes = updatedSymbolNodes
+
+        function updateNodes(nodes) {
+          for (let i = 0; i < nodes.length; i++) {
+            if (
+              nodes[i].symbolId === updatedSymbolId &&
+              nodes[i].id !== elementId
+            ) {
+              let editedNodesArray = JSON.parse(
+                JSON.stringify(updatedSymbolNodes)
+              )
+              // let editedNodesArray = updatedSymbolNodes
+
+              editedNodesArray.expanded = false
+              regenerateIdsInNodes(editedNodesArray)
+              nodes[i] = editedNodesArray
+            }
+            if (nodes[i].children) {
+              updateNodes(nodes[i].children)
+            }
+          }
+        }
+
+        updateNodesGlobally(state, updateNodes)
+      }
+    },
+
+    finishEditingSymbolNodes: (state) => {
+      if (state.keyboardNavigationOn) {
+        let updatedSymbolNodes = findActiveNode(
+          state.preRenderedHTMLNodes,
+          state.editedSymbolId.elementId
+        )
+        updatedSymbolNodes.expanded = false
+        state.editedSymbolId = { symbolId: '', elementId: '' }
+        state.activeNodeId = ''
+      }
+    },
+
+    editSymbolNodesOnInactivePage: (state, action) => {
       const symbolId = state.editedSymbolId.symbolId
       const elementId = state.editedSymbolId.elementId
-      state.activeNodeId = elementId
-      state.editedSymbolId = { symbolId: '', elementId: '' }
+      const symbolPageId = action.payload.pageId
 
       let updatedSymbolId = symbolId
       let updatedSymbolNodes = findActiveNode(
-        state.preRenderedHTMLNodes,
+        state.projectPages.find(({ id }) => id === symbolPageId)
+          .preRenderedHTMLNodes,
         elementId
       )
       updatedSymbolNodes.expanded = false
@@ -917,7 +1004,6 @@ export const projectSlice = createSlice({
           }
         }
       }
-      state.activeNodeId = ''
       updateNodesGlobally(state, updateNodes)
     },
 
@@ -1001,10 +1087,8 @@ export const projectSlice = createSlice({
 
     setPages: (state, action) => {
       state.projectPages = action.payload
-      // console.log('Pages', state.projectPages)
       state.preRenderedHTMLNodes =
         state.projectPages[state.activePageIndex].preRenderedHTMLNodes
-      // add setActivePageIndex here
       state.activePageId = state.projectPages[state.activePageIndex].id
     },
 
@@ -1924,6 +2008,7 @@ export const projectSlice = createSlice({
             border_style: computedStyle?.['border-style'],
 
             text_align: computedStyle?.['text-align'],
+            text_transform: computedStyle?.['text-transform'],
 
             overflow: computedStyle?.['overflow'],
 
@@ -1967,6 +2052,12 @@ export const projectSlice = createSlice({
       state.elementsInlineStyleMode = action.payload
       if (state.elementsInlineStyleMode === true) {
         state.activeStyleId = ''
+      }
+    },
+
+    togglePasteTextMode: (state, action) => {
+      if (state.keyboardNavigationOn) {
+        state.pasteTextMode = !state.pasteTextMode
       }
     },
 
@@ -2177,7 +2268,6 @@ export const projectSlice = createSlice({
     },
 
     copyHtmlNodes: (state) => {
-      console.log('1')
       const isNodeBody = state.activeNodeObject?.type === 'body'
       if (state.keyboardNavigationOn) {
         if (!isNodeBody) {
@@ -2191,7 +2281,7 @@ export const projectSlice = createSlice({
 
     pasteHtmlNodes: (state) => {
       const isCopyMemoryEmpty = JSON.stringify(state.copiedNodes) === '{}'
-      if (!isCopyMemoryEmpty) {
+      if (!isCopyMemoryEmpty && !state.pasteTextMode) {
         regenerateIdsInNodes(state.copiedNodes)
         if (state.activeNodeId === '') {
           state.activeNodeId = state.preRenderedHTMLNodes?.[0].id
@@ -2220,6 +2310,64 @@ export const projectSlice = createSlice({
             )
           }
           state.activeNodeId = state.copiedNodes.id
+        }
+      }
+    },
+
+    wrapActiveHtmlNode: (state) => {
+      if (state.keyboardNavigationOn) {
+        let [activeNode, activeNodeSiblingArray, activeNodeIndex] =
+          findActiveNodeSiblingArrayAndIndex(
+            state.preRenderedHTMLNodes,
+            state.activeNodeId
+          )
+        let wraperId = uuidv4()
+
+        activeNodeSiblingArray.splice(activeNodeIndex + 1, 0, {
+          id: wraperId,
+          type: 'div',
+          title: '',
+          children: [activeNode],
+          class: [],
+          expanded: true,
+        })
+        activeNodeSiblingArray.splice(activeNodeIndex, 1)
+        state.activeNodeId = wraperId
+      } else {
+        console.log(state.keyboardNavigationOn)
+      }
+    },
+
+    unwrapActiveHtmlNode: (state) => {
+      if (state.keyboardNavigationOn) {
+        let [activeNode, activeNodeSiblingArray, activeNodeIndex] =
+          findActiveNodeSiblingArrayAndIndex(
+            state.preRenderedHTMLNodes,
+            state.activeNodeId
+          )
+        if (activeNode.children?.length === 0) return
+        let index = activeNodeIndex
+        activeNode.children.forEach((item) => {
+          activeNodeSiblingArray.splice(index + 1, 0, item)
+          index++
+        })
+        activeNodeSiblingArray.splice(activeNodeIndex, 1)
+        state.activeNodeId = activeNode.children[0].id
+      }
+    },
+
+    pasteTextToActiveHtmlNode: (state, action) => {
+      if (state.keyboardNavigationOn && state.pasteTextMode) {
+        let activeNode = findActiveNode(
+          state.preRenderedHTMLNodes,
+          state.activeNodeId
+        )
+        if (
+          activeNode.type === 'h' ||
+          activeNode.type === 'p' ||
+          activeNode.type === 'a'
+        ) {
+          activeNode.title = action.payload
         }
       }
     },
@@ -2353,6 +2501,11 @@ export const projectSlice = createSlice({
             state.activeNodeId = activeNodeSiblingArray[activeNodeIndex + 1].id
           } else if (activeNodeSiblingArray[activeNodeIndex - 1]) {
             state.activeNodeId = activeNodeSiblingArray[activeNodeIndex - 1].id
+          } else if (state.activeNodeParentsPath.length > 1) {
+            state.activeNodeId =
+              state.activeNodeParentsPath[
+                state.activeNodeParentsPath.length - 2
+              ].id
           } else {
             state.activeNodeId = ''
           }
@@ -2607,6 +2760,9 @@ export const projectSlice = createSlice({
 
             if (pressedKey == 'down') {
               if (nodes[i].children.length > 0) {
+                if (nodes[i].type === 'sym' && !nodes[i].expanded) {
+                  break
+                }
                 response = nodes[i].children[0].id
               }
             }
@@ -3231,7 +3387,7 @@ export const projectSlice = createSlice({
         }
 
         function doForEachClass(item, index, tempState) {
-          let styleDefaultName = item.name
+          let styleDefaultName = item?.name
           if (index !== 0 && item.id !== '') {
             styleDefaultName = listOfSubStyles?.[index - 1]?.defaultName
             if (styleDefaultName !== undefined) {
@@ -3445,17 +3601,21 @@ export const projectSlice = createSlice({
       function findNode(nodes, id) {
         for (let i = 0; i < nodes.length; i++) {
           if (nodes[i].id === id) {
-            // console.log(id)
+            // state.activeNodeId = state.copiedSectionNodes.id
             // console.log(state.activeNodeId)
+            // console.log(state.copiedSectionNodes.id)
             if (notContainsChildrens(nodes[i])) {
               nodes[i].children.push(state.copiedSectionNodes)
             } else {
               nodes.splice(i + 1, 0, state.copiedSectionNodes)
             }
+            // state.activeNodeId = state.copiedSectionNodes.id
+            // console.log(state.activeNodeId)
             break
           }
           if (nodes[i].children) {
             findNode(nodes[i].children, id)
+            state.activeNodeId = state.copiedSectionNodes.id
           }
         }
       }
@@ -3471,7 +3631,6 @@ export const projectSlice = createSlice({
 
     setProjectFirebaseId: (state, action) => {
       state.projectFirebaseId = action.payload
-      console.log(state.projectFirebaseId)
     },
 
     setFavicon: (state, action) => {
@@ -3559,6 +3718,8 @@ export const projectSlice = createSlice({
         const app = initializeApp(firebaseConfig)
         const db = getFirestore(app)
 
+        console.log(current(state.preRenderedHTMLNodes))
+
         try {
           await updateDoc(doc(db, 'projects', state.projectFirebaseId), {
             pages: state.projectPages,
@@ -3579,6 +3740,7 @@ export const projectSlice = createSlice({
           document.querySelector('.saveButton.save').innerHTML = 'Saved'
         } catch (error) {
           console.log(error)
+
           document.querySelector('.error-wrap').classList.add('active')
         }
       }
@@ -4049,6 +4211,9 @@ export const {
   addSymbolToProject,
   makeSymbolEditable,
   editSymbolNodes,
+  unlinkSymbolNodes,
+  finishEditingSymbolNodes,
+  editSymbolNodesOnInactivePage,
   editSymbolsClickableArea,
   setActiveSymbolConnections,
 
@@ -4109,6 +4274,9 @@ export const {
   setHtmlNodesWithoutExpandedState,
   copyHtmlNodes,
   pasteHtmlNodes,
+  wrapActiveHtmlNode,
+  unwrapActiveHtmlNode,
+  pasteTextToActiveHtmlNode,
   deleteHtmlNode,
   deleteActiveHtmlNode,
   deleteActiveHtmlNodeShortcut,
@@ -4211,6 +4379,7 @@ export const {
   setIsKeyAPressed,
   setIsShiftPressed,
   setIsBackupOn,
+  togglePasteTextMode,
 
   /* Style Guide */
   setStyleGuide,

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   editCollection,
   setActiveSettingsCollectionId,
-  setKeyboardNavigationOn,
 } from '../../../../features/project'
 import Button from '../../../ui/Button'
 import Input from '../../../ui/Input'
