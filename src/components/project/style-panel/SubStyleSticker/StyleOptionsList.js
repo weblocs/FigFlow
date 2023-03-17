@@ -33,7 +33,7 @@ export default function StyleOptionsList({
     <div className="style-option-list">
       {preRenderedStyles
         .find(({ id }) => id === stylesInActiveNode?.[0].id)
-        ?.childrens[index].options.map((option) => (
+        ?.childrens[index].options.map((option, subOptionIndex) => (
           <div className="style-option-item relative" key={option.id}>
             <div
               className="style-option-item-text"
@@ -45,6 +45,7 @@ export default function StyleOptionsList({
               <div className="px-4 py-4 flex items-center">
                 <SubStyleEdit
                   index={index}
+                  subOptionIndex={subOptionIndex}
                   text="Edit Option"
                   itemType="option"
                   element={option}

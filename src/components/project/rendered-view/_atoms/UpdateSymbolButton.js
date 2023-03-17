@@ -46,19 +46,8 @@ export default function UpdateSymbolButton() {
   const { updateASymbol } = useKeyboardShortcut(
     ['A'],
     (shortcutKeys) => {
+      console.log('1')
       dispatch(editSymbolNodes())
-    },
-    {
-      overrideSystem: false,
-      ignoreInputFields: true,
-      repeatOnHold: false,
-    }
-  )
-
-  const { unlinkSymbol } = useKeyboardShortcut(
-    ['O'],
-    (shortcutKeys) => {
-      dispatch(unwrapActiveHtmlNode())
     },
     {
       overrideSystem: false,

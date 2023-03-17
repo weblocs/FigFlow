@@ -666,7 +666,7 @@ function RenderedNode(props) {
         .find(({ id }) => id === activeCollectionTemplateId)
         ?.items?.find(({ id }) => id === activeCollectionItemTemplateId)
 
-      if (props.cmsFieldId !== '' && props.cmsFieldId !== undefined) {
+      if (props.cmsFieldId !== null && props.cmsFieldId !== undefined) {
         nodeText = activeCollectionItem?.data?.find(
           ({ fieldId }) => fieldId === props.cmsFieldId
         )?.fieldValue
@@ -677,10 +677,9 @@ function RenderedNode(props) {
     }
 
     if (props.collectionItems) {
-      if (props.cmsFieldId === '') {
+      if (props.cmsFieldId === 'null') {
         nodeText = props.title
-      }
-      if (props.cmsFieldId === '0') {
+      } else if (props.cmsFieldId === '0') {
         nodeText = props.collectionItemName
       } else {
         nodeText = props.collectionItems.find(
@@ -690,7 +689,7 @@ function RenderedNode(props) {
     }
 
     if (nodeText === undefined) {
-      nodeText = 'empty'
+      nodeText = props.title
     }
   }
 

@@ -33,7 +33,7 @@ export default function CollectionListFieldsConnetor({
         id: activeNodeId,
         field: 'cmsFieldId',
         value: isNodeCmsEditable
-          ? ''
+          ? null
           : activeCollectionItems[0].data[0].fieldId,
       })
     )

@@ -57,7 +57,7 @@ function NavigationNodeItem({ parents, node, depth }) {
       if (
         event.clientY -
           document.querySelector(`[nodeid="${node.id}"]`).offsetTop <
-        50
+        20
       ) {
         if (!navigatorItemDragBehindState) {
           dispatch(setNavigatorItemDragBehindState(true))

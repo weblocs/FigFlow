@@ -15,6 +15,7 @@ export default function SubStyleEdit({
   text,
   itemType,
   folderItem,
+  subOptionIndex,
 }) {
   const dispatch = useDispatch()
 
@@ -57,6 +58,7 @@ export default function SubStyleEdit({
 
       <SubStyleEditForm
         index={index}
+        subOptionIndex={subOptionIndex}
         element={element}
         editFx={editFx}
         deleteFx={deleteFx}

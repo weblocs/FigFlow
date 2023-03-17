@@ -4,6 +4,7 @@ import { getFirestore, setDoc, doc, updateDoc } from 'firebase/firestore'
 import { firebaseConfig } from '../../utils/firebase-config'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { setFavicon, setFaviconMobile } from '../../features/project'
+import { createClient } from '@supabase/supabase-js'
 
 const fileToDataUri = (file) =>
   new Promise((resolve, reject) => {
@@ -15,6 +16,11 @@ const fileToDataUri = (file) =>
   })
 
 export default function FaviconUploader() {
+  const supabase = createClient(
+    'https://tvibleithndshiwcxpyh.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2aWJsZWl0aG5kc2hpd2N4cHloIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzg4MDcxMjAsImV4cCI6MTk5NDM4MzEyMH0.UGM0_FrjGdB8twoyXQk2aKKJg3mP924BDzCKcFNTDvU'
+  )
+
   const projectFirebaseId = useSelector(
     (state) => state.project.projectFirebaseId
   )
@@ -37,8 +43,8 @@ export default function FaviconUploader() {
         uploadBytes(tempStorageRef, file).then((snapshot) => {})
       })
       .then(async () => {
-        const app = initializeApp(firebaseConfig)
-        const db = getFirestore(app)
+        // const app = initializeApp(firebaseConfig)
+        // const db = getFirestore(app)
         let node = {
           favicon: projectFirebaseId + '-' + file.name,
         }
@@ -47,7 +53,13 @@ export default function FaviconUploader() {
             faviconMobile: projectFirebaseId + '-' + file.name,
           }
         }
-        await updateDoc(doc(db, 'projects', projectFirebaseId), node)
+
+        const { data, error } = await supabase
+          .from('projects')
+          .update(node)
+          .eq('id', projectFirebaseId)
+
+        // await updateDoc(doc(db, 'projects', projectFirebaseId), node)
       })
       .then(async () => {
         if (type === 'favicon') {

@@ -34,7 +34,16 @@ export default function AddBlockButton() {
   )
 
   const { openListShortcut } = useKeyboardShortcut(
-    ['E'],
+    ['Meta', 'E'],
+    (shortcutKeys) => {
+      if (!keyboardNavigationOn) return
+      setListIsOpened(true)
+    },
+    { overrideSystem: false, ignoreInputFields: true, repeatOnHold: false }
+  )
+
+  const { openListShortcutWindows } = useKeyboardShortcut(
+    ['Control', 'E'],
     (shortcutKeys) => {
       if (!keyboardNavigationOn) return
       setListIsOpened(!listIsOpened)

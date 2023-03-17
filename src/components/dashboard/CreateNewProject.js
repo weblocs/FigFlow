@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import { initializeApp } from 'firebase/app'
+
+import { createClient } from '@supabase/supabase-js'
 import {
   getFirestore,
   getDocs,
@@ -15,6 +17,11 @@ import {
 import { firebaseConfig } from '../../utils/firebase-config'
 
 export default function CreateNewProject(props) {
+  const supabase = createClient(
+    'https://tvibleithndshiwcxpyh.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2aWJsZWl0aG5kc2hpd2N4cHloIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzg4MDcxMjAsImV4cCI6MTk5NDM4MzEyMH0.UGM0_FrjGdB8twoyXQk2aKKJg3mP924BDzCKcFNTDvU'
+  )
+
   const [input, setInput] = useState('')
   const [templates, setTemplates] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -75,12 +82,15 @@ export default function CreateNewProject(props) {
   })
 
   async function getTemplates() {
-    const querySnapshot = await getDocs(query(collection(db, 'templates')))
-    let tempTemplates = []
-    querySnapshot.forEach((doc) => {
-      tempTemplates = [...tempTemplates, doc.data()]
-    })
-    setTemplates(tempTemplates)
+    const { data, error } = await supabase.from('templates').select()
+    setTemplates(data)
+
+    // const querySnapshot = await getDocs(query(collection(db, 'templates')))
+    // let tempTemplates = []
+    // querySnapshot.forEach((doc) => {
+    //   tempTemplates = [...tempTemplates, doc.data()]
+    // })
+    // setTemplates(tempTemplates)
   }
 
   useEffect(() => {
@@ -92,62 +102,93 @@ export default function CreateNewProject(props) {
 
     if (input !== '') {
       let projectSlug = input.toLowerCase().replaceAll(' ', '-')
-      let sameNameProjects = await getDocs(
-        query(collection(db, 'projects'), where('projectId', '==', projectSlug))
-      )
+      // let sameNameProjects = await getDocs(
+      //   query(collection(db, 'projects'), where('projectId', '==', projectSlug))
+      // )
 
-      // check if in database we don't have same slug
-      let projectSufixIndex = 1
-      let initialProjectSlug = projectSlug
-      while (sameNameProjects.size > 0) {
-        projectSufixIndex++
-        projectSlug = initialProjectSlug + '-' + projectSufixIndex
-        sameNameProjects = await getDocs(
-          query(
-            collection(db, 'projects'),
-            where('projectId', '==', projectSlug)
-          )
-        )
-      }
+      // // check if in database we don't have same slug
+      // let projectSufixIndex = 1
+      // let initialProjectSlug = projectSlug
+      // while (sameNameProjects.size > 0) {
+      //   projectSufixIndex++
+      //   projectSlug = initialProjectSlug + '-' + projectSufixIndex
+      //   sameNameProjects = await getDocs(
+      //     query(
+      //       collection(db, 'projects'),
+      //       where('projectId', '==', projectSlug)
+      //     )
+      //   )
+      // }
 
-      await setDoc(doc(collection(db, 'projects'), newProjectId), {
-        isDeleted: false,
-        projectId: projectSlug,
-        projectName: input,
-        userid: props.userid,
-        pages: templateData.pages,
-        projectPageFolderStructure: templateData.projectPageFolderStructure,
-        projectPageFolders: templateData.projectPageFolders,
-        collections: templateData.collections,
-        setStyles: templateData.setStyles,
-        symbols: templateData.symbols,
-        swatches: templateData.swatches,
-        sections: templateData.sections,
-        blocks: templateData.blocks,
-        images: templateData.images,
-        scripts: templateData.scripts,
-        libraries: templateData.libraries,
-        fonts: templateData.fonts,
-        preRenderedStyles: templateData.preRenderedStyles,
-        styleGuide: templateData.styleGuide,
-      }).then((res) => {
-        window.location.replace('/design/' + projectSlug)
-      })
+      const { error } = await supabase
+        .from('projects')
+        .insert({
+          id: uuidv4(),
+          projectName: input,
+          projectId: projectSlug,
+          userid: props.userid,
+          pages: templateData.pages,
+          projectPageFolderStructure: templateData.projectPageFolderStructure,
+          projectPageFolders: templateData.projectPageFolders,
+          collections: templateData.collections,
+          symbols: templateData.symbols,
+          swatches: templateData.swatches,
+          sections: templateData.sections,
+          blocks: templateData.blocks,
+          images: templateData.images,
+          scripts: templateData.scripts,
+          libraries: templateData.libraries,
+          fonts: templateData.fonts,
+          preRenderedStyles: templateData.preRenderedStyles,
+          styleGuide: templateData.styleGuide,
+        })
+        .then((res) => {
+          window.location.replace('/design/' + projectSlug)
+        })
+
+      // await setDoc(doc(collection(db, 'projects'), newProjectId), {
+      //   isDeleted: false,
+      //   projectId: projectSlug,
+      //   projectName: input,
+      //   userid: props.userid,
+      //   pages: templateData.pages,
+      //   projectPageFolderStructure: templateData.projectPageFolderStructure,
+      //   projectPageFolders: templateData.projectPageFolders,
+      //   collections: templateData.collections,
+      //   setStyles: templateData.setStyles,
+      //   symbols: templateData.symbols,
+      //   swatches: templateData.swatches,
+      //   sections: templateData.sections,
+      //   blocks: templateData.blocks,
+      //   images: templateData.images,
+      //   scripts: templateData.scripts,
+      //   libraries: templateData.libraries,
+      //   fonts: templateData.fonts,
+      //   preRenderedStyles: templateData.preRenderedStyles,
+      //   styleGuide: templateData.styleGuide,
+      // }).then((res) => {
+      //   window.location.replace('/design/' + projectSlug)
+      // })
     }
   }
 
   async function handleTemplateClick(id) {
     if (id !== '') {
-      const tempTemplateData = await (
-        await getDoc(doc(db, 'projects', id))
-      ).data()
+      const { data, error } = await supabase
+        .from('projects')
+        .select()
+        .eq('id', id)
+      const tempTemplateData = data[0]
+
+      // const tempTemplateData = await (
+      //   await getDoc(doc(db, 'projects', id))
+      // ).data()
 
       setTemplateData({
         pages: tempTemplateData.pages,
         projectPageFolderStructure: tempTemplateData.projectPageFolderStructure,
         projectPageFolders: tempTemplateData.projectPageFolders,
         collections: tempTemplateData.collections,
-        setStyles: tempTemplateData.setStyles,
         symbols: tempTemplateData.symbols,
         swatches: tempTemplateData.swatches,
         sections: tempTemplateData.sections,

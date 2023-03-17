@@ -15,7 +15,7 @@ function hasChildren(node) {
 
 function isNodeText(node) {
   const type = node.type
-  return type === 'h' || type === 'p' || type === 'a'
+  return type === 'h' || type === 'p' || node.type === 'a'
 }
 
 export default function generateAnyPage(
@@ -135,6 +135,9 @@ export default function generateAnyPage(
           }
           if (node.type === 'rich_text') {
             generatedHTML += generateNodeText(node, collectionItem, item)
+          }
+          if (node.type === 'embed') {
+            generatedHTML += node.embed
           }
         }
       }

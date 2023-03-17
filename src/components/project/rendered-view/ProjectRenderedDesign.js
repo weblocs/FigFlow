@@ -93,9 +93,7 @@ export default function ProjectRenderedDesign() {
                 children={el.children}
                 class={el.class}
                 onChange={(text, id) =>
-                  dispatch(
-                    editHtmlNode({ id: id, field: 'title', value: text })
-                  )
+                  dispatch(editHtmlNode({ field: 'title', value: text }))
                 }
                 onClick={([_id]) => dispatch(setActiveHtmlNode({ id: _id }))}
               />

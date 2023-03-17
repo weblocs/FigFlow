@@ -14,6 +14,9 @@
   --bg-black-hover: #242424;
   --bg-black-active: #2f2f2f;
   --bg-gray-300: #a5a5a5;
+  --bg-gray-500: #767676;
+  --bg-gray-700: #504f4f;
+  --white: #fff;
 }
 
 ::-webkit-scrollbar {
@@ -100,13 +103,6 @@ img {
   display: none;
 }
 
-.symbol-wrapper {
-  background: green;
-  opacity: 0;
-  position: absolute;
-  z-index: 9999;
-}
-
 .renderedNode {
   cursor: default;
   -webkit-touch-callout: none;
@@ -134,12 +130,19 @@ img {
   cursor: text;
 }
 
+.symbol-wrapper {
+  background: #45c032;
+  opacity: 0;
+  position: absolute;
+  z-index: 2;
+}
+
 .renderedNode.active > div > .symbol-wrapper {
-  opacity: 0.2;
+  opacity: 0.07;
 }
 
 .symbol-wrapper:hover {
-  opacity: 0.2;
+  opacity: 0.07;
 }
 
 .unit-chooser_closer {
@@ -986,10 +989,6 @@ img {
   outline: none;
 }
 
-.symbol-wrapper {
-  z-index: 2;
-}
-
 .rich-element-settings_box {
   z-index: 10000;
 }
@@ -1105,7 +1104,7 @@ button {
 
   .saveButton {
     background-color: var(--bg-black);
-    color: var(--bg-gray-300);
+    color: var(--bg-gray-500);
     display: inline-block;
     height: 40px;
     padding: 12px;
@@ -1133,7 +1132,7 @@ button {
 
   .navigatorWrapper {
     width: 200px;
-    height: calc(100vh - 32px);
+    height: calc(100vh - 40px);
     flex-shrink: 0;
     border-right: 1px solid #d3d3d3;
     display: none;
@@ -1294,6 +1293,8 @@ button {
   }
 
   .addNodeButton {
+    background-color: var(--bg-black);
+    color: var(--bg-gray-300);
     display: flex;
     font-size: 11px;
     cursor: pointer;
@@ -1316,8 +1317,8 @@ button {
     position: fixed;
     top: 6px;
     left: 6px;
-    background-color: #f8f8f8;
-    border: 1px solid #c3c3c3;
+    background-color: var(--bg-black);
+    border: 1px solid var(--bg-gray-700);
     border-bottom: 0;
   }
 
@@ -1326,15 +1327,22 @@ button {
   }
 
   .logo-settings-panel-link {
-    padding: 0px 12px 0 8px;
-    border-bottom: 1px solid #c3c3c3;
-    color: #333;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--bg-gray-700);
+    background-color: var(--bg-black);
+    color: var(--bg-gray-300);
+  }
+
+  .logo-settings-panel-link:hover {
+    background-color: var(--bg-black-hover);
   }
 
   .addNodeButton.medium {
     width: 66px;
     font-size: 9.5px;
-    border-bottom: 1px solid #d3d3d3;
+    border-right: 1px solid var(--bg-gray-500);
+    border-bottom: 1px solid var(--bg-gray-500);
   }
   .addNodeButton.medium:nth-child(3n) {
     border-right: 0;

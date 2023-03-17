@@ -20,23 +20,23 @@ export default function SymbolSettings() {
   })
   const dispatch = useDispatch()
 
-  // const { openSymbol } = useKeyboardShortcut(
-  //   ['Shift'],
-  //   (shortcutKeys) => {
-  //     editedSymbolId.symbolId === '' &&
-  //       dispatch(
-  //         makeSymbolEditable({
-  //           symbolId: activeNodeObject.symbolId,
-  //           elementId: activeNodeObject.id,
-  //         })
-  //       )
-  //   },
-  //   {
-  //     overrideSystem: false,
-  //     ignoreInputFields: true,
-  //     repeatOnHold: false,
-  //   }
-  // )
+  const { openSymbol } = useKeyboardShortcut(
+    ['Meta' + 'R'],
+    (shortcutKeys) => {
+      editedSymbolId.symbolId === '' &&
+        dispatch(
+          makeSymbolEditable({
+            symbolId: activeNodeObject.symbolId,
+            elementId: activeNodeObject.id,
+          })
+        )
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
 
   if (isNodeSymbol) {
     return (

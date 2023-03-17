@@ -21,6 +21,7 @@ import {
   unwrapActiveHtmlNode,
   pasteTextToActiveHtmlNode,
   togglePasteTextMode,
+  editHtmlNode,
 } from '../features/project'
 
 let keys = []
@@ -52,7 +53,13 @@ export default function loadShortcuts() {
     '$mod+KeyD': (event) => {
       event.preventDefault()
     },
+    '$mod+KeyE': (event) => {
+      event.preventDefault()
+    },
     '$mod+Shift+KeyD': (event) => {
+      event.preventDefault()
+    },
+    '$mod+KeyA': (event) => {
       event.preventDefault()
     },
     '$mod+Shift+KeyA': (event) => {
@@ -114,6 +121,29 @@ export default function loadShortcuts() {
   //     repeatOnHold: false,
   //   }
   // )
+
+  const { convertToDivShortcut } = useKeyboardShortcut(
+    ['Meta', 'L'],
+    (shortcutKeys) => {
+      dispatch(editHtmlNode({ field: 'type', value: 'l' }))
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
+  const { convertToLinkShortcut } = useKeyboardShortcut(
+    ['Meta', 'K'],
+    (shortcutKeys) => {
+      dispatch(editHtmlNode({ field: 'type', value: 'div' }))
+    },
+    {
+      overrideSystem: false,
+      ignoreInputFields: true,
+      repeatOnHold: false,
+    }
+  )
 
   const { undoProjectShortcut } = useKeyboardShortcut(
     ['Meta', 'Z'],
@@ -304,7 +334,7 @@ export default function loadShortcuts() {
   )
 
   const { unwrapShortcut } = useKeyboardShortcut(
-    ['Meta', 'Shift', 'D'],
+    ['Meta', 'S'],
     (shortcutKeys) => {
       dispatch(unwrapActiveHtmlNode())
     },

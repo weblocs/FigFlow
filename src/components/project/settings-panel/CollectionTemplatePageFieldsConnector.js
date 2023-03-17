@@ -60,7 +60,7 @@ export default function CollectionTemplatePageFieldsConnector() {
     if (isNodeCmsEditable) {
       console.log('2')
       dispatch(
-        editHtmlNode({ id: activeNodeId, field: 'cmsFieldId', value: '' })
+        editHtmlNode({ id: activeNodeId, field: 'cmsFieldId', value: null })
       )
     } else {
       // if (activeCollectionItems[0]?.data[0]?.fieldId !== undefined) {

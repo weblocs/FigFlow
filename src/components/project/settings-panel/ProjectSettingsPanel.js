@@ -27,7 +27,7 @@ export default function ProjectSettingsPanel() {
   const isNodeCmsEditable = useSelector(
     (state) =>
       state.project.activeNodeObject?.cmsFieldId !== undefined &&
-      state.project.activeNodeObject?.cmsFieldId !== ''
+      state.project.activeNodeObject?.cmsFieldId !== 'null'
   )
 
   const isNodeCollection = useSelector((state) => {

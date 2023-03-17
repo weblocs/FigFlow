@@ -1,4 +1,6 @@
 import { createSlice, current } from '@reduxjs/toolkit'
+import { createClient } from '@supabase/supabase-js'
+import { arrayMoveImmutable, arrayMoveMutable } from 'array-move'
 import {
   JSONtoCSS,
   getIndexOfElementInArrayById,
@@ -12,6 +14,11 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore, updateDoc, doc } from 'firebase/firestore'
 import { firebaseConfig } from '../utils/firebase-config.js'
 import { deleteUnits } from '../utils/style-panel'
+
+const supabase = createClient(
+  'https://tvibleithndshiwcxpyh.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2aWJsZWl0aG5kc2hpd2N4cHloIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzg4MDcxMjAsImV4cCI6MTk5NDM4MzEyMH0.UGM0_FrjGdB8twoyXQk2aKKJg3mP924BDzCKcFNTDvU'
+)
 
 const initialState = {
   offlineMode: false,
@@ -1945,6 +1952,33 @@ export const projectSlice = createSlice({
       }
     },
 
+    moveStyleSubOption: (state, action) => {
+      function arraymove(arr, fromIndex, toIndex) {
+        var element = arr[fromIndex]
+        arr.splice(fromIndex, 1)
+        arr.splice(toIndex, 0, element)
+      }
+
+      let optionIndex = action.payload.optionIndex
+      let subOptionId = action.payload.subOptionId
+
+      let mainStyleId = state.stylesInActiveNode[0].id
+      let options = state.preRenderedStyles.find(({ id }) => id === mainStyleId)
+        .childrens[optionIndex].options
+
+      if (options.length > 0) {
+        for (let i = 0; i < options.length; i++) {
+          if (options[i].id === subOptionId) {
+            if (action.payload.direction === 'up') {
+              arraymove(options, i, i - 1)
+            } else {
+              arraymove(options, i, i + 1)
+            }
+          }
+        }
+      }
+    },
+
     setActiveNodeComputedStyles: (state) => {
       if (state.activeNodeId !== '') {
         try {
@@ -3703,46 +3737,74 @@ export const projectSlice = createSlice({
       state.scripts = action.payload.scripts
       state.libraries = action.payload.libraries
       state.swatches = action.payload.swatches
+      state.fonts = action.payload.fonts
+      state.images = action.payload.images
+
       state.faviconImage = action.payload.favicon
       state.faviconMobileImage = action.payload.faviconMobile
-      state.fonts = action.payload.fonts
       state.projectNameAndSlug = {
         name: action.payload.projectName,
         slug: action.payload.projectId,
       }
-      state.images = action.payload.images
     },
 
     saveProjectToFirebase: (state) => {
+      const blocks = [...state.blocks]
       async function saveProjectToFirebasePreRenderedNodesAndStyles() {
         const app = initializeApp(firebaseConfig)
         const db = getFirestore(app)
 
-        console.log(current(state.preRenderedHTMLNodes))
-
         try {
-          await updateDoc(doc(db, 'projects', state.projectFirebaseId), {
-            pages: state.projectPages,
-            projectPageFolders: state.projectPageFolders,
-            projectPageFolderStructure: state.projectPageFolderStructure,
-            collections: state.collections,
-            preRenderedStyles: state.preRenderedStyles,
-            symbols: state.projectSymbols,
-            swatches: state.projectSwatches,
-            sections: state.projectLayouts,
-            blocks: state.blocks,
-            styleGuide: state.styleGuide,
-            scripts: state.scripts,
-            libraries: state.libraries,
-            images: state.images,
-            fonts: state.fonts,
-          })
+          const { data, error } = await supabase
+            .from('projects')
+            .update({
+              pages: current(state.projectPages),
+              projectPageFolders: current(state.projectPageFolders),
+              projectPageFolderStructure: current(
+                state.projectPageFolderStructure
+              ),
+              collections: current(state.collections),
+              preRenderedStyles: current(state.preRenderedStyles),
+              symbols: current(state.projectSymbols),
+              swatches: current(state.projectSwatches),
+              sections: current(state.projectLayouts),
+              blocks: current(state.blocks),
+              styleGuide: current(state.styleGuide),
+              scripts: current(state.scripts),
+              libraries: current(state.libraries),
+              images: current(state.images),
+              fonts: current(state.fonts),
+            })
+            .eq('id', state.projectFirebaseId)
           document.querySelector('.saveButton.save').innerHTML = 'Saved'
         } catch (error) {
           console.log(error)
-
           document.querySelector('.error-wrap').classList.add('active')
         }
+
+        // try {
+        //   await updateDoc(doc(db, 'projects', state.projectFirebaseId), {
+        //     pages: state.projectPages,
+        //     projectPageFolders: state.projectPageFolders,
+        //     projectPageFolderStructure: state.projectPageFolderStructure,
+        //     collections: state.collections,
+        //     preRenderedStyles: state.preRenderedStyles,
+        //     symbols: state.projectSymbols,
+        //     swatches: state.projectSwatches,
+        //     sections: state.projectLayouts,
+        //     blocks: state.blocks,
+        //     styleGuide: state.styleGuide,
+        //     scripts: state.scripts,
+        //     libraries: state.libraries,
+        //     images: state.images,
+        //     fonts: state.fonts,
+        //   })
+        //   document.querySelector('.saveButton.save').innerHTML = 'Saved'
+        // } catch (error) {
+        //   console.log(error)
+
+        //   document.querySelector('.error-wrap').classList.add('active')
+        // }
       }
 
       if (state.isBackupOn === null) {
@@ -4256,6 +4318,8 @@ export const {
 
   editStyleSubOption,
   deleteStyleSubOption,
+
+  moveStyleSubOption,
 
   setActiveNodeComputedStyles,
   editActiveStyleProperties,

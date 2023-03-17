@@ -50,10 +50,26 @@ export default function SizeStyleInput(props) {
   function setProperty(e) {
     let unit = editedStyleUnit
     let value = e.target.value
-    if (e.key === 'Enter' && (unit === '' || unit === '-')) {
+
+    function replaceUnit(_unit) {
+      if (value.includes(_unit)) {
+        value = value.replace(_unit, '')
+        unit = _unit
+      }
+    }
+
+    replaceUnit('px')
+    replaceUnit('%')
+    replaceUnit('em')
+    replaceUnit('rem')
+    replaceUnit('vh')
+    replaceUnit('vw')
+
+    if (unit === '' || unit === '-') {
       unit = 'px'
     }
-    dispatch(editStyleProperty([props.style, e.target.value + unit]))
+    dispatch(editStyleProperty([props.style, value + unit]))
+    inputRef.current.value = value
   }
 
   function handleKeyPress(e) {

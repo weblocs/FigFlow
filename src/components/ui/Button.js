@@ -35,17 +35,33 @@ export default function Button({
     }
   }
 
-  return (
-    <button
-      onClick={handleClick}
-      className={
-        'text-sm capitalize pointer ' +
-        (isFullWidth ? ' w-full' : '') +
-        getTypeStyles() +
-        getSizeStyles()
-      }
-    >
-      {text}
-    </button>
-  )
+  if (submit === true) {
+    return (
+      <button
+        onClick={handleClick}
+        className={
+          'text-sm capitalize pointer ' +
+          (isFullWidth ? ' w-full' : '') +
+          getTypeStyles() +
+          getSizeStyles()
+        }
+      >
+        {text}
+      </button>
+    )
+  } else {
+    return (
+      <div
+        onClick={handleClick}
+        className={
+          'text-sm capitalize pointer ' +
+          (isFullWidth ? ' w-full' : '') +
+          getTypeStyles() +
+          getSizeStyles()
+        }
+      >
+        {text}
+      </div>
+    )
+  }
 }

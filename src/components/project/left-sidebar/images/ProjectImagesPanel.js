@@ -1,4 +1,5 @@
 import React from 'react'
+import { createClient } from '@supabase/supabase-js'
 import { useDispatch, useSelector } from 'react-redux'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
@@ -32,6 +33,11 @@ export default function ProjectImagesPanel() {
 
   const storage = getStorage()
 
+  const supabase = createClient(
+    'https://tvibleithndshiwcxpyh.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2aWJsZWl0aG5kc2hpd2N4cHloIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzg4MDcxMjAsImV4cCI6MTk5NDM4MzEyMH0.UGM0_FrjGdB8twoyXQk2aKKJg3mP924BDzCKcFNTDvU'
+  )
+
   const imageUploadingFirebase = (file) => {
     const fileName = projectFirebaseId + '-' + file.name.replaceAll('.', '-')
     if (!file) {
@@ -43,17 +49,30 @@ export default function ProjectImagesPanel() {
         uploadBytes(tempStorageRef, file).then((snapshot) => {})
       })
       .then(async () => {
-        const app = initializeApp(firebaseConfig)
-        const db = getFirestore(app)
-        await updateDoc(doc(db, 'projects', projectFirebaseId), {
-          images: [
-            ...projectImages,
-            {
-              name: fileName,
-              id: uuidv4(),
-            },
-          ],
-        })
+        const { data, error } = await supabase
+          .from('projects')
+          .update({
+            images: [
+              ...projectImages,
+              {
+                name: fileName,
+                id: uuidv4(),
+              },
+            ],
+          })
+          .eq('id', projectFirebaseId)
+
+        // const app = initializeApp(firebaseConfig)
+        // const db = getFirestore(app)
+        // await updateDoc(doc(db, 'projects', projectFirebaseId), {
+        //   images: [
+        //     ...projectImages,
+        //     {
+        //       name: fileName,
+        //       id: uuidv4(),
+        //     },
+        //   ],
+        // })
       })
       .then(async () => {
         dispatch(addImage(fileName))
