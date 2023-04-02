@@ -40,7 +40,7 @@ export default function Button({
       <button
         onClick={handleClick}
         className={
-          'text-sm capitalize pointer ' +
+          'text-sm capitalize pointer flex items-center ' +
           (isFullWidth ? ' w-full' : '') +
           getTypeStyles() +
           getSizeStyles()
@@ -54,7 +54,7 @@ export default function Button({
       <div
         onClick={handleClick}
         className={
-          'text-sm capitalize pointer ' +
+          'text-sm capitalize pointer flex items-center ' +
           (isFullWidth ? ' w-full' : '') +
           getTypeStyles() +
           getSizeStyles()

@@ -59,9 +59,9 @@ export default function loadShortcuts() {
     '$mod+Shift+KeyD': (event) => {
       event.preventDefault()
     },
-    '$mod+KeyA': (event) => {
-      event.preventDefault()
-    },
+    // '$mod+KeyA': (event) => {
+    //   event.preventDefault()
+    // },
     '$mod+Shift+KeyA': (event) => {
       event.preventDefault()
     },

@@ -6,6 +6,7 @@ import {
   updateStateOnScroll,
 } from '../../../features/project'
 import { renderFontCss } from '../../../utils/nodes-editing'
+import ProjectStylePanelHorizontal from '../style-panel/ProjectStylePanelHorizontal'
 import HtmlNodeSettings from './html-node-settings/HtmlNodeSettings'
 import ProjectParentsPathBar from './html-nodes-path/ProjectParentsPathBar'
 import RenderedNode from './RenderedNode'
@@ -102,6 +103,12 @@ export default function ProjectRenderedDesign() {
         </div>
       </div>
       {isProjectModeDev && <ProjectParentsPathBar />}
+
+      {/* <div className="horizontal-style-bar">
+        <div className="user-panel">
+          <ProjectStylePanelHorizontal />
+        </div>
+      </div> */}
     </div>
   )
 }

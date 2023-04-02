@@ -10,6 +10,7 @@ import { fullJSONtoCSS } from '../../../utils/nodes-editing'
 import Resizer from 'react-image-file-resizer'
 import generatePageCss from './export/GeneratePageCss'
 import getStyleUrlDots, { getFontsUrlDots } from './export/GetStyleUrlDots'
+import generateFontCss from './export/GenerateFontCss'
 
 export default function ExportButton() {
   const preRenderedStyles = useSelector(
@@ -96,6 +97,7 @@ export default function ExportButton() {
                 fontsURLDots
               )
             )
+            zip.file(`project/fonts.css`, generateFontCss(fonts))
 
             zip.file(
               `${path}/index.html`,

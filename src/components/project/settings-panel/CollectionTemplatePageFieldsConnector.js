@@ -23,7 +23,7 @@ export default function CollectionTemplatePageFieldsConnector() {
   const isNodeCmsEditable = useSelector(
     (state) =>
       state.project.activeNodeObject?.cmsFieldId !== undefined &&
-      state.project.activeNodeObject?.cmsFieldId !== ''
+      state.project.activeNodeObject?.cmsFieldId !== 'null'
   )
   const activeCollectionItems = useSelector(
     (state) =>

@@ -24,6 +24,7 @@ import CustomResolutionsButton from './CustomResolutionsButton'
 import ExportButtonServer from './ExportButtonServer'
 import RestoreButton from './RestoreButton'
 import TextModeChanger from './TextModeChanger'
+import VersionsIcon from '../../../img/capacitor.svg'
 
 export default function TopNavbar() {
   const projectMode = useSelector((state) => state.project.projectMode)
@@ -60,6 +61,12 @@ export default function TopNavbar() {
               shortcode="C"
               tab="Symbols"
               img={ComponentIcon}
+            />
+            <SidebarButton
+              letter="V"
+              shortcode="V"
+              tab="Versions"
+              img={VersionsIcon}
             />
           </div>
         )}

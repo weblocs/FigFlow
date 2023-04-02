@@ -9,6 +9,9 @@ export default function generateNodeText(node, collectionItem, item) {
   }
   // Collection List
   if (collectionItem !== null) {
+    if (node.cmsFieldId === undefined || node.cmsFieldId === 'null') {
+      return node.title
+    }
     if (node.cmsFieldId === '0') {
       return collectionItem.name
     }
@@ -17,6 +20,9 @@ export default function generateNodeText(node, collectionItem, item) {
     )?.fieldValue
   }
   // Collection Page
+  if (node.cmsFieldId === undefined || node.cmsFieldId === 'null') {
+    return node.title
+  }
   if (node.cmsFieldId === '0') {
     return item.name
   }

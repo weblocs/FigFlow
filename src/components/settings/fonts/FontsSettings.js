@@ -6,10 +6,15 @@ import AddFontFamilyForm from './AddFontFamilyForm'
 import UploadFont from './UploadFont'
 import FontItem from './FontItem'
 import FontNameInput from './FontNameInput'
+import DeleteFontFamilyButton from './DeleteFontFamilyButton'
 
 export default function FontsSettings() {
   const fonts = useSelector((state) => state.project.fonts)
   const dispatch = useDispatch()
+
+  function deleteFontFamily(id) {
+    dispatch(deleteFontFamily({ id }))
+  }
 
   return (
     <div>
@@ -21,7 +26,8 @@ export default function FontsSettings() {
                 <FontNameInput font={font} />
 
                 <div className="flex gap-4">
-                  {/* <Button text="Edit" size="sm" type="white" /> */}
+                  <DeleteFontFamilyButton id={font.id} />
+
                   <UploadFont fontId={font.id} />
                 </div>
               </div>

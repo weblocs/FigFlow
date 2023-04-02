@@ -35,6 +35,7 @@ import { useSearchParams } from 'react-router-dom'
 import BackupLoader from './components/project/backup/BackupLoader'
 import ProjectScriptsPanel from './components/project/left-sidebar/scripts/ProjectScriptsPanel'
 import Supabase from './Supabase'
+import ProjectStylePanelHorizontal from './components/project/style-panel/ProjectStylePanelHorizontal'
 
 export default function DevMode() {
   const offlineMode = useSelector((state) => state.project.offlineMode)

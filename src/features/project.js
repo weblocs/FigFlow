@@ -2584,9 +2584,9 @@ export const projectSlice = createSlice({
         state.activeNodeId
       )
 
-      // if (state?.activeNodeObject !== undefined) {
-      //   console.log(current(state.activeNodeObject))
-      // }
+      if (state?.activeNodeObject !== undefined) {
+        console.log(current(state.activeNodeObject))
+      }
     },
 
     toggleHtmlNodeExpandedState: (state, action) => {

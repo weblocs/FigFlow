@@ -141,8 +141,8 @@ export default function generatePageCss(
   return (
     `*{-webkit-font-smoothing: antialiased;box-sizing: border-box;}body{margin:0;}img{display: block;width: 100%; height: auto;}` +
     fullJSONtoCSS(updatedPreRenderedStyles, swatches) +
-    inlineStyles +
-    renderFontCss(fonts, fontsURLDots)
+    inlineStyles
+    // + renderFontCss(fonts, fontsURLDots)
   )
   //   return generatedCSS
 }
