@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ProjectTopNavbar from './components/project/top-navbar/TopNavbar'
 import LeftSidebar from './components/project/left-sidebar/LeftSidebar'
 import ProjectNavigator from './components/project/left-sidebar/navigator/ProjectNavigator'

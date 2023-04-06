@@ -25,6 +25,7 @@ import ExportButtonServer from './ExportButtonServer'
 import RestoreButton from './RestoreButton'
 import TextModeChanger from './TextModeChanger'
 import VersionsIcon from '../../../img/capacitor.svg'
+import ExportButtonLiquid from './ExportButtonLiquid'
 
 export default function TopNavbar() {
   const projectMode = useSelector((state) => state.project.projectMode)
@@ -103,7 +104,8 @@ export default function TopNavbar() {
           </>
         ) : (
           <>
-            <ExportButton />
+            {/* <ExportButton /> */}
+            <ExportButtonLiquid />
             <SaveButton />
           </>
         )}
