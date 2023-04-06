@@ -16,18 +16,25 @@ import generateFontCssLiquid from './export/GenerateFontCssLiquid'
 
 import { Octokit } from 'octokit'
 import { encode, decode } from 'js-base64'
-import { Base64File } from 'js-base64-file'
+// import { Base64File } from 'js-base64-file'
 
 export default function ExportButtonLiquid() {
   const octokit = new Octokit({
-    auth: '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',
+    auth: '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',
   })
   const owner = 'weblocs'
   const repo = 'shopify'
 
-  async function pushFileToGit(path, content) {
+  async function pushFileToGit(path, content, isEncoded = false) {
     let sha = null
     let isContentChanged = false
+
+    function encodeContent(content) {
+      if (isEncoded) {
+        return content
+      }
+      return encode(content)
+    }
     try {
       await octokit
         .request('GET /repos/{owner}/{repo}/contents/{path}', {
@@ -40,7 +47,11 @@ export default function ExportButtonLiquid() {
         })
         .then((response) => {
           sha = response.data.sha
-          if (content !== decode(response.data.content)) {
+          if (isEncoded) {
+            if (content !== response.data.content) {
+              isContentChanged = true
+            }
+          } else if (content !== decode(response.data.content)) {
             isContentChanged = true
           }
         })
@@ -58,7 +69,7 @@ export default function ExportButtonLiquid() {
           name: 'Maciej Kociela',
           email: 'kocielam@gmail.com',
         },
-        content: encode(content),
+        content: encodeContent(content),
         sha: sha,
         headers: {
           'X-GitHub-Api-Version': '2022-11-28',
@@ -75,7 +86,7 @@ export default function ExportButtonLiquid() {
             name: 'Maciej Kociela',
             email: 'kocielam@gmail.com',
           },
-          content: encode(content),
+          content: encodeContent(content),
           sha: sha,
           headers: {
             'X-GitHub-Api-Version': '2022-11-28',
@@ -298,7 +309,7 @@ export default function ExportButtonLiquid() {
         'https://firebasestorage.googleapis.com/v0/b/figflow-5a912.appspot.com/o/' +
         image.name +
         '?alt=media&token=fe82f3f8-fd09-40ae-9168-25ebc8835c9a'
-      const file = urlToPromise(imageUrl)
+      //   const file = urlToPromise(imageUrl)
       let imageSrc = image.name
       const types = ['webp', 'avif', 'jpg', 'jpeg', 'png', 'gif', 'svg']
       types.forEach((type) => {
@@ -311,6 +322,12 @@ export default function ExportButtonLiquid() {
           imageSrc = imageSrc.concat('.' + type)
         }
       })
+
+      async function getImageBlob() {
+        let blob = await fetch(imageUrl).then((r) => r.blob())
+        blobToBase64(`assets/${imageSrc}`, blob)
+      }
+      getImageBlob()
 
       //   pushFileToGit(`assets/images/${imageSrc}`, file, {
       //     binary: true,
@@ -340,21 +357,24 @@ export default function ExportButtonLiquid() {
       })
     })
 
-    function getBase64(file) {
+    function blobToBase64(path, blob) {
+      var f = blob
+      var base64String = ''
       var reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = function () {
-        console.log(reader.result)
-        return reader.result
-      }
-      reader.onerror = function (error) {
-        console.log('Error: ', error)
-      }
+      reader.onload = (function (theFile) {
+        return function (e) {
+          var binaryData = e.target.result
+          base64String = window.btoa(binaryData)
+          pushFileToGit(path, base64String, true)
+        }
+      })(f)
+      reader.readAsBinaryString(f)
+      return base64String
     }
 
-    function getFontFile(fontUrl, name) {
-      const fontFile = getBase64(fontUrl)
-      pushFileToGit(`assets/fonts/${name}`, fontFile)
+    async function getFontFile(fontUrl, name) {
+      let blob = await fetch(fontUrl).then((r) => r.blob())
+      blobToBase64(`assets/${name}`, blob)
     }
   }
 

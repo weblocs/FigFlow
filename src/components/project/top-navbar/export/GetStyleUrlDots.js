@@ -23,6 +23,6 @@ export function getFontsUrlDots(type, depth, slug) {
     depth === 1 && (styleURLDots = '../')
     isIndex && (styleURLDots = '')
   }
-  console.log(type, depth, slug, styleURLDots)
+  console.log('published ' + slug)
   return styleURLDots
 }

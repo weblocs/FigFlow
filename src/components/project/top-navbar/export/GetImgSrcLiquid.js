@@ -45,7 +45,7 @@ export default function getImgSrcLiquid(
   })
 
   return (
-    `src='{{ 'images/${imageSrc}' | asset_url }}` +
+    `src='{{ '${imageSrc}' | asset_url }}` +
     `'alt='${node.altText}' loading=` +
     (node?.isImgEager === 'true' ? '"eager"' : '"lazy"') +
     ' sizes="(max-width: 600px) 96vw, 700px" ' +
